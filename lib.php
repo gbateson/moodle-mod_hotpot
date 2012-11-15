@@ -612,7 +612,7 @@ function hotpot_print_recent_activity($course, $viewfullnames, $timestart) {
  *     $activity->timestamp : the time that the content was recorded in the database
  */
 function hotpot_get_recent_mod_activity(&$activities, &$index, $timestart, $courseid, $coursemoduleid=0, $userid=0, $groupid=0) {
-    global $CFG, $DB;
+    global $CFG, $DB, $USER;
 
     if (! $course = $DB->get_record('course', array('id'=>$courseid))) {
         return; // invalid course id - shouldn't happen !!
@@ -620,6 +620,15 @@ function hotpot_get_recent_mod_activity(&$activities, &$index, $timestart, $cour
 
     if (! $modinfo = unserialize($course->modinfo)) {
         return; // no activity mods
+    }
+
+    // CONTRIB-4025 don't allow students to see each other's scores
+    $coursecontext = hotpot_get_context(CONTEXT_COURSE, $courseid);
+    if (! has_capability('mod/hotpot:reviewmyattempts', $coursecontext)) {
+        return; // can't view recent activity
+    }
+    if (! has_capability('mod/hotpot:reviewallattempts', $coursecontext)) {
+        $userid = $USER->id; // force this user only
     }
 
     $hotpots = array(); // hotpotid => cmid
