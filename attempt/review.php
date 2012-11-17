@@ -125,7 +125,7 @@ class mod_hotpot_attempt_review {
     /**
      * review
      */
-    function review($hotpot, $class)  {
+    static function review($hotpot, $class)  {
         global $DB;
 
         // for the time-being we set this setting manually here
@@ -236,13 +236,15 @@ class mod_hotpot_attempt_review {
 
                 // add separator
                 if (count($table->data)) {
-                	call_user_func(array($class, 'add_separator'), $table, $question_colspan);
+                	call_user_func(array($class, 'add_separator'), &$table, $question_colspan);
+                	// may be we are not allowed to pass params by reference with call_user_func(), so ...
+                	// $table = call_user_func(array($class, 'add_separator'), $table, $question_colspan)
                 }
 
                 // question text
                 if (call_user_func(array($class, 'show_question_text'))) {
                     if ($text = hotpot::get_question_text($questions[$response->questionid])) {
-                    	call_user_func(array($class, 'add_question_text'), $table, $text, $question_colspan);
+                    	call_user_func(array($class, 'add_question_text'), &$table, $text, $question_colspan);
                     }
                 }
 
@@ -268,17 +270,17 @@ class mod_hotpot_attempt_review {
                     if ($neutralize_text_fields) {
                         $neutral_text .= ($neutral_text ? ',' : '').$text;
                     } else {
-                        call_user_func(array($class, 'add_text_field'), $table, $field, $text, $textfield_colspan);
+                        call_user_func(array($class, 'add_text_field'), &$table, $field, $text, $textfield_colspan);
                     }
                 }
                 if ($neutral_text) {
-                    call_user_func(array($class, 'add_text_field'), $table, 'responses', $neutral_text, $textfield_colspan);
+                    call_user_func(array($class, 'add_text_field'), &$table, 'responses', $neutral_text, $textfield_colspan);
                 }
 
                 // numeric fields
                 $row = new html_table_row();
                 foreach ($response_num_fields as $field) {
-                    call_user_func(array($class, 'add_num_field'), $row, $field, $response->$field);
+                    call_user_func(array($class, 'add_num_field'), &$row, $field, $response->$field);
                 }
                 $table->data[] = $row;
             }
@@ -293,7 +295,7 @@ class mod_hotpot_attempt_review {
      * @param xxx $field
      * @return xxx
      */
-    function format_attempt_heading($field) {
+    static function format_attempt_heading($field) {
         switch ($field) {
             case 'timemodified': return get_string('time', 'quiz');
             case 'attempt'     : return get_string('attemptnumber', 'hotpot');
@@ -310,7 +312,7 @@ class mod_hotpot_attempt_review {
      * @param xxx $strtimeformat
      * @return xxx
      */
-    function format_attempt_data($attempt, $field, $strtimeformat) {
+    static function format_attempt_data($attempt, $field, $strtimeformat) {
         switch ($field) {
             case 'status'      : return hotpot::format_status($attempt->$field);
             case 'duration'    : return format_time($attempt->timemodified - $attempt->timestart);
