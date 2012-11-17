@@ -89,6 +89,12 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
 
         switch ($type) {
 
+            case 'dropdown':
+                // adding missing brackets to call to Is_ExerciseFinished() in CheckAnswers()
+                $search = '/(Finished\s*=\s*Is_ExerciseFinished)(;)/';
+                $this->headcontent = preg_replace($search, '$1()$2', $this->headcontent);
+                break;
+
             case 'findit':
                 // get position of last </style> tag and
                 // insert CSS to make <b> and <em> tags bold

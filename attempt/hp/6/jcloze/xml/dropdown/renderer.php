@@ -78,29 +78,17 @@ class mod_hotpot_attempt_hp_6_jcloze_xml_dropdown_renderer extends mod_hotpot_at
     }
 
     /**
+     * fix_headcontent
+     */
+    function fix_headcontent()  {
+        $this->fix_headcontent_rottmeier('dropdown');
+    }
+
+    /**
      * fix_bodycontent
      */
     function fix_bodycontent()  {
         $this->fix_bodycontent_rottmeier(true);
-    }
-
-    /**
-     * fix_js_CheckAnswers
-     *
-     * @param xxx $str (passed by reference)
-     * @param xxx $start
-     * @param xxx $length
-     * @return xxx
-     */
-    function fix_js_CheckAnswers(&$str, $start, $length) {
-        $substr = substr($str, $start, $length);
-        parent::fix_js_CheckAnswers($substr, 0, strlen($substr));
-
-        // adding missing brackets to call to Is_ExerciseFinished()
-        $search = '/(Finished\s*=\s*Is_ExerciseFinished)(;)/';
-        $substr = preg_replace($search, '$1()$2', $substr);
-
-        $str = substr_replace($str, $substr, $start, $length);
     }
 
     /**
