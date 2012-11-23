@@ -192,6 +192,12 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
     function fix_js_Client(&$str, $start, $length)  {
         $substr = substr($str, $start, $length);
 
+        // refine detection of Chrome browser
+        $search = 'this.geckoVer < 20020000';
+        if ($pos = strpos($substr, $search)) {
+            $substr = substr_replace($substr, 'this.geckoVer > 10000000 && ', $pos, 0);
+        }
+
         // add detection of Chrome browser
         $search = '/(\s*)if \(this\.min == false\)\{/s';
         $replace = '$1'
