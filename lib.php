@@ -835,6 +835,28 @@ function hotpot_print_recent_mod_activity($activity, $courseid, $detail, $modnam
     echo html_writer::table($table);
 }
 
+/*
+* This function defines what log actions will be selected from the Moodle logs
+* and displayed for course -> report -> activity module -> HotPOt -> View OR All actions
+*
+* This function is called from: {@link course/report/participation/index.php}
+* @return array(string) of text strings used to log QuizPort view actions
+*/
+function hotpot_get_view_actions() {
+    return array('view', 'viewindex', 'report', 'review');
+}
+
+/*
+* This function defines what log actions will be selected from the Moodle logs
+* and displayed for course -> report -> activity module -> Hot Potatoes Quiz -> Post OR All actions
+*
+* This function is called from: {@link course/report/participation/index.php}
+* @return array(string) of text strings used to log QuizPort post actions
+*/
+function hotpot_get_post_actions() {
+    return array('submit');
+}
+
 /**
  * Function to be run periodically according to the moodle cron
  * This function searches for things that need to be done, such
