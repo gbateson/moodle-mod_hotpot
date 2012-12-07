@@ -491,7 +491,7 @@ function xmldb_hotpot_upgrade($oldversion) {
                     // anyway we must do this check, so that create_file_from_xxx() does not abort
                 } else if ($url) {
                     // file is on an external url - unusual ?!
-                    $file = $fs->create_file_from_url($file_record, $url);
+                    $file = false; // $fs->create_file_from_url($file_record, $url);
                 } else if ($file = $fs->get_file_by_hash($filehash)) {
                     // $file has already been migrated to Moodle's file system
                     // this is the route we expect most people to come :-)
@@ -511,7 +511,8 @@ function xmldb_hotpot_upgrade($oldversion) {
                     } else {
                         $msg = "course_modules.id=$hotpot->cmid, path=$path";
                     }
-                    $msg = html_writer::link(new moodle_url('/course/modedit.php', array('update'=>$hotpot->cmid)), $msg);
+                    $params = array('update'=>$hotpot->cmid, 'onclick'=>'this.target="_blank"');
+                    $msg = html_writer::link(new moodle_url('/course/modedit.php', $params), $msg);
                     $msg = get_string('sourcefilenotfound', 'hotpot', $msg);
                     echo html_writer::tag('div', $msg, array('class'=>'notifyproblem'));
                 }
