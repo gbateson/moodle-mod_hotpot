@@ -710,12 +710,92 @@ function xmldb_hotpot_upgrade($oldversion) {
         upgrade_mod_savepoint(true, "$newversion", 'hotpot');
     }
 
+    $newversion = 2010080353;
+    if ($oldversion < $newversion) {
+
+        // remove any unwanted "course_files" folders that may have been created
+        // when restoring Moodle 1.9 HotPot activities to a Moodle 2.x site
+
+        // select all HotPot activities which have a "course_files" folder
+        // but whose "sourcefile" path does not require such a folder
+
+        $select = 'f.*,'.
+                  'h.id AS hotpotid,'.
+                  'h.sourcefile AS sourcefile';
+
+        $from   = '{hotpot} h,'.
+                  '{course_modules} cm,'.
+                  '{context} c,'.
+                  '{files} f';
+
+        $where  = $DB->sql_like('h.sourcefile', '?', false, false, true). // NOT LIKE
+                  ' AND h.id=cm.instance'.
+                  ' AND cm.id=c.instanceid'.
+                  ' AND c.id=f.contextid'.
+                  ' AND f.component=?'.
+                  ' AND f.filearea=?'.
+                  ' AND f.filepath=?'.
+                  ' AND f.filename=?';
+
+        $params = array('/course_files/%', 'mod_hotpot', 'sourcefile', '/course_files/', '.');
+        if ($filerecords = $DB->get_records_sql("SELECT $select FROM $from WHERE $where", $params)) {
+
+            $fs = get_file_storage();
+            foreach ($filerecords as $filerecord) {
+                xmldb_hotpot_move_file($fs->get_file_instance($filerecord), '/');
+            }
+        }
+
+        upgrade_mod_savepoint(true, "$newversion", 'hotpot');
+    }
 
     if ($empty_cache) {
         $DB->delete_records('hotpot_cache');
     }
 
     return true;
+}
+
+/**
+ * xmldb_hotpot_move_file
+ *
+ * move a file or folder (within the same context)
+ * if $file is a directory, then all subfolders and files will also be moved
+ * if the destination file/folder already exists, then $file will be deleted
+ *
+ * @param stored_file $file
+ * @param string $new_filepath
+ * @param string $new_filename (optional, default='')
+ * @return void, but may update filearea
+ */
+function xmldb_hotpot_move_file($file, $new_filepath, $new_filename='') {
+
+    $fs = get_file_storage();
+
+    $contextid = $file->get_contextid();
+    $component = $file->get_component();
+    $filearea  = $file->get_filearea();
+    $itemid    = $file->get_itemid();
+    $filepath  = $file->get_filepath();
+    $filename  = $file->get_filename();
+
+    if ($file->is_directory()) {
+        $children = $fs->get_directory_files($contextid, $component, $filearea, $itemid, $filepath);
+        $filepath = '/^'.preg_quote($filepath, '/').'/';
+        foreach ($children as $child) {
+            xmldb_hotpot_move_file($child, preg_replace($filepath, $new_filepath, $child->get_filepath(), 1));
+        }
+    }
+
+    if ($new_filename=='') {
+        $new_filename = $filename;
+    }
+
+    if ($fs->file_exists($contextid, $component, $filearea, $itemid, $new_filepath, $new_filename)) {
+        $file->delete(); // new file already exists
+    } else {
+        $file->rename($new_filepath, $new_filename);
+    }
 }
 
 /**

@@ -121,10 +121,10 @@ class moodle1_mod_hotpot_handler extends moodle1_mod_handler {
         $contextid      = $this->converter->get_contextid(CONTEXT_MODULE, $this->moduleid);
 
         // set $path, $filepath and $filename
-        $filepath = dirname($data['sourcefile']);
         $filename = basename($data['sourcefile']);
-        $filepath = trim($filepath, '/');
-        if ($filepath=='' || $filepath=='/') {
+        $filepath = dirname($data['sourcefile']);
+        $filepath = trim($filepath, './');
+        if ($filepath=='') {
             $filepath = '/';
         } else {
             $filepath = '/'.$filepath.'/';
