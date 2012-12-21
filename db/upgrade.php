@@ -459,33 +459,33 @@ function xmldb_hotpot_upgrade($oldversion) {
 
                 // this information should be enough to access the file
                 // if it has been migrated into Moodle 2.0 file system
-                $filename = basename($path);
-                $filepath = dirname($path);
-                if ($filepath=='.' || $filepath=='') {
-                    $filepath = '/';
+                $old_filename = basename($path);
+                $old_filepath = dirname($path);
+                if ($old_filepath=='.' || $old_filepath=='') {
+                    $old_filepath = '/';
                 } else {
-                    $filepath = '/'.ltrim($filepath, '/'); // require leading slash
-                    $filepath = rtrim($filepath, '/').'/'; // require trailing slash
+                    $old_filepath = '/'.ltrim($old_filepath, '/'); // require leading slash
+                    $old_filepath = rtrim($old_filepath, '/').'/'; // require trailing slash
                 }
-                $filehash = sha1('/'.$coursecontext->id.'/course/legacy/0'.$filepath.$filename);
+                $filehash = sha1('/'.$coursecontext->id.'/course/legacy/0'.$old_filepath.$old_filename);
 
                 // we might need the old file path, if the file has not been migrated
-                $oldfilepath = $CFG->dataroot.'/'.$courseid.$filepath.$filename;
+                $oldfilepath = $CFG->dataroot.'/'.$courseid.$old_filepath.$old_filename;
 
                 // set parameters used to add file to filearea
                 // (sortorder=1 siginifies the "mainfile" in this filearea)
                 $context  = get_context_instance(CONTEXT_MODULE, $hotpot->cmid);
                 $file_record = array(
                     'contextid'=>$context->id, 'component'=>'mod_hotpot', 'filearea'=>'sourcefile',
-                    'sortorder'=>1, 'itemid'=>0, 'filepath'=>$filepath, 'filename'=>$filename
+                    'sortorder'=>1, 'itemid'=>0, 'filepath'=>$old_filepath, 'filename'=>$old_filename
                 );
 
                 // initialize sourcefile settings
-                $hotpot->sourcefile = $filepath.$filename;
+                $hotpot->sourcefile = $old_filepath.$old_filename;
                 $hotpot->sourcetype = '';
                 $hotpot->sourceitemid = 0;
 
-                if ($file = $fs->get_file($context->id, 'mod_hotpot', 'sourcefile', 0, $filepath, $filename)) {
+                if ($file = $fs->get_file($context->id, 'mod_hotpot', 'sourcefile', 0, $old_filepath, $old_filename)) {
                     // file already exists for this context - shouldn't happen !!
                     // maybe an earlier upgrade failed for some reason ?
                     // anyway we must do this check, so that create_file_from_xxx() does not abort
@@ -532,7 +532,7 @@ function xmldb_hotpot_upgrade($oldversion) {
                         case 'html':
                         default:
                             if ($file) {
-                                $pathnamehash = $fs->get_pathname_hash($context->id, 'mod_hotpot', 'sourcefile', 0, $filepath, $filename);
+                                $pathnamehash = $fs->get_pathname_hash($context->id, 'mod_hotpot', 'sourcefile', 0, $old_filepath, $old_filename);
                                 if ($contenthash = $DB->get_field('files', 'contenthash', array('pathnamehash'=>$pathnamehash))) {
                                     $l1 = $contenthash[0].$contenthash[1];
                                     $l2 = $contenthash[2].$contenthash[3];
@@ -742,7 +742,8 @@ function xmldb_hotpot_upgrade($oldversion) {
 
             $fs = get_file_storage();
             foreach ($filerecords as $filerecord) {
-                xmldb_hotpot_move_file($fs->get_file_instance($filerecord), '/');
+                $file = $fs->get_file_instance($filerecord);
+                xmldb_hotpot_move_file($file, '/');
             }
         }
 
@@ -776,19 +777,20 @@ function xmldb_hotpot_move_file($file, $new_filepath, $new_filename='') {
     $component = $file->get_component();
     $filearea  = $file->get_filearea();
     $itemid    = $file->get_itemid();
-    $filepath  = $file->get_filepath();
-    $filename  = $file->get_filename();
+
+    $old_filepath = $file->get_filepath();
+    $old_filename = $file->get_filename();
 
     if ($file->is_directory()) {
-        $children = $fs->get_directory_files($contextid, $component, $filearea, $itemid, $filepath);
-        $filepath = '/^'.preg_quote($filepath, '/').'/';
+        $children = $fs->get_directory_files($contextid, $component, $filearea, $itemid, $old_filepath);
+        $old_filepath = '/^'.preg_quote($old_filepath, '/').'/';
         foreach ($children as $child) {
-            xmldb_hotpot_move_file($child, preg_replace($filepath, $new_filepath, $child->get_filepath(), 1));
+            xmldb_hotpot_move_file($child, preg_replace($old_filepath, $new_filepath, $child->get_filepath(), 1));
         }
     }
 
     if ($new_filename=='') {
-        $new_filename = $filename;
+        $new_filename = $old_filename;
     }
 
     if ($fs->file_exists($contextid, $component, $filearea, $itemid, $new_filepath, $new_filename)) {
