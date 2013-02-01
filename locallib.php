@@ -2020,4 +2020,75 @@ class hotpot {
         }
         return $this->gradeitem;
     }
+
+    /**
+     * require_redirect
+     *
+     * @return mixed URL or boolean true/false
+     */
+    public function require_redirect() {
+        // decide whether or not we need to redirect after receiving the attempt results
+        switch (true) {
+            case $this->delay3==self::TIME_DISABLE:
+                // results have already been saved
+                $redirect = true;
+                break;
+
+            case $this->attempt->status==self::STATUS_INPROGRESS:
+                // this attempt is still in progress
+                $redirect = true;
+                break;
+
+            case $this->attempt->redirect==0:
+                // this attempt has told us not to do anything
+                $redirect = true;
+                break;
+
+            case $this->attempt->status==self::STATUS_ABANDONED:
+                // check whether we can continue this attempt
+                switch ($this->attempt->can_continue()) {
+                    case self::CONTINUE_RESUMEQUIZ:  $redirect = true; break;
+                    case self::CONTINUE_RESTARTQUIZ: $redirect = true; break;
+                    case self::CONTINUE_RESTARTUNIT: $redirect = empty($this->entrypage); break;
+                    case self::CONTINUE_ABANDONUNIT: $redirect = false; break;
+                    default: $redirect = false; // shouldn't happen !!
+                }
+                if ($redirect) {
+                    $redirect = $this->view_url();
+                }
+                break;
+
+            default:
+                // do not redirect
+                $redirect = false;
+        }
+
+        return $redirect;
+    }
+
+    /**
+     * redirect
+     *
+     * @param mixed $redirect URL or boolean true/false
+     * @return void, but may redirect browser and exit PHP script
+     */
+    function redirect($redirect) {
+
+        if (empty($redirect)) {
+            return; // do nothing - unexpected !!
+        }
+
+        if ($redirect===true) {
+            // we need some check here to see if the user is trying to navigate away
+            // from the page in which case we should just die and not send the header
+            header("HTTP/1.0 204 No Response");
+            // Note: don't use header("Status: 204"); because it can confuse PHP+FastCGI
+            // http://moodle.org/mod/forum/discuss.php?d=108330
+            die;
+            // script will die here
+        } else {
+            redirect($redirect);
+            // script will die here
+        }
+    }
 }

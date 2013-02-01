@@ -82,6 +82,11 @@ require_once($CFG->dirroot.'/mod/hotpot/'.$subdir.'/storage.php');
 $class = 'mod_hotpot_'.$subtype.'_storage';
 $storage = call_user_func(array($class, 'store'), $hotpot);
 
+// redirect the browser (only if necessary)
+if ($redirect = $hotpot->require_redirect()) {
+    $hotpot->redirect($redirect); // script stops here
+}
+
 // if we don't need an exit page, go straight back to the next activity or course page (or retry this hotpot)
 if (empty($hotpot->exitpage)) {
     if ($hotpot->require_exitgrade() && $hotpot->attempt->score < $hotpot->exitgrade) {
