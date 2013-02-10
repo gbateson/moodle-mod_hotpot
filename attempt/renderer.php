@@ -201,7 +201,7 @@ class mod_hotpot_attempt_renderer extends mod_hotpot_renderer {
      *  - $this->page->requires->js_module('hotpot'); // gets mod/hotpot/module.js
      *  - $this->page->requires->js_init_call('M.mod_hotpot.secure_window.init');
      *
-     * @param hotpot object
+     * @param xxx $hotpot object
      * @return string html
      */
     public function render_attempt($hotpot, $cacheonly=false) {
@@ -838,14 +838,12 @@ class mod_hotpot_attempt_renderer extends mod_hotpot_renderer {
      * @param xxx $type
      * @return xxx
      */
-    function can_resume($type)  {
-        global $QUIZPORT;
-        if ($type=='unit' || ($type=='quiz' && $this->provide_resume())) {
-            if (isset($QUIZPORT->$type) && $QUIZPORT->$type->allowresume) {
-                return true;
-            }
+    function can_resume()  {
+        if ($this->provide_resume() && isset($this->hotpot) && $this->hotpot->allowresume) {
+            return true;
+        } else {
+            return false;
         }
-        return false;
     }
 
     // can the current unit/quiz be restarted after the current attempt finishes?
@@ -853,14 +851,12 @@ class mod_hotpot_attempt_renderer extends mod_hotpot_renderer {
     /**
      * can_restart
      *
-     * @param xxx $type
      * @return xxx
      */
-    function can_restart($type)  {
-        global $QUIZPORT;
-        if (isset($QUIZPORT->$type) && $QUIZPORT->$type->attemptlimit) {
-            if ($attempts = $QUIZPORT->get_attempts($type)) {
-                if (count($attempts) >= $QUIZPORT->$type->attemptlimit) {
+    function can_restart()  {
+        if (isset($this->hotpot) && $this->hotpot->attemptlimit) {
+            if ($countattempts = $this->hotpot->get_attempts()) {
+                if ($countattempts >= $this->hotpot->attemptlimit) {
                     return false;
                 }
             }
@@ -874,15 +870,10 @@ class mod_hotpot_attempt_renderer extends mod_hotpot_renderer {
      * @return xxx
      */
     function can_continue()  {
-        if ($this->can_resume('unit')) {
-            if ($this->can_resume('quiz')) {
-                return hotpot::CONTINUE_RESUMEQUIZ;
-            } else if ($this->can_restart('quiz')) {
-                return hotpot::CONTINUE_RESTARTQUIZ;
-            }
-        }
-        if ($this->can_restart('unit')) {
-            return hotpot::CONTINUE_RESTARTUNIT;
+        if ($this->can_resume()) {
+            return hotpot::CONTINUE_RESUMEQUIZ;
+        } else if ($this->can_restart()) {
+            return hotpot::CONTINUE_RESTARTQUIZ;
         } else {
             return hotpot::CONTINUE_ABANDONUNIT;
         }
@@ -898,6 +889,99 @@ class mod_hotpot_attempt_renderer extends mod_hotpot_renderer {
             return true;
         } else {
             return false;
+        }
+    }
+
+
+    /**
+     * require_response
+     *
+     * @param xxx $hotpot object
+     * @return mixed URL or boolean true/false
+     */
+    public function require_response($hotpot) {
+
+        // initialize some important properties
+        $this->init($hotpot);
+
+        // decide whether or not we need to redirect after receiving the attempt results
+        switch (true) {
+            case $this->hotpot->attempt->status==hotpot::STATUS_INPROGRESS:
+                // this attempt is still in progress
+                $response = hotpot::HTTP_204_RESPONSE;
+                break;
+
+            case $this->hotpot->attempt->redirect==0:
+                // this attempt has told us not to do anything
+                $response = hotpot::HTTP_204_RESPONSE;
+                break;
+
+            //case $this->hotpot->delay3==hotpot::TIME_DISABLE:
+                // results have already been saved
+                //$response = hotpot::HTTP_204_RESPONSE;
+                //break;
+
+            case $this->hotpot->attempt->status==hotpot::STATUS_ABANDONED:
+                // check whether we can continue this attempt
+                switch ($this->can_continue()) {
+                    case hotpot::CONTINUE_RESUMEQUIZ:  $response = true; break;
+                    case hotpot::CONTINUE_RESTARTQUIZ: $response = true; break;
+                    case hotpot::CONTINUE_RESTARTUNIT: $response = empty($this->hotpot->entrypage); break;
+                    case hotpot::CONTINUE_ABANDONUNIT: $response = false; break;
+                    default: $response = false; // shouldn't happen !!
+                }
+                if ($response) {
+                    $response = $this->hotpot->view_url();
+                } else {
+                    $response = hotpot::HTTP_NO_RESPONSE;
+                }
+                break;
+
+            default:
+                // do not send a response to the browser
+                $response = hotpot::HTTP_NO_RESPONSE;
+        }
+
+        // if we don't need an exit page, go straight back to the next activity or course page (or retry this hotpot)
+        if ($response==hotpot::HTTP_NO_RESPONSE && empty($this->hotpot->exitpage)) {
+            if ($this->hotpot->require_exitgrade() && $this->hotpot->attempt->score < $this->hotpot->exitgrade) {
+                // score was not good enough, so do automatic retry
+                $response = $this->hotpot->attempt_url();
+            } else if ($cm = $this->hotpot->get_cm('exit')) {
+                // display next activity
+                $response = $this->hotpot->view_url($cm);
+            } else {
+                // return to course page
+                $response = $this->hotpot->course_url();
+            }
+        }
+
+        return $response;
+    }
+
+    /**
+     * send_response
+     *
+     * @param mixed $response URL or boolean true/false
+     * @return void, but may redirect browser and exit PHP script
+     */
+    function send_response($response) {
+
+        if ($response===hotpot::HTTP_NO_RESPONSE) {
+            return; // do nothing - unexpected !!
+        }
+
+        if ($response===hotpot::HTTP_204_RESPONSE) {
+            // we need some check here to see if the user is trying to navigate away
+            // from the page in which case we should just die and not send the header
+            header("HTTP/1.0 204 No Response");
+            // Note: don't use header("Status: 204"); because it can confuse PHP+FastCGI
+            // http://moodle.org/mod/forum/discuss.php?d=108330
+            die;
+            // script will die here
+        } else {
+            redirect($response);
+            // script will die here
         }
     }
 

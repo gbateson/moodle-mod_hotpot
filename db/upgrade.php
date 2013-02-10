@@ -155,7 +155,7 @@ function xmldb_hotpot_upgrade($oldversion) {
         // remove field: shownextquiz (replaced by "exitcm")
         $field = new xmldb_field('shownextquiz', XMLDB_TYPE_INTEGER, '4', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0');
         if ($dbman->field_exists($table, $field)) {
-            // set exitcm to show next HotPot: -4 = hotpot::ACTIVITY_SECTION_QUIZPORT
+            // set exitcm to show next HotPot: -4 = hotpot::ACTIVITY_SECTION_HOTPOT
             $DB->execute('UPDATE {hotpot} SET exitcm=-4 WHERE shownextquiz=1');
             $dbman->drop_field($table, $field);
         }
@@ -704,12 +704,6 @@ function xmldb_hotpot_upgrade($oldversion) {
         upgrade_mod_savepoint(true, "$newversion", 'hotpot');
     }
 
-    $newversion = 2010080352;
-    if ($oldversion < $newversion) {
-        $empty_cache = true;
-        upgrade_mod_savepoint(true, "$newversion", 'hotpot');
-    }
-
     $newversion = 2010080353;
     if ($oldversion < $newversion) {
 
@@ -747,6 +741,12 @@ function xmldb_hotpot_upgrade($oldversion) {
             }
         }
 
+        upgrade_mod_savepoint(true, "$newversion", 'hotpot');
+    }
+
+    $newversion = 2010080356;
+    if ($oldversion < $newversion) {
+        $empty_cache = true;
         upgrade_mod_savepoint(true, "$newversion", 'hotpot');
     }
 

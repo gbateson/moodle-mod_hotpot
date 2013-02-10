@@ -840,7 +840,7 @@ function hotpot_print_recent_mod_activity($activity, $courseid, $detail, $modnam
 * and displayed for course -> report -> activity module -> HotPOt -> View OR All actions
 *
 * This function is called from: {@link course/report/participation/index.php}
-* @return array(string) of text strings used to log QuizPort view actions
+* @return array(string) of text strings used to log HotPot view actions
 */
 function hotpot_get_view_actions() {
     return array('view', 'viewindex', 'report', 'review');
@@ -851,7 +851,7 @@ function hotpot_get_view_actions() {
 * and displayed for course -> report -> activity module -> Hot Potatoes Quiz -> Post OR All actions
 *
 * This function is called from: {@link course/report/participation/index.php}
-* @return array(string) of text strings used to log QuizPort post actions
+* @return array(string) of text strings used to log HotPot post actions
 */
 function hotpot_get_post_actions() {
     return array('submit');

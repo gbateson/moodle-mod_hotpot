@@ -39,6 +39,7 @@ $string['hotpot:view'] = 'View the entry page of a HotPot activity';
 
 // more strings
 $string['abandoned'] = 'Abandoned';
+$string['abandonhotpot'] = 'Your results so far will be saved but you cannot resume or restart this activity later.';
 $string['activitycloses'] = 'Activity closes';
 $string['activitygrade'] = 'Activity grade';
 $string['activityopens'] = 'Activity opens';
@@ -67,9 +68,8 @@ $string['attemptsunlimited'] = 'Unlimited attempts';
 $string['average'] = 'Average';
 $string['averagescore'] = 'Average score';
 $string['cacherecords'] = 'HotPot cache records';
-$string['canrestartquiz'] = 'Your results so far will be saved and you can redo "{$a}" later';
-$string['canrestartunit'] = 'Your results so far will be saved but if you want to redo this activity again later, you will have to start from the beginning.';
-$string['canresumequiz'] = 'Your results so far will be saved and you can resume "{$a}" later.';
+$string['canrestarthotpot'] = 'Your results so far will be saved and you can redo "{$a}" later';
+$string['canresumehotpot'] = 'Your results so far will be saved and you can resume "{$a}" later.';
 $string['checks'] = 'Checks';
 $string['checksomeboxes'] = 'Please check some boxes';
 $string['clearcache'] = 'Clear HotPot cache';

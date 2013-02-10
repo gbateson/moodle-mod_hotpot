@@ -805,13 +805,22 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
                 ."// create HP object (to collect and send responses)\n"
                 ."	window.HP = new ".$this->js_object_type."('".$this->can_clickreport()."','".$forceajax."');\n"
                 ."\n"
-                ."// call HP.onunload to send results when this page unloads\n"
-                ."	var s = '';\n"
-                ."	if (typeof(window.onunload)=='function'){\n"
-                ."		window.onunload_StartUp = onunload;\n"
-                ."		s += 'window.onunload_StartUp();'\n"
+                //."// call HP.onunload to send results when this page unloads\n"
+                //."	var s = '';\n"
+                //."	if (typeof(window.onunload)=='function'){\n"
+                //."		window.onunload_StartUp = onunload;\n"
+                //."		s += 'window.onunload_StartUp();'\n"
+                //."	}\n"
+                //."	window.onunload = new Function(s + 'if(window.HP){HP.status=$onunload_status;HP.onunload();object_destroy(HP);}return true;');\n"
+                //."\n"
+                ."	window.onunload = function() {\n"
+                ."		if (window.HP) {\n"
+                ."			HP.status=$onunload_status;\n"
+                ."			HP.onunload();\n"
+                ."			object_destroy(HP);\n"
+                ."		}\n"
+                ."		return true;\n"
                 ."	}\n"
-                ."	window.onunload = new Function(s + 'if(window.HP){HP.status=$onunload_status;HP.onunload();object_destroy(HP);}return true;');\n"
                 ."\n"
             ;
             $substr = substr_replace($substr, $append, $pos, 0);
@@ -1075,7 +1084,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
         if ($name = $this->get_stop_function_name()) {
             return 'if('.$this->get_stop_function_confirm().')'.$name.'('.$this->get_stop_function_args().')';
         } else {
-            return 'if(window.HP)HP.onunload('.QUIZPORT_STATUS_ABANDONED.')';
+            return 'if(window.HP)HP.onunload('.hotpot::STATUS_ABANDONED.')';
         }
     }
 
@@ -1156,6 +1165,11 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
         } else {
             $flag = 0; // set form values and send form
         }
+        if ($this->hotpot->delay3==hotpot::TIME_DISABLE) {
+            $forceredirect = '(ForceQuizStatus ? 1 : 0)';
+        } else {
+            $forceredirect = 1;
+        }
         return "\n"
             ."	if ($1){\n"
             ."		var QuizStatus = 4; // completed\n"
@@ -1175,12 +1189,13 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
             ."		Finished = true;\n"
             ."	}\n"
             ."	if (Finished || HP.sendallclicks){\n"
+            ."		var ForceRedirect = $forceredirect;\n"
             ."		if (ForceQuizStatus || QuizStatus==1){\n"
             ."			// send results immediately\n"
-            ."			HP.onunload(QuizStatus);\n"
+            ."			HP.onunload(QuizStatus, 0, ForceRedirect);\n"
             ."		} else {\n"
             ."			// send results after delay\n"
-            ."			setTimeout('HP.onunload('+QuizStatus+',$flag)', SubmissionTimeout);\n"
+            ."			setTimeout('HP.onunload('+QuizStatus+',$flag,'+ForceRedirect+')', SubmissionTimeout);\n"
             ."		}\n"
             ."	}\n"
         ;
@@ -2371,7 +2386,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
                 $images = array_merge($images, $matches[1]);
             }
 
-            // extract all urls from QuizPort's [square bracket] notation
+            // extract all urls from HotPot's [square bracket] notation
             // e.g. [%sitefiles%/images/screenshot.jpg image 350 265 center]
             $search = '/\['."([^\?\]]*\.(?:jpg|gif|png)(?:\?[^ \t\r\n\]]*)?)".'[^\]]*'.'\]/s';
             if (preg_match_all($search, $this->hotpot->source->filecontents, $matches)) {
