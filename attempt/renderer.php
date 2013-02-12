@@ -917,9 +917,9 @@ class mod_hotpot_attempt_renderer extends mod_hotpot_renderer {
                 break;
 
             //case $this->hotpot->delay3==hotpot::TIME_DISABLE:
-                // results have already been saved
-                //$response = hotpot::HTTP_204_RESPONSE;
-                //break;
+            //    // results have already been saved
+            //    $response = hotpot::HTTP_204_RESPONSE;
+            //    break;
 
             case $this->hotpot->attempt->status==hotpot::STATUS_ABANDONED:
                 // check whether we can continue this attempt
@@ -972,17 +972,16 @@ class mod_hotpot_attempt_renderer extends mod_hotpot_renderer {
         }
 
         if ($response===hotpot::HTTP_204_RESPONSE) {
-            // we need some check here to see if the user is trying to navigate away
-            // from the page in which case we should just die and not send the header
+            // may be better to check to see if the user is trying to navigate away
+            // from the page, in which case we should just die and not send the header
             header("HTTP/1.0 204 No Response");
             // Note: don't use header("Status: 204"); because it can confuse PHP+FastCGI
             // http://moodle.org/mod/forum/discuss.php?d=108330
-            die;
-            // script will die here
-        } else {
-            redirect($response);
-            // script will die here
+            die; // script will die here
         }
+
+        // otherwise, we assume the $response is a URL
+        redirect($response); // script will die here
     }
 
     /////////////////////////////////////////////////////////////////////

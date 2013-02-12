@@ -99,8 +99,8 @@ class hotpot {
     const CONTINUE_RESTARTUNIT      = 3;
     const CONTINUE_ABANDONUNIT      = 4;
 
-    const HTTP_NO_RESPONSE          = false;
-    const HTTP_204_RESPONSE         = true;
+    const HTTP_NO_RESPONSE          = 0; // was false
+    const HTTP_204_RESPONSE         = 1; // was true
 
     const STATUS_INPROGRESS         = 1;
     const STATUS_TIMEDOUT           = 2;
