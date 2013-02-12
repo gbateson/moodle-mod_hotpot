@@ -1505,7 +1505,7 @@ class mod_hotpot_attempt_renderer extends mod_hotpot_renderer {
 
         // convert urls, if any, in the query string
         if ($query) {
-            $search = '/'.'((?:file|src|thesound|mp3)=)([^&]+)(&|$)/is';
+            $search = '/'.'((?:file|song_url|src|thesound|mp3)=)([^&]+)(&|$)/is';
             $callback = array($this, 'convert_url');
             $query = preg_replace_callback($search, $callback, $query);
         }

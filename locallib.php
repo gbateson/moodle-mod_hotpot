@@ -994,12 +994,11 @@ class hotpot {
             // get sourcetype e.g. hp_6_jcloze_xml
             $sourcefile = $this->get_sourcefile();
             if (! $sourcetype = clean_param($this->sourcetype, PARAM_SAFEDIR)) {
-                if ($sourcetype = hotpot::get_sourcetype($sourcefile)) {
-                    $DB->set_field('hotpot', 'sourcetype', $sourcetype, array('id' => $this->id));
-                    $this->sourcetype = $sourcetype;
-                } else {
-                    throw new moodle_exception('missingsourcetype', 'hotpot');
+                if (! $sourcetype = hotpot::get_sourcetype($sourcefile)) {
+                    return null;
                 }
+                $DB->set_field('hotpot', 'sourcetype', $sourcetype, array('id' => $this->id));
+                $this->sourcetype = $sourcetype;
             }
 
             $dir = str_replace('_', '/', $sourcetype);
@@ -1141,11 +1140,13 @@ class hotpot {
      * @return string $subtype
      */
     public function get_outputformat() {
-        if (empty($this->outputformat)) {
-            return $this->get_source()->get_best_outputformat();
-        } else {
+        if ($this->outputformat) {
             return clean_param($this->outputformat, PARAM_SAFEDIR);
         }
+        if ($source = $this->get_source()) {
+            return $source->get_best_outputformat();
+        }
+        return ''; // shouldn't happen !!
     }
 
     /**
@@ -1304,7 +1305,11 @@ class hotpot {
      * @return string $subtype
      */
     public function get_attempt_renderer_subtype() {
-        return 'attempt_'.$this->get_outputformat();
+        if ($outputformat = $this->get_outputformat()) {
+            return 'attempt_'.$outputformat;
+        } else {
+            return ''; // shouldn't happen !!
+        }
     }
 
     /**
