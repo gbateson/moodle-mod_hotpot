@@ -701,7 +701,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
             $substr = preg_replace($search, $replace, $substr, 1);
         }
 
-        $substr = preg_replace($search, $replace, $substr, 1);
+        $str = substr_replace($str, $substr, $start, $length);
     }
 
     /**
@@ -1639,20 +1639,25 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      */
     function get_feedback_teachers()  {
         $context = hotpot_get_context(CONTEXT_COURSE, $this->hotpot->source->courseid);
-        $teachers = get_users_by_capability($context, 'mod/hotpot:grade');
-        if (! $teachers) {
-            return '';
-        }
-        if ($this->hotpot->studentfeedback==hotpot::FEEDBACK_MOODLEMESSAGING) {
-            $detail = 'id';
-        } else {
-            $detail = 'email';
-        }
+        $teachers = get_users_by_capability($context, 'mod/hotpot:reviewallattempts');
+
         $details = array();
-        foreach ($teachers as $teacher) {
-            $details[] = "new Array('".addslashes_js(fullname($teacher))."', '".addslashes_js($teacher->$detail)."')";
+        if (isset($teachers) && count($teachers)) {
+            if ($this->hotpot->studentfeedback==hotpot::FEEDBACK_MOODLEMESSAGING) {
+                $detail = 'id';
+            } else {
+                $detail = 'email';
+            }
+            foreach ($teachers as $teacher) {
+                $details[] = "new Array('".addslashes_js(fullname($teacher))."', '".addslashes_js($teacher->$detail)."')";
+            }
         }
-        return 'new Array('.implode(', ', $details).')';
+
+        if ($details = implode(', ', $details)) {
+            return 'new Array('.$details.')';
+        } else {
+            return ''; // no teachers
+        }
     }
 
     /**
