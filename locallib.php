@@ -1273,7 +1273,9 @@ class hotpot {
         if (is_null($canstart)) {
             if (is_null($this->canstart)) {
                 // set automatically
-                if (! $this->can_attempt()) {
+                if (has_capability('mod/hotpot:preview', $this->context)) {
+                    $this->canstart = true;
+                } else if (! $this->can_attempt()) {
                     $this->canstart = false;
                 } else if ($this->require_isopen()) {
                     $this->canstart = false;
