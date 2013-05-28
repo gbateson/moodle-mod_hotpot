@@ -153,9 +153,11 @@ class mod_hotpot_mod_form extends moodleform_mod {
 
         // legacy field from Moodle 1.9 - it will probably be removed someday
         $mform->addElement('hidden', 'sourcelocation', isset($this->current->sourcelocation) ? $this->current->sourcelocation : 0);
+        $mform->setType('sourcelocation', PARAM_INT);
 
         // Add quiz chain (this setting is not implemented in Moodle 2.0)
         $mform->addElement('hidden', 'quizchain', 0);
+        $mform->setType('quizchain', PARAM_INT);
         //if ($this->is_add()) {
         //    $mform->addElement('selectyesno', 'quizchain', get_string('addquizchain', 'hotpot'));
         //    $mform->setDefault('quizchain', get_user_preferences('hotpot_add_quizchain', 0));
