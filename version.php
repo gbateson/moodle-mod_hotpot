@@ -32,10 +32,5 @@ $module->cron      = 0;
 $module->component = 'mod_hotpot';
 $module->maturity  = MATURITY_STABLE; // = 200
 $module->release   = 'v3.0.62';
-$module->requires  = 2011070100; // Moodle 2.1
+$module->requires  = 2010112400; // Moodle 2.0
 $module->version   = 2010080362;
-
-// actually this module can run on ANY version of Moodle 2.x
-// to get past the moodle.org plugins code sentry, we do this:
-$requires = 'requires';
-$module->$requires = 2010112400; // Moodle 2.0
