@@ -943,7 +943,7 @@ class mod_hotpot_attempt_renderer extends mod_hotpot_renderer {
         }
 
         // if we don't need an exit page, go straight back to the next activity or course page (or retry this hotpot)
-        if ($response==hotpot::HTTP_NO_RESPONSE && empty($this->hotpot->exitpage)) {
+        if (is_int($response) && $response==hotpot::HTTP_NO_RESPONSE && empty($this->hotpot->exitpage)) {
             if ($this->hotpot->require_exitgrade() && $this->hotpot->attempt->score < $this->hotpot->exitgrade) {
                 // score was not good enough, so do automatic retry
                 $response = $this->hotpot->attempt_url();
