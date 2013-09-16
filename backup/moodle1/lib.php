@@ -120,8 +120,6 @@ class moodle1_mod_hotpot_handler extends moodle1_mod_handler {
         $this->moduleid = $currentcminfo['id'];
         $contextid      = $this->converter->get_contextid(CONTEXT_MODULE, $this->moduleid);
 
-        //$data['sourcefile'] = 'http://localhost/19/99/'.$data['sourcefile'];
-
         // set $path, $filepath and $filename
         $is_url = preg_match('|^https?://|', $data['sourcefile']);
         if ($is_url) {
