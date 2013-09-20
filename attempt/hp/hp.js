@@ -302,29 +302,26 @@ function hpQuizAttempt() {
 
             // based on http://www.captain.at/howto-ajax-form-post-request.php
             var useajax = false;
-            if (typeof(window.HP_httpRequest)=='undefined') {
-                window.HP_httpRequest = false;
+            if (typeof(window.HP_xmlHttp)=='undefined') {
+                window.HP_xmlHttp = false;
                 if (this.forceajax || this.redirect==0) {
                     if (window.XMLHttpRequest) { // Mozilla, Safari,...
-                        HP_httpRequest = new XMLHttpRequest();
+                        HP_xmlHttp = new XMLHttpRequest();
                     } else if (window.ActiveXObject) { // IE
                         try {
-                            HP_httpRequest = new ActiveXObject("Msxml2.XMLHTTP");
+                            HP_xmlHttp = new ActiveXObject("Msxml2.XMLHTTP");
                         } catch (e) {
                             try {
-                                HP_httpRequest = new ActiveXObject("Microsoft.XMLHTTP");
+                                HP_xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
                             } catch (e) {
-                                HP_httpRequest = false;
+                                HP_xmlHttp = false;
                             }
                         }
                     }
                 }
-                if (HP_httpRequest) {
-                    useajax = true;
-                }
             }
 
-            if (useajax) {
+            if (HP_xmlHttp) {
                 var parameters = '';
                 var i_max = this.form.elements.length;
                 for (var i=0; i<i_max; i++) {
@@ -338,12 +335,12 @@ function hpQuizAttempt() {
                     }
                     parameters += (parameters=='' ? '' : '&') + obj.name + '=' + escape(value); // encodeURI
                 }
-                HP_httpRequest.onreadystatechange = HP_onreadystatechange;
-                HP_httpRequest.open(this.form.method, this.form.action, true); // ! this.redirect
-                HP_httpRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-                HP_httpRequest.setRequestHeader("Content-length", parameters.length);
-                HP_httpRequest.setRequestHeader("Connection", "close");
-                HP_httpRequest.send(parameters);
+                HP_xmlHttp.onreadystatechange = HP_onreadystatechange;
+                HP_xmlHttp.open(this.form.method, this.form.action, (this.forceajax ? false : true)); // false=SYNNCHRONOUS, true=ASYNCHRONOUS
+                HP_xmlHttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                HP_xmlHttp.setRequestHeader("Content-length", parameters.length);
+                HP_xmlHttp.setRequestHeader("Connection", "close");
+                HP_xmlHttp.send(parameters);
             } else {
                 this.form.submit();
             }
@@ -447,24 +444,24 @@ function hpQuizAttempt() {
  */
 function HP_onreadystatechange() {
     // http://www.webdeveloper.com/forum/showthread.php?t=108334
-    if (! window.HP_httpRequest) {
+    if (! window.HP_xmlHttp) {
         return false;
     }
-    if (HP_httpRequest.readyState==4) {
-        switch (HP_httpRequest.status) {
+    if (HP_xmlHttp.readyState==4) {
+        switch (HP_xmlHttp.status) {
             case 200:
                 // we do not expect to get any real content on this channel
                 // it is probably an error message from the server, so display it
-                document.write(HP_httpRequest.responseText);
+                document.write(HP_xmlHttp.responseText);
                 document.close();
                 break;
             case 204:
                 // the server has fulfilled the request
-                // we can unset the HP_httpRequest object
-                window.HP_httpRequest = null;
+                // we can unset the HP_xmlHttp object
+                window.HP_xmlHttp = null;
                 break;
             default:
-                // alert('Unexpected httpRequest.status: '+HP_httpRequest.status);
+                // alert('Unexpected httpRequest.status: '+HP_xmlHttp.status);
         }
     }
 }
@@ -878,11 +875,8 @@ function pad(i, l) {
  */
 function trim(s) {
     switch (typeof(s)) {
-        case 'string':
-            return s.replace(new RegExp('^\\s+|\\s+$', 'g'), '');
-        case 'undefined':
-            return '';
-        default:
-            return s;
+        case 'string'   : return s.replace(new RegExp('^\\s+|\\s+$', 'g'), '');
+        case 'undefined': return '';
+        default         : return s;
     }
 }

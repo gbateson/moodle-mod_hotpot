@@ -813,7 +813,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
                 //."	}\n"
                 //."	window.onunload = new Function(s + 'if(window.HP){HP.status=$onunload_status;HP.onunload();object_destroy(HP);}return true;');\n"
                 //."\n"
-                ."	window.onunload = function() {\n"
+                ."	window.hotpotunload = function() {\n"
                 ."		if (window.HP) {\n"
                 ."			HP.status=$onunload_status;\n"
                 ."			HP.onunload();\n"
@@ -821,6 +821,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
                 ."		}\n"
                 ."		return true;\n"
                 ."	}\n"
+                ."	window.onunload = hotpotunload;\n"
                 ."\n"
             ;
             $substr = substr_replace($substr, $append, $pos, 0);

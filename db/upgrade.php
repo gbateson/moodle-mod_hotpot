@@ -752,6 +752,11 @@ function xmldb_hotpot_upgrade($oldversion) {
                 $DB->set_field('hotpot', 'sourcefile', $sourcefile, array('id' => $hotpot->id));
             }
         }
+        upgrade_mod_savepoint(true, "$newversion", 'hotpot');
+    }
+
+    $newversion = 2010080368;
+    if ($oldversion < $newversion) {
         $empty_cache = true;
         upgrade_mod_savepoint(true, "$newversion", 'hotpot');
     }

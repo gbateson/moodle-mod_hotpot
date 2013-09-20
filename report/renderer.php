@@ -248,12 +248,12 @@ class mod_hotpot_report_renderer extends mod_hotpot_renderer {
 
         // add user table if needed
         if ($require_usertable && strpos($from, '{user}')===false) {
-            $from   .= ', {user} u';
+            $from .= ' JOIN {user} u ON ha.userid = u.id';
         }
 
         // add attempt table if needed
         if ($require_attempttable && strpos($from, '{hotpot_attempts}')===false) {
-            $from  .= ', {hotpot_attempts} ha';
+            $from = '{hotpot_attempts} ha '.$from;
         }
 
         // join to grade tables if necessary
@@ -263,12 +263,16 @@ class mod_hotpot_report_renderer extends mod_hotpot_renderer {
             // grade tables are required, but missing, so add them to $from
             // the "gg" table alias is added by the "set_sql()" method of this class
             // or the "get_sql_filter_attempts()" method of the hotpot "grade" filter
-            $from   .= ', {grade_items} gi, {grade_grades} gg';
-            $where  .= ' AND ha.userid=gg.userid AND gg.itemid=gi.id'.
-                       ' AND gi.courseid=:courseid AND gi.itemtype=:itemtype'.
-                       ' AND gi.itemmodule=:itemmodule AND gi.iteminstance=:iteminstance';
-            $params += array('courseid' => $this->hotpot->course->id, 'itemtype' => 'mod',
-                             'itemmodule' => 'hotpot', 'iteminstance' => $this->hotpot->id);
+            $from   .= ' JOIN {grade_items} gi ON gi.courseid = :courseid'.
+                                            ' AND gi.itemtype = :itemtype'.
+                                            ' AND gi.itemmodule = :itemmodule'.
+                                            ' AND gi.iteminstance = :iteminstance'.
+                       ' LEFT JOIN {grade_grades} gg ON gg.itemid = gi.id'.
+                                                 '  AND gg.userid = ha.userid';
+            $params += array('courseid' => $this->hotpot->course->id,
+                             'itemtype' => 'mod',
+                             'itemmodule' => 'hotpot',
+                             'iteminstance' => $this->hotpot->id);
         }
 
         return array($select, $from, $where, $params);
@@ -318,7 +322,8 @@ class mod_hotpot_report_renderer extends mod_hotpot_renderer {
         }
 
         // sql to select all attempts at this HotPot (and Moodle grade)
-        $select = 'ha.*, (ha.timemodified - ha.timestart) AS duration, '.$select_questions.' ROUND(gg.rawgrade, 0) AS grade';
+        $round_grade = '(CASE WHEN gg.rawgrade IS NULL THEN 0 ELSE ROUND(gg.rawgrade, 0) END)';
+        $select = 'ha.*, (ha.timemodified - ha.timestart) AS duration,'.$select_questions." $round_grade AS grade";
         $from   = '{hotpot_attempts} ha';
         $where  = 'ha.hotpotid=:hotpotid';
         $params = array('hotpotid' => $this->hotpot->id);

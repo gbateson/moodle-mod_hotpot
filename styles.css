@@ -62,6 +62,7 @@ body.path-course-view div.hotpotrecentactivity ul {font-size: 0.8em; margin: 0em
 #page-mod-hotpot-report table#attempts {clear: both; margin-left: auto; margin-right: auto;}
 #page-mod-hotpot-report table#attempts.analysis td.c0 {font-weight: bold;}
 #page-mod-hotpot-report table#attempts.analysis td.c0:after {content: ":"}
+#page-mod-hotpot-report table.flexible tr.emptyrow { display: none; }
 /* ================= */
 #page-mod-hotpot-report #page-content {overflow:visible;}
 #page-mod-hotpot-report #page-content #region-main-box #region-post-box #region-main-wrap #region-main {overflow:visible;}

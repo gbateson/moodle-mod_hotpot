@@ -1499,7 +1499,7 @@ class hotpot {
             }
 
             // set previous "in progress" attempt(s) to adandoned
-            $select = 'hotpotid=? AND userid=? AND attempt<=? AND status=?';
+            $select = 'hotpotid=? AND userid=? AND attempt<? AND status=?';
             $params = array($this->id, $USER->id, $max_attempt, self::STATUS_INPROGRESS);
             if ($attempts = $DB->get_records_select('hotpot_attempts', $select, $params)) {
                 foreach ($attempts as $attempt) {
