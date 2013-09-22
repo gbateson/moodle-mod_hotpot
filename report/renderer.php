@@ -248,7 +248,7 @@ class mod_hotpot_report_renderer extends mod_hotpot_renderer {
 
         // add user table if needed
         if ($require_usertable && strpos($from, '{user}')===false) {
-            $from .= ' JOIN {user} u ON ha.userid = u.id';
+            $from .= ' INNER JOIN {user} u ON ha.userid = u.id';
         }
 
         // add attempt table if needed
@@ -263,10 +263,12 @@ class mod_hotpot_report_renderer extends mod_hotpot_renderer {
             // grade tables are required, but missing, so add them to $from
             // the "gg" table alias is added by the "set_sql()" method of this class
             // or the "get_sql_filter_attempts()" method of the hotpot "grade" filter
-            $from   .= ' JOIN {grade_items} gi ON gi.courseid = :courseid'.
-                                            ' AND gi.itemtype = :itemtype'.
-                                            ' AND gi.itemmodule = :itemmodule'.
-                                            ' AND gi.iteminstance = :iteminstance'.
+            // Note that we expect that there will always be a "grade_items" record
+            // but there may not necessarily be a "grade_grades" record
+            $from   .= ' INNER JOIN {grade_items} gi ON gi.courseid = :courseid'.
+                                                  ' AND gi.itemtype = :itemtype'.
+                                                  ' AND gi.itemmodule = :itemmodule'.
+                                                  ' AND gi.iteminstance = :iteminstance'.
                        ' LEFT JOIN {grade_grades} gg ON gg.itemid = gi.id'.
                                                  '  AND gg.userid = ha.userid';
             $params += array('courseid' => $this->hotpot->course->id,
