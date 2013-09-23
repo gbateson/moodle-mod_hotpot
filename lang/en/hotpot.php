@@ -564,3 +564,8 @@ $string['weighting'] = 'Weighting';
 $string['wrong'] = 'Wrong';
 $string['zeroduration'] = 'No duration';
 $string['zeroscore'] = 'Zero score';
+
+$string['reviewduringattempt'] = 'Allow review during attempt';
+$string['reviewafterattempt'] = 'Allow review after attempt';
+$string['reviewafterclose'] = 'Allow review after HotPot closes';
+$string['reviewoptions'] = 'Review options';

@@ -761,6 +761,23 @@ function xmldb_hotpot_upgrade($oldversion) {
         upgrade_mod_savepoint(true, "$newversion", 'hotpot');
     }
 
+    $newversion = 2010080370;
+    if ($oldversion < $newversion) {
+        require_once($CFG->dirroot.'/mod/hotpot/locallib.php');
+
+        $reviewoptions = 0;
+        list($times, $items) = hotpot::reviewoptions_times_items();
+        foreach ($times as $timename => $timevalue) {
+            foreach ($items as $itemname => $itemvalue) {
+                $reviewoptions += ($timevalue & $itemvalue);
+            }
+        }
+        // $reviewoptions should now be set to 62415
+        $DB->set_field('hotpot', 'reviewoptions', $reviewoptions);
+
+        upgrade_mod_savepoint(true, "$newversion", 'hotpot');
+    }
+
     if ($empty_cache) {
         $DB->delete_records('hotpot_cache');
     }

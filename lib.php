@@ -323,6 +323,21 @@ function hotpot_process_formdata(stdclass &$data, $mform) {
         }
     }
 
+    // set review options
+    $data->reviewoptions = 0;
+    list($times, $items) = hotpot::reviewoptions_times_items();
+    foreach ($times as $timename => $timevalue) {
+        foreach ($items as $itemname => $itemvalue) {
+            $name = $timename.$itemname; // e.g. duringattemptresponses
+            if (isset($data->$name)) {
+                if ($data->$name) {
+                    $data->reviewoptions += ($timevalue & $itemvalue);
+                }
+                unset($data->$name);
+            }
+        }
+    }
+
     // save these form settings as user preferences
     $preferences = array();
     foreach (hotpot::user_preferences_fieldnames() as $fieldname) {

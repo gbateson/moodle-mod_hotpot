@@ -384,13 +384,39 @@ class mod_hotpot_mod_form extends moodleform_mod {
         $mform->disabledIf('delay3specific[timeunit]', 'delay3', 'ne', hotpot::TIME_SPECIFIC);
 
         // Allow review?
-        $mform->addElement('selectyesno', 'allowreview', get_string('allowreview', 'hotpot'));
-        $mform->setDefault('allowreview', get_user_preferences('hotpot_review', 1));
-        $mform->addHelpButton('allowreview', 'allowreview', 'hotpot');
-        $mform->setAdvanced('allowreview');
+        //$mform->addElement('selectyesno', 'allowreview', get_string('allowreview', 'hotpot'));
+        //$mform->setDefault('allowreview', get_user_preferences('hotpot_review', 1));
+        //$mform->addHelpButton('allowreview', 'allowreview', 'hotpot');
+        //$mform->setAdvanced('allowreview');
+
+        // Review options -------------------------------------------------------------
+        $mform->addElement('header', 'reviewoptionshdr', get_string('reviewoptions', 'hotpot'));
+        //-----------------------------------------------------------------------------
+
+        list($times, $items) = hotpot::reviewoptions_times_items();
+        foreach ($times as $timename => $timevalue) {
+            $elements = array();
+            foreach ($items as $itemname => $itemvalue) {
+                $name = $timename.$itemname; // e.g. duringattemptresponses
+                $elements[] = &$mform->createElement('checkbox', $name, '', get_string($itemname, 'quiz'));
+                $mform->setType($name, PARAM_INT);
+            }
+
+            $id = 'fgroup_id_'.$timename.'_elements';
+            $text = '';
+            $text .= html_writer::tag('a', get_string('all'), array('onclick' => 'select_all_in("DIV", "fitem", "'.$id.'")'));
+            $text .= ' / ';
+            $text .= html_writer::tag('a', get_string('none'), array('onclick' => 'deselect_all_in("DIV", "fitem", "'.$id.'")'));
+            $elements[] = &$mform->createElement('static', '', '', html_writer::tag('span', $text));
+
+            $mform->addGroup($elements, $timename.'_elements', get_string('review'.$timename, 'hotpot'), null, false);
+            if ($timename=='afterclose') {
+                $mform->disabledIf('afterclose_elements', 'timeclose[off]', 'checked');
+            }
+        }
 
         // Security -------------------------------------------------------------------
-        $mform->addElement('header', 'security', get_string('extraattemptrestrictions', 'quiz'));
+        $mform->addElement('header', 'securityhdr', get_string('extraattemptrestrictions', 'quiz'));
         //-----------------------------------------------------------------------------
 
         // Maximum number of attempts
@@ -701,6 +727,19 @@ class mod_hotpot_mod_form extends moodleform_mod {
                 $data['stopbutton_yesno'] = 0;
                 $data['stopbutton_type'] = '';
                 $data['stopbutton_text'] = '';
+        }
+
+        // set review options
+        if (empty($data['reviewoptions'])) {
+            $default = 0;
+        } else {
+            $default = $data['reviewoptions'];
+        }
+        list($times, $items) = hotpot::reviewoptions_times_items();
+        foreach ($times as $timename => $timevalue) {
+            foreach ($items as $itemname => $itemvalue) {
+                $data[$timename.$itemname] = min(1, $default & $timevalue & $itemvalue);
+            }
         }
     }
 

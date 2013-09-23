@@ -489,11 +489,11 @@ class hotpot_report_table extends table_sql {
      * format_review_link
      *
      * @param xxx $text
-     * @param xxx $attemptid
+     * @param xxx $row from hotpot_attempts table
      * @return xxx
      */
     function format_review_link($text, $row)  {
-        if (strlen($text) && $this->output->hotpot->can_reviewattempts()) {
+        if (strlen($text) && $this->output->hotpot->can_reviewattempt($row)) {
             $url = $this->output->hotpot->review_url($row);
             $text = html_writer::link($url, $text);
         }

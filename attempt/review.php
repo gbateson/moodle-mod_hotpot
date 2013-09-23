@@ -85,12 +85,7 @@ class mod_hotpot_attempt_review {
      *
      * @return boolean true if attempt can be reviewed, otherwise false
      */
-    static function can_reviewattempts()  {
-        return self::provide_review();
-
-        // when $hotpot->reviewoptions are implemented,
-        // we can do something like the following ...
-
+    static function can_reviewattempt($attempt=null)  {
         if (self::provide_review() && $hotpot->reviewoptions) {
             if ($attempt = $hotpot->get_attempt()) {
                 if ($hotpot->reviewoptions & hotpot::REVIEW_DURINGATTEMPT) {
@@ -130,7 +125,7 @@ class mod_hotpot_attempt_review {
 
         // for the time-being we set this setting manually here
         // but one day it will be settable in "mod/hotpot/mod_form.php"
-        $hotpot->reviewoptions = hotpot::REVIEW_DURINGATTEMPT | hotpot::REVIEW_AFTERATTEMPT | hotpot::REVIEW_AFTERCLOSE;
+        //$hotpot->reviewoptions = hotpot::REVIEW_DURINGATTEMPT | hotpot::REVIEW_AFTERATTEMPT | hotpot::REVIEW_AFTERCLOSE;
 
         // set $reviewoptions to relevant part of $hotpot->reviewoptions
         $reviewoptions = 0;

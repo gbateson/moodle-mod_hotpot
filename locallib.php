@@ -727,6 +727,27 @@ class hotpot {
     }
 
     /**
+     * reviewoptions_timesitems
+     *
+     * @return xxx
+     */
+    public static function reviewoptions_times_items() {
+        return array(
+            array( // times
+                'duringattempt' => self::REVIEW_DURINGATTEMPT,
+                'afterattempt'  => self::REVIEW_AFTERATTEMPT,
+                'afterclose'    => self::REVIEW_AFTERCLOSE
+            ),
+            array( // items
+                'responses'     => self::REVIEW_RESPONSES,
+                'answers'       => self::REVIEW_ANSWERS,
+                'scores'        => self::REVIEW_SCORES,
+                'feedback'      => self::REVIEW_FEEDBACK
+            )
+        );
+    }
+
+    /**
      * user_preferences_fields
      *
      * @return array of user_preferences used by the HotPot module
@@ -1250,6 +1271,48 @@ class hotpot {
         }
         return $this->canreviewmyattempts;
     }
+
+    /**
+     * can_reviewattempt
+     *
+     * @param xxx $attempt record from "hotpot_attempts" table
+     * @return xxx
+     */
+    function can_reviewattempt($attempt) {
+        if ($this->can_reviewattempts()) {
+            if ($attempt) {
+                if ($this->reviewoptions & self::REVIEW_DURINGATTEMPT) {
+                    // during attempt
+                    if ($attempt->status==self::STATUS_INPROGRESS) {
+                        return true;
+                    }
+                }
+                if ($this->reviewoptions & self::REVIEW_AFTERATTEMPT) {
+                    // after attempt (but before quiz closes)
+                    if ($attempt->status==self::STATUS_COMPLETED) {
+                        return true;
+                    }
+                    if ($attempt->status==self::STATUS_ABANDONED) {
+                        return true;
+                    }
+                    if ($attempt->status==self::STATUS_TIMEDOUT) {
+                        return true;
+                    }
+                    if ($attempt->status==self::STATUS_INPROGRESS) {
+                        return true;
+                    }
+                }
+                if ($this->reviewoptions & self::REVIEW_AFTERCLOSE) {
+                    // after the quiz closes
+                    if ($this->timeclose < $this->time) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
 
     /**
      * can_view

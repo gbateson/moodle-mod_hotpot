@@ -1665,7 +1665,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * fix_reviewoptions
      */
     function fix_reviewoptions()  {
-        // enable / disable review options
+        // enable/disable review options
     }
 
     /**
