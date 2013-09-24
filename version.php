@@ -32,13 +32,5 @@ $module->cron      = 0;
 $module->component = 'mod_hotpot';
 $module->maturity  = MATURITY_STABLE; // = 200
 $module->release   = 'v3.0.71';
-$module->requires  = 2010112400; // 2011070100; // Moodle 2.1
+$module->requires  = 2010112400; // Moodle 2.0
 $module->version   = 2010080371;
-
-// actually this version of the HotPot module can run on
-// *any* version of Moodle 2.x, starting from Moodle 2.0
-$name = 'requ'.'ires';
-$value = 2010112400; // Moodle 2.0
-if (isset($CFG->version) && $CFG->version < $module->$name && $CFG->version > $value) {
-    $module->$name = $value;
-}
