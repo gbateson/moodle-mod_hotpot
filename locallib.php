@@ -1275,42 +1275,75 @@ class hotpot {
     /**
      * can_reviewattempt
      *
-     * @param xxx $attempt record from "hotpot_attempts" table
-     * @return xxx
+     * @param object $attempt (optional, default=null) record from "hotpot_attempts" table
+     * @return integer $reviewoptions currently available for this user at this attempt
      */
-    function can_reviewattempt($attempt) {
+    function can_reviewhotpot() {
+        if ($this->can_reviewallattempts()) {
+            // teacher can view always review everything
+            return (self::REVIEW_DURINGATTEMPT | self::REVIEW_AFTERATTEMPT | self::REVIEW_AFTERCLOSE);
+        }
+        if ($this->can_reviewmyattempts()) {
+            if ($this->timeclose && $this->timeclose > $this->time) {
+                // quiz is still open
+                if ($reviewoptions = ($this->reviewoptions & self::REVIEW_DURINGATTEMPT)) {
+                    return $reviewoptions;
+                }
+                if ($reviewoptions = ($this->reviewoptions & self::REVIEW_AFTERATTEMPT)) {
+                    return $reviewoptions;
+                }
+            } else {
+                // quiz is already closed
+                if ($reviewoptions = $this->reviewoptions & self::REVIEW_AFTERCLOSE) {
+                    return $reviewoptions;
+                }
+            }
+        }
+        return 0; // review not available (to this user)
+    }
+
+    /**
+     * can_reviewattempt
+     *
+     * @param object $attempt (optional, default=null) record from "hotpot_attempts" table
+     * @return integer $reviewoptions currently available for this user at this attempt
+     */
+    function can_reviewattempt($attempt=null) {
         if ($this->can_reviewattempts()) {
+            if ($attempt===null && isset($this->attempt)) {
+                $attempt = $this->attempt;
+            }
             if ($attempt) {
-                if ($this->reviewoptions & self::REVIEW_DURINGATTEMPT) {
+                if ($reviewoptions = ($this->reviewoptions & self::REVIEW_DURINGATTEMPT)) {
                     // during attempt
                     if ($attempt->status==self::STATUS_INPROGRESS) {
-                        return true;
+                        return $reviewoptions;
                     }
                 }
-                if ($this->reviewoptions & self::REVIEW_AFTERATTEMPT) {
+                if ($reviewoptions = ($this->reviewoptions & self::REVIEW_AFTERATTEMPT)) {
                     // after attempt (but before quiz closes)
                     if ($attempt->status==self::STATUS_COMPLETED) {
-                        return true;
+                        return $reviewoptions;
                     }
                     if ($attempt->status==self::STATUS_ABANDONED) {
-                        return true;
+                        return $reviewoptions;
                     }
                     if ($attempt->status==self::STATUS_TIMEDOUT) {
-                        return true;
+                        return $reviewoptions;
                     }
                     if ($attempt->status==self::STATUS_INPROGRESS) {
-                        return true;
+                        return $reviewoptions;
                     }
                 }
-                if ($this->reviewoptions & self::REVIEW_AFTERCLOSE) {
+                if ($reviewoptions = ($this->reviewoptions & self::REVIEW_AFTERCLOSE)) {
                     // after the quiz closes
                     if ($this->timeclose < $this->time) {
-                        return true;
+                        return $reviewoptions;
                     }
                 }
             }
         }
-        return false;
+        return 0;
     }
 
 

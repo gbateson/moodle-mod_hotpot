@@ -427,7 +427,12 @@ $string['removegradeitem_help'] = 'Should the grade item for this activity be re
 
 **Yes**
 : If the maximum grade or the grade weighting for this HotPot is set to zero, then the grade item for this activity will be removed from the Moodle gradebook';
+$string['responses'] = 'Responses';
 $string['responsesreport'] = 'Responses';
+$string['reviewafterattempt'] = 'Allow review after attempt';
+$string['reviewafterclose'] = 'Allow review after HotPot closes';
+$string['reviewduringattempt'] = 'Allow review during attempt';
+$string['reviewoptions'] = 'Review options';
 $string['score'] = 'Score';
 $string['scoresreport'] = 'Scores';
 $string['selectattempts'] = 'Select attempts';
@@ -564,8 +569,3 @@ $string['weighting'] = 'Weighting';
 $string['wrong'] = 'Wrong';
 $string['zeroduration'] = 'No duration';
 $string['zeroscore'] = 'Zero score';
-
-$string['reviewduringattempt'] = 'Allow review during attempt';
-$string['reviewafterattempt'] = 'Allow review after attempt';
-$string['reviewafterclose'] = 'Allow review after HotPot closes';
-$string['reviewoptions'] = 'Review options';

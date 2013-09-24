@@ -31,9 +31,9 @@ defined('MOODLE_INTERNAL') || die();
 $module->cron      = 0;
 $module->component = 'mod_hotpot';
 $module->maturity  = MATURITY_STABLE; // = 200
-$module->release   = 'v3.0.70';
-$module->requires  = 2011070100; // Moodle 2.1
-$module->version   = 2010080370;
+$module->release   = 'v3.0.71';
+$module->requires  = 2010112400; // 2011070100; // Moodle 2.1
+$module->version   = 2010080371;
 
 // actually this version of the HotPot module can run on
 // *any* version of Moodle 2.x, starting from Moodle 2.0

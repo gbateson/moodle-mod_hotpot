@@ -127,47 +127,40 @@ class mod_hotpot_attempt_review {
         // but one day it will be settable in "mod/hotpot/mod_form.php"
         //$hotpot->reviewoptions = hotpot::REVIEW_DURINGATTEMPT | hotpot::REVIEW_AFTERATTEMPT | hotpot::REVIEW_AFTERCLOSE;
 
-        // set $reviewoptions to relevant part of $hotpot->reviewoptions
-        $reviewoptions = 0;
-        if ($hotpot->can_reviewallattempts()) {
-            // teacher can always review (anybody's) quiz attempts
-            $reviewoptions = (hotpot::REVIEW_AFTERATTEMPT | hotpot::REVIEW_AFTERCLOSE);
-        } else if ($hotpot->timeclose && $hotpot->timeclose > $hotpot->time) {
-            // quiz is closed
-            if ($hotpot->reviewoptions & hotpot::REVIEW_AFTERCLOSE) {
-                // user can review quiz attempt after quiz closes
-                $reviewoptions = ($hotpot->reviewoptions & hotpot::REVIEW_AFTERCLOSE);
-            } else if ($hotpot->reviewoptions & hotpot::REVIEW_AFTERATTEMPT) {
-                return get_string('noreviewbeforeclose', 'hotpot', userdate($hotpot->timeclose));
+        // the $hotpot should already have the $attempt attached to it
+        if (! $reviewoptions = $hotpot->can_reviewattempt()) {
+            // oops, we are not allowed to review this $hotpot->attempt
+            if ($hotpot->timeclose && $hotpot->timeclose > $hotpot->time) {
+                // quiz is closed
+                if ($hotpot->reviewoptions & hotpot::REVIEW_AFTERATTEMPT) {
+                    return get_string('noreviewbeforeclose', 'hotpot', userdate($hotpot->timeclose));
+                }
             } else {
-                return get_string('noreview', 'hotpot');
+                // quiz is still open
+                if ($hotpot->reviewoptions & hotpot::REVIEW_AFTERCLOSE) {
+                    return get_string('noreviewafterclose', 'hotpot');
+                }
             }
-        } else {
-            // quiz is still open
-            if ($hotpot->reviewoptions & hotpot::REVIEW_AFTERATTEMPT) {
-                // user can review quiz attempt while quiz is open
-                $reviewoptions = ($hotpot->reviewoptions & hotpot::REVIEW_AFTERATTEMPT);
-            } else if ($hotpot->reviewoptions & hotpot::REVIEW_AFTERCLOSE) {
-                return get_string('noreviewafterclose', 'hotpot');
-            } else {
-                return get_string('noreview', 'hotpot');
-            }
+            return get_string('noreview', 'hotpot');
         }
+
+        // we need to know if this user can review all attempts (i.e. a "teacher")
+        $reviewallattempts = $hotpot->can_reviewallattempts();
 
         // if necessary, remove score and weighting fields
         $response_num_fields = call_user_func(array($class, 'response_num_fields'));
-        if (! ($reviewoptions & hotpot::REVIEW_SCORES)) {
+        if (! ($reviewallattempts || $reviewoptions & hotpot::REVIEW_SCORES)) {
             $response_num_fields = preg_grep('/^score|weighting$/', $response_num_fields, PREG_GREP_INVERT);
         }
 
         // if necessary, remove reponses fields
         $response_text_fields = call_user_func(array($class, 'response_text_fields'));
-        if (! ($reviewoptions & hotpot::REVIEW_RESPONSES)) {
+        if (! ($reviewallattempts || $reviewoptions & hotpot::REVIEW_RESPONSES)) {
             $response_text_fields = array();
         }
 
         // set flag to remove, if necessary, labels that show whether responses are correct or not
-        if (! ($reviewoptions & hotpot::REVIEW_ANSWERS)) {
+        if (! ($reviewallattempts || $reviewoptions & hotpot::REVIEW_ANSWERS)) {
             $neutralize_text_fields = true;
         } else {
             $neutralize_text_fields = false;

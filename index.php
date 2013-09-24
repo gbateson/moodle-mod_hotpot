@@ -137,22 +137,39 @@ foreach ($hotpots as $hotpot) {
     $text = html_writer::tag('a', $hotpot->name, $params);
     $row->cells[] = new html_table_cell($text);
 
+    // Create an object to represent this attempt at the current HotPot activity
+    $cm = get_coursemodule_from_instance('hotpot', $hotpot->id, $course->id, false, MUST_EXIST);
+    $hotpot = hotpot::create($hotpot, $cm, $course, $PAGE->context);
+
     if (empty($aggregates[$hotpot->id]) || empty($aggregates[$hotpot->id]->attemptcount)) {
         $row->cells[] = new html_table_cell('0'); // average score
         $row->cells[] = new html_table_cell('0'); // max score
         $row->cells[] = new html_table_cell('&nbsp;'); // reports
     } else {
-        $href = new moodle_url('/mod/hotpot/report.php', array('id' => $hotpot->coursemodule));
+        $reviewoptions = $hotpot->can_reviewhotpot();
+
+        $href = new moodle_url('/mod/hotpot/report.php', array('id' => $hotpot->cm->id));
         $params = array('href' => $href, 'class' => $class);
 
-        $text = html_writer::tag('a', $aggregates[$hotpot->id]->maxscore, $params);
+        $text = $aggregates[$hotpot->id]->maxscore;
+        if ($reviewoptions) {
+            $text = html_writer::tag('a', $text, $params);
+        }
         $row->cells[] = new html_table_cell($text);
 
-        $text = html_writer::tag('a', $aggregates[$hotpot->id]->averagescore, $params);
+        $text = $aggregates[$hotpot->id]->averagescore;
+        if ($reviewoptions) {
+            $text = html_writer::tag('a', $text, $params);
+        }
         $row->cells[] = new html_table_cell($text);
 
-        $text = get_string('viewreports', 'hotpot', $aggregates[$hotpot->id]->usercount);
-        $text = html_writer::tag('a', $text, $params);
+        if ($reviewoptions) {
+            $text = $aggregates[$hotpot->id]->usercount;
+            $text = get_string('viewreports', 'hotpot', $text);
+            $text = html_writer::tag('a', $text, $params);
+        } else {
+            $text = '&nbsp;';
+        }
         $row->cells[] = new html_table_cell($text);
     }
 
