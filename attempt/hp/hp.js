@@ -336,7 +336,7 @@ function hpQuizAttempt() {
                     parameters += (parameters=='' ? '' : '&') + obj.name + '=' + escape(value); // encodeURI
                 }
                 HP_xmlHttp.onreadystatechange = HP_onreadystatechange;
-                HP_xmlHttp.open(this.form.method, this.form.action, (this.forceajax ? false : true)); // false=SYNNCHRONOUS, true=ASYNCHRONOUS
+                HP_xmlHttp.open(this.form.method, this.form.action, (this.forceajax ? false : true)); // false=SYNCHRONOUS, true=ASYNCHRONOUS
                 HP_xmlHttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
                 HP_xmlHttp.send(parameters);
             } else {

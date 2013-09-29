@@ -755,12 +755,6 @@ function xmldb_hotpot_upgrade($oldversion) {
         upgrade_mod_savepoint(true, "$newversion", 'hotpot');
     }
 
-    $newversion = 2010080368;
-    if ($oldversion < $newversion) {
-        $empty_cache = true;
-        upgrade_mod_savepoint(true, "$newversion", 'hotpot');
-    }
-
     $newversion = 2010080370;
     if ($oldversion < $newversion) {
         require_once($CFG->dirroot.'/mod/hotpot/locallib.php');
@@ -775,6 +769,12 @@ function xmldb_hotpot_upgrade($oldversion) {
         // $reviewoptions should now be set to 62415
         $DB->set_field('hotpot', 'reviewoptions', $reviewoptions);
 
+        upgrade_mod_savepoint(true, "$newversion", 'hotpot');
+    }
+
+    $newversion = 2010080372;
+    if ($oldversion < $newversion) {
+        $empty_cache = true;
         upgrade_mod_savepoint(true, "$newversion", 'hotpot');
     }
 
