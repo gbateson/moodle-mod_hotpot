@@ -932,9 +932,9 @@ class mod_hotpot_attempt_hp_6_jquiz_xml_v6_autoadvance_renderer extends mod_hotp
         $search = '	if (AllDone == true){';
         if ($pos = strpos($substr, $search)) {
             $insert = ''
-                ."	if (typeof(ForceQuizStatus)=='undefined') {\n"
+                ."	if (typeof(ForceQuizEvent)=='undefined') {\n"
                 ."		if (maximumWrong && CountWrong > maximumWrong) {\n"
-                ."			ForceQuizStatus = 3;\n"
+                ."			ForceQuizEvent = 3;\n"
                 ."		}\n"
                 ."		if (TotalWeighting > 0) {\n"
                 ."			BestPossibleScore = Math.floor((BestPossibleScore/TotalWeighting)*100);\n"
@@ -942,7 +942,7 @@ class mod_hotpot_attempt_hp_6_jquiz_xml_v6_autoadvance_renderer extends mod_hotp
                 ."			BestPossibleScore = 100;\n"
                 ."		}\n"
                 ."		if (minimumScore && BestPossibleScore < minimumScore) {\n"
-                ."			ForceQuizStatus = 3;\n"
+                ."			ForceQuizEvent = 3;\n"
                 ."		}\n"
                 ."	}\n"
             ;

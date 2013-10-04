@@ -105,7 +105,7 @@ class mod_hotpot_attempt_hp_6_rhubarb_renderer extends mod_hotpot_attempt_hp_6_r
             }
             $insert = ''
                 ."	Finished = true;\n"
-                ."	HP.onunload(".hotpot::STATUS_TIMEDOUT.",$flag);\n"
+                ."	HP_send_results(HP.EVENT_TIMEDOUT);\n"
             ;
             $substr = substr_replace($substr, $insert, $pos, 0);
         }

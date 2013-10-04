@@ -328,20 +328,15 @@ class mod_hotpot_attempt_hp_renderer extends mod_hotpot_attempt_renderer {
                 $onbeforeunload = ''; // shouldn't happen !!
         }
         if ($onbeforeunload) {
-            $onunload_status = hotpot::STATUS_INPROGRESS;
-            $search = "/(\s*)window\.(?:hotpot|on)unload = function/s";
+            $search = "/(\s*)window\.(?:hotpot|on)unload = /s";
             $replace = ''
                 .'$1'."window.hotpotbeforeunload = function() {"
-                .'$1'."	if (window.HP) {"
-                .'$1'."		HP.onunload();"
-                .'$1'."	}"
                 .'$1'."	return '".$this->hotpot->source->js_value_safe($onbeforeunload, true)."';"
                 .'$1'."}"
                 .'$1'."if (window.opera) {"
                 .'$1'."	opera.setOverrideHistoryNavigationMode('compatible');"
                 .'$1'."	history.navigationMode = 'compatible';"
                 .'$1'."}"
-                .'$1'."window.onbeforeunload = hotpotbeforeunload;"
                 .'$0'
             ;
             $this->headcontent = preg_replace($search, $replace, $this->headcontent, 1);
@@ -918,5 +913,18 @@ class mod_hotpot_attempt_hp_renderer extends mod_hotpot_attempt_renderer {
         }
 
         return $url;
+    }
+
+    /**
+     * get_send_results_flag
+     *
+     * @return string
+     */
+    function get_send_results_event() {
+        if ($this->hotpot->delay3==hotpot::TIME_AFTEROK) {
+            return 'HP.EVENT_SETVALUES';
+        } else {
+            return 'HP.EVENT_COMPLETED';
+        }
     }
 }

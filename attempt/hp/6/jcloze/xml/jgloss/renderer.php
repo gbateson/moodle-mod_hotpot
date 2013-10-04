@@ -94,7 +94,7 @@ class mod_hotpot_attempt_hp_6_jcloze_xml_jgloss_renderer extends mod_hotpot_atte
      * @return xxx
      */
     function get_stop_function_name()  {
-        return 'HP.onunload';
+        return 'HP_send_results';
     }
 
     /**
@@ -103,6 +103,6 @@ class mod_hotpot_attempt_hp_6_jcloze_xml_jgloss_renderer extends mod_hotpot_atte
      * @return xxx
      */
     function get_stop_function_args()  {
-        return hotpot::STATUS_COMPLETED;
+        return 'HP.EVENT_COMPLETED';
     }
 }

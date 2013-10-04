@@ -931,7 +931,8 @@ class mod_hotpot_attempt_renderer extends mod_hotpot_renderer {
                     default: $response = false; // shouldn't happen !!
                 }
                 if ($response) {
-                    $response = $this->hotpot->view_url();
+                    //$response = $this->hotpot->view_url();
+                    $response = hotpot::HTTP_NO_RESPONSE;
                 } else {
                     $response = hotpot::HTTP_NO_RESPONSE;
                 }
@@ -1218,17 +1219,33 @@ class mod_hotpot_attempt_renderer extends mod_hotpot_renderer {
                 ."	obj[onevent] = new Function('var onevent=\"'+onevent+'\"; for (var i=0; i<this.evts[onevent].length; i++) this.evts[onevent][i]();');\n"
                 ."}\n"
 
-                ."function set_onpaste(obj, truefalse) {\n"
-                ."	obj.ondrop = new Function('return ' + truefalse);\n"
-                ."	obj.onpaste = new Function('return ' + truefalse);\n"
+                // required for HP_send_results in "mod/hotpot/attempt/hp/hp.js"
+                ."function set_onfocus(obj) {\n"
+                ."	obj.onfocus = HP_send_results;\n"
+                ."	//obj.onkeydown = HP_send_results;\n"
+                ."	//obj.onmousedown = HP_send_results;\n"
                 ."}\n"
 
-                ."function set_onpaste_input(obj, truefalse) {\n"
+                ."function set_onpaste(obj, allowpaste) {\n"
+                ."	obj.ondrop = new Function('return ' + allowpaste);\n"
+                ."	obj.onpaste = new Function('return ' + allowpaste);\n"
+                ."}\n"
+
+                // By default, pasting of answers is NOT allowed.
+                // To allow it: window.allow_paste_input = true;
+                ."function setup_input_and_textarea() {\n"
+                ."	if (window.allow_paste_input) {\n"
+                ."		var allowpaste = 'true';\n"
+                ."	} else {\n"
+                ."		var allowpaste = 'false';\n"
+                ."	}\n"
                 ."	var obj = document.getElementsByTagName('input');\n"
                 ."	if (obj) {\n"
-                ."		for (var i=0; i<obj.length; i++) {\n"
+                ."		var i_max = obj.length;\n"
+                ."		for (var i=0; i<i_max; i++) {\n"
                 ."			if (obj[i].type=='text') {\n"
-                ."				set_onpaste(obj[i], truefalse)\n"
+                ."				set_onpaste(obj[i], allowpaste);\n"
+                ."				set_onfocus(obj[i]);\n"
                 ."			}\n"
                 ."		}\n"
                 ."	}\n"
@@ -1236,15 +1253,14 @@ class mod_hotpot_attempt_renderer extends mod_hotpot_renderer {
                 ."	if (obj) {\n"
                 ."		var i_max = obj.length;\n"
                 ."		for (var i=0; i<i_max; i++) {\n"
-                ."			set_onpaste(obj[i], truefalse)\n"
+                ."			set_onpaste(obj[i], allowpaste);\n"
+                ."			set_onfocus(obj[i]);\n"
                 ."		}\n"
                 ."	}\n"
                 ."	obj = null;\n"
                 ."}\n"
 
-                // By default, pasting of answers is NOT allowed.
-                // To allow it: window.allow_paste_input = true;
-                ."set_onpaste_input(window.allow_paste_input ? 'true' : 'false');\n"
+                ."setup_input_and_textarea();\n"
             ;
         }
         $onload_oneline = preg_replace('/\s+/s', ' ', $onload);
