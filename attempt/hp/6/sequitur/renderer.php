@@ -180,7 +180,7 @@ class mod_hotpot_attempt_hp_6_sequitur_renderer extends mod_hotpot_attempt_hp_6_
                 ."	} else if (TimeOver){\n"
                 ."		var QuizEvent = HP.EVENT_TIMEDOUT;\n"
                 ."	} else {\n"
-                ."		var QuizEvent = HP.EVENT_INPROGRESS;\n"
+                ."		var QuizEvent = HP.EVENT_CHECK;\n"
                 ."	}\n"
                 ."	"
             ;
@@ -226,6 +226,6 @@ class mod_hotpot_attempt_hp_6_sequitur_renderer extends mod_hotpot_attempt_hp_6_
      * @return xxx
      */
     function get_stop_function_args()  {
-        return 'HP.STATUS_ABANDONED';
+        return '0,null,HP.EVENT_ABANDONED';
     }
 }
