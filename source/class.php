@@ -161,6 +161,8 @@ class hotpot_source {
             throw new moodle_exception('sourcefilenotfound', 'hotpot', '', $msg);
         }
 
+        $this->hotpot = $hotpot;
+
         if (is_object($file_or_string)) {
             // view hotpot activity
             $this->file = $file_or_string;
@@ -633,8 +635,30 @@ class hotpot_source {
 
             // get the file contents
             if (! $this->filecontents = $this->file->get_content()) {
-                // nothing in the file
-                return false;
+                $path = '';
+                if (method_exists($this->file, 'get_repository_id')) {
+                    if ($repositoryid = $this->file->get_repository_id()) {
+                        if (isset($this->hotpot->cm)) {
+                            $context = hotpot_get_context(CONTEXT_MODULE, $this->hotpot->cm->id);
+                        } else if (isset($this->hotpot->course)) {
+                            $context = hotpot_get_context(CONTEXT_COURSE, $this->hotpot->course->id);
+                        } else {
+                            $context = null; // shouldn't happen !!
+                        }
+                        if ($repository = repository::get_repository_by_id($repositoryid, $context)) {
+                            if (isset($repository->root_path)) {
+                                $path = $repository->root_path;
+                            }
+                        }
+                    }
+                }
+                if ($path) {
+                    $path .= '/'.$this->file->get_reference();
+                    $this->filecontents = file_get_contents($path);
+                } else {
+                    throw new moodle_exception('could not fetch file contents: class='.get_class($this->file).', file='.$this->file->get_filepath().$this->file->get_filename());
+                    return false;
+                }
             }
 
             if ($id && $lifetime) {
