@@ -414,7 +414,7 @@ class mod_hotpot_attempt_hp_6_jmix_renderer extends mod_hotpot_attempt_hp_6_rend
      * @return xxx
      */
     function get_stop_function_args()  {
-        return '0,'.hotpot::STATUS_ABANDONED;
+        return 'HP.EVENT_ABANDONED';
     }
 
     /**

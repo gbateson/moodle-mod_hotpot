@@ -171,6 +171,7 @@ class mod_hotpot_attempt_hp_6_sequitur_renderer extends mod_hotpot_attempt_hp_6_
 
         // set quiz status
         if ($pos = strpos($substr, 'if (CurrentCorrect == Chosen)')) {
+            $event = $this->get_send_results_event();
             $insert = ''
                 ."if (CurrentCorrect==Chosen && CurrentNumber>=(TotalSegments-2)){\n"
                 ."		var QuizEvent = $event;\n" // COMPLETED or SETVALUES
@@ -225,6 +226,6 @@ class mod_hotpot_attempt_hp_6_sequitur_renderer extends mod_hotpot_attempt_hp_6_
      * @return xxx
      */
     function get_stop_function_args()  {
-        return '0,null,'.hotpot::STATUS_ABANDONED;
+        return 'HP.STATUS_ABANDONED';
     }
 }
