@@ -703,10 +703,8 @@ class hotpot_source {
         // convert to UTF-8, if necessary
         if ($encoding=='' || $encoding=='UTF-8') {
             // do nothing
-        } else if (function_exists('iconv')) {
-            $this->filecontents = iconv($encoding, 'UTF-8', $this->filecontents);
-        } else if (function_exists('mb_convert_encoding')) {
-            $this->filecontents = mb_convert_encoding($this->filecontents, 'UTF-8', $encoding);
+        } else {
+            $this->filecontents = hotpot_textlib('convert', $this->filecontents, $encoding);
         }
 
         return true;
