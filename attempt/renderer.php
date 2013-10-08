@@ -1219,33 +1219,36 @@ class mod_hotpot_attempt_renderer extends mod_hotpot_renderer {
                 ."	obj[onevent] = new Function('var onevent=\"'+onevent+'\"; for (var i=0; i<this.evts[onevent].length; i++) this.evts[onevent][i]();');\n"
                 ."}\n"
 
-                // required for HP_send_results in "mod/hotpot/attempt/hp/hp.js"
-                ."function set_onfocus(obj) {\n"
-                ."	obj.onfocus = HP_send_results;\n"
-                ."	//obj.onkeydown = HP_send_results;\n"
-                ."	//obj.onmousedown = HP_send_results;\n"
-                ."}\n"
-
-                ."function set_onpaste(obj, allowpaste) {\n"
-                ."	obj.ondrop = new Function('return ' + allowpaste);\n"
-                ."	obj.onpaste = new Function('return ' + allowpaste);\n"
+                ."function HP_disable_event(evt) {\n"
+                ."	if (evt==null) {\n"
+                ."		evt = window.event;\n"
+                ."	}\n"
+                ."	if (evt.preventDefault) {\n"
+                ."		evt.preventDefault();\n"
+                ."	} else {\n" // IE <= 8
+                ."		evt.returnValue = false;\n"
+                ."	}\n"
+                ."	return false;\n"
                 ."}\n"
 
                 // By default, pasting of answers is NOT allowed.
                 // To allow it: window.allow_paste_input = true;
                 ."function setup_input_and_textarea() {\n"
-                ."	if (window.allow_paste_input) {\n"
-                ."		var allowpaste = 'true';\n"
+                ."	if (window.allow_paste_input || window.enable_paste_input) {\n"
+                ."		var disablepaste = false;\n"
                 ."	} else {\n"
-                ."		var allowpaste = 'false';\n"
+                ."		var disablepaste = true;\n"
                 ."	}\n"
                 ."	var obj = document.getElementsByTagName('input');\n"
                 ."	if (obj) {\n"
                 ."		var i_max = obj.length;\n"
                 ."		for (var i=0; i<i_max; i++) {\n"
                 ."			if (obj[i].type=='text') {\n"
-                ."				set_onpaste(obj[i], allowpaste);\n"
-                ."				set_onfocus(obj[i]);\n"
+                ."				if (disablepaste) {\n"
+                ."						hotpotAttachEvent(obj[i], 'drop', HP_disable_event);\n"
+                ."						hotpotAttachEvent(obj[i], 'paste', HP_disable_event);\n"
+                ."				}\n"
+                ."				hotpotAttachEvent(obj[i], 'focus', HP_send_results);\n" // keydown, mousedown ?
                 ."			}\n"
                 ."		}\n"
                 ."	}\n"
@@ -1253,14 +1256,23 @@ class mod_hotpot_attempt_renderer extends mod_hotpot_renderer {
                 ."	if (obj) {\n"
                 ."		var i_max = obj.length;\n"
                 ."		for (var i=0; i<i_max; i++) {\n"
-                ."			set_onpaste(obj[i], allowpaste);\n"
-                ."			set_onfocus(obj[i]);\n"
+                ."			if (disablepaste) {\n"
+                ."					hotpotAttachEvent(obj[i], 'drop', HP_disable_event);\n"
+                ."					hotpotAttachEvent(obj[i], 'paste', HP_disable_event);\n"
+                ."			}\n"
+                ."			hotpotAttachEvent(obj[i], 'focus', HP_send_results);\n"
                 ."		}\n"
                 ."	}\n"
                 ."	obj = null;\n"
                 ."}\n"
 
                 ."setup_input_and_textarea();\n"
+
+                // ensure keydown (not keypress) event handler is assigned
+                // to prevent leaving page when user hits delete key
+                ."if (window.SuppressBackspace) {\n"
+                ."	hotpotAttachEvent(window, 'keydown', SuppressBackspace);\n"
+                ."}\n"
             ;
         }
         $onload_oneline = preg_replace('/\s+/s', ' ', $onload);
@@ -1351,7 +1363,7 @@ class mod_hotpot_attempt_renderer extends mod_hotpot_renderer {
             $functions = '';
             if (preg_match_all('/(?<=function )\w+/', $mediafilter->js_inline, $names)) {
                 foreach ($names[0] as $name) {
-                    list($start, $finish) = $this->locate_js_function($name, $mediafilter->js_inline, true);
+                    list($start, $finish) = $this->locate_js_block($name, $mediafilter->js_inline, true);
                     if ($finish) {
                         $functions .= trim(substr($mediafilter->js_inline, $start, ($finish - $start)))."\n";
                         $mediafilter->js_inline = substr_replace($mediafilter->js_inline, '', $start, ($finish - $start));

@@ -328,7 +328,7 @@ class mod_hotpot_attempt_hp_renderer extends mod_hotpot_attempt_renderer {
                 $onbeforeunload = ''; // shouldn't happen !!
         }
         if ($onbeforeunload) {
-            $search = "/(\s*)window\.(?:hotpot|on)unload = /s";
+            $search = "/(\s*)window\.(?:hotpotunload|onunload|HP) = /s";
             $replace = ''
                 .'$1'."window.hotpotbeforeunload = function() {"
                 .'$1'."	return '".$this->hotpot->source->js_value_safe($onbeforeunload, true)."';"
@@ -553,7 +553,7 @@ class mod_hotpot_attempt_hp_renderer extends mod_hotpot_attempt_renderer {
             $names = explode(',', $names);
         }
         foreach($names as $name) {
-            list($start, $finish) = $this->locate_js_function($name, $this->scripts);
+            list($start, $finish) = $this->locate_js_block($name, $this->scripts);
             if (! $finish) {
                 // debugging("Could not locate JavaScript function: $name", DEBUG_DEVELOPER);
                 continue;
@@ -568,29 +568,34 @@ class mod_hotpot_attempt_hp_renderer extends mod_hotpot_attempt_renderer {
     }
 
     /**
-     * locate_js_function
+     * locate_js_block
      *
-     * @param xxx $name
-     * @param xxx $str (passed by reference)
-     * @param xxx $includewhitespace (optional, default=false)
-     * @return xxx
+     * @param string  $name of js function to locate OR block type ("if", "for", "while", "do", "switch")
+     * @param string  $str (passed by reference)
+     * @param boolean $includewhitespace (optional, default=false)
+     * @return array($start, $finish) start and finish positions of js block within $str
      */
-    function locate_js_function($name, &$str, $includewhitespace=false)  {
+    function locate_js_block($name, &$str, $includewhitespace=false)  {
         $start = 0;
         $finish = 0;
 
-        if ($includewhitespace) {
-            $search = '/\s*'.'function '.$name.'\b/s';
+        if ($name=='if' || $name=='for' || $name=='while' || $name=='do' || $name=='switch') {
+            $search = $name;
         } else {
-            $search = '/\b'.'function '.$name.'\b/';
+            $search = 'function +'.$name;
         }
-        if (preg_match($search, $str, $matches, PREG_OFFSET_CAPTURE)) {
-            // $matches[0][0] : matching string
-            // $matches[0][1] : offset to matching string
-            $start = $matches[0][1];
+        if ($includewhitespace) {
+            $search = '/\s*'.$search.'\b/s';
+        } else {
+            $search = '/\b'.$search.'\b/';
+        }
+        if (preg_match($search, $str, $match, PREG_OFFSET_CAPTURE)) {
+            // $match[0][0] : matching string
+            // $match[0][1] : offset to matching string
+            $start = $match[0][1];
 
             // position of opening curly bracket (or thereabouts)
-            $i = $start + strlen($matches[0][0]);
+            $i = $start + strlen($match[0][0]);
 
             // count how many opening curly brackets we have had so far
             $count = 0;
@@ -671,6 +676,26 @@ class mod_hotpot_attempt_hp_renderer extends mod_hotpot_attempt_renderer {
 
                             case '}':
                                 $count--; // end of Javascript code block
+                                switch ($name) {
+                                    case 'if':
+                                        // detect "else" block, if any
+                                        $search = '/^\s*else(?:\s+if\s*\(.*?\))?\s*\{/s';
+                                        if (preg_match($search, substr($str, $i+1), $match)) {
+                                            $i += strlen($match[0]);
+                                            $count++; // continue parsing
+                                        }
+                                        break;
+                                    case 'do':
+                                        // detect "while" statement, if any
+                                        $search = '/^\s*while\s*\(.*?\);/s';
+                                        if (preg_match($search, substr($str, $i+1), $match)) {
+                                            $i += strlen($match[0]);
+                                        }
+                                        break;
+                                }
+                                if ($str{$i+1}==';') {
+                                    $i++; // allow trailing semicolon
+                                }
                                 if ($count==0) { // end of outer code block (i.e. end of function)
                                     $finish = $i + 1;
                                 }
@@ -681,6 +706,7 @@ class mod_hotpot_attempt_hp_renderer extends mod_hotpot_attempt_renderer {
                 $i++;
             } // end while
         } // end if $start
+
         return array($start, $finish);
     }
 

@@ -179,7 +179,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
         // Each function name requires an corresponding function called:
         // fix_js_{$name}
 
-        return 'Client,ShowElements,GetViewportHeight,PageDim,TrimString,RemoveBottomNavBarForIE,StartUp,GetUserName,PreloadImages,ShowMessage,HideFeedback,SendResults,Finish,WriteToInstructions,ShowSpecialReadingForQuestion';
+        return 'Client,ShowElements,GetViewportHeight,SuppressBackspace,PageDim,TrimString,RemoveBottomNavBarForIE,StartUp,GetUserName,PreloadImages,ShowMessage,HideFeedback,SendResults,Finish,WriteToInstructions,ShowSpecialReadingForQuestion';
     }
 
     /**
@@ -456,6 +456,57 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
             ."}"
         ;
         $str = substr_replace($str, $replace, $start, $length);
+    }
+
+    /**
+     * fix_js_SuppressBackspace
+     *
+     * @param xxx $str (passed by reference)
+     * @param xxx $start
+     * @param xxx $length
+     * @return xxx
+     */
+    function fix_js_SuppressBackspace(&$str, $start, $length)  {
+        // could also check "window.InTextBox" which is HP's standard way of detecting INPUT and TEXTAREA
+        $replace = ''
+            ."function SuppressBackspace(evt) {\n"
+            ."	if (evt==null) {\n"
+            ."		evt = window.event;\n"
+            ."	}\n"
+            ."	if (evt.target) {\n"
+            ."		var evtTarget = evt.target;\n"
+            ."	} else if (evt.srcElement) {\n"
+            ."		var evtTarget = evt.srcElement;\n"
+            ."	} else {\n"
+            ."		return true;\n" // shouldn't happen !!
+            ."	}\n"
+            ."	if (evt.keyCode != 8) {\n"
+            ."		return true;\n" // not the delete key
+            ."	}\n"
+            ."	if (evtTarget.nodeType==3) {\n" // Safari quirk
+            ."		evtTarget = evtTarget.parentNode;\n"
+            ."	}\n"
+            ."	if (evtTarget.tagName=='INPUT' || evtTarget.tagName=='TEXTAREA') {\n"
+            ."		return true;\n" // allow delete key in text input / textarea
+            ."	}\n"
+            ."	if (evt.preventDefault) {\n"
+            ."		evt.preventDefault();\n"
+            ."	} else if (window.event) {\n"
+            ."		window.event.returnValue = false;\n"
+            ."		window.event.cancelBubble = true;\n"
+            ."	}\n"
+            ."	return false;\n"
+            ."}\n"
+        ;
+        $str = substr_replace($str, $replace, $start, $length);
+
+        // remove standard HP code that assigns event keypress/keydown handler
+        $start += strlen($replace);
+        $substr = substr($str, $start);
+        list($discard, $length) = $this->locate_js_block('if', $substr);
+        if ($length) {
+            $str = substr_replace($str, '', $start, $length);
+        }
     }
 
     /**
@@ -811,9 +862,9 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
                 ."	window.HP = new ".$this->js_object_type."($sendallclicks,$ajax);\n"
                 ."\n"
                 ."	// define event handlers to try to send results if quiz finishes unexpectedly\n"
-                ."	window.onbeforeunload = HP_send_results;\n" // modern browsers
-                ."	window.onpagehide = HP_send_results;\n"     // modern browsers that don't allow actions in "onbeforeunload"
-                ."	window.onunload = HP_send_results;\n"       // old browsers that don't have "onbeforeunload" or "pagehide"
+                ."	hotpotAttachEvent(window, 'beforeunload', HP_send_results);\n" // modern browsers
+                ."	hotpotAttachEvent(window, 'pagehide', HP_send_results);\n"     // modern browsers that don't allow actions in "onbeforeunload"
+                ."	hotpotAttachEvent(window, 'unload', HP_send_results);\n"       // old browsers that don't have "onbeforeunload" or "pagehide"
                 ."\n"
             ;
             $substr = substr_replace($substr, $append, $pos, 0);
@@ -1090,7 +1141,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
         return ''
             ."confirm("
             ."'".$this->hotpot->source->js_value_safe(get_string('confirmstop', 'hotpot'), true)."'"
-            ."+'\\n\\n'+(window.onbeforeunload &amp;&amp; onbeforeunload()?(onbeforeunload()+'\\n\\n'):'')+"
+            ."+'\\n\\n'+(window.hotpotbeforeunload &amp;&amp; hotpotbeforeunload()?(hotpotbeforeunload()+'\\n\\n'):'')+"
             ."'".$this->hotpot->source->js_value_safe(get_string('pressoktocontinue', 'hotpot'), true)."'"
             .")"
         ;
