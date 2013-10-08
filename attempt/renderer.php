@@ -1164,7 +1164,7 @@ class mod_hotpot_attempt_renderer extends mod_hotpot_renderer {
                 ." * and is covered under the license viewable at http://phrogz.net/JS/_ReuseLicense.txt\n"
                 ." */\n"
 
-                ."function hotpotAttachEvent(obj, evt, fnc, useCapture) {\n"
+                ."function HP_add_listener(obj, evt, fnc, useCapture) {\n"
                 ."	// obj : an HTML element\n"
                 ."	// evt : the name of the event (without leading 'on')\n"
                 ."	// fnc : the name of the event handler funtion\n"
@@ -1179,7 +1179,7 @@ class mod_hotpot_attempt_renderer extends mod_hotpot_renderer {
                 ."	if (obj[onevent]) {\n"
                 ."		var old_event_handler = obj[onevent];\n"
                 ."		obj[onevent] = null;\n"
-                ."		hotpotAttachEvent(obj, evt, old_event_handler, useCapture);\n"
+                ."		HP_add_listener(obj, evt, old_event_handler, useCapture);\n"
                 ."	}\n"
 
                 ."	// create key for this event handler\n"
@@ -1233,7 +1233,7 @@ class mod_hotpot_attempt_renderer extends mod_hotpot_renderer {
 
                 // By default, pasting of answers is NOT allowed.
                 // To allow it: window.allow_paste_input = true;
-                ."function setup_input_and_textarea() {\n"
+                ."function HP_setup_input_and_textarea() {\n"
                 ."	if (window.allow_paste_input || window.enable_paste_input) {\n"
                 ."		var disablepaste = false;\n"
                 ."	} else {\n"
@@ -1245,10 +1245,10 @@ class mod_hotpot_attempt_renderer extends mod_hotpot_renderer {
                 ."		for (var i=0; i<i_max; i++) {\n"
                 ."			if (obj[i].type=='text') {\n"
                 ."				if (disablepaste) {\n"
-                ."						hotpotAttachEvent(obj[i], 'drop', HP_disable_event);\n"
-                ."						hotpotAttachEvent(obj[i], 'paste', HP_disable_event);\n"
+                ."						HP_add_listener(obj[i], 'drop', HP_disable_event);\n"
+                ."						HP_add_listener(obj[i], 'paste', HP_disable_event);\n"
                 ."				}\n"
-                ."				hotpotAttachEvent(obj[i], 'focus', HP_send_results);\n" // keydown, mousedown ?
+                ."				HP_add_listener(obj[i], 'focus', HP_send_results);\n" // keydown, mousedown ?
                 ."			}\n"
                 ."		}\n"
                 ."	}\n"
@@ -1257,27 +1257,27 @@ class mod_hotpot_attempt_renderer extends mod_hotpot_renderer {
                 ."		var i_max = obj.length;\n"
                 ."		for (var i=0; i<i_max; i++) {\n"
                 ."			if (disablepaste) {\n"
-                ."					hotpotAttachEvent(obj[i], 'drop', HP_disable_event);\n"
-                ."					hotpotAttachEvent(obj[i], 'paste', HP_disable_event);\n"
+                ."					HP_add_listener(obj[i], 'drop', HP_disable_event);\n"
+                ."					HP_add_listener(obj[i], 'paste', HP_disable_event);\n"
                 ."			}\n"
-                ."			hotpotAttachEvent(obj[i], 'focus', HP_send_results);\n"
+                ."			HP_add_listener(obj[i], 'focus', HP_send_results);\n"
                 ."		}\n"
                 ."	}\n"
                 ."	obj = null;\n"
                 ."}\n"
 
-                ."setup_input_and_textarea();\n"
+                ."HP_add_listener(document, 'load', HP_setup_input_and_textarea);\n"
 
                 // ensure keydown (not keypress) event handler is assigned
                 // to prevent leaving page when user hits delete key
                 ."if (window.SuppressBackspace) {\n"
-                ."	hotpotAttachEvent(window, 'keydown', SuppressBackspace);\n"
+                ."	HP_add_listener(window, 'keydown', SuppressBackspace);\n"
                 ."}\n"
             ;
         }
         $onload_oneline = preg_replace('/\s+/s', ' ', $onload);
         $onload_oneline = preg_replace("/[\\']/", '\\\\$0', $onload_oneline);
-        $str .= "hotpotAttachEvent(window, 'load', '$onload_oneline');\n";
+        $str .= "HP_add_listener(window, 'load', '$onload_oneline');\n";
         if ($script_tags) {
             $str .= "//]]>\n"."</script>\n";
         }

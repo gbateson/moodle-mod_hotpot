@@ -862,9 +862,9 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
                 ."	window.HP = new ".$this->js_object_type."($sendallclicks,$ajax);\n"
                 ."\n"
                 ."	// define event handlers to try to send results if quiz finishes unexpectedly\n"
-                ."	hotpotAttachEvent(window, 'beforeunload', HP_send_results);\n" // modern browsers
-                ."	hotpotAttachEvent(window, 'pagehide', HP_send_results);\n"     // modern browsers that don't allow actions in "onbeforeunload"
-                ."	hotpotAttachEvent(window, 'unload', HP_send_results);\n"       // old browsers that don't have "onbeforeunload" or "pagehide"
+                ."	HP_add_listener(window, 'beforeunload', HP_send_results);\n" // modern browsers
+                ."	HP_add_listener(window, 'pagehide', HP_send_results);\n"     // modern browsers that don't allow actions in "onbeforeunload"
+                ."	HP_add_listener(window, 'unload', HP_send_results);\n"       // old browsers that don't have "onbeforeunload" or "pagehide"
                 ."\n"
             ;
             $substr = substr_replace($substr, $append, $pos, 0);
