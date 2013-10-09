@@ -1186,25 +1186,30 @@ class mod_hotpot_attempt_renderer extends mod_hotpot_renderer {
                 ."	var s = fnc.toString();\n"
                 .'	s = s.replace(new RegExp("[; \\\\t\\\\n\\\\r]+", "g"), "");'."\n"
                 .'	s = s.substring(s.indexOf("{") + 1, s.lastIndexOf("}"));'."\n"
+                ."	s = evt + s;\n"
 
                 ."	 // skip event handler, if it is a duplicate\n"
-                ."	if (! obj.evt_keys) {\n"
+                ."	if (typeof(obj.evt_keys)=='undefined') {\n"
                 ."		obj.evt_keys = new Array();\n"
                 ."	}\n"
-                ."	if (obj.evt_keys[s]) {\n"
-                ."		return true;\n"
+                ."	var i_max = obj.evt_keys.length;\n"
+                ."	for (var i=0; i<i_max; i++) {\n"
+                ."		if (obj.evt_keys[i]==s) {\n"
+                ."			return true;\n"
+                ."		}\n"
                 ."	}\n"
-                ."	obj.evt_keys[s] = true;\n"
+                ."	obj.evt_keys[i_max] = s;\n"
 
                 ."	// standard DOM\n"
                 ."	if (obj.addEventListener) {\n"
                 ."		obj.addEventListener(evt, fnc, (useCapture ? true : false));\n"
-                ."		return true;\n"
+                ."		return;\n"
                 ."	}\n"
 
                 ."	// IE\n"
                 ."	if (obj.attachEvent) {\n"
-                ."		return obj.attachEvent(onevent, fnc);\n"
+                ."		obj.attachEvent(onevent, fnc);\n"
+                ."		return;\n"
                 ."	}\n"
 
                 ."	// old browser (e.g. NS4 or IE5Mac)\n"
@@ -1217,6 +1222,22 @@ class mod_hotpot_attempt_renderer extends mod_hotpot_renderer {
                 ."	var i = obj.evts[onevent].length;\n"
                 ."	obj.evts[onevent][i] = fnc;\n"
                 ."	obj[onevent] = new Function('var onevent=\"'+onevent+'\"; for (var i=0; i<this.evts[onevent].length; i++) this.evts[onevent][i]();');\n"
+                ."}\n"
+
+                ."function HP_remove_listener(obj, evt, fnc, useCapture) {\n"
+                ."	// obj : an HTML element\n"
+                ."	// evt : the name of the event (without leading 'on')\n"
+                ."	// fnc : the name of the event handler funtion\n"
+                ."	// useCapture : boolean (default = false)\n"
+
+                ."	var onevent = 'on' + evt;\n"
+                ."	if (obj.removeEventListener) {\n"
+                ."		obj.removeEventListener(evt, fnc, (useCapture ? true : false));\n"
+                ."	} else if (obj.attachEvent) {\n"
+                ."		obj.detachEvent(onevent, fnc);\n"
+                ."	} else {\n"
+                ."		obj[onevent] = null;\n"
+                ."	}\n"
                 ."}\n"
 
                 ."function HP_disable_event(evt) {\n"
@@ -1363,7 +1384,7 @@ class mod_hotpot_attempt_renderer extends mod_hotpot_renderer {
             $functions = '';
             if (preg_match_all('/(?<=function )\w+/', $mediafilter->js_inline, $names)) {
                 foreach ($names[0] as $name) {
-                    list($start, $finish) = $this->locate_js_block($name, $mediafilter->js_inline, true);
+                    list($start, $finish) = $this->locate_js_block('function', $name, $mediafilter->js_inline, true);
                     if ($finish) {
                         $functions .= trim(substr($mediafilter->js_inline, $start, ($finish - $start)))."\n";
                         $mediafilter->js_inline = substr_replace($mediafilter->js_inline, '', $start, ($finish - $start));

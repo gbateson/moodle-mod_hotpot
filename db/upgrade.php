@@ -772,7 +772,7 @@ function xmldb_hotpot_upgrade($oldversion) {
         upgrade_mod_savepoint(true, "$newversion", 'hotpot');
     }
 
-    $newversion = 2010080377;
+    $newversion = 2010080378;
     if ($oldversion < $newversion) {
         $empty_cache = true;
         upgrade_mod_savepoint(true, "$newversion", 'hotpot');

@@ -330,7 +330,7 @@ class mod_hotpot_attempt_hp_renderer extends mod_hotpot_attempt_renderer {
         if ($onbeforeunload) {
             $search = "/(\s*)window\.(?:hotpotunload|onunload|HP) = /s";
             $replace = ''
-                .'$1'."window.hotpotbeforeunload = function() {"
+                .'$1'."window.HP_beforeunload = function() {"
                 .'$1'."	return '".$this->hotpot->source->js_value_safe($onbeforeunload, true)."';"
                 .'$1'."}"
                 .'$1'."if (window.opera) {"
@@ -553,7 +553,7 @@ class mod_hotpot_attempt_hp_renderer extends mod_hotpot_attempt_renderer {
             $names = explode(',', $names);
         }
         foreach($names as $name) {
-            list($start, $finish) = $this->locate_js_block($name, $this->scripts);
+            list($start, $finish) = $this->locate_js_block('function', $name, $this->scripts);
             if (! $finish) {
                 // debugging("Could not locate JavaScript function: $name", DEBUG_DEVELOPER);
                 continue;
@@ -570,26 +570,42 @@ class mod_hotpot_attempt_hp_renderer extends mod_hotpot_attempt_renderer {
     /**
      * locate_js_block
      *
-     * @param string  $name of js function to locate OR block type ("if", "for", "while", "do", "switch")
-     * @param string  $str (passed by reference)
-     * @param boolean $includewhitespace (optional, default=false)
+     * @param string $type one of "function", "if", "for", "while", "do", "switch"
+     * @param string $name unique string to identify this js block (e.g. function-name OR if-condition)
+     * @param string $str (passed by reference) javascript code
+     * @param boolean $includewhitespace (optional, default=false) TRUE=return leading white space, FALSE otherwise
+     * @param boolean $offset (optional, default=0) char position at which to start search
      * @return array($start, $finish) start and finish positions of js block within $str
      */
-    function locate_js_block($name, &$str, $includewhitespace=false)  {
+    function locate_js_block($type, $name, &$str, $includewhitespace=false, $offset=0)  {
         $start = 0;
         $finish = 0;
 
-        if ($name=='if' || $name=='for' || $name=='while' || $name=='do' || $name=='switch') {
-            $search = $name;
-        } else {
-            $search = 'function +'.$name;
+        // set $search string to locate the start of this block $type
+        switch ($type) {
+
+            // these blocks have an leading parenthetical phrase
+            case 'if':
+            case 'for':
+            case 'while':
+            case 'switch':
+                $search = $type.'\s*\('.preg_quote($name, '/').'\)';
+                break;
+
+            // these blocks have a trailing parenthetical phrase
+            case 'do':
+                $search = $type.'\s*(?=\{)';
+                break;
+
+            // functions - this is the original intention of this locate_js_block()
+            case 'function':
+                $search = 'function\s+'.$name.'\s*\(.*?\)';
+                break;
         }
-        if ($includewhitespace) {
-            $search = '/\s*'.$search.'\b/s';
-        } else {
-            $search = '/\b'.$search.'\b/';
-        }
-        if (preg_match($search, $str, $match, PREG_OFFSET_CAPTURE)) {
+        $search = '/'.($includewhitespace ? '\s*' : '').$search.'/s';
+
+        if (preg_match($search, $str, $match, PREG_OFFSET_CAPTURE, $offset)) {
+
             // $match[0][0] : matching string
             // $match[0][1] : offset to matching string
             $start = $match[0][1];
@@ -676,27 +692,33 @@ class mod_hotpot_attempt_hp_renderer extends mod_hotpot_attempt_renderer {
 
                             case '}':
                                 $count--; // end of Javascript code block
-                                switch ($name) {
+
+                                // detect trailing blocks or phrases
+                                switch ($type) {
+
+                                    // "if" blocks may have trailing "else if" or "else" blocks
                                     case 'if':
-                                        // detect "else" block, if any
                                         $search = '/^\s*else(?:\s+if\s*\(.*?\))?\s*\{/s';
                                         if (preg_match($search, substr($str, $i+1), $match)) {
                                             $i += strlen($match[0]);
                                             $count++; // continue parsing
                                         }
                                         break;
+
+                                    // "do" blocks have a trailing parenthetical phrase
                                     case 'do':
-                                        // detect "while" statement, if any
-                                        $search = '/^\s*while\s*\(.*?\);/s';
+                                        $search = '/^\s*while\s*\('.preg_quote($name, '/').'\);/s';
                                         if (preg_match($search, substr($str, $i+1), $match)) {
                                             $i += strlen($match[0]);
                                         }
                                         break;
                                 }
+
+                                // detect trailing semicolon, if any
                                 if ($str{$i+1}==';') {
-                                    $i++; // allow trailing semicolon
+                                    $i++;
                                 }
-                                if ($count==0) { // end of outer code block (i.e. end of function)
+                                if ($count==0) { // end of outer code block (e.g. end of function)
                                     $finish = $i + 1;
                                 }
                                 break;

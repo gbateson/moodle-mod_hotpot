@@ -321,7 +321,7 @@ function hpQuizAttempt() {
         if (flag==this.FLAG_SENDVALUES || flag==this.FLAG_SETANDSEND) {
 
             // cancel the check for navigating away from this page
-            window.onbeforeunload = null;
+            HP_remove_listener(window, 'beforeunload', HP_send_results);
 
             if (ajax) {
                 var use_asynchronous = (evt==this.EVENT_BEFOREUNLOAD ? false : true);
@@ -334,7 +334,7 @@ function hpQuizAttempt() {
             if (evt==this.EVENT_COMPLETED || evt==this.EVENT_SENDVALUES) {
                 this.form = null; // we don't need this any more
             } else if (ajax) {
-                window.onbeforeunload = window.HP_send_results;
+                HP_add_listener('window', 'beforeunload', HP_send_results);
             }
         }
     };
@@ -809,8 +809,8 @@ function HP_send_results(evt) {
         HP.send_results(evt, status);
     }
 
-    if (evt==HP.EVENT_BEFOREUNLOAD && window.hotpotbeforeunload) {
-        return hotpotbeforeunload();
+    if (evt==HP.EVENT_BEFOREUNLOAD && window.HP_beforeunload) {
+        return HP_beforeunload();
     } else {
         return evt;
     }

@@ -501,10 +501,11 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
         $str = substr_replace($str, $replace, $start, $length);
 
         // remove standard HP code that assigns event keypress/keydown handler
-        $start += strlen($replace);
-        $substr = substr($str, $start);
-        list($discard, $length) = $this->locate_js_block('if', $substr);
-        if ($length) {
+        $offset = $start + strlen($replace);
+        list($start, $finish) = $this->locate_js_block('if', 'C.ie', $str, true, $offset);
+
+        if ($finish) {
+            $length = $finish - $start;
             $str = substr_replace($str, '', $start, $length);
         }
     }
@@ -1141,7 +1142,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
         return ''
             ."confirm("
             ."'".$this->hotpot->source->js_value_safe(get_string('confirmstop', 'hotpot'), true)."'"
-            ."+'\\n\\n'+(window.hotpotbeforeunload &amp;&amp; hotpotbeforeunload()?(hotpotbeforeunload()+'\\n\\n'):'')+"
+            ."+'\\n\\n'+(window.HP_beforeunload &amp;&amp; HP_beforeunload()?(HP_beforeunload()+'\\n\\n'):'')+"
             ."'".$this->hotpot->source->js_value_safe(get_string('pressoktocontinue', 'hotpot'), true)."'"
             .")"
         ;
