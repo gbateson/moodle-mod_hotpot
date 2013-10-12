@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="mod/hotpot/db" VERSION="20120627" COMMENT="XMLDB file for Moodle mod/hotpot"
+<XMLDB PATH="mod/hotpot/db" VERSION="20131012" COMMENT="XMLDB file for Moodle mod/hotpot"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
@@ -67,12 +67,14 @@
         <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="hotpot_enableswf" NEXT="sourcefile"/>
         <FIELD NAME="sourcefile" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="name" NEXT="sourcetype"/>
         <FIELD NAME="sourcetype" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="sourcefile" NEXT="sourcelocation"/>
-        <FIELD NAME="sourcelocation" TYPE="int" LENGTH="2" NOTNULL="true" SEQUENCE="false" PREVIOUS="sourcetype" NEXT="sourcelastmodified"/>
-        <FIELD NAME="sourcelastmodified" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="sourcelocation" NEXT="sourceetag"/>
+        <FIELD NAME="sourcelocation" TYPE="int" LENGTH="2" NOTNULL="true" SEQUENCE="false" PREVIOUS="sourcetype" NEXT="sourcerepositoryid"/>
+        <FIELD NAME="sourcerepositoryid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="sourcelocation" NEXT="sourcelastmodified"/>
+        <FIELD NAME="sourcelastmodified" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="sourcerepositoryid" NEXT="sourceetag"/>
         <FIELD NAME="sourceetag" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="sourcelastmodified" NEXT="configfile"/>
         <FIELD NAME="configfile" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="sourceetag" NEXT="configlocation"/>
-        <FIELD NAME="configlocation" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="configfile" NEXT="configlastmodified"/>
-        <FIELD NAME="configlastmodified" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="configlocation" NEXT="configetag"/>
+        <FIELD NAME="configlocation" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="configfile" NEXT="configrepositoryid"/>
+        <FIELD NAME="configrepositoryid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="configlocation" NEXT="configlastmodified"/>
+        <FIELD NAME="configlastmodified" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="configrepositoryid" NEXT="configetag"/>
         <FIELD NAME="configetag" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="configlastmodified" NEXT="navigation"/>
         <FIELD NAME="navigation" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="configetag" NEXT="title"/>
         <FIELD NAME="title" TYPE="int" LENGTH="6" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="navigation" NEXT="stopbutton"/>

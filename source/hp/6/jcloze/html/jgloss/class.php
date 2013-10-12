@@ -50,7 +50,7 @@ class hotpot_source_hp_6_jcloze_html_jgloss extends hotpot_source_hp_6_jcloze_ht
             return false;
         }
 
-        if (! $content = $sourcefile->get_content()) {
+        if (! $content = self::get_content($sourcefile)) {
             // empty or non-existant file
             return false;
         }

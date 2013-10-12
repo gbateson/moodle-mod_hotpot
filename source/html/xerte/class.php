@@ -54,7 +54,7 @@ class hotpot_source_html_xerte extends hotpot_source_html {
             // not an html file
             return false;
         }
-        if (! $content = $sourcefile->get_content()) {
+        if (! $content = self::get_content($sourcefile)) {
             // empty or non-existant file
             return false;
         }

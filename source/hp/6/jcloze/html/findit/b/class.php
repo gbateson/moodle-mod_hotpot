@@ -50,7 +50,7 @@ class hotpot_source_hp_6_jcloze_html_findit_b extends hotpot_source_hp_6_jcloze_
             return false;
         }
 
-        if (! $content = $sourcefile->get_content()) {
+        if (! $content = self::get_content($sourcefile)) {
             // empty or non-existant file
             return false;
         }

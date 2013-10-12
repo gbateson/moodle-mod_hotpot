@@ -50,7 +50,7 @@ class hotpot_source_hp_6_rhubarb_html extends hotpot_source_hp_6_rhubarb {
             return false;
         }
 
-        if (! $content = $sourcefile->get_content()) {
+        if (! $content = self::get_content($sourcefile)) {
             // empty or non-existant file
             return false;
         }

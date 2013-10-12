@@ -436,8 +436,105 @@ class hotpot_source {
      * @param stdclass $sourcefile a Moodle stored_file object representing the source file
      * @return boolean true if the file is a recognized quiz file, or false otherwise
      */
-    function is_unitfile($sourcefile) {
+    public static function is_unitfile($sourcefile) {
         return false;
+    }
+
+    /**
+     * get_content
+     *
+     * @param xxx $sourcefile
+     * @return xxx
+     */
+    public static function get_content($file, $hotpot=null)  {
+        global $CFG, $DB;
+
+        if ($content = $file->get_content()) {
+            return $content;
+        }
+
+        if ($path = self::get_real_path($file, $hotpot)) {
+            return file_get_contents($path);
+        }
+
+        return ''; // shouldn't happen !!
+    }
+
+    /**
+     * get_real_path
+     *
+     * @param object $context
+     * @return string
+     */
+    public static function get_real_path($file, $hotpot=null) {
+        global $CFG;
+
+        // sanity check
+        if (empty($file)) {
+            return '';
+        }
+
+        // set default path (= cached file in filedir)
+        $hash = $file->get_contenthash();
+        $path = $CFG->dataroot.'/filedir/'.$hash[0].$hash[1].'/'.$hash[2].$hash[3].'/'.$hash;
+
+        if (! method_exists($file, 'get_repository_id')) {
+            return $path; // Moodle <= 2.2
+        }
+        if (! $repositoryid = $file->get_repository_id()) {
+            return $path; // shoudn't happen !!
+        }
+
+        switch (true) {
+            case isset($hotpot->coursemodule):
+                $context = hotpot_get_context(CONTEXT_MODULE, $hotpot->coursemodule);
+                break;
+            case isset($hotpot->cm):
+                $id = (is_object($hotpot->cm) ? $hotpot->cm->id : $hotpot->cm);
+                $context = hotpot_get_context(CONTEXT_MODULE, $id);
+                break;
+            case isset($hotpot->course):
+                $id = (is_object($hotpot->course) ? $hotpot->course->id : $hotpot->course);
+                $context = hotpot_get_context(CONTEXT_COURSE, $id);
+                break;
+            case isset($GLOBALS['modcontext']):
+                $context = $GLOBALS['modcontext'];
+                break;
+            case isset($GLOBALS['context']):
+                $context = $GLOBALS['context'];
+                break;
+            return $path; // shouldn't happen !!
+        }
+
+        if (! $repository = repository::get_repository_by_id($repositoryid, $context)) {
+            return $path; // shouldn't happen
+        }
+
+        // get repository $type
+        switch (true) {
+            case isset($repository->options['type']):
+                $type = $repository->options['type'];
+                break;
+            case isset($repository->instance->typeid):
+                $type = repository::get_type_by_id($repository->instance->typeid);
+                $type = $type->get_typename();
+                break;
+            default:
+                $type = ''; // shouldn't happen !!
+        }
+
+        // get path according to repository $type
+        switch ($type) {
+            case 'filesystem':
+                $path = $repository->root_path.'/'.$file->get_reference();
+                break;
+            case 'user':
+            case 'coursefiles':
+                // use the the default $path
+                break;
+        }
+
+        return $path;
     }
 
     // returns name of quiz that is displayed in the list of quizzes
@@ -563,7 +660,15 @@ class hotpot_source {
      */
     function filemtime($lastmodified, $etag)  {
         if (is_object($this->file)) {
-            return $this->file->get_timemodified();
+            if (method_exists($this->file, 'referencelastsync')) {
+                $time = $this->file->referencelastsync(); // Moodle >= 2.3
+            } else {
+                $time = $this->file->get_timemodified(); // Moodle <= 2.2
+            }
+            if ($path = self::get_real_path($this->file, $this->hotpot)) {
+                $time = max($time, filemtime($path));
+            }
+            return $time;
         }
         if ($this->url) {
             $headers = array(
@@ -619,51 +724,7 @@ class hotpot_source {
                 // no file object - shouldn't happen !!
                 return false;
             }
-
-            // we want the latest version of the file content
-            // so we force the lifetime to be zero, if it isn't already
-
-            $id = 0;
-            $lifetime = 0;
-            if (method_exists($this->file, 'get_referencefileid')) {
-                if ($id = $this->file->get_referencefileid()) {
-                    if ($lifetime = $this->file->get_referencelifetime()) {
-                        $DB->set_field('files_reference', 'lifetime', 0, array('id' => $id));
-                    }
-                }
-            }
-
-            // get the file contents
-            if (! $this->filecontents = $this->file->get_content()) {
-                $path = '';
-                if (method_exists($this->file, 'get_repository_id')) {
-                    if ($repositoryid = $this->file->get_repository_id()) {
-                        if (isset($this->hotpot->cm)) {
-                            $context = hotpot_get_context(CONTEXT_MODULE, $this->hotpot->cm->id);
-                        } else if (isset($this->hotpot->course)) {
-                            $context = hotpot_get_context(CONTEXT_COURSE, $this->hotpot->course->id);
-                        } else {
-                            $context = null; // shouldn't happen !!
-                        }
-                        if ($repository = repository::get_repository_by_id($repositoryid, $context)) {
-                            if (isset($repository->root_path)) {
-                                $path = $repository->root_path;
-                            }
-                        }
-                    }
-                }
-                if ($path) {
-                    $path .= '/'.$this->file->get_reference();
-                    $this->filecontents = file_get_contents($path);
-                } else {
-                    throw new moodle_exception('could not fetch file contents: class='.get_class($this->file).', file='.$this->file->get_filepath().$this->file->get_filename());
-                    return false;
-                }
-            }
-
-            if ($id && $lifetime) {
-                $DB->set_field('files_reference', 'lifetime', $lifetime, array('id' => $id));
-            }
+            $this->filecontents = self::get_content($this->file, $this->hotpot);
         }
 
         // file contents were successfully read

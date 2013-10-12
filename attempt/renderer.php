@@ -97,7 +97,7 @@ class mod_hotpot_attempt_renderer extends mod_hotpot_renderer {
     );
 
     /**
-     * these fields in the quiz record must match those in the "hotpot_cache" table
+     * these fields in the hotpot record must match those in the "hotpot_cache" table
      * "outputformat" is not stored explicitly because it is included in the md5key
      */
     protected $cache_hotpot_fields = array(
@@ -660,11 +660,21 @@ class mod_hotpot_attempt_renderer extends mod_hotpot_renderer {
         }
 
         // custom fields
-        if (isset($this->hotpot->source) && $this->cache->timemodified < $this->hotpot->source->filemtime($this->cache->sourcelastmodified, $this->cache->sourceetag)) {
-            return false; // sourcefile file has been modified
-        }
-        if (isset($this->hotpot->source->config) && $this->cache->timemodified < $this->hotpot->source->config->filemtime($this->cache->configlastmodified, $this->cache->configetag)) {
-            return false; // config file has been modified
+        $fileareas = array('source', 'config');
+        foreach ($fileareas as $filearea) {
+            if (isset($this->hotpot->$filearea) && $this->hotpot->$filearea) {
+                $lastmodified = $filearea.'lastmodified';
+                $etag = $filearea.'etag';
+                if ($this->cache->timemodified < $this->hotpot->$filearea->filemtime($this->cache->$lastmodified, $this->cache->$etag)) {
+                    return false; // file has been modified
+                }
+                if (method_exists($this->hotpot->$filearea->file, 'get_repository_id')) {
+                    $repositoryid = $filearea.'repositoryid';
+                    if ($this->cache->$repositoryid != $this->hotpot->$filearea->file->get_repository_id()) {
+                        return false; // different repository
+                    }
+                }
+            }
         }
 
         if ($this->hotpot->useglossary) {
@@ -731,6 +741,17 @@ class mod_hotpot_attempt_renderer extends mod_hotpot_renderer {
             $configfield = 'config'.$field;
             $this->cache->$sourcefield = ''; // $this->hotpot->source->$field;
             $this->cache->$configfield = ''; // $this->hotpot->source->config->$field;
+        }
+
+        $fileareas = array('source', 'config');
+        foreach ($fileareas as $filearea) {
+            if (empty($this->hotpot->$filearea)) {
+                continue;
+            }
+            if (method_exists($this->hotpot->$filearea->file, 'get_repository_id')) {
+                $repositoryid = $filearea.'repositoryid';
+                $this->cache->$repositoryid = $this->hotpot->$filearea->file->get_repository_id();
+            }
         }
 
         // create content object
@@ -1158,12 +1179,6 @@ class mod_hotpot_attempt_renderer extends mod_hotpot_renderer {
             // only do this once per quiz
             $attacheventid = $this->hotpot->id;
             $str .= ''
-                ."/**\n"
-                ." * Based on http://phrogz.net/JS/AttachEvent_js.txt - thanks!\n"
-                ." * That code is copyright 2003 by Gavin Kistner, !@phrogz.net\n"
-                ." * and is covered under the license viewable at http://phrogz.net/JS/_ReuseLicense.txt\n"
-                ." */\n"
-
                 ."function HP_add_listener(obj, evt, fnc, useCapture) {\n"
                 ."	// obj : an HTML element\n"
                 ."	// evt : the name of the event (without leading 'on')\n"
@@ -1177,51 +1192,27 @@ class mod_hotpot_attempt_renderer extends mod_hotpot_renderer {
                 ."	// transfer object's old event handler (if any)\n"
                 ."	var onevent = 'on' + evt;\n"
                 ."	if (obj[onevent]) {\n"
-                ."		var old_event_handler = obj[onevent];\n"
+                ."		var old_fnc = obj[onevent];\n"
                 ."		obj[onevent] = null;\n"
-                ."		HP_add_listener(obj, evt, old_event_handler, useCapture);\n"
+                ."		HP_add_listener(obj, evt, old_fnc, useCapture);\n"
                 ."	}\n"
 
-                ."	// create key for this event handler\n"
-                ."	var s = fnc.toString();\n"
-                .'	s = s.replace(new RegExp("[; \\\\t\\\\n\\\\r]+", "g"), "");'."\n"
-                .'	s = s.substring(s.indexOf("{") + 1, s.lastIndexOf("}"));'."\n"
-                ."	s = evt + s;\n"
-
-                ."	 // skip event handler, if it is a duplicate\n"
-                ."	if (typeof(obj.evt_keys)=='undefined') {\n"
-                ."		obj.evt_keys = new Array();\n"
-                ."	}\n"
-                ."	var i_max = obj.evt_keys.length;\n"
-                ."	for (var i=0; i<i_max; i++) {\n"
-                ."		if (obj.evt_keys[i]==s) {\n"
-                ."			return true;\n"
-                ."		}\n"
-                ."	}\n"
-                ."	obj.evt_keys[i_max] = s;\n"
-
-                ."	// standard DOM\n"
                 ."	if (obj.addEventListener) {\n"
                 ."		obj.addEventListener(evt, fnc, (useCapture ? true : false));\n"
-                ."		return;\n"
-                ."	}\n"
-
-                ."	// IE\n"
-                ."	if (obj.attachEvent) {\n"
+                ."	} else if (obj.attachEvent) {\n"
                 ."		obj.attachEvent(onevent, fnc);\n"
-                ."		return;\n"
+                ."	} else {\n" // old browser NS4, IE5 ...
+                ."		if (! obj.evts) {\n"
+                ."			obj.evts = new Array();\n"
+                ."		}\n"
+                ."		if (obj.evts && ! obj.evts[onevent]) {\n"
+                ."			obj.evts[onevent] = new Array();\n"
+                ."		}\n"
+                ."		if (obj.evts && obj.evts[onevent] && ! obj.evts[onevent]) {\n"
+                ."			obj.evts[onevent][obj.evts[onevent].length] = fnc;\n"
+                ."			obj[onevent] = new Function('HP_handle_event(this, \"'+onevent+'\")');\n"
+                ."		}\n"
                 ."	}\n"
-
-                ."	// old browser (e.g. NS4 or IE5Mac)\n"
-                ."	if (! obj.evts) {\n"
-                ."		obj.evts = new Array();\n"
-                ."	}\n"
-                ."	if (! obj.evts[onevent]) {\n"
-                ."		obj.evts[onevent] = new Array();\n"
-                ."	}\n"
-                ."	var i = obj.evts[onevent].length;\n"
-                ."	obj.evts[onevent][i] = fnc;\n"
-                ."	obj[onevent] = new Function('var onevent=\"'+onevent+'\"; for (var i=0; i<this.evts[onevent].length; i++) this.evts[onevent][i]();');\n"
                 ."}\n"
 
                 ."function HP_remove_listener(obj, evt, fnc, useCapture) {\n"
@@ -1235,8 +1226,22 @@ class mod_hotpot_attempt_renderer extends mod_hotpot_renderer {
                 ."		obj.removeEventListener(evt, fnc, (useCapture ? true : false));\n"
                 ."	} else if (obj.attachEvent) {\n"
                 ."		obj.detachEvent(onevent, fnc);\n"
-                ."	} else {\n"
-                ."		obj[onevent] = null;\n"
+                ."	} else if (obj.evts && obj.evts[onevent]) {\n"
+                ."		var i_max = obj.evts[onevent].length;\n"
+                ."		for (var i=(i_max - 1); i>=0; i--) {\n"
+                ."			if (obj.evts[onevent][i]==fnc) {\n"
+                ."				obj.evts[onevent].splice(i, 1);\n"
+                ."			}\n"
+                ."		}\n"
+                ."	}\n"
+                ."}\n"
+
+                ."function HP_handle_event(obj, onevent) {\n"
+                ."	if (obj.evts[onevent]) {\n"
+                ."		var i_max = obj.evts[onevent].length\n"
+                ."		for (var i=0; i<i_max; i++) {\n"
+                ."			obj.evts[onevent][i]();\n"
+                ."		}\n"
                 ."	}\n"
                 ."}\n"
 

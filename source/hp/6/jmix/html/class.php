@@ -50,7 +50,7 @@ class hotpot_source_hp_6_jmix_html extends hotpot_source_hp_6_jmix {
             return false;
         }
 
-        if (! $content = $sourcefile->get_content()) {
+        if (! $content = self::get_content($sourcefile)) {
             // empty or non-existant file
             return false;
         }
