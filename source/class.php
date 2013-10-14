@@ -463,11 +463,12 @@ class hotpot_source {
     /**
      * get_real_path
      *
-     * @param object $context
+     * @param object $file
+     * @param object $hotpot (optional, default=null)
      * @return string
      */
     public static function get_real_path($file, $hotpot=null) {
-        global $CFG;
+        global $CFG, $PAGE;
 
         // sanity check
         if (empty($file)) {
@@ -485,28 +486,7 @@ class hotpot_source {
             return $path; // shoudn't happen !!
         }
 
-        switch (true) {
-            case isset($hotpot->coursemodule):
-                $context = hotpot_get_context(CONTEXT_MODULE, $hotpot->coursemodule);
-                break;
-            case isset($hotpot->cm):
-                $id = (is_object($hotpot->cm) ? $hotpot->cm->id : $hotpot->cm);
-                $context = hotpot_get_context(CONTEXT_MODULE, $id);
-                break;
-            case isset($hotpot->course):
-                $id = (is_object($hotpot->course) ? $hotpot->course->id : $hotpot->course);
-                $context = hotpot_get_context(CONTEXT_COURSE, $id);
-                break;
-            case isset($GLOBALS['modcontext']):
-                $context = $GLOBALS['modcontext'];
-                break;
-            case isset($GLOBALS['context']):
-                $context = $GLOBALS['context'];
-                break;
-            return $path; // shouldn't happen !!
-        }
-
-        if (! $repository = repository::get_repository_by_id($repositoryid, $context)) {
+        if (! $repository = repository::get_repository_by_id($repositoryid, $PAGE->context)) {
             return $path; // shouldn't happen
         }
 

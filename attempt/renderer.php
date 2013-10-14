@@ -745,12 +745,13 @@ class mod_hotpot_attempt_renderer extends mod_hotpot_renderer {
 
         $fileareas = array('source', 'config');
         foreach ($fileareas as $filearea) {
-            if (empty($this->hotpot->$filearea)) {
-                continue;
-            }
-            if (method_exists($this->hotpot->$filearea->file, 'get_repository_id')) {
-                $repositoryid = $filearea.'repositoryid';
-                $this->cache->$repositoryid = $this->hotpot->$filearea->file->get_repository_id();
+            $this->cache->{$filearea.'repositoryid'} = 0; // default
+            if (isset($this->hotpot->$filearea->file)) {
+                if (method_exists($this->hotpot->$filearea->file, 'get_repository_id')) {
+                    if ($repositoryid = $this->hotpot->$filearea->file->get_repository_id()) {
+                        $this->cache->{$filearea.'repositoryid'} = $repositoryid;
+                    }
+                }
             }
         }
 
@@ -1292,7 +1293,7 @@ class mod_hotpot_attempt_renderer extends mod_hotpot_renderer {
                 ."	obj = null;\n"
                 ."}\n"
 
-                ."HP_add_listener(document, 'load', HP_setup_input_and_textarea);\n"
+                ."HP_add_listener(window, 'load', HP_setup_input_and_textarea);\n"
 
                 // ensure keydown (not keypress) event handler is assigned
                 // to prevent leaving page when user hits delete key

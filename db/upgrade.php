@@ -788,7 +788,11 @@ function xmldb_hotpot_upgrade($oldversion) {
                 $dbman->add_field($table, $field);
             }
         }
+        upgrade_mod_savepoint(true, "$newversion", 'hotpot');
+    }
 
+    $newversion = 2010080380;
+    if ($oldversion < $newversion) {
         $empty_cache = true;
         upgrade_mod_savepoint(true, "$newversion", 'hotpot');
     }
