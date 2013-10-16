@@ -379,14 +379,14 @@ function hpQuizAttempt() {
         // based on http://www.captain.at/howto-ajax-form-post-request.php
         if (window.HP_xmlhttp===undefined || window.HP_xmlhttp===null) {
             window.HP_xmlhttp = false;
-            if (window.XMLHttpRequest) { // Mozilla, Safari,...
+            if (window.XMLHttpRequest) { // modern browser (incl. IE7+)
                 HP_xmlhttp = new XMLHttpRequest();
             } else if (window.ActiveXObject) { // IE
                 try {
-                    HP_xmlhttp = new ActiveXObject("Msxml2.XMLHTTP");
+                    HP_xmlhttp = new ActiveXObject("Msxml2.XMLHTTP"); // IE6
                 } catch (e) {
                     try {
-                        HP_xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+                        HP_xmlhttp = new ActiveXObject("Microsoft.XMLHTTP"); // IE5
                     } catch (e) {
                         HP_xmlhttp = false;
                     }
