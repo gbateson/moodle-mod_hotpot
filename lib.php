@@ -1481,9 +1481,9 @@ function hotpot_get_file_info($browser, $areas, $course, $cm, $context, $fileare
  * @param navigation_node $navref An object representing the navigation tree node of the hotpot module instance
  * @param stdclass $course
  * @param stdclass $module
- * @param stdclass $cm
+ * @param cm_info  $cm
  */
-function hotpot_extend_navigation(navigation_node $hotpotnode, stdclass $course, stdclass $module, stdclass $cm) {
+function hotpot_extend_navigation(navigation_node $hotpotnode, stdclass $course, stdclass $module, cm_info $cm) {
     global $CFG, $DB;
     require_once($CFG->dirroot.'/mod/hotpot/locallib.php');
 
