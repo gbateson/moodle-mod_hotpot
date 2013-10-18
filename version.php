@@ -31,6 +31,6 @@ defined('MOODLE_INTERNAL') || die();
 $module->cron      = 0;
 $module->component = 'mod_hotpot';
 $module->maturity  = MATURITY_STABLE; // = 200
-$module->release   = 'v3.0.81';
+$module->release   = 'v3.0.82';
 $module->requires  = 2010112400; // Moodle 2.0
-$module->version   = 2010080381;
+$module->version   = 2010080382;

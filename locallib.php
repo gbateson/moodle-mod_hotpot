@@ -364,7 +364,7 @@ class hotpot {
      * @param stdclass $context  The context of the hotpot instance
      * @param stdclass $attempt  attempt data from the {hotpot_attempts} table
      */
-    private function __construct(stdclass $dbrecord, stdclass $cm, stdclass $course, stdclass $context=null, stdclass $attempt=null) {
+    private function __construct($dbrecord, $cm, $course, $context=null, $attempt=null) {
         foreach ($dbrecord as $field => $value) {
             if (property_exists('hotpot', $field)) {
                 $this->$field = $value;
@@ -397,7 +397,7 @@ class hotpot {
      * @param stdclass $course a row from the course table
      * @return hotpot the new hotpot object
      */
-    static public function create(stdclass $dbrecord, stdclass $cm, stdclass $course, stdclass $context=null, stdclass $attempt=null) {
+    static public function create($dbrecord, $cm, $course, $context=null, $attempt=null) {
         return new hotpot($dbrecord, $cm, $course, $context, $attempt);
     }
 
