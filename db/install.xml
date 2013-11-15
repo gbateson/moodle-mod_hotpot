@@ -81,8 +81,9 @@
         <FIELD NAME="navigation" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="configetag" NEXT="title"/>
         <FIELD NAME="title" TYPE="int" LENGTH="6" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="navigation" NEXT="stopbutton"/>
         <FIELD NAME="stopbutton" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="title" NEXT="stoptext"/>
-        <FIELD NAME="stoptext" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="stopbutton" NEXT="usefilters"/>
-        <FIELD NAME="usefilters" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="stoptext" NEXT="useglossary"/>
+        <FIELD NAME="stoptext" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="stopbutton" NEXT="allowpaste"/>
+        <FIELD NAME="allowpaste" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="stoptext" NEXT="usefilters"/>
+        <FIELD NAME="usefilters" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="allowpaste" NEXT="useglossary"/>
         <FIELD NAME="useglossary" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="usefilters" NEXT="usemediafilter"/>
         <FIELD NAME="usemediafilter" TYPE="char" LENGTH="255" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="useglossary" NEXT="studentfeedback"/>
         <FIELD NAME="studentfeedback" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="usemediafilter" NEXT="studentfeedbackurl"/>
