@@ -1179,7 +1179,12 @@ class mod_hotpot_attempt_renderer extends mod_hotpot_renderer {
         } else {
             // only do this once per quiz
             $attacheventid = $this->hotpot->id;
-            $allowpaste = $this->hotpot->allowpaste;
+
+            if ($this->hotpot->allowpaste) {
+                $allowpaste = 'true';
+            } else {
+                $allowpaste = 'false';
+            }
             $str .= ''
                 ."function HP_add_listener(obj, evt, fnc, useCapture) {\n"
                 ."	// obj : an HTML element\n"
