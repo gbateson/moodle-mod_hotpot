@@ -776,7 +776,7 @@ function xmldb_hotpot_upgrade($oldversion) {
     if ($oldversion < $newversion) {
         $tables = array(
             'hotpot' => array(
-                new xmldb_field('allowpaste', XMLDB_TYPE_INTEGER, '2', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0', 'stoptext')
+                new xmldb_field('allowpaste', XMLDB_TYPE_INTEGER, '2', null, XMLDB_NOTNULL, null, '0', 'stoptext')
             ),
             'hotpot_cache' => array(
                 new xmldb_field('hotpot_bodystyles',  XMLDB_TYPE_CHAR,    '8',  null, XMLDB_NOTNULL, null, null, 'slasharguments'),
