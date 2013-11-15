@@ -266,6 +266,13 @@ class mod_hotpot_mod_form extends moodleform_mod {
         $mform->disabledIf('stopbutton_elements', 'stopbutton_yesno', 'ne', '1');
         $mform->disabledIf('stopbutton_text', 'stopbutton_type', 'ne', 'specific');
 
+        // Allow paste
+        $mform->addElement('selectyesno', 'allowpaste', get_string('allowpaste', 'hotpot'));
+        $mform->setType('allowpaste', PARAM_INT);
+        $mform->setDefault('allowpaste', get_user_preferences('hotpot_quiz_allowpaste', 1));
+        $mform->addHelpButton('allowpaste', 'allowpaste', 'hotpot');
+        $mform->setAdvanced('allowpaste');
+
         // Use filters
         $mform->addElement('selectyesno', 'usefilters', get_string('usefilters', 'hotpot'));
         $mform->setType('usefilters', PARAM_INT);

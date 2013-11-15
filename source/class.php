@@ -506,7 +506,11 @@ class hotpot_source {
         // get path according to repository $type
         switch ($type) {
             case 'filesystem':
-                $path = $repository->root_path.'/'.$file->get_reference();
+                if (method_exists($repository, 'get_rootpath')) {
+                    $path = $repository->get_rootpath().'/'.$file->get_reference();
+                } else if (isset($repository->root_path)) {
+                    $path = $repository->root_path.'/'.$file->get_reference();
+                }
                 break;
             case 'user':
             case 'coursefiles':

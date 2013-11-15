@@ -93,7 +93,7 @@ class mod_hotpot_attempt_renderer extends mod_hotpot_renderer {
      * "wwwroot" is not stored explicitly because it is included in the md5key
      */
     protected $cache_CFG_fields = array(
-        'slasharguments','hotpot_enableobfuscate','hotpot_enableswf'
+        'slasharguments','hotpot_bodystyles','hotpot_enableobfuscate','hotpot_enableswf'
     );
 
     /**
@@ -727,7 +727,7 @@ class mod_hotpot_attempt_renderer extends mod_hotpot_renderer {
 
         // transfer $CFG fields to cache record
         foreach ($this->cache_CFG_fields as $field) {
-            $this->cache->$field = $CFG->$field;
+            $this->cache->$field = trim($CFG->$field);
         }
 
         // transfer quiz fields to cache record
@@ -1179,6 +1179,7 @@ class mod_hotpot_attempt_renderer extends mod_hotpot_renderer {
         } else {
             // only do this once per quiz
             $attacheventid = $this->hotpot->id;
+            $allowpaste = $this->hotpot->allowpaste;
             $str .= ''
                 ."function HP_add_listener(obj, evt, fnc, useCapture) {\n"
                 ."	// obj : an HTML element\n"
@@ -1261,7 +1262,7 @@ class mod_hotpot_attempt_renderer extends mod_hotpot_renderer {
                 // By default, pasting of answers is NOT allowed.
                 // To allow it: window.allow_paste_input = true;
                 ."function HP_setup_input_and_textarea() {\n"
-                ."	if (window.allow_paste_input || window.enable_paste_input) {\n"
+                ."	if (window.allow_paste_input || window.enable_paste_input || $allowpaste) {\n"
                 ."		var disablepaste = false;\n"
                 ."	} else {\n"
                 ."		var disablepaste = true;\n"

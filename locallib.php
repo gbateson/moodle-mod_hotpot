@@ -241,6 +241,9 @@ class hotpot {
     /** @var string the string to be displayed on the stop button */
     public $stoptext;
 
+    /** @var boolean flag to indicate copy-paste should be allowed or not */
+    public $allowpaste;
+
     /** @var boolean flag to indicate quiz content should be run processed by Moodle filters */
     public $usefilters;
 
@@ -766,7 +769,7 @@ class hotpot {
             'entrycm','entrygrade','exitcm','exitgrade',
 
             // display
-            'outputformat','navigation','title','stopbutton','stoptext',
+            'outputformat','navigation','title','stopbutton','stoptext','allowpaste',
             'usefilters','useglossary','usemediafilter','studentfeedback','studentfeedbackurl',
 
             // access restrictions
