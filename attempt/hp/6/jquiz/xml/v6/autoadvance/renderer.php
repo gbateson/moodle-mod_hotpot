@@ -159,7 +159,7 @@ class mod_hotpot_attempt_hp_6_jquiz_xml_v6_autoadvance_renderer extends mod_hotp
 
         $dots = 'squares'; // default
         if ($param = clean_param($this->expand_UserDefined1(), PARAM_ALPHANUM)) {
-            if (is_dir($CFG->dirroot."/mod/hotpot/output/hp/6/jquiz/xml/v6/autoadvance/$param")) {
+            if (is_dir($CFG->dirroot."/mod/hotpot/pix/autoadvance/$param")) {
                 $dots = $param;
             }
         }
@@ -254,7 +254,7 @@ class mod_hotpot_attempt_hp_6_jquiz_xml_v6_autoadvance_renderer extends mod_hotp
             // add functions required for progress bar
             $substr .= "\n"
                 ."function AA_images() {\n"
-                ."	return 'output/hp/6/jquiz/xml/v6/autoadvance/$dots';\n"
+                ."	return 'pix/autoadvance/$dots';\n"
                 ."}\n"
                 ."function AA_ProgressArrow() {\n"
                 ."	var img = document.createElement('img');\n"
