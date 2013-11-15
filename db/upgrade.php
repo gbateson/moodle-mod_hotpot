@@ -772,25 +772,6 @@ function xmldb_hotpot_upgrade($oldversion) {
         upgrade_mod_savepoint(true, "$newversion", 'hotpot');
     }
 
-    $newversion = 2010080379;
-    if ($oldversion < $newversion) {
-
-        $table = new xmldb_table('hotpot_cache');
-        $fields = array(
-            new xmldb_field('sourcerepositoryid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0', 'sourcelocation'),
-            new xmldb_field('configrepositoryid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0', 'configlocation'),
-        );
-        foreach ($fields as $field) {
-            xmldb_hotpot_fix_previous_field($dbman, $table, $field);
-            if ($dbman->field_exists($table, $field)) {
-                $dbman->change_field_type($table, $field);
-            } else {
-                $dbman->add_field($table, $field);
-            }
-        }
-        upgrade_mod_savepoint(true, "$newversion", 'hotpot');
-    }
-
     $newversion = 2013111685;
     if ($oldversion < $newversion) {
         $tables = array(
@@ -798,7 +779,9 @@ function xmldb_hotpot_upgrade($oldversion) {
                 new xmldb_field('allowpaste', XMLDB_TYPE_INTEGER, '2', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0', 'stoptext')
             ),
             'hotpot_cache' => array(
-                new xmldb_field('hotpot_bodystyles', XMLDB_TYPE_CHAR, '8', null, XMLDB_NOTNULL, null, null, 'slasharguments')
+                new xmldb_field('hotpot_bodystyles',  XMLDB_TYPE_CHAR,    '8',  null, XMLDB_NOTNULL, null, null, 'slasharguments'),
+                new xmldb_field('sourcerepositoryid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0',  'sourcelocation'),
+                new xmldb_field('configrepositoryid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0',  'configlocation')
             ),
         );
         foreach ($tables as $table => $fields) {
