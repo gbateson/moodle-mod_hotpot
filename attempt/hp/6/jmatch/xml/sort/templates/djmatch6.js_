@@ -5,7 +5,6 @@
 // function Centrer_ligne : auteur Michael Rottmeier
 // pour un JMatch_Sort v.1.4.2 (exercice de catégorisation)
 
-
 //***************************************************************
 
 // données issues de l'interface :
@@ -33,7 +32,6 @@ function SetScormScore(){
 	if (API != null){
 		API.LMSSetValue('cmi.core.score.raw', Score);
 
-
 //Now send a detailed reports on the item
 		var ItemLabel = 'Matching';
 		API.LMSSetValue('cmi.objectives.0.id', 'obj'+ItemLabel);
@@ -57,7 +55,6 @@ function SetScormScore(){
 // you can change those variable values
 //***************************************************************
 
-
 // Hauteur des boites de catégorie
 // Height of the category boxes
 // définie dans [strUserDefined1]
@@ -70,7 +67,6 @@ var autoHeight = 1; // comment for no auto height
 // taille maximale pour accueillir tous les items
 // (translation)
 // var autoHeight = 0; //uncomment for no auto height
-
 
 // Largeur des boites de catégorie
 // Width of the category boxes
@@ -91,7 +87,6 @@ var equiWidthFC = 1; //comment for minimal widths
 // définie dans [strUserDefined3]
 // set in [strUserDefined3]
  var autoHighlight = '[strUserDefined3]';
-
 
 // entre le bord gauche d'une boite de catégorie et les items placés
 // (translation)
@@ -150,8 +145,6 @@ var QsToShow = [QsToShow];
 
 //***************************************************************
 
-
-
 //Fixed and draggable card arrays
 FC = new Array();
 DC = new Array();
@@ -162,9 +155,6 @@ Liste_FC = new Array();
 Liste_DC = new Array();
 // pour le réarrangement vertical dans les cartes réceptrices
 Liste_RC = new Array();
-
-
-
 
 function onEndDrag(){
 // modifié par AS
@@ -274,9 +264,6 @@ function StartUp(){
 		ReduceItems2();
 	}
 
-
-
-
 // ajouté par AS :
 // avant shuffle
 //***************************************************************
@@ -286,11 +273,9 @@ function StartUp(){
 // ajout d'un F[x][2] contenant le nombre de D correspondants (utilisé ?)
 // et adaptation des n° de correspondance de D
 
-
 	var NewF= new Array();
 	var q=0; //index du nouveau tableau
 	NewF [q]= new Array();
-
 
 	for(var x=0;x<F.length;x++) // pour chaque élément de F et l'élément de même index de D
 	{	stock=0;
@@ -340,7 +325,6 @@ function StartUp(){
 
 //Shuffle the categories (F)
 	//F = Shuffle(F);
-
 
 //***************************************************************
 // ************* Les cartes : définition et données *************
@@ -413,7 +397,6 @@ function StartUp(){
 	}
 		hauteur_totale_DC = hauteur_totale_DC - spacerV_CDinRC;// pas besoin d'un spacerV_CDinRC pour le dernier
 
-
 	// calcul de la hauteur totale des DC corrects pour chaque boite RC
 	var hauteur_total_DC_corrects =0;
 
@@ -426,7 +409,6 @@ function StartUp(){
 		if (hauteur_total_DC_corrects_in_RC > hauteur_total_DC_corrects) {hauteur_total_DC_corrects = hauteur_total_DC_corrects_in_RC - spacerV_CDinRC};
 		}
 	}
-
 
 //***************************************************************
 // **************** Les cartes : positionnement *****************
@@ -476,7 +458,6 @@ function StartUp(){
 
 		//centrage des cartes FC
 		Centrer_ligne(Liste_FC,0);
-
 
 //***************** positionnement des cartes RC ****************
 
@@ -543,7 +524,6 @@ function StartUp(){
 	//centrage des cartes DC
 		Centrer_ligne(Liste_DC,0);
 
-
 // fonction de centrage
 // d'après Michael Rottmeier
 function Centrer_ligne(CardList,idx_debut_ligne)
@@ -575,7 +555,6 @@ function Centrer_ligne(CardList,idx_debut_ligne)
 	}
 
 }
-
 
 //***************************************************************
 // Si on a coché les cases Fix dans l'interface de Jmatch
@@ -670,11 +649,7 @@ function Slide(MoverNum, TargL, TargT, TargW, LeftChange)
 }
 [/inclSlide]
 
-
-
-
 // *******************************************
-
 
 // *******************************************
 
@@ -731,7 +706,6 @@ function CheckAnswers(){
 // modifié par AS
 	// ne tient pas compte des cartes pré-fixées
 	// Penalties/2 pour que le score s'améliore lorsqu'on corrige une erreur
-
 
 	if (D.length == NbFix){ // cas où toutes les cartes sont fixées
 		Score = 0 ;

@@ -815,6 +815,17 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
     function fix_js_StartUp(&$str, $start, $length)  {
         $substr = substr($str, $start, $length);
 
+        // ensure StartUp is not called more than once
+        if ($pos = strpos($substr, '{')) {
+            $insert = "\n"
+                ."	if (window.StartedUp) {\n"
+                ."		return;\n"
+                ."	}\n"
+                ."	window.StartedUp = true;"
+            ;
+            $substr = substr_replace($substr, $insert, $pos+1, 0);
+        }
+
         // if necessary, fix drag area for JMatch or JMix drag-and-drop
         $this->fix_js_StartUp_DragAndDrop($substr);
 

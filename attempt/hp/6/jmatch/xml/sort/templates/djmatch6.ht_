@@ -98,7 +98,6 @@
 
 <!--
 
-
 for (var i=0; i<F.length; i++){
 	document.write('<div id="F' + i + '" class="CardStyleFC"></div>');
 }
