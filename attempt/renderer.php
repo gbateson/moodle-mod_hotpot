@@ -1019,8 +1019,7 @@ class mod_hotpot_attempt_renderer extends mod_hotpot_renderer {
      */
     function remove_blank_lines($str)  {
         // standardize line endings and remove trailing white space and blank lines
-        $str = preg_replace('/\s+[\r\n]/s', "\n", $str);
-        return $str;
+        return preg_replace('/\s+[\r\n]/s', "\n", $str);
     }
 
     /**
@@ -1081,6 +1080,9 @@ class mod_hotpot_attempt_renderer extends mod_hotpot_renderer {
         $container = '#'.$this->themecontainer;
         $css_selector = $match[1];
         $css_definition = $match[2];
+
+        // standardize indent to a single tab
+        $css_definition = preg_replace('/^[\t ]*(?=[^\n\r\t ])/m', "\t", $css_definition);
 
         // additional CSS for list items
         $listitem_css = '';

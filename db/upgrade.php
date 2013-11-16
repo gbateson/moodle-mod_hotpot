@@ -781,8 +781,8 @@ function xmldb_hotpot_upgrade($oldversion) {
             'hotpot_cache' => array(
                 new xmldb_field('hotpot_bodystyles',  XMLDB_TYPE_CHAR,    '8',  null, XMLDB_NOTNULL, null, null, 'slasharguments'),
                 new xmldb_field('sourcerepositoryid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0',  'sourcelocation'),
-                new xmldb_field('configrepositoryid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0',  'configlocation')
-                new xmldb_field('allowpaste',         XMLDB_TYPE_INTEGER, '2',  null, XMLDB_NOTNULL, null, '0',  'stoptext'),
+                new xmldb_field('configrepositoryid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0',  'configlocation'),
+                new xmldb_field('allowpaste',         XMLDB_TYPE_INTEGER, '2',  null, XMLDB_NOTNULL, null, '0',  'stoptext')
             ),
         );
         foreach ($tables as $table => $fields) {
@@ -797,7 +797,12 @@ function xmldb_hotpot_upgrade($oldversion) {
             }
         }
         upgrade_mod_savepoint(true, "$newversion", 'hotpot');
+    }
+
+    $newversion = 2013111686;
+    if ($oldversion < $newversion) {
         $empty_cache = true;
+        upgrade_mod_savepoint(true, "$newversion", 'hotpot');
     }
 
     if ($empty_cache) {

@@ -249,7 +249,12 @@ class mod_hotpot_attempt_hp_renderer extends mod_hotpot_attempt_renderer {
                 $this->styles = str_replace('TheBody', $this->themecontainer, $this->styles);
             }
 
+            // remove comments /* ... */
+            $this->styles = preg_replace('/[\n\r]*[\t ]*\/\*.*?\*\//s', '', $this->styles);
+
+            // remove blank lines
             $this->styles = $this->remove_blank_lines($this->styles);
+
         }
 
         // transfer <script> tags from $this->headcontent to $this->scripts

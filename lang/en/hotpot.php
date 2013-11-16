@@ -397,6 +397,7 @@ $string['outputformat_hp_6_jcross_xml_v6'] = 'JCross (v6) from xml';
 $string['outputformat_hp_6_jmatch_html'] = 'JMatch (v6) from html';
 $string['outputformat_hp_6_jmatch_xml_flashcard'] = 'JMatch (flashcard) from xml';
 $string['outputformat_hp_6_jmatch_xml_jmemori'] = 'JMemori from xml';
+$string['outputformat_hp_6_jmatch_xml_sort'] = 'JMatch Sort from xml';
 $string['outputformat_hp_6_jmatch_xml_v6'] = 'JMatch (v6) from xml';
 $string['outputformat_hp_6_jmatch_xml_v6_plus'] = 'JMatch (v6+) from xml';
 $string['outputformat_hp_6_jmix_html'] = 'JMix (v6) from html';
