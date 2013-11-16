@@ -60,7 +60,7 @@ class mod_hotpot_storage {
      *
      * @param xxx $hotpot
      */
-    public static function store($hotpot)  {
+    static public function store($hotpot)  {
         global $CFG, $DB, $USER;
 
         if (empty($hotpot->attempt)) {
@@ -182,7 +182,7 @@ class mod_hotpot_storage {
      * @param xxx $old_string (passed by reference)
      * @return xxx
      */
-    public static function pre_xmlize(&$old_string)  {
+    static public function pre_xmlize(&$old_string)  {
         $new_string = '';
         $str_start = 0;
         while (($cdata_start = strpos($old_string, '<![CDATA[', $str_start)) && ($cdata_end = strpos($old_string, ']]>', $cdata_start))) {
@@ -199,7 +199,7 @@ class mod_hotpot_storage {
      *
      * @param xxx $attempt (passed by reference)
      */
-    public static function store_details($attempt)  {
+    static public function store_details($attempt)  {
 
         // encode ampersands so that HTML entities are preserved in the XML parser
         // N.B. ampersands inside <![CDATA[ ]]> blocks do NOT need to be encoded
@@ -330,7 +330,7 @@ class mod_hotpot_storage {
      * @param xxx $question (passed by reference)
      * @param xxx $response (passed by reference)
      */
-    public static function add_response(&$attempt, &$question, &$response)  {
+    static public function add_response(&$attempt, &$question, &$response)  {
         global $DB;
 
         if (! $question || ! $response || ! isset($question->name)) {

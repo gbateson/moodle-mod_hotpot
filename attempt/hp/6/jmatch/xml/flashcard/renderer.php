@@ -58,7 +58,7 @@ class mod_hotpot_attempt_hp_6_jmatch_xml_flashcard_renderer extends mod_hotpot_a
      *
      * @return array of strings
      */
-    public static function sourcetypes()  {
+    static public function sourcetypes()  {
         return array('hp_6_jmatch_xml');
     }
 

@@ -420,7 +420,7 @@ class hotpot {
      *
      * @return array
      */
-    public static function available_navigations_list() {
+    static public function available_navigations_list() {
         return array (
             self::NAVIGATION_MOODLE   => get_string('navigation_moodle', 'hotpot'),
             self::NAVIGATION_TOPBAR   => get_string('navigation_topbar', 'hotpot'),
@@ -436,7 +436,7 @@ class hotpot {
      *
      * @return array
      */
-    public static function available_feedbacks_list() {
+    static public function available_feedbacks_list() {
         global $CFG;
         $list = array (
             self::FEEDBACK_NONE        => get_string('none'),
@@ -455,7 +455,7 @@ class hotpot {
      *
      * @return array
      */
-    public static function available_mediafilters_list() {
+    static public function available_mediafilters_list() {
         $plugins = get_list_of_plugins('mod/hotpot/mediafilter'); // sorted
 
         if (in_array('moodle', $plugins)) {
@@ -477,7 +477,7 @@ class hotpot {
      *
      * @return array
      */
-    public static function available_outputformats_list($sourcetype) {
+    static public function available_outputformats_list($sourcetype) {
 
         $outputformats = array(
             '0' => get_string('outputformat_best', 'hotpot')
@@ -506,7 +506,7 @@ class hotpot {
      *
      * @return array
      */
-    public static function available_attemptlimits_list() {
+    static public function available_attemptlimits_list() {
         $options = array(
             0 => get_string('attemptsunlimited', 'hotpot'),
         );
@@ -521,7 +521,7 @@ class hotpot {
      *
      * @return array
      */
-    public static function available_grademethods_list() {
+    static public function available_grademethods_list() {
         return array (
             self::GRADEMETHOD_HIGHEST => get_string('highestscore', 'hotpot'),
             self::GRADEMETHOD_AVERAGE => get_string('averagescore', 'hotpot'),
@@ -535,7 +535,7 @@ class hotpot {
      *
      * @return array
      */
-    public static function available_statuses_list() {
+    static public function available_statuses_list() {
         return array (
             self::STATUS_INPROGRESS => get_string('inprogress', 'hotpot'),
             self::STATUS_TIMEDOUT   => get_string('timedout', 'hotpot'),
@@ -549,7 +549,7 @@ class hotpot {
      *
      * @return array
      */
-    public static function available_namesources_list() {
+    static public function available_namesources_list() {
         return array (
             self::TEXTSOURCE_FILE     => get_string('textsourcefile', 'hotpot'),
             self::TEXTSOURCE_FILENAME => get_string('textsourcefilename', 'hotpot'),
@@ -563,7 +563,7 @@ class hotpot {
      *
      * @return array
      */
-    public static function available_titles_list() {
+    static public function available_titles_list() {
         return array (
             self::TEXTSOURCE_SPECIFIC => get_string('hotpotname', 'hotpot'),
             self::TEXTSOURCE_FILE     => get_string('textsourcefile', 'hotpot'),
@@ -577,7 +577,7 @@ class hotpot {
      *
      * @return array
      */
-    public static function available_gradeweightings_list() {
+    static public function available_gradeweightings_list() {
         $options = array();
         for ($i=100; $i>=1; $i--) {
             $options[$i] = $i;
@@ -592,7 +592,7 @@ class hotpot {
      * @param stored_file $sourcefile the file that has just been uploaded and stored
      * @return string the type of the source file (e.g. hp_6_jcloze_xml)
      */
-    public static function get_sourcetype($sourcefile) {
+    static public function get_sourcetype($sourcefile) {
         // include all the hotpot_source classes
         $classes = self::get_classes('hotpotsource');
 
@@ -620,7 +620,7 @@ class hotpot {
      *        array('flagged', 'question')
      *    )
      */
-    public static function get_js_module(array $requires = null, array $strings = null) {
+    static public function get_js_module(array $requires = null, array $strings = null) {
         return array(
             'name' => 'mod_hotpot',
             'fullpath' => '/mod/hotpot/module.js',
@@ -635,7 +635,7 @@ class hotpot {
      * @param xxx $info
      * @return xxx
      */
-    public static function get_version_info($info)  {
+    static public function get_version_info($info)  {
         global $CFG;
 
         static $module = null;
@@ -656,7 +656,7 @@ class hotpot {
     *
     * @param xxx $classname
     */
-   public static function load_mediafilter_filter($classname)  {
+   static public function load_mediafilter_filter($classname)  {
         global $CFG;
         $path = $CFG->dirroot.'/mod/hotpot/mediafilter/'.$classname.'/class.php';
 
@@ -675,7 +675,7 @@ class hotpot {
      * @param xxx $context
      * @return xxx
      */
-    public static function sourcefile_options() {
+    static public function sourcefile_options() {
         return array('subdirs' => 1, 'maxbytes' => 0, 'maxfiles' => -1);
     }
 
@@ -685,7 +685,7 @@ class hotpot {
      * @param xxx $context
      * @return xxx
      */
-    public static function text_editors_options($context)  {
+    static public function text_editors_options($context)  {
         return array('subdirs' => 1, 'maxbytes' => 0, 'maxfiles' => EDITOR_UNLIMITED_FILES,
                      'changeformat' => 1, 'context' => $context, 'noclean' => 1, 'trusttext' => 0);
     }
@@ -695,7 +695,7 @@ class hotpot {
      *
      * @return xxx
      */
-    public static function text_page_types() {
+    static public function text_page_types() {
         return array('entry', 'exit');
     }
 
@@ -705,7 +705,7 @@ class hotpot {
      * @param xxx $type
      * @return xxx
      */
-    public static function text_page_options($type)  {
+    static public function text_page_options($type)  {
         if ($type=='entry') {
             return array(
                 'title'         => self::ENTRYOPTIONS_TITLE,
@@ -734,7 +734,7 @@ class hotpot {
      *
      * @return xxx
      */
-    public static function reviewoptions_times_items() {
+    static public function reviewoptions_times_items() {
         return array(
             array( // times
                 'duringattempt' => self::REVIEW_DURINGATTEMPT,
@@ -755,7 +755,7 @@ class hotpot {
      *
      * @return array of user_preferences used by the HotPot module
      */
-    public static function user_preferences_fieldnames() {
+    static public function user_preferences_fieldnames() {
         return array(
             // fields used only when adding a new HotPot
             'namesource','entrytextsource','exittextsource','quizchain',
@@ -787,7 +787,7 @@ class hotpot {
      * @param xxx $field_value
      * @return xxx
      */
-    public static function string_ids($field_value, $max_field_length=255)  {
+    static public function string_ids($field_value, $max_field_length=255)  {
         $ids = array();
 
         $strings = explode(',', $field_value);
@@ -827,7 +827,7 @@ class hotpot {
      * @param xxx $str
      * @return xxx
      */
-    public static function string_id($str)  {
+    static public function string_id($str)  {
         global $DB;
 
         if (! isset($str) || ! is_string($str) || trim($str)=='') {
@@ -859,7 +859,7 @@ class hotpot {
      * @param xxx $ids
      * @return xxx
      */
-    public static function get_strings($ids)  {
+    static public function get_strings($ids)  {
         global $DB;
 
         // convert $ids to an array, if necessary
@@ -1053,7 +1053,7 @@ class hotpot {
      *
      * @return string
      */
-    public static function format_status($status) {
+    static public function format_status($status) {
         $options = self::available_statuses_list();
         if (array_key_exists($status, $options)) {
             return $options[$status];
@@ -1070,7 +1070,7 @@ class hotpot {
      * @param string $notime return value if $time==0
      * @return string
      */
-    public static function format_time($time, $format=null, $notime='&nbsp;') {
+    static public function format_time($time, $format=null, $notime='&nbsp;') {
         if ($time>0) {
             return format_time($time, $format);
         } else {

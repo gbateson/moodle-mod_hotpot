@@ -48,7 +48,7 @@ class course_module_viewed extends \core\event\content_viewed {
      *
      * @return string legacy event name
      */
-    public static function get_legacy_eventname() {
+    static public function get_legacy_eventname() {
         return 'hotpot_viewed';
     }
 
@@ -66,7 +66,7 @@ class course_module_viewed extends \core\event\content_viewed {
      *
      * @return string
      */
-    public static function get_name() {
+    static public function get_name() {
         return get_string('hotpotviewed', 'hotpot');
     }
 

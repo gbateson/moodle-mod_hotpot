@@ -43,7 +43,7 @@ class mod_hotpot_attempt_hp_6_jquiz_xml_v6_autoadvance_renderer extends mod_hotp
      *
      * @return array of strings
      */
-    public static function sourcetypes()  {
+    static public function sourcetypes()  {
         return array('hp_6_jquiz_xml');
     }
 
