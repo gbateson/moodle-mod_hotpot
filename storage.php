@@ -110,7 +110,9 @@ class mod_hotpot_storage {
         $startfield = self::durationstartfield; // "starttime" or "timestart"
         $finishfield = self::durationfinishfield; // "endtime" or "timefinish"
         $duration = ($hotpot->attempt->$finishfield - $hotpot->attempt->$startfield);
-        if ($duration > 0) {
+        if (empty($hotpot->attempt->duration)) {
+            $hotpot->attempt->duration = $duration;
+        } else if ($duration > 0) {
             $hotpot->attempt->duration += $duration;
         }
         unset($duration, $startfield, $finishfield);
