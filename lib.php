@@ -961,6 +961,7 @@ function hotpot_grade_item_update($hotpot, $grades=null) {
         return;
     }
 
+    // set up params for grade_update()
     $params = array(
         'itemname' => $hotpot->name
     );
@@ -968,17 +969,23 @@ function hotpot_grade_item_update($hotpot, $grades=null) {
         $params['reset'] = true;
         $grades = null;
     }
-    if (property_exists($hotpot, 'cmidnumber')) {
+    if (isset($hotpot->cmidnumber)) {
         //cmidnumber may not be always present
         $params['idnumber'] = $hotpot->cmidnumber;
     }
-    if ($hotpot->gradeweighting > 0) {
+    if ($hotpot->gradeweighting) {
         $params['gradetype'] = GRADE_TYPE_VALUE;
         $params['grademax']  = $hotpot->gradeweighting;
         $params['grademin']  = 0;
-
     } else {
         $params['gradetype'] = GRADE_TYPE_NONE;
+        // Note: when adding a new activity, a gradeitem will *not*
+        // be created in the grade book if gradetype==GRADE_TYPE_NONE
+        // A gradeitem will be created later if gradetype changes to GRADE_TYPE_VALUE
+        // However, the gradeitem will *not* be deleted if the activity's
+        // gradetype changes back from GRADE_TYPE_VALUE to GRADE_TYPE_NONE
+        // Therefore, we force the removal of empty gradeitems
+        $params['deleted'] = true;
     }
     return grade_update('mod/hotpot', $hotpot->course, 'mod', 'hotpot', $hotpot->id, 0, $grades, $params);
 }

@@ -54,7 +54,7 @@ foreach ($items as $item) {
         continue;
     }
     if ($item->isFile()) {
-        $href = $CFG->wwwroot.'/'.$dirname.'/'.$item;
+        $href = $CFG->wwwroot."$dirname/$item";
         echo html_writer::tag('li', html_writer::tag('a', $item, array('href' => $href)))."\n";
     }
 }

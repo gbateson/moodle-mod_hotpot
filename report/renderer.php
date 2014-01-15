@@ -68,13 +68,23 @@ class mod_hotpot_report_renderer extends mod_hotpot_renderer {
         // save a reference to the $hotpot record
         $this->hotpot = $hotpot;
 
+        // remove grade filter and column, if not required
+        if (! $hotpot->gradeweighting) {
+            if (array_key_exists('grade', $this->filterfields)) {
+                unset($this->filterfields['grade']);
+            }
+            $i = array_search('grade', $this->tablecolumns);
+            if (is_numeric($i)) {
+                array_splice($this->tablecolumns, $i, 1);
+            }
+        }
+
         // add question numbers to $tablecolumns
         if ($this->has_questioncolumns) {
             if ($records = $DB->get_records('hotpot_questions', array('hotpotid' => $this->hotpot->id), '', 'id,name,text')) {
                 $this->questions = array_values($records);
             }
         }
-
     }
 
     /**
