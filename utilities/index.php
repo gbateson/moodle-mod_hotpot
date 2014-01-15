@@ -37,6 +37,7 @@ $PAGE->set_url($CFG->wwwroot.$SCRIPT);
 $title = 'HotPot Utilities index';
 $PAGE->set_title($title);
 $PAGE->set_heading($title);
+$PAGE->set_pagelayout('admin');
 
 echo $OUTPUT->header();
 echo $OUTPUT->box_start();

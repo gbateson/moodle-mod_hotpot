@@ -265,7 +265,7 @@ class mod_hotpot_report_renderer extends mod_hotpot_renderer {
             // or the "get_sql_filter_attempts()" method of the hotpot "grade" filter
             // Note that we expect that there will always be a "grade_items" record
             // but there may not necessarily be a "grade_grades" record
-            $from   .= ' INNER JOIN {grade_items} gi ON gi.courseid = :courseid'.
+            $from   .= ' LEFT JOIN {grade_items} gi  ON gi.courseid = :courseid'.
                                                   ' AND gi.itemtype = :itemtype'.
                                                   ' AND gi.itemmodule = :itemmodule'.
                                                   ' AND gi.iteminstance = :iteminstance'.
