@@ -507,7 +507,7 @@ function hpQuizAttempt() {
      */
     this.end_of_quiz = function (evt) {
         if (evt==null) {
-            return (this.form==null || evt==this.EVENT_COMPLETED || evt==this.EVENT_SENDVALUES);
+            return (this.form==null || this.evt==this.EVENT_COMPLETED || this.evt==this.EVENT_SENDVALUES);
         }
         return (evt==this.EVENT_ABANDONED || evt==this.EVENT_TIMEDOUT || evt==this.EVENT_COMPLETED || evt==this.EVENT_SETVALUES || evt==this.EVENT_SENDVALUES);
     };

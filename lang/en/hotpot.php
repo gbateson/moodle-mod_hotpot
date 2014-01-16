@@ -523,6 +523,7 @@ $string['title_help'] = 'This setting specifies the title to be displayed on the
 $string['unitname_help'] = 'help text for unit name';
 $string['unrecognizedsourcefile'] = 'Sorry, the HotPot module could not detect the type of the source file: {$a}';
 $string['updated'] = 'Updated';
+$string['updatinggrades'] = 'Updating HotPot grades';
 $string['usefilters'] = 'Use filters';
 $string['usefilters_help'] = 'If this setting is enabled, the content will be passed through the Moodle filters before being sent to the browser.';
 $string['useglossary'] = 'Use glossary';

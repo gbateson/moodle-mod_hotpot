@@ -799,8 +799,9 @@ function xmldb_hotpot_upgrade($oldversion) {
         upgrade_mod_savepoint(true, "$newversion", 'hotpot');
     }
 
-    $newversion = 2013111688;
+    $newversion = 2014011693;
     if ($oldversion < $newversion) {
+        hotpot_update_grades();
         $empty_cache = true;
         upgrade_mod_savepoint(true, "$newversion", 'hotpot');
     }

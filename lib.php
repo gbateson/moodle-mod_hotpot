@@ -995,19 +995,74 @@ function hotpot_grade_item_update($hotpot, $grades=null) {
  *
  * Needed by grade_update_mod_grades() in lib/gradelib.php
  *
- * @param stdclass $hotpot instance object with extra cmidnumber and modname property
- * @param int $userid update grade of specific user only, 0 means all participants
+ * @param stdclass  $hotpot      instance object with extra cmidnumber and modname property
+ * @param integer   $userid      >0 update grade of specific user only, 0 means all participants
+ * @param boolean   $nullifnone  TRUE = force creation of NULL grade if this user has no grade
+ * @return boolean  TRUE if successful, FALSE otherwise
  * @return void
  */
-function hotpot_update_grades($hotpot, $userid=0, $nullifnone=true) {
+function hotpot_update_grades($hotpot=null, $userid=0, $nullifnone=true) {
     global $CFG, $DB;
 
     // get hotpot object
     require_once($CFG->dirroot.'/mod/hotpot/locallib.php');
 
+    if ($hotpot===null) {
+        // update/create grades for all hotpots
+
+        // set up sql strings
+        $strupdating = get_string('updatinggrades', 'hotpot');
+        $select = 'h.*, cm.idnumber AS cmidnumber';
+        $from   = '{hotpot} h, {course_modules} cm, {modules} m';
+        $where  = 'h.id = cm.instance AND cm.module = m.id AND m.name = ?';
+        $params = array('hotpot');
+
+        // get previous record index (if any)
+        if (! $config = $DB->get_record('config', array('name'=>'hotpot_update_grades'))) {
+            $config = (object)array('id'=>0, 'name'=>'hotpot_update_grades', 'value'=>'0');
+        }
+        $i_min = intval($config->value);
+
+        $i_max = $DB->count_records_sql("SELECT COUNT('x') FROM $from WHERE $where", $params);
+        if ($rs = $DB->get_recordset_sql("SELECT $select FROM $from WHERE $where", $params)) {
+            $bar = new progress_bar('hotpotupgradegrades', 500, true);
+            $i = 0;
+            foreach ($rs as $hotpot) {
+
+                // update grade
+                if ($i >= $i_min) {
+                    upgrade_set_timeout(); // apply for more time (3 mins)
+                    hotpot_update_grades($hotpot, 0, false);
+                }
+
+                // update progress bar
+                $i++;
+                $bar->update($i, $i_max, $strupdating.": ($i/$i_max)");
+
+                // update record index
+                if ($i > $i_min) {
+                    $config->value = "$i";
+                    if ($config->id) {
+                        $DB->update_record('config', $config);
+                    } else {
+                        $config->id = $DB->insert_record('config', $config);
+                    }
+                }
+            }
+            $rs->close();
+        }
+
+        // delete the record index
+        if ($config->id) {
+            $DB->delete_records('config', array('id'=>$config->id));
+        }
+
+        return true;
+    }
+
     // sanity check on $hotpot->id
     if (! isset($hotpot->id)) {
-        return;
+        return false;
     }
 
     if ($hotpot->grademethod==hotpot::GRADEMETHOD_AVERAGE || $hotpot->gradeweighting<100) {
@@ -1071,6 +1126,8 @@ function hotpot_update_grades($hotpot, $userid=0, $nullifnone=true) {
         // no grades and no userid
         hotpot_grade_item_update($hotpot);
     }
+
+    return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
