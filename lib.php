@@ -480,39 +480,33 @@ function hotpot_print_recent_activity($course, $viewfullnames, $timestart) {
     //     view.php    : view
     // all these actions have a record in the "log_display" table
 
-    $select = "time>? AND course=? AND module=? AND action IN (?, ?, ?, ?, ?)";
+    $select = "time > ? AND course = ? AND module = ? AND action IN (?, ?, ?, ?, ?)";
     $params = array($timestart, $course->id, 'hotpot', 'add', 'update', 'view', 'attempt', 'submit');
 
     if ($logs = $DB->get_records_select('log', $select, $params, 'time ASC')) {
 
-        $coursecontext = hotpot_get_context(CONTEXT_COURSE, $course->id);
-        $viewhiddensections = has_capability('moodle/course:viewhiddensections', $coursecontext);
-
-        if ($modinfo = unserialize($course->modinfo)) {
-            $coursemoduleids = array_keys($modinfo);
-        } else {
-            $coursemoduleids = array();
-        }
+        $modinfo = get_fast_modinfo($course);
+        $cmids   = array_keys($modinfo->get_cms());
 
         $stats = array();
         foreach ($logs as $log) {
             $cmid = $log->cmid;
-            if (! array_key_exists($cmid, $modinfo)) {
+            if (! in_array($cmid, $cmids)) {
                 continue; // invalid $cmid - shouldn't happen !!
             }
-            if (! $viewhiddensections && ! $modinfo[$cmid]->visible) {
+            $cm = $modinfo->get_cm($cmid);
+            if (! $cm->uservisible) {
                 continue; // coursemodule is hidden from user
             }
-            $sortorder = array_search($cmid, $coursemoduleids);
+            $sortorder = array_search($cmid, $cmids);
             if (! array_key_exists($sortorder, $stats)) {
-                $context = hotpot_get_context(CONTEXT_MODULE, $cmid);
-                if (has_capability('mod/hotpot:reviewmyattempts', $context) || has_capability('mod/hotpot:reviewallattempts', $context)) {
+                if (has_capability('mod/hotpot:reviewmyattempts', $cm->context) || has_capability('mod/hotpot:reviewallattempts', $cm->context)) {
                     $viewreport = true;
                 } else {
                     $viewreport = false;
                 }
                 $stats[$sortorder] = (object)array(
-                    'name' => format_string(urldecode($modinfo[$cmid]->name)),
+                    'name' => $cm->get_formatted_name(array('context' => $cm->context)),
                     'cmid' => $cmid, 'add'=>0, 'update'=>0, 'view'=>0, 'attempt'=>0, 'submit'=>0,
                     'viewreport' => $viewreport,
                     'users' => array()
@@ -629,14 +623,6 @@ function hotpot_print_recent_activity($course, $viewfullnames, $timestart) {
 function hotpot_get_recent_mod_activity(&$activities, &$index, $timestart, $courseid, $coursemoduleid=0, $userid=0, $groupid=0) {
     global $CFG, $DB, $USER;
 
-    if (! $course = $DB->get_record('course', array('id'=>$courseid))) {
-        return; // invalid course id - shouldn't happen !!
-    }
-
-    if (! $modinfo = unserialize($course->modinfo)) {
-        return; // no activity mods
-    }
-
     // CONTRIB-4025 don't allow students to see each other's scores
     $coursecontext = hotpot_get_context(CONTEXT_COURSE, $courseid);
     if (! has_capability('mod/hotpot:reviewmyattempts', $coursecontext)) {
@@ -646,17 +632,22 @@ function hotpot_get_recent_mod_activity(&$activities, &$index, $timestart, $cour
         $userid = $USER->id; // force this user only
     }
 
-    $hotpots = array(); // hotpotid => cmid
+    $modinfo = get_fast_modinfo($courseid);
+    $course  = $modinfo->get_course();
+    $cms     = $modinfo->get_cms();
 
-    foreach (array_keys($modinfo) as $cmid) {
-        if ($modinfo[$cmid]->mod=='hotpot' && ($coursemoduleid==0 || $coursemoduleid==$cmid)) {
+    $hotpots = array(); // hotpotid => cmid
+    $users   = array(); // cmid => array(userids)
+
+    foreach ($cms as $cmid => $cm) {
+        if ($cm->modname=='hotpot' && ($coursemoduleid==0 || $coursemoduleid==$cmid)) {
             // save mapping from hotpotid => coursemoduleid
-            $hotpots[$modinfo[$cmid]->id] = $cmid;
+            $hotpots[$cm->instance] = $cmid;
             // initialize array of users who have recently attempted this HotPot
-            $modinfo[$cmid]->users = array();
+            $users[$cmid] = array();
         } else {
             // we are not interested in this mod
-            unset($modinfo[$cmid]);
+            unset($cms[$cmid]);
         }
     }
 
@@ -695,39 +686,32 @@ function hotpot_get_recent_mod_activity(&$activities, &$index, $timestart, $cour
         if (! array_key_exists($attempt->hotpotid, $hotpots)) {
             continue; // invalid hotpotid - shouldn't happen !!
         }
+
         $cmid = $hotpots[$attempt->hotpotid];
-
-        if (! array_key_exists($cmid, $modinfo)) {
-            continue; // invalid cmid - shouldn't happen !!
-        }
-        $mod = &$modinfo[$cmid];
-
         $userid = $attempt->userid;
-        if (! array_key_exists($userid, $mod->users)) {
-            $mod->users[$userid] = (object)array(
-                'id' => $userid,
-                'userid' => $userid,
+        if (! array_key_exists($userid, $user[$cmid])) {
+            $users[$cmid][$userid] = (object)array(
+                'id'        => $userid,
+                'userid'    => $userid,
                 'firstname' => $attempt->firstname,
-                'lastname' => $attempt->lastname,
-                'fullname' => fullname($attempt),
-                'picture' => $attempt->picture,
-                'imagealt' => $attempt->imagealt,
-                'email' => $attempt->email,
-                'attempts' => array()
+                'lastname'  => $attempt->lastname,
+                'fullname'  => fullname($attempt),
+                'picture'   => $attempt->picture,
+                'imagealt'  => $attempt->imagealt,
+                'email'     => $attempt->email,
+                'attempts'  => array()
             );
         }
         // add this attempt by this user at this course module
-        $mod->users[$userid]->attempts[$attempt->attempt] = &$attempt;
+        $users[$cmid][$userid]->attempts[$attempt->attempt] = &$attempt;
     }
 
-    foreach (array_keys($modinfo) as $cmid) {
-        $mod = &$modinfo[$cmid];
-        if (empty($mod->users)) {
+    foreach ($cms as $cmid => $cm) {
+        if (empty($users[$cmid])) {
             continue;
         }
         // add an activity object for each user's attempts at this hotpot
-        foreach (array_keys($mod->users) as $userid) {
-            $user = &$mod->users[$userid];
+        foreach ($users[$cmid] as $userid => $user) {
 
             // get index of last (=most recent) attempt
             $max_unumber = max(array_keys($user->attempts));
@@ -735,18 +719,18 @@ function hotpot_get_recent_mod_activity(&$activities, &$index, $timestart, $cour
             $activities[$index++] = (object)array(
                 'type' => 'hotpot',
                 'cmid' => $cmid,
-                'name' => format_string(urldecode($mod->name)),
+                'name' => $cm->get_formatted_name(array('context' => $cm->context)),
                 'user' => (object)array(
-                    'id' => $user->id,
-                    'userid' => $user->userid,
+                    'id'        => $user->id,
+                    'userid'    => $user->userid,
                     'firstname' => $user->firstname,
-                    'lastname' => $user->lastname,
-                    'fullname' => $user->fullname,
-                    'picture' => $user->picture,
-                    'imagealt' => $user->imagealt,
-                    'email' => $user->email
+                    'lastname'  => $user->lastname,
+                    'fullname'  => $user->fullname,
+                    'picture'   => $user->picture,
+                    'imagealt'  => $user->imagealt,
+                    'email'     => $user->email
                 ),
-                'attempts' => $user->attempts,
+                'attempts'  => $user->attempts,
                 'timestamp' => $user->attempts[$max_unumber]->timemodified
             );
         }
