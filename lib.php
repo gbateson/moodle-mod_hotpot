@@ -505,11 +505,22 @@ function hotpot_print_recent_activity($course, $viewfullnames, $timestart) {
                 } else {
                     $viewreport = false;
                 }
+                $options = array('context' => $cm->context);
+                if (method_exists($cm, 'get_formatted_name')) {
+                    $name = $cm->get_formatted_name($options);
+                } else {
+                    $name = format_string($cm->name, true,  $options);
+                }
                 $stats[$sortorder] = (object)array(
-                    'name' => $cm->get_formatted_name(array('context' => $cm->context)),
-                    'cmid' => $cmid, 'add'=>0, 'update'=>0, 'view'=>0, 'attempt'=>0, 'submit'=>0,
-                    'viewreport' => $viewreport,
-                    'users' => array()
+                    'name'    => $name,
+                    'cmid'    => $cmid,
+                    'add'     => 0,
+                    'update'  => 0,
+                    'view'    => 0,
+                    'attempt' => 0,
+                    'submit'  => 0,
+                    'users'   => array(),
+                    'viewreport' => $viewreport
                 );
             }
             $action = $log->action;
@@ -632,9 +643,22 @@ function hotpot_get_recent_mod_activity(&$activities, &$index, $timestart, $cour
         $userid = $USER->id; // force this user only
     }
 
-    $modinfo = get_fast_modinfo($courseid);
-    $course  = $modinfo->get_course();
-    $cms     = $modinfo->get_cms();
+    // we want to detect Moodle >= 2.4
+    // method_exists('course_modinfo', 'get_used_module_names')
+    // method_exists('cm_info', 'get_modue_type_name')
+    // method_exists('cm_info', 'is_user_access_restricted_by_capability')
+
+    $reflector = new ReflectionFunction('get_fast_modinfo');
+    if ($reflector->getNumberOfParameters() >= 3) {
+        // Moodle >= 2.4 has 3rd parameter ($resetonly)
+        $modinfo = get_fast_modinfo($courseid);
+        $course  = $modinfo->get_course();
+    } else {
+        // Moodle <= 2.3
+        $course = $DB->get_record('course', array('id' => $courseid));
+        $modinfo = get_fast_modinfo($course);
+    }
+    $cms = $modinfo->get_cms();
 
     $hotpots = array(); // hotpotid => cmid
     $users   = array(); // cmid => array(userids)
@@ -716,10 +740,17 @@ function hotpot_get_recent_mod_activity(&$activities, &$index, $timestart, $cour
             // get index of last (=most recent) attempt
             $max_unumber = max(array_keys($user->attempts));
 
+            $options = array('context' => $cm->context);
+            if (method_exists($cm, 'get_formatted_name')) {
+                $name = $cm->get_formatted_name($options);
+            } else {
+                $name = format_string($cm->name, true,  $options);
+            }
+
             $activities[$index++] = (object)array(
                 'type' => 'hotpot',
                 'cmid' => $cmid,
-                'name' => $cm->get_formatted_name(array('context' => $cm->context)),
+                'name' => $name,
                 'user' => (object)array(
                     'id'        => $user->id,
                     'userid'    => $user->userid,
