@@ -689,7 +689,7 @@ function hotpot_get_recent_mod_activity(&$activities, &$index, $timestart, $cour
 
         $cmid = $hotpots[$attempt->hotpotid];
         $userid = $attempt->userid;
-        if (! array_key_exists($userid, $user[$cmid])) {
+        if (! array_key_exists($userid, $users[$cmid])) {
             $users[$cmid][$userid] = (object)array(
                 'id'        => $userid,
                 'userid'    => $userid,
