@@ -1530,7 +1530,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
     }
 
     /**
-     * filter_text_bodycontent
+     * filter_text_to_utf8
      *
      * @param xxx $str
      * @param xxx $search
@@ -1555,9 +1555,9 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      */
     function filter_text_bodycontent()  {
         // convert entities to utf8, filter text and convert back
-        //$this->bodycontent = hotpot_textlib('entities_to_utf8', $this->bodycontent);
-        //$this->bodycontent = filter_text($this->bodycontent);
-        //$this->bodycontent = hotpot_textlib('utf8_to_entities', $this->bodycontent);
+        $this->bodycontent = hotpot_textlib('entities_to_utf8', $this->bodycontent);
+        $this->bodycontent = filter_text($this->bodycontent);
+        $this->bodycontent = hotpot_textlib('utf8_to_entities', $this->bodycontent);
     }
 
     /**

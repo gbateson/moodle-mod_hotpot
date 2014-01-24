@@ -803,6 +803,11 @@ function xmldb_hotpot_upgrade($oldversion) {
     if ($oldversion < $newversion) {
         require_once($CFG->dirroot.'/mod/hotpot/lib.php');
         hotpot_update_grades();
+        upgrade_mod_savepoint(true, "$newversion", 'hotpot');
+    }
+
+    $newversion = 2014012498;
+    if ($oldversion < $newversion) {
         $empty_cache = true;
         upgrade_mod_savepoint(true, "$newversion", 'hotpot');
     }
