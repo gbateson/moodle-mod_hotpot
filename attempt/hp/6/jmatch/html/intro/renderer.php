@@ -62,8 +62,47 @@ class mod_hotpot_attempt_hp_6_jmatch_html_intro_renderer extends mod_hotpot_atte
     function get_js_functionnames()  {
         // start list of function names
         $names = parent::get_js_functionnames();
-        $names .= ($names ? ',' : '').'CheckAnswer';
+        $names .= ($names ? ',' : '').'CheckAnswer,ShowDescription';
         return $names;
+    }
+
+    /**
+     * fix_js_ShowDescription
+     *
+     * @param xxx $str (passed by reference)
+     * @param xxx $start
+     * @param xxx $length
+     * @todo Finish documenting this function
+     */
+    public function fix_js_ShowDescription(&$str, $start, $length)  {
+        $replace = ''
+            ."function ShowDescription(evt, ElmNum){\n"
+            ."	if (evt==null) {\n"
+            ."		evt = window.event; // IE\n"
+            ."	}\n"
+
+            ."	var obj = document.getElementById('DivIntroPage');\n"
+            ."	if (obj) {\n"
+            ."		obj.innerHTML = D[ElmNum][0];\n"
+            ."		obj.style.display = 'block';\n"
+
+            ."		var pg = new PageDim();\n"
+
+            ."		var posX = (evt.clientX + 20 - obj.offsetWidth);\n"
+            ."		posX = Math.max(5, Math.min(pg.W * 0.95, posX));\n"
+            ."		posX += ((is.ie) ? document.body.scrollLeft : window.pageXOffset);\n"
+
+            ."		var posY = (evt.clientY - 5 - obj.offsetHeight);\n"
+            ."		posY = Math.max(5, Math.min(pg.H * 0.95, posY));\n"
+            ."		posY += ((is.ie) ? document.body.scrollTop : window.pageYOffset);\n"
+
+            ."		obj.style.top = posY + 'px';\n"
+            ."		obj.style.left = posX + 'px';\n"
+            ."		obj.style.zIndex = ++topZ;\n"
+            ."	}\n"
+            ."}\n"
+        ;
+        $str = substr_replace($str, $replace, $start, $length);
     }
 
     /**
