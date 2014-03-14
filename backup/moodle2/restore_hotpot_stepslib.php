@@ -141,7 +141,7 @@ class restore_hotpot_activity_structure_step extends restore_activity_structure_
         }
 
         // store mapping from $oldid to $newid
-        $this->set_mapping('hotpot_strings', $oldid, $newid);
+        $this->set_mapping('hotpot_string', $oldid, $newid);
     }
 
     /**
@@ -172,7 +172,7 @@ class restore_hotpot_activity_structure_step extends restore_activity_structure_
         }
 
         // store mapping from $oldid to $newid
-        $this->set_mapping('hotpot_attempts', $oldid, $newid);
+        $this->set_mapping('hotpot_attempt', $oldid, $newid);
 
         // reset clickreportid to point to parent attempt
         if (empty($data->clickreportid) || $data->clickreportid==$oldid) {
@@ -215,7 +215,7 @@ class restore_hotpot_activity_structure_step extends restore_activity_structure_
         }
 
         // store mapping from $oldid to $newid
-        $this->set_mapping('hotpot_questions', $oldid, $newid);
+        $this->set_mapping('hotpot_question', $oldid, $newid);
     }
 
     /**
@@ -239,7 +239,7 @@ class restore_hotpot_activity_structure_step extends restore_activity_structure_
         if (! isset($data->attemptid)) {
             return false; // attemptid not set - shouldn't happen !!
         }
-        if (! $data->attemptid = $this->get_mappingid('hotpot_attempts', $data->attemptid)) {
+        if (! $data->attemptid = $this->get_mappingid('hotpot_attempt', $data->attemptid)) {
             return false; // new attemptid not available - shouldn't happen !!
         }
         $this->set_string_ids($data, array('correct', 'wrong', 'ignored'));
@@ -250,7 +250,7 @@ class restore_hotpot_activity_structure_step extends restore_activity_structure_
         }
 
         // store mapping from $oldid to $newid
-        $this->set_mapping('hotpot_attempts', $oldid, $newid);
+        $this->set_mapping('hotpot_response', $oldid, $newid);
     }
 
     /**
@@ -277,7 +277,7 @@ class restore_hotpot_activity_structure_step extends restore_activity_structure_
             if (isset($data->$fieldname)) {
                 $oldids = explode(',', $data->$fieldname);
                 foreach ($oldids as $oldid) {
-                    if ($newid = $this->get_mappingid('hotpot_strings', $oldid)) {
+                    if ($newid = $this->get_mappingid('hotpot_string', $oldid)) {
                         $newids[] = $newid;
                     } else {
                         // new string id not available - should we report it ?
