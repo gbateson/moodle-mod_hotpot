@@ -294,10 +294,51 @@ class restore_hotpot_activity_structure_step extends restore_activity_structure_
 
     /**
      * after_execute
+     *
+     * @uses $DB
      */
     protected function after_execute()  {
+        global $DB;
+
+        // restore files
         $this->add_related_files('mod_hotpot', 'sourcefile', null);
         $this->add_related_files('mod_hotpot', 'entrytext',  null);
         $this->add_related_files('mod_hotpot', 'exittext',   null);
+
+        // get most recently restored hotpot record
+        $params = array('id' => $this->quiz->get_activityid());
+        if (! $hotpot = $DB->get_record('hotpot', $params)) {
+            return false; // shouldn;t happen !!
+        }
+
+        // remap $unit->entrycm and $unit->exitcm
+        $keys = array('entrycm' => 'course_module', 'exitcm' => 'course_module');
+        $this->after_execute_foreignkeys($hotpot, 'hotpot_units', $keys);
+    }
+
+    /**
+     * after_execute_foreignkeys
+     *
+     * @uses $DB
+     * @param object $record (passed by reference)
+     * @param string $tablename table from which $record was extracted
+     * @param array $keys map record $field => $itemname
+     * @return void, but may update $record and DB tables
+     * @todo Finish documenting this function
+     */
+    protected function after_execute_foreignkeys(&$record, $table, $keys, $default=0)  {
+        $update = false;
+        foreach ($keys as $field => $itemname) {
+            if ($record->$field > 0) {
+                $record->$field = $this->get_mappingid($itemname, $record->$field);
+                if ($record->$field===false || $record->$field===null) {
+                    $record->$field = $default; // shouldn't happen !!
+                }
+                $update = true;
+            }
+        }
+        if ($update) {
+            $DB->update_record($table, $record);
+        }
     }
 }

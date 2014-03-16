@@ -134,6 +134,9 @@ class backup_hotpot_activity_structure_step extends backup_activity_structure_st
         // id annotations (foreign keys on non-parent tables)
         ////////////////////////////////////////////////////////////////////////
 
+        $hotpot->annotate_ids('course_modules', 'entrycm');
+        $hotpot->annotate_ids('course_modules', 'exitcm');
+
         if ($userinfo) {
             $attempt->annotate_ids('user', 'userid');
             $response->annotate_ids('hotpot_attempts', 'attemptid');
