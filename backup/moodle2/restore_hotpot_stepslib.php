@@ -313,7 +313,7 @@ class restore_hotpot_activity_structure_step extends restore_activity_structure_
 
         // remap $unit->entrycm and $unit->exitcm
         $keys = array('entrycm' => 'course_module', 'exitcm' => 'course_module');
-        $this->after_execute_foreignkeys($hotpot, 'hotpot_units', $keys);
+        $this->after_execute_foreignkeys($hotpot, 'hotpot', $keys);
     }
 
     /**
