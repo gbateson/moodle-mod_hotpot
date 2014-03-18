@@ -306,12 +306,12 @@ class restore_hotpot_activity_structure_step extends restore_activity_structure_
         $this->add_related_files('mod_hotpot', 'exittext',   null);
 
         // get most recently restored hotpot record
-        $params = array('id' => $this->quiz->get_activityid());
+        $params = array('id' => $this->task->get_activityid());
         if (! $hotpot = $DB->get_record('hotpot', $params)) {
             return false; // shouldn;t happen !!
         }
 
-        // remap $unit->entrycm and $unit->exitcm
+        // remap $hotpot->entrycm and $hotpot->exitcm
         $keys = array('entrycm' => 'course_module', 'exitcm' => 'course_module');
         $this->after_execute_foreignkeys($hotpot, 'hotpot', $keys);
     }

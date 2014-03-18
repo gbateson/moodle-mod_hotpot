@@ -1558,6 +1558,13 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
         // convert entities to utf8
         $this->bodycontent = hotpot_textlib('entities_to_utf8', $this->bodycontent);
 
+        // fix faulty conversion of non-breaking space (&nbsp;) in Moodle <= 2.0
+        $twobyte = chr(194).chr(160);
+        $fourbyte = chr(195).chr(130).$twobyte;
+        if (hotpot_textlib('entities_to_utf8', '&nbsp;')==$fourbyte) {
+            $this->bodycontent = str_replace($fourbyte, $twobyte, $this->bodycontent);
+        }
+
         // we will skip these tags and everything they contain
         $tags = array('audio'  => '</audio>',
                       'button' => '</button>',
@@ -1594,7 +1601,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
             if ($i < $i_max) {
                 foreach ($tags as $tag => $end) {
                     if ($len[$tag]==0 || substr($this->bodycontent, $ii+1, $len[$tag])==$tag) {
-                        $char = substr($this->bodycontent, $ii+$len[$tag], 1);
+                        $char = substr($this->bodycontent, $ii + $len[$tag] + 1, 1);
                         if ($len[$tag]==0 || $char==' ' || $char=='>') {
                             if ($ii = strpos($this->bodycontent, $end, $ii + $len[$tag])) {
                                 $ii += $len[$end];
