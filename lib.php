@@ -972,7 +972,7 @@ function hotpot_grade_item_update($hotpot, $grades=null) {
     require_once($CFG->dirroot.'/lib/gradelib.php');
 
     // sanity check on $hotpot->id
-    if (! isset($hotpot->id)) {
+    if (empty($hotpot->id) || empty($hotpot->course)) {
         return;
     }
 
