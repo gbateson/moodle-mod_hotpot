@@ -1624,6 +1624,11 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
         $filter = filter_manager::instance();
         $context = $this->hotpot->context;
 
+        // setup filter (Moodle >= 2.3)
+        if (method_exists($filter, 'setup_page_for_filters')) {
+            $filter->setup_page_for_filters($this->page, $context);
+        }
+
         // whitespace and punctuation chars
         $trimchars = "\0\t\n\r !\"#$%&'()*+,-./:;<=>?@[\\]^_`{¦}~\x0B";
 
