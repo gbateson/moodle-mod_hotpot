@@ -29,9 +29,33 @@
 // prevent direct access to this script
 defined('MOODLE_INTERNAL') || die();
 
-$module->cron      = 0;
-$module->component = 'mod_hotpot';
-$module->maturity  = MATURITY_STABLE; // ALPHA=50, BETA=100, RC=150, STABLE=200
-$module->release   = '2014.04.21 (11)';
-$module->version   = 2014042111;
-$module->requires  = 2010112400; // Moodle 2.0
+if (isset($plugin) && is_object($plugin)) {
+    // Moodle >= 2.5
+    $saveplugin = null;
+} else {
+    // Moodle <= 2.4
+    if (isset($plugin)) {
+        $saveplugin = $plugin;
+    } else {
+        $saveplugin = false;
+    }
+    $plugin = new stdClass();
+}
+
+$plugin->cron      = 0;
+$plugin->component = 'mod_hotpot';
+$plugin->maturity  = MATURITY_STABLE; // ALPHA=50, BETA=100, RC=150, STABLE=200
+$plugin->release   = '2014.04.26 (12)';
+$plugin->version   = 2014042612;
+$plugin->requires  = 2010112400; // Moodle 2.0
+
+// setup $module for Moodle <= 2.4
+if (isset($saveplugin)) {
+    $$module = clone($plugin);
+    if ($saveplugin) {
+        $plugin = $saveplugin;
+    } else {
+        unset($plugin);
+    }
+}
+unset($saveplugin);
