@@ -29,11 +29,13 @@
 // prevent direct access to this script
 defined('MOODLE_INTERNAL') || die();
 
-// the following two lines are required for
+// the following four lines are required for
 // validation checks on plugins at moodle.org
 /*****************************
-$plugin->release = '99.99.99';
-$plugin->version = 9999999999;
+$plugin->component = 'mod_hotpot';
+$plugin->requires  = 9999999999;
+$plugin->release   = '99.99.99';
+$plugin->version   = 9999999999;
 *****************************/
 
 if (isset($plugin) && is_object($plugin)) {
