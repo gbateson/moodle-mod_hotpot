@@ -31,8 +31,10 @@ defined('MOODLE_INTERNAL') || die();
 
 // the following two lines are required for
 // validation checks on plugins at moodle.org
-// $plugin->release = '99.99.99';
-// $plugin->version = 9999999999;
+/*****************************
+$plugin->release = '99.99.99';
+$plugin->version = 9999999999;
+*****************************/
 
 if (isset($plugin) && is_object($plugin)) {
     // Moodle >= 2.5
