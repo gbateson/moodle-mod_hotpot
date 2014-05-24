@@ -46,29 +46,32 @@ defined('MOODLE_INTERNAL') || die();
  * @return mixed true if the feature is supported, null if unknown
  */
 function hotpot_supports($feature) {
+
     switch($feature) {
-        // enable features whose default is "false"
-        case FEATURE_GRADE_HAS_GRADE:   return true;
-        case FEATURE_GROUPINGS:         return true;
-        case FEATURE_GROUPMEMBERSONLY:  return true;
-        case FEATURE_BACKUP_MOODLE2:    return true;
-
-        // use default for these features whose default is "false"
-        //case FEATURE_RATE:              return false;
-        //case FEATURE_GRADE_HAS_GRADE:   return false;
-        //case FEATURE_COMPLETION_TRACKS_VIEWS: return false;
-
-        // disable features whose default is "true"
-        case FEATURE_MOD_INTRO:         return false;
-
-        // use default for these features whose default is "true"
-        //case FEATURE_GROUPS:            return true;
-        //case FEATURE_IDNUMBER:          return true;
-        //case FEATURE_GRADE_OUTCOMES:    return true;
-        //case FEATURE_MODEDIT_DEFAULT_COMPLETION: return true;
+        // these constants are defined in "lib/moodlelib.php"
+        case FEATURE_ADVANCED_GRADING            return true;
+        case FEATURE_BACKUP_MOODLE2:             return true;
+        case FEATURE_COMMENT                     return true;
+        case FEATURE_COMPLETION_HAS_RULES        return true;
+        case FEATURE_COMPLETION_TRACKS_VIEWS     return true;
+        case FEATURE_CONTROLS_GRADE_VISIBILITY   return true;
+        case FEATURE_GRADE_HAS_GRADE:            return true;
+        case FEATURE_GRADE_OUTCOMES:             return true;
+        case FEATURE_GROUPINGS:                  return true;
+        case FEATURE_GROUPMEMBERSONLY:           return true;
+        case FEATURE_GROUPS:                     return true;
+        case FEATURE_IDNUMBER:                   return true;
+        case FEATURE_MOD_ARCHETYPE               return MOD_ARCHETYPE_OTHER;
+        case FEATURE_MOD_INTRO:                  return false;
+        case FEATURE_MODEDIT_DEFAULT_COMPLETION: return true;
+        case FEATURE_NO_VIEW_LINK                return false;
+        case FEATURE_PLAGIARISM                  return false;
+        case FEATURE_RATE:                       return false;
+        case FEATURE_SHOW_DESCRIPTION            return true;
+        case FEATURE_USES_QUESTIONS              return false;
 
         // otherwise, this is some feature we do not know about
-        default:                        return null;
+        default: return null;
     }
 }
 
@@ -1946,4 +1949,23 @@ function hotpot_textlib() {
     $method = array_shift($args);
     $callback = array($textlib, $method);
     return call_user_func_array($callback, $args);
+}
+
+/**
+ * Obtains the automatic completion state for this hotpot based on the condition
+ * in hotpot settings.
+ *
+ * @param object  $course record from "course" table
+ * @param object  $cm     record from "course_modules" table
+ * @param integer $userid id from "user" table
+ * @param bool $type Type of comparison (or/and; can be used as return value if no conditions)
+ * @return bool True if completed, false if not, $type if conditions not set
+ */
+function hotpot_get_completion_state($course, $cm, $userid, $type) {
+    global $CFG, $DB;
+    require_once($CFG->dirroot.'/mod/hotpot/locallib.php');
+    $params = array('hotpotid'   => $cm->instance,
+                    'userid'     => $userid,
+                    'status'     => hotpot::STATUS_COMPLETED);
+    return $DB->record_exists('hotpot_attempts', $params);
 }
