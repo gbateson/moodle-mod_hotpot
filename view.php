@@ -47,6 +47,10 @@ require_capability('mod/hotpot:view', $PAGE->context);
 // Create an object to represent the current HotPot activity
 $hotpot = hotpot::create($hotpot, $cm, $course, $PAGE->context);
 
+// Update 'viewed' state if required by completion system
+$completion = new completion_info($course);
+$completion->set_module_viewed($cm);
+
 if (empty($hotpot->entrypage)) {
     // go straight to attempt.php
     redirect($hotpot->attempt_url());
@@ -71,10 +75,6 @@ if ($action=='deleteselected') {
 
 // Log this request
 add_to_log($course->id, 'hotpot', 'view', 'view.php?id='.$cm->id, $hotpot->id, $cm->id);
-
-// Update 'viewed' state if required by completion system
-$completion = new completion_info($course);
-$completion->set_module_viewed($cm);
 
 // Set editing mode
 if ($PAGE->user_allowed_editing()) {
