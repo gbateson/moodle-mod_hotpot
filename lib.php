@@ -47,32 +47,37 @@ defined('MOODLE_INTERNAL') || die();
  */
 function hotpot_supports($feature) {
 
-    switch($feature) {
-        // these constants are defined in "lib/moodlelib.php"
-        case FEATURE_ADVANCED_GRADING:           return true;
-        case FEATURE_BACKUP_MOODLE2:             return true;
-        case FEATURE_COMMENT:                    return true;
-        case FEATURE_COMPLETION_HAS_RULES:       return true;
-        case FEATURE_COMPLETION_TRACKS_VIEWS:    return true;
-        case FEATURE_CONTROLS_GRADE_VISIBILITY:  return true;
-        case FEATURE_GRADE_HAS_GRADE:            return true;
-        case FEATURE_GRADE_OUTCOMES:             return true;
-        case FEATURE_GROUPINGS:                  return true;
-        case FEATURE_GROUPMEMBERSONLY:           return true;
-        case FEATURE_GROUPS:                     return true;
-        case FEATURE_IDNUMBER:                   return true;
-        case FEATURE_MOD_ARCHETYPE:              return MOD_ARCHETYPE_OTHER;
-        case FEATURE_MOD_INTRO:                  return false;
-        case FEATURE_MODEDIT_DEFAULT_COMPLETION: return true;
-        case FEATURE_NO_VIEW_LINK:               return false;
-        case FEATURE_PLAGIARISM:                 return false;
-        case FEATURE_RATE:                       return false;
-        case FEATURE_SHOW_DESCRIPTION:           return true;
-        case FEATURE_USES_QUESTIONS:             return false;
-
-        // otherwise, this is some feature we do not know about
-        default: return null;
+    // these constants are defined in "lib/moodlelib.php"
+    // they are not all defined in Moodle 2.0, so we
+    // check each one is defined before trying to use it
+    $constants = array(
+        'FEATURE_ADVANCED_GRADING' => true, // default=false
+        'FEATURE_BACKUP_MOODLE2'   => true, // default=false
+        'FEATURE_COMMENT'          => true,
+        'FEATURE_COMPLETION_HAS_RULES' => true,
+        'FEATURE_COMPLETION_TRACKS_VIEWS' => true,
+        'FEATURE_CONTROLS_GRADE_VISIBILITY' => true,
+        'FEATURE_GRADE_HAS_GRADE'  => true, // default=false
+        'FEATURE_GRADE_OUTCOMES'   => true,
+        'FEATURE_GROUPINGS'        => true, // default=false
+        'FEATURE_GROUPMEMBERSONLY' => true, // default=false
+        'FEATURE_GROUPS'           => true,
+        'FEATURE_IDNUMBER'         => true,
+        'FEATURE_MOD_ARCHETYPE'    => MOD_ARCHETYPE_OTHER,
+        'FEATURE_MOD_INTRO'        => false, // default=true
+        'FEATURE_MODEDIT_DEFAULT_COMPLETION' => true,
+        'FEATURE_NO_VIEW_LINK'     => false,
+        'FEATURE_PLAGIARISM'       => false,
+        'FEATURE_RATE'             => false,
+        'FEATURE_SHOW_DESCRIPTION' => true, // default=false (Moodle 2.2)
+        'FEATURE_USES_QUESTIONS'   => false
+    );
+    foreach ($constants as $constant => $value) {
+        if (defined($constant) && $feature==constant($constant)) {
+            return $value;
+        }
     }
+    return false;
 }
 
 /**

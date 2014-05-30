@@ -46,8 +46,8 @@ $plugin->cron      = 0;
 $plugin->component = 'mod_hotpot';
 $plugin->maturity  = MATURITY_STABLE; // ALPHA=50, BETA=100, RC=150, STABLE=200
 $plugin->requires  = 2010112400;      // Moodle 2.0
-$plugin->release   = '2014.05.28 (16)';
-$plugin->version   = 2014052816;
+$plugin->release   = '2014.05.30 (17)';
+$plugin->version   = 2014053017;
 
 // setup $module for Moodle <= 2.4
 if (isset($saveplugin)) {
