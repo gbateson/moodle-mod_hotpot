@@ -74,7 +74,7 @@ if ($action=='deleteselected') {
 }
 
 // Log this request
-add_to_log($course->id, 'hotpot', 'view', 'view.php?id='.$cm->id, $hotpot->id, $cm->id);
+hotpot_add_to_log($course->id, 'hotpot', 'view', 'view.php?id='.$cm->id, $hotpot->id, $cm->id);
 
 // Set editing mode
 if ($PAGE->user_allowed_editing()) {

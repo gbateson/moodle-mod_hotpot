@@ -476,7 +476,7 @@ function hotpot_print_recent_activity($course, $viewfullnames, $timestart) {
     //     log_timcoumodact_ix : time, course, module, action
 
     // log records are added by the following function in "lib/datalib.php":
-    //     add_to_log($courseid, $module, $action, $url='', $info='', $cm=0, $user=0)
+    //     hotpot_add_to_log($courseid, $module, $action, $url='', $info='', $cm=0, $user=0)
 
     // log records are added by the following HotPot scripts:
     //     (scriptname : log action)
@@ -1954,6 +1954,18 @@ function hotpot_textlib() {
     $method = array_shift($args);
     $callback = array($textlib, $method);
     return call_user_func_array($callback, $args);
+}
+
+/**
+ * hotpot_add_to_log
+ */
+function hotpot_add_to_log($courseid, $module, $action, $url='', $info='', $cm=0, $user=0) {
+    if (function_exists('get_log_manager')) {
+        $manager = get_log_manager();
+        $manager->legacy_add_to_log($courseid, $module, $action, $url, $info, $cm, $user);
+    } else if (function_exists('add_to_log')) {
+        add_to_log($courseid, $module, $action, $url, $info, $cm, $user);
+    }
 }
 
 /**
