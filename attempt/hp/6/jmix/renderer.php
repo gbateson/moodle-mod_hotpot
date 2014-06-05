@@ -180,6 +180,32 @@ class mod_hotpot_attempt_hp_6_jmix_renderer extends mod_hotpot_attempt_hp_6_rend
     }
 
     /**
+     * fix_navigation_buttons
+     *
+     * @return xxx
+     */
+    function fix_navigation_buttons()  {
+        parent::fix_navigation_buttons();
+
+        // replace location.reload() in <button class="FuncButton" ... onclick="location.reload()" ...">
+        // with javascript code to return all tiles/segments to their starting positions
+        $search = '/(?<='.'onclick=")location.reload\(\);?'.'(?=")/';
+        if (strpos(get_class($this), '_plus_')) {
+            // Drag and Drop
+            $replace = 'for (var i=0; i<Cds.length; i++) Cds[i].GoHome(); return false;';
+        } else {
+            // clickety-click
+            $replace = 'GuessSequence = new Array();'.
+                       'BuildCurrGuess();'.
+                       'BuildExercise();'.
+                       'DisplayExercise(Exercise);'.
+                       "WriteToGuess('<span class=&quot;Answer&quot;>' + Output + '</span>');".
+                       'return false;';
+        }
+        $this->bodycontent = preg_replace($search, $replace, $this->bodycontent);
+    }
+
+    /**
      * get_js_functionnames
      *
      * @return xxx
