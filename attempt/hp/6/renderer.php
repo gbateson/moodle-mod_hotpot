@@ -1203,7 +1203,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
         // JMatch : AllDone || TimeOver
         // JMix : AllDone || TimeOver (in the CheckAnswer function)
         // JQuiz : AllDone (in the CheckFinished function)
-        return '/\s*if \(\((\w+) == true\)\|\|\(\w+ == true\)\)({).*?}\s*/s';
+        return '/\s*if *\(\((\w+) *== *true\) *\|\| *\(\w+ *== *true\)\) *({).*?}\s*/s';
     }
 
     /**
@@ -1244,6 +1244,185 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
             ."		}\n"
             ."	}\n"
         ;
+    }
+
+    /**
+     * fix_js_CardSetHTML
+     * for drag-and-drop JMatch and JMix
+     *
+     * @param xxx $str (passed by reference)
+     * @param xxx $start
+     * @param xxx $length
+     * @return xxx
+     * @todo Finish documenting this function
+     */
+    public function fix_js_CardSetHTML(&$str, $start, $length)  {
+        $substr = substr($str, $start, $length);
+        $search = '/(DragImgs\[i\]). onmousedown = (.*)/';
+        $replace = "HP_add_listener(DragImgs[i], 'mousedown', 'return false');";
+        $substr = preg_replace($search, $replace, $substr);
+        $str = substr_replace($str, $substr, $start, $length);
+    }
+
+    /**
+     * fix_js_beginDrag
+     * for drag-and-drop JMatch and JMix
+     *
+     * @param xxx $str (passed by reference)
+     * @param xxx $start
+     * @param xxx $length
+     * @return xxx
+     * @todo Finish documenting this function
+     */
+    public function fix_js_beginDrag(&$str, $start, $length)  {
+        $substr = substr($str, $start, $length);
+        if (strpos($str, 'function beginDrag', $start + $length)) {
+            $substr = ''; // remove first occurrence of this function
+        } else {
+            // add event handlers for touch screens
+            $search = '/(\s*)([a-z]+).on(mouse[a-z]+)=([a-z]+Drag);?/s';
+            //$replace = '$1$2.onmouse$3 = $4;$1$2.touch$3 = $4;';
+            $replace = '$1HP_add_listener($2, \'$3\', $4);';
+            $substr = preg_replace($search, $replace, $substr);
+
+            // detect drag position for mouse AND touch
+            if ($target = $this->get_beginDrag_target()) {
+                $substr = $this->fix_js_clientXY($substr, $target);
+            }
+
+            // disable scrolling on touch screens
+            $substr = $this->fix_js_disable_event($substr);
+        }
+        $str = substr_replace($str, $substr, $start, $length);
+    }
+
+    /**
+     * get_beginDrag_target
+     * for drag-and-drop JMatch and JMix
+     *
+     * @return string
+     * @todo Finish documenting this function
+     */
+    public function get_beginDrag_target() {
+        return '';
+    }
+
+    /**
+     * fix_js_doDrag
+     * for drag-and-drop JMatch and JMix
+     *
+     * @param xxx $str (passed by reference)
+     * @param xxx $start
+     * @param xxx $length
+     * @return xxx
+     * @todo Finish documenting this function
+     */
+    public function fix_js_doDrag(&$str, $start, $length)  {
+        $substr = substr($str, $start, $length);
+        if (strpos($str, 'function doDrag', $start + $length)) {
+             $substr = ''; // remove first occurrence of this function
+        } else {
+            // reformat single line if (C.ie){...}else{...}
+            $substr = $this->fix_js_if_then_else($substr);
+
+            // detect drag position for mouse AND touch
+            $substr = $this->fix_js_clientXY($substr, 'var difX');
+
+            // disable scrolling on touch screens
+            $substr = $this->fix_js_disable_event($substr);
+        }
+        $str = substr_replace($str, $substr, $start, $length);
+    }
+
+    /**
+     * fix_js_endDrag
+     * for drag-and-drop JMatch and JMix
+     *
+     * @param xxx $str (passed by reference)
+     * @param xxx $start
+     * @param xxx $length
+     * @return xxx
+     * @todo Finish documenting this function
+     */
+    public function fix_js_endDrag(&$str, $start, $length)  {
+        $substr = substr($str, $start, $length);
+
+        if (strpos($str, 'function endDrag', $start + $length)) {
+            $substr = ''; // remove first occurrence of this function
+        } else {
+            // reformat single line if (C.ie){...}else{...}
+            $substr = $this->fix_js_if_then_else($substr);
+
+            // add event handlers for touch screens
+            $search = '/(\s*)([a-z]+).on(mouse[a-z]+)=([a-z]+);?/';
+            //$replace = '$1$2.onmouse$3=$4;$1$2.touch$3=$4;';
+            $replace = '$1HP_remove_listener($2, \'$3\', doDrag);';
+            $substr = preg_replace($search, $replace, $substr);
+
+            // disable scrolling on touch screens
+            $substr = $this->fix_js_disable_event($substr);
+        }
+
+        $str = substr_replace($str, $substr, $start, $length);
+    }
+
+    /**
+     * fix_js_clientXY
+     * for drag-and-drop JMatch and JMix
+     *
+     * @param string $str
+     * @param string $target
+     * @return string
+     * @todo Finish documenting this function
+     */
+     public function fix_js_clientXY($str, $target) {
+        // replace Ev.client(X|Y) with "x" and "y" variables
+        $search = array('Ev.clientX', 'Ev.clientY');
+        $replace = array('x', 'y');
+        $str = str_replace($search, $replace, $str);
+
+        // set "x" and "y" for mouse or touch device
+        $search = '/(\s*)'.preg_quote($target, '/').'/s';
+        $replace = '$1'.'if (Ev.changedTouches) {'.
+                   '$1'."\t".'var x = Ev.changedTouches[0].clientX;'.
+                   '$1'."\t".'var y = Ev.changedTouches[0].clientY'.
+                   '$1'.'} else {'.
+                   '$1'."\t".'var x = Ev.clientX;'.
+                   '$1'."\t".'var y = Ev.clientY;'.
+                   '$1'.'}'.
+                   '$0';
+        return preg_replace($search, $replace, $str, 1);
+     }
+
+    /**
+     * fix_js_if_then_else
+     * for drag-and-drop JMatch and JMix
+     *
+     * @param string $str
+     * @return string
+     * @todo Finish documenting this function
+     */
+    public function fix_js_if_then_else($str)  {
+        $search = '/(\s*)if *\(C.ie\) *\{(.*?);?\} *else *\{(.*?);?\}/s';
+        $replace = '$1if (C.ie) {$1'."\t".'$2;$1} else {$1'."\t".'$3;$1}';
+        return preg_replace($search, $replace, $str);
+    }
+
+    /**
+     * fix_js_disable_event
+     *
+     * for drag-and-drop JMatch and JMix
+     * adjust mouse events and cursor position
+     * so they work on touch devices too
+     *
+     * @param xxx $substr (passed by reference)
+     * @return xxx
+     * @todo Finish documenting this function
+     */
+    public function fix_js_disable_event($substr)  {
+        $search = '/return (true|false);/';
+        $replace = 'HP_disable_event(e);';
+        return preg_replace($search, $replace, $substr);
     }
 
     /**

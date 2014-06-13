@@ -152,8 +152,8 @@ class mod_hotpot_attempt_hp_6_jmix_renderer extends mod_hotpot_attempt_hp_6_rend
             ."		var div = document.createElement('div');\n"
             ."		div.setAttribute('id', 'D' + i);\n"
             ."		div.setAttribute('class', 'CardStyle');\n"
-            ."		div.setAttribute('onmousedown', 'beginDrag(event, ' + i + ')');\n"
-            ."		myParentNode.appendChild(div);\n"
+            ."		div = myParentNode.appendChild(div);\n"
+            ."		HP_add_listener(div, 'mousedown', 'beginDrag(event, ' + i + ')');\n"
             ."	} else {\n"
             ."		document.write('".'<div id="'."D' + i + '".'" class="CardStyle" onmousedown="'."beginDrag(event, ' + i + ')".'"'."></div>');\n"
             ."	}\n"
@@ -211,10 +211,26 @@ class mod_hotpot_attempt_hp_6_jmix_renderer extends mod_hotpot_attempt_hp_6_rend
      * @return xxx
      */
     function get_js_functionnames()  {
+        // Note that the drag functions get added twice to the html
+        // once from hp6card.js_ (this is actually the JMatch version)
+        // and once from djmix6.js_. Consequently, we need to process
+        // these functions twice: once to delete, and then again to modify
+        $drag = 'beginDrag,doDrag,endDrag';
         // start list of function names
         $names = parent::get_js_functionnames();
-        $names .= ($names ? ',' : '').'CheckAnswer,TimesUp,WriteToGuess';
+        $names .= ($names ? ',' : '')."CardSetHTML,$drag,CheckAnswer,TimesUp,WriteToGuess,$drag";
         return $names;
+    }
+
+    /**
+     * get_beginDrag_target
+     * for drag-and-drop JMatch and JMix
+     *
+     * @return string
+     * @todo Finish documenting this function
+     */
+    public function get_beginDrag_target() {
+        return 'Cds[CurrDrag]';
     }
 
     /**
