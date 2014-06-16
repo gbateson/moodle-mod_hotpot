@@ -1292,6 +1292,18 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
 
             // disable scrolling on touch screens
             $substr = $this->fix_js_disable_event($substr);
+
+            if ($pos = strpos($substr, '{')) {
+                $insert = "\n"
+                    ."	if (e && e.target && e.target.tagName) {\n"
+                    ."		var tagname = e.target.tagName.toUpperCase();\n"
+                    ."		if (tagname=='EMBED' || tagname=='OBJECT') {\n"
+                    ."			return false;\n"
+                    ."		}\n"
+                    ."	}\n"
+                ;
+                $substr = substr_replace($substr, $insert, $pos+1, 0);
+            }
         }
         $str = substr_replace($str, $substr, $start, $length);
     }
