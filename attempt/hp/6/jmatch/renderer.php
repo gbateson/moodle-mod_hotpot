@@ -239,8 +239,11 @@ class mod_hotpot_attempt_hp_6_jmatch_renderer extends mod_hotpot_attempt_hp_6_re
         parent::fix_js_beginDrag($substr, 0, $length);
         if ($pos = strpos($substr, '{')) {
             $insert = "\n"
-                ."	if (e && e.target && e.target.tagName && e.target.tagName.toUpperCase()=='OBJECT') {\n"
-                ."		return;\n"
+                ."	if (e && e.target && e.target.tagName) {\n"
+                ."		var tagname = e.target.tagName.toUpperCase();\n"
+                ."		if (tagname=='EMBED' || tagname=='OBJECT') {\n"
+                ."			return false;\n"
+                ."		}\n"
                 ."	}\n"
             ;
             $substr = substr_replace($substr, $insert, $pos+1, 0);
