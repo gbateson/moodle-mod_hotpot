@@ -1300,6 +1300,9 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
                     ."		if (tagname=='EMBED' || tagname=='OBJECT') {\n"
                     ."			return false;\n"
                     ."		}\n"
+                    ."		if (tagname=='AUDIO' || tagname=='VIDEO') {\n"
+                    ."			return false;\n"
+                    ."		}\n"
                     ."	}\n"
                 ;
                 $substr = substr_replace($substr, $insert, $pos+1, 0);

@@ -780,7 +780,7 @@ function HP_fix_event(evt) {
 function HP_add_listener(obj, evt, fnc, useCapture) {
 
 	if (typeof(fnc)=='string') {
-		fnc = new Function(fnc);
+		fnc = new Function('event', fnc);
 	}
 
 	// transfer object's old event handler (if any)
