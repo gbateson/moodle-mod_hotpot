@@ -1470,7 +1470,7 @@ class mod_hotpot_attempt_renderer extends mod_hotpot_renderer {
     function convert_url_param($match)  {
         // make sure the param "name" attribute is one we know about
         $quote = $match[6];
-        $search = "/name\s*=\s*$quote(?:data|movie|src|FlashVars)$quote/i";
+        $search = "/name\s*=\s*$quote(?:data|movie|src|url|FlashVars)$quote/i";
         if (preg_match($search, $match[0])) {
             return $this->convert_url_relative($match);
         } else {
