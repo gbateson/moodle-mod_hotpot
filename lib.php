@@ -227,7 +227,7 @@ function hotpot_process_formdata(stdclass &$data, $mform) {
 
         // default activity name is simply "HotPot"
         if ($textfield=='name' && $data->$textfield=='') {
-            $data->$textfield = get_string('modulename', 'hotpot');
+            $data->$textfield = get_string('modulename', 'mod_hotpot');
         }
     }
 
@@ -430,9 +430,9 @@ function hotpot_user_outline($course, $user, $mod, $hotpot) {
         $scores[] = hotpot::format_score($attempt);
     }
     if (count($scores)) {
-        $info = get_string('score', 'hotpot').': '.implode(', ', $scores);
+        $info = get_string('score', 'mod_hotpot').': '.implode(', ', $scores);
     } else {
-        $info = get_string('noactivity', 'hotpot');
+        $info = get_string('noactivity', 'mod_hotpot');
     }
 
     return (object)array('time'=>$time, 'info'=>$info);
@@ -447,7 +447,7 @@ function hotpot_user_outline($course, $user, $mod, $hotpot) {
 function hotpot_user_complete($course, $user, $mod, $hotpot) {
     $report = hotpot_user_outline($course, $user, $mod, $hotpot);
     if (empty($report)) {
-        echo get_string("noactivity", 'hotpot');
+        echo get_string("noactivity", 'mod_hotpot');
     } else {
         $date = userdate($report->time, get_string('strftimerecentfull'));
         echo $report->info.' '.get_string('mostrecently').': '.$date;
@@ -549,11 +549,11 @@ function hotpot_print_recent_activity($course, $viewfullnames, $timestart) {
         }
 
         $strusers     = get_string('users');
-        $stradded     = get_string('added',    'hotpot');
-        $strupdated   = get_string('updated',  'hotpot');
-        $strviews     = get_string('views',    'hotpot');
-        $strattempts  = get_string('attempts', 'hotpot');
-        $strsubmits   = get_string('submits',  'hotpot');
+        $stradded     = get_string('added',    'mod_hotpot');
+        $strupdated   = get_string('updated',  'mod_hotpot');
+        $strviews     = get_string('views',    'mod_hotpot');
+        $strattempts  = get_string('attempts', 'mod_hotpot');
+        $strsubmits   = get_string('submits',  'mod_hotpot');
 
         $print_headline = true;
         ksort($stats);
@@ -587,7 +587,7 @@ function hotpot_print_recent_activity($course, $viewfullnames, $timestart) {
             if (count($li)) {
                 if ($print_headline) {
                     $print_headline = false;
-                    echo $OUTPUT->heading(get_string('modulenameplural', 'hotpot').':', 3);
+                    echo $OUTPUT->heading(get_string('modulenameplural', 'mod_hotpot').':', 3);
                 }
 
                 $url = new moodle_url('/mod/hotpot/view.php', array('id'=>$stat->cmid));
@@ -1034,7 +1034,7 @@ function hotpot_update_grades($hotpot=null, $userid=0, $nullifnone=true) {
         // update/create grades for all hotpots
 
         // set up sql strings
-        $strupdating = get_string('updatinggrades', 'hotpot');
+        $strupdating = get_string('updatinggrades', 'mod_hotpot');
         $select = 'h.*, cm.idnumber AS cmidnumber';
         $from   = '{hotpot} h, {course_modules} cm, {modules} m';
         $where  = 'h.id = cm.instance AND cm.module = m.id AND m.name = ?';
@@ -1169,9 +1169,9 @@ function hotpot_update_grades($hotpot=null, $userid=0, $nullifnone=true) {
  */
 function hotpot_get_file_areas($course, $cm, $context) {
     return array(
-        'entry'      => get_string('entrytext',  'hotpot'),
-        'exit'       => get_string('exittext',   'hotpot'),
-        'sourcefile' => get_string('sourcefile', 'hotpot')
+        'entry'      => get_string('entrytext',  'mod_hotpot'),
+        'exit'       => get_string('exittext',   'mod_hotpot'),
+        'sourcefile' => get_string('sourcefile', 'mod_hotpot')
     );
 }
 
@@ -1598,7 +1598,7 @@ function hotpot_extend_navigation(navigation_node $hotpotnode, stdclass $course,
         $type = navigation_node::TYPE_SETTING;
         foreach ($hotpot->get_report_modes() as $mode) {
             $url = $hotpot->report_url($mode);
-            $label = get_string($mode.'report', 'hotpot');
+            $label = get_string($mode.'report', 'mod_hotpot');
             $hotpotnode->add($label, $url, $type, null, null, $icon);
         }
     }
@@ -1626,8 +1626,8 @@ function hotpot_extend_settings_navigation(settings_navigation $settingsnav, nav
  * @param xxx $mform (passed by reference)
  */
 function hotpot_reset_course_form_definition(&$mform) {
-    $mform->addElement('header', 'hotpotheader', get_string('modulenameplural', 'hotpot'));
-    $mform->addElement('checkbox', 'reset_hotpot_deleteallattempts', get_string('deleteallattempts', 'hotpot'));
+    $mform->addElement('header', 'hotpotheader', get_string('modulenameplural', 'mod_hotpot'));
+    $mform->addElement('checkbox', 'reset_hotpot_deleteallattempts', get_string('deleteallattempts', 'mod_hotpot'));
 }
 
 /**
@@ -1685,8 +1685,8 @@ function hotpot_reset_userdata($data) {
     }
 
     return array(array(
-        'component' => get_string('modulenameplural', 'hotpot'),
-        'item' => get_string('deleteallattempts', 'hotpot'),
+        'component' => get_string('modulenameplural', 'mod_hotpot'),
+        'item' => get_string('deleteallattempts', 'mod_hotpot'),
         'error' => false
     ));
 }
@@ -1794,8 +1794,8 @@ function hotpot_update_events(&$hotpot, &$eventids, $delete) {
         // set $maxduration (secs) from $maxeventlength (days)
         $maxduration = $maxeventlength * 24 * 60 * 60;
 
-        $stropens = get_string('activityopens', 'hotpot');
-        $strcloses = get_string('activitycloses', 'hotpot');
+        $stropens = get_string('activityopens', 'mod_hotpot');
+        $strcloses = get_string('activitycloses', 'mod_hotpot');
     }
 
     // array to hold events for this hotpot

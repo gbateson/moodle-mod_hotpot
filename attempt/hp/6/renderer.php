@@ -1152,9 +1152,9 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
         // Note: "&&" in onclick must be encoded as html-entities for strict XHTML
         return ''
             ."confirm("
-            ."'".$this->hotpot->source->js_value_safe(get_string('confirmstop', 'hotpot'), true)."'"
+            ."'".$this->hotpot->source->js_value_safe(get_string('confirmstop', 'mod_hotpot'), true)."'"
             ."+'\\n\\n'+(window.HP_beforeunload &amp;&amp; HP_beforeunload()?(HP_beforeunload()+'\\n\\n'):'')+"
-            ."'".$this->hotpot->source->js_value_safe(get_string('pressoktocontinue', 'hotpot'), true)."'"
+            ."'".$this->hotpot->source->js_value_safe(get_string('pressoktocontinue', 'mod_hotpot'), true)."'"
             .")"
         ;
     }
@@ -1552,9 +1552,9 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
                 $stoptext = $this->hotpot->stoptext;
             }
             if (trim($stoptext)=='') {
-                $stoptext = get_string('giveup', 'hotpot');
+                $stoptext = get_string('giveup', 'mod_hotpot');
             }
-            $confirm = get_string('confirmstop', 'hotpot');
+            $confirm = get_string('confirmstop', 'mod_hotpot');
             //$search = '/<!-- BeginTopNavButtons -->'.'.*?'.'<!-- EndTopNavButtons -->/s';
             $search = '/<(div class="Titles")>/s';
             $replace = '<$1 style="position: relative">'."\n\t"
@@ -1936,10 +1936,10 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
         } else {
             // complete remaining feedback fields
             if ($this->hotpot->studentfeedback==hotpot::FEEDBACK_MOODLEFORUM) {
-                $feedback[6] = "'".addslashes_js(get_string('feedbackdiscuss', 'hotpot'))."'";
+                $feedback[6] = "'".addslashes_js(get_string('feedbackdiscuss', 'mod_hotpot'))."'";
             } else {
                 // FEEDBACK_WEBPAGE, FEEDBACK_FORMMAIL, FEEDBACK_MOODLEMESSAGING
-                $feedback[6] = "'".addslashes_js(get_string('feedbacksendmessage', 'hotpot'))."'";
+                $feedback[6] = "'".addslashes_js(get_string('feedbacksendmessage', 'mod_hotpot'))."'";
             }
             $feedback[7] = "'".addslashes_js(get_string('feedback'))."'";
             $feedback[8] = "'".addslashes_js(get_string('defaultcourseteacher'))."'";

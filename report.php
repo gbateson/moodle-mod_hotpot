@@ -74,7 +74,7 @@ $PAGE->set_title($hotpot->name);
 $PAGE->set_heading($course->shortname);
 $PAGE->navbar->add(get_string('report', 'quiz'));
 if ($mode) {
-    $PAGE->navbar->add(get_string($mode.'report', 'hotpot'));
+    $PAGE->navbar->add(get_string($mode.'report', 'mod_hotpot'));
 }
 
 // get renderer subtype (e.g. report_overview)

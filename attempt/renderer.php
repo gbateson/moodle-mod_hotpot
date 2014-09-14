@@ -504,8 +504,8 @@ class mod_hotpot_attempt_renderer extends mod_hotpot_renderer {
         $direction = get_string('thisdirection', 'langconfig');
 
         $title = format_text($this->hotpot->name);
-        $title_top = get_string('navigation_frame', 'hotpot');
-        $title_main = get_string('modulename', 'hotpot');
+        $title_top = get_string('navigation_frame', 'mod_hotpot');
+        $title_main = get_string('modulename', 'mod_hotpot');
 
         $src_top = $this->hotpot->attempt_url('top');
         $src_main = $this->hotpot->attempt_url('main');

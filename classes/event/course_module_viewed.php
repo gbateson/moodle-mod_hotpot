@@ -67,7 +67,7 @@ class course_module_viewed extends \core\event\content_viewed {
      * @return string
      */
     static public function get_name() {
-        return get_string('hotpotviewed', 'hotpot');
+        return get_string('hotpotviewed', 'mod_hotpot');
     }
 
     /**

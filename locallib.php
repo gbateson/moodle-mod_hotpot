@@ -422,12 +422,12 @@ class hotpot {
      */
     static public function available_navigations_list() {
         return array (
-            self::NAVIGATION_MOODLE   => get_string('navigation_moodle', 'hotpot'),
-            self::NAVIGATION_TOPBAR   => get_string('navigation_topbar', 'hotpot'),
-            self::NAVIGATION_FRAME    => get_string('navigation_frame', 'hotpot'),
-            self::NAVIGATION_EMBED    => get_string('navigation_embed', 'hotpot'),
-            self::NAVIGATION_ORIGINAL => get_string('navigation_original', 'hotpot'),
-            self::NAVIGATION_NONE     => get_string('navigation_none', 'hotpot')
+            self::NAVIGATION_MOODLE   => get_string('navigation_moodle', 'mod_hotpot'),
+            self::NAVIGATION_TOPBAR   => get_string('navigation_topbar', 'mod_hotpot'),
+            self::NAVIGATION_FRAME    => get_string('navigation_frame', 'mod_hotpot'),
+            self::NAVIGATION_EMBED    => get_string('navigation_embed', 'mod_hotpot'),
+            self::NAVIGATION_ORIGINAL => get_string('navigation_original', 'mod_hotpot'),
+            self::NAVIGATION_NONE     => get_string('navigation_none', 'mod_hotpot')
         );
     }
 
@@ -440,12 +440,12 @@ class hotpot {
         global $CFG;
         $list = array (
             self::FEEDBACK_NONE        => get_string('none'),
-            self::FEEDBACK_WEBPAGE     => get_string('feedbackwebpage',  'hotpot'),
-            self::FEEDBACK_FORMMAIL    => get_string('feedbackformmail', 'hotpot'),
-            self::FEEDBACK_MOODLEFORUM => get_string('feedbackmoodleforum', 'hotpot')
+            self::FEEDBACK_WEBPAGE     => get_string('feedbackwebpage',  'mod_hotpot'),
+            self::FEEDBACK_FORMMAIL    => get_string('feedbackformmail', 'mod_hotpot'),
+            self::FEEDBACK_MOODLEFORUM => get_string('feedbackmoodleforum', 'mod_hotpot')
         );
         if ($CFG->messaging) {
-            $list[self::FEEDBACK_MOODLEMESSAGING] = get_string('feedbackmoodlemessaging', 'hotpot');
+            $list[self::FEEDBACK_MOODLEMESSAGING] = get_string('feedbackmoodlemessaging', 'mod_hotpot');
         }
         return $list;
     }
@@ -467,7 +467,7 @@ class hotpot {
         // define element type for list of mediafilters (select, radio, checkbox)
         $options = array('' => get_string('none'));
         foreach ($plugins as $plugin) {
-            $options[$plugin] = get_string('mediafilter_'.$plugin, 'hotpot');
+            $options[$plugin] = get_string('mediafilter_'.$plugin, 'mod_hotpot');
         }
         return $options;
     }
@@ -480,7 +480,7 @@ class hotpot {
     static public function available_outputformats_list($sourcetype) {
 
         $outputformats = array(
-            '0' => get_string('outputformat_best', 'hotpot')
+            '0' => get_string('outputformat_best', 'mod_hotpot')
         );
         if ($sourcetype) {
             $classes = self::get_classes('hotpotattempt', 'renderer.php', 'mod_', '_renderer');
@@ -490,7 +490,7 @@ class hotpot {
                 if (in_array($sourcetype, $sourcetypes)) {
                     // strip prefix, "mod_hotpot_attempt_", and suffix, "_renderer"
                     $outputformat = substr($class, 19, -9);
-                    $outputformats[$outputformat] = get_string('outputformat_'.$outputformat, 'hotpot');
+                    $outputformats[$outputformat] = get_string('outputformat_'.$outputformat, 'mod_hotpot');
                 }
             }
             // remove "best" if there is only one compatible output format
@@ -508,7 +508,7 @@ class hotpot {
      */
     static public function available_attemptlimits_list() {
         $options = array(
-            0 => get_string('attemptsunlimited', 'hotpot'),
+            0 => get_string('attemptsunlimited', 'mod_hotpot'),
         );
         for ($i=1; $i<=10; $i++) {
             $options[$i] = "$i";
@@ -523,10 +523,10 @@ class hotpot {
      */
     static public function available_grademethods_list() {
         return array (
-            self::GRADEMETHOD_HIGHEST => get_string('highestscore', 'hotpot'),
-            self::GRADEMETHOD_AVERAGE => get_string('averagescore', 'hotpot'),
-            self::GRADEMETHOD_FIRST   => get_string('firstattempt', 'hotpot'),
-            self::GRADEMETHOD_LAST    => get_string('lastattempt', 'hotpot'),
+            self::GRADEMETHOD_HIGHEST => get_string('highestscore', 'mod_hotpot'),
+            self::GRADEMETHOD_AVERAGE => get_string('averagescore', 'mod_hotpot'),
+            self::GRADEMETHOD_FIRST   => get_string('firstattempt', 'mod_hotpot'),
+            self::GRADEMETHOD_LAST    => get_string('lastattempt', 'mod_hotpot'),
         );
     }
 
@@ -537,10 +537,10 @@ class hotpot {
      */
     static public function available_statuses_list() {
         return array (
-            self::STATUS_INPROGRESS => get_string('inprogress', 'hotpot'),
-            self::STATUS_TIMEDOUT   => get_string('timedout', 'hotpot'),
-            self::STATUS_ABANDONED  => get_string('abandoned', 'hotpot'),
-            self::STATUS_COMPLETED  => get_string('completed', 'hotpot')
+            self::STATUS_INPROGRESS => get_string('inprogress', 'mod_hotpot'),
+            self::STATUS_TIMEDOUT   => get_string('timedout', 'mod_hotpot'),
+            self::STATUS_ABANDONED  => get_string('abandoned', 'mod_hotpot'),
+            self::STATUS_COMPLETED  => get_string('completed', 'mod_hotpot')
         );
     }
 
@@ -551,10 +551,10 @@ class hotpot {
      */
     static public function available_namesources_list() {
         return array (
-            self::TEXTSOURCE_FILE     => get_string('textsourcefile', 'hotpot'),
-            self::TEXTSOURCE_FILENAME => get_string('textsourcefilename', 'hotpot'),
-            self::TEXTSOURCE_FILEPATH => get_string('textsourcefilepath', 'hotpot'),
-            self::TEXTSOURCE_SPECIFIC => get_string('textsourcespecific', 'hotpot')
+            self::TEXTSOURCE_FILE     => get_string('textsourcefile', 'mod_hotpot'),
+            self::TEXTSOURCE_FILENAME => get_string('textsourcefilename', 'mod_hotpot'),
+            self::TEXTSOURCE_FILEPATH => get_string('textsourcefilepath', 'mod_hotpot'),
+            self::TEXTSOURCE_SPECIFIC => get_string('textsourcespecific', 'mod_hotpot')
         );
     }
 
@@ -565,10 +565,10 @@ class hotpot {
      */
     static public function available_titles_list() {
         return array (
-            self::TEXTSOURCE_SPECIFIC => get_string('hotpotname', 'hotpot'),
-            self::TEXTSOURCE_FILE     => get_string('textsourcefile', 'hotpot'),
-            self::TEXTSOURCE_FILENAME => get_string('textsourcefilename', 'hotpot'),
-            self::TEXTSOURCE_FILEPATH => get_string('textsourcefilepath', 'hotpot')
+            self::TEXTSOURCE_SPECIFIC => get_string('hotpotname', 'mod_hotpot'),
+            self::TEXTSOURCE_FILE     => get_string('textsourcefile', 'mod_hotpot'),
+            self::TEXTSOURCE_FILENAME => get_string('textsourcefilename', 'mod_hotpot'),
+            self::TEXTSOURCE_FILEPATH => get_string('textsourcefilepath', 'mod_hotpot')
         );
     }
 
@@ -1818,7 +1818,7 @@ class hotpot {
     public function require_isopen() {
         if ($this->timeopen && $this->timeopen > $this->time) {
             // unit/quiz is not yet open
-            return get_string('notavailable', 'hotpot', userdate($this->timeopen));
+            return get_string('notavailable', 'mod_hotpot', userdate($this->timeopen));
         }
         return false;
     }
@@ -1831,7 +1831,7 @@ class hotpot {
     public function require_notclosed() {
         if ($this->timeclose && $this->timeclose < $this->time) {
             // unit/quiz is already closed
-            return get_string('closed', 'hotpot', userdate($this->timeclose));
+            return get_string('closed', 'mod_hotpot', userdate($this->timeclose));
         }
         return false;
     }
@@ -1870,7 +1870,7 @@ class hotpot {
                             'entrygrade' => $this->entrygrade,
                             'entryactivity' => html_writer::tag('a', format_string(urldecode($cm->name)), array('href' => $href))
                         );
-                        return get_string('entrygradewarning', 'hotpot', $a);
+                        return get_string('entrygradewarning', 'mod_hotpot', $a);
                     }
                 }
             }
@@ -1895,7 +1895,7 @@ class hotpot {
             if ($table && $select && ! $DB->record_exists_select($table, $select, $params)) {
                 // user has not viewed or completed this activity yet
                 $a = html_writer::tag('a', format_string(urldecode($cm->name)), array('href' => $href->out()));
-                return get_string('entrycompletionwarning', 'hotpot', $a);
+                return get_string('entrycompletionwarning', 'mod_hotpot', $a);
             }
         }
 
@@ -1977,11 +1977,11 @@ class hotpot {
 
         // maximum number of unit/quiz attempts reached
         if ($shorterror) {
-            return get_string('nomoreattempts', 'hotpot');
+            return get_string('nomoreattempts', 'mod_hotpot');
         } else {
-            $attemptlimitstr = hotpot_textlib('moodle_strtolower', get_string('attemptlimit', 'hotpot'));
+            $attemptlimitstr = hotpot_textlib('moodle_strtolower', get_string('attemptlimit', 'mod_hotpot'));
             $msg = html_writer::tag('b', format_string($this->name))." ($attemptlimitstr = $this->attemptlimit)";
-            return html_writer::tag('p', get_string('nomoreattempts', 'hotpot')).html_writer::tag('p', $msg);
+            return html_writer::tag('p', get_string('nomoreattempts', 'mod_hotpot')).html_writer::tag('p', $msg);
         }
     }
 

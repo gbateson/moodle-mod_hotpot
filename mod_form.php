@@ -143,11 +143,11 @@ class mod_hotpot_mod_form extends moodleform_mod {
         }
 
         // Reference
-        // $mform->addElement('filepicker', 'sourceitemid', get_string('sourcefile', 'hotpot'));
+        // $mform->addElement('filepicker', 'sourceitemid', get_string('sourcefile', 'mod_hotpot'));
         // $mform->addRule('sourceitemid', null, 'required', null, 'client');
         // $mform->addHelpButton('sourceitemid', 'sourcefile', 'hotpot');
         $options = array('subdirs' => 1, 'maxbytes' => 0, 'maxfiles' => -1, 'mainfile' => true, 'accepted_types' => '*');
-        $mform->addElement('filemanager', 'sourceitemid', get_string('sourcefile', 'hotpot'), null, $options);
+        $mform->addElement('filemanager', 'sourceitemid', get_string('sourcefile', 'mod_hotpot'), null, $options);
         $mform->addRule('sourceitemid', null, 'required', null, 'client');
         $mform->addHelpButton('sourceitemid', 'sourcefile', 'hotpot');
 
@@ -159,7 +159,7 @@ class mod_hotpot_mod_form extends moodleform_mod {
         $mform->addElement('hidden', 'quizchain', 0);
         $mform->setType('quizchain', PARAM_INT);
         //if ($this->is_add()) {
-        //    $mform->addElement('selectyesno', 'quizchain', get_string('addquizchain', 'hotpot'));
+        //    $mform->addElement('selectyesno', 'quizchain', get_string('addquizchain', 'mod_hotpot'));
         //    $mform->setDefault('quizchain', get_user_preferences('hotpot_add_quizchain', 0));
         //    $mform->addHelpButton('quizchain', 'addquizchain', 'hotpot');
         //    $mform->setAdvanced('quizchain');
@@ -168,7 +168,7 @@ class mod_hotpot_mod_form extends moodleform_mod {
         //}
 
         // Entry page -----------------------------------------------------------------
-        $mform->addElement('header', 'entrypagehdr', get_string('entrypagehdr', 'hotpot'));
+        $mform->addElement('header', 'entrypagehdr', get_string('entrypagehdr', 'mod_hotpot'));
         //-----------------------------------------------------------------------------
 
         // Entry page text editor
@@ -176,18 +176,18 @@ class mod_hotpot_mod_form extends moodleform_mod {
 
         // Entry page options
         $elements = array(
-            $mform->createElement('checkbox', 'entry_title', '', get_string('title', 'hotpot')),
-            $mform->createElement('checkbox', 'entry_grading', '', get_string('entry_grading', 'hotpot')),
-            $mform->createElement('checkbox', 'entry_dates', '', get_string('entry_dates', 'hotpot')),
-            $mform->createElement('checkbox', 'entry_attempts', '', get_string('entry_attempts', 'hotpot'))
+            $mform->createElement('checkbox', 'entry_title', '', get_string('title', 'mod_hotpot')),
+            $mform->createElement('checkbox', 'entry_grading', '', get_string('entry_grading', 'mod_hotpot')),
+            $mform->createElement('checkbox', 'entry_dates', '', get_string('entry_dates', 'mod_hotpot')),
+            $mform->createElement('checkbox', 'entry_attempts', '', get_string('entry_attempts', 'mod_hotpot'))
         );
-        $mform->addGroup($elements, 'entryoptions_elements', get_string('entryoptions', 'hotpot'), html_writer::empty_tag('br'), false);
+        $mform->addGroup($elements, 'entryoptions_elements', get_string('entryoptions', 'mod_hotpot'), html_writer::empty_tag('br'), false);
         $mform->setAdvanced('entryoptions_elements');
         $mform->addHelpButton('entryoptions_elements', 'entryoptions', 'hotpot');
         $mform->disabledIf('entryoptions_elements', 'entrypage', 'ne', 1);
 
         // Exit page ------------------------------------------------------------------
-        $mform->addElement('header', 'exitpagehdr', get_string('exitpagehdr', 'hotpot'));
+        $mform->addElement('header', 'exitpagehdr', get_string('exitpagehdr', 'mod_hotpot'));
         //-----------------------------------------------------------------------------
 
         // Exit page text editor
@@ -195,24 +195,24 @@ class mod_hotpot_mod_form extends moodleform_mod {
 
         // Exit page options (feedback)
         $elements = array(
-            $mform->createElement('checkbox', 'exit_title', '', get_string('title', 'hotpot')),
-            $mform->createElement('checkbox', 'exit_encouragement', '', get_string('exit_encouragement', 'hotpot')),
-            $mform->createElement('checkbox', 'exit_attemptscore', '', get_string('exit_attemptscore', 'hotpot', '...')),
-            $mform->createElement('checkbox', 'exit_hotpotgrade', '', get_string('exit_hotpotgrade', 'hotpot', '...'))
+            $mform->createElement('checkbox', 'exit_title', '', get_string('title', 'mod_hotpot')),
+            $mform->createElement('checkbox', 'exit_encouragement', '', get_string('exit_encouragement', 'mod_hotpot')),
+            $mform->createElement('checkbox', 'exit_attemptscore', '', get_string('exit_attemptscore', 'mod_hotpot', '...')),
+            $mform->createElement('checkbox', 'exit_hotpotgrade', '', get_string('exit_hotpotgrade', 'mod_hotpot', '...'))
         );
-        $mform->addGroup($elements, 'exit_feedback', get_string('exit_feedback', 'hotpot'), html_writer::empty_tag('br'), false);
+        $mform->addGroup($elements, 'exit_feedback', get_string('exit_feedback', 'mod_hotpot'), html_writer::empty_tag('br'), false);
         $mform->setAdvanced('exit_feedback');
         $mform->disabledIf('exit_feedback', 'exitpage', 'ne', 1);
         $mform->addHelpButton('exit_feedback', 'exit_feedback', 'hotpot');
 
         // Exit page options (links)
         $elements = array(
-            $mform->createElement('checkbox', 'exit_retry', '', get_string('exit_retry', 'hotpot').': '.get_string('exit_retry_text', 'hotpot')),
-            $mform->createElement('checkbox', 'exit_index', '', get_string('exit_index', 'hotpot').': '.get_string('exit_index_text', 'hotpot')),
-            $mform->createElement('checkbox', 'exit_course', '', get_string('exit_course', 'hotpot').': '.get_string('exit_course_text', 'hotpot')),
-            $mform->createElement('checkbox', 'exit_grades', '', get_string('exit_grades', 'hotpot').': '.get_string('exit_grades_text', 'hotpot')),
+            $mform->createElement('checkbox', 'exit_retry', '', get_string('exit_retry', 'mod_hotpot').': '.get_string('exit_retry_text', 'mod_hotpot')),
+            $mform->createElement('checkbox', 'exit_index', '', get_string('exit_index', 'mod_hotpot').': '.get_string('exit_index_text', 'mod_hotpot')),
+            $mform->createElement('checkbox', 'exit_course', '', get_string('exit_course', 'mod_hotpot').': '.get_string('exit_course_text', 'mod_hotpot')),
+            $mform->createElement('checkbox', 'exit_grades', '', get_string('exit_grades', 'mod_hotpot').': '.get_string('exit_grades_text', 'mod_hotpot')),
         );
-        $mform->addGroup($elements, 'exit_links', get_string('exit_links', 'hotpot'), html_writer::empty_tag('br'), false);
+        $mform->addGroup($elements, 'exit_links', get_string('exit_links', 'mod_hotpot'), html_writer::empty_tag('br'), false);
         $mform->setAdvanced('exit_links');
         $mform->disabledIf('exit_links', 'exitpage', 'ne', 1);
         $mform->addHelpButton('exit_links', 'exit_links', 'hotpot');
@@ -230,32 +230,32 @@ class mod_hotpot_mod_form extends moodleform_mod {
         } else {
             $sourcetype = $this->current->sourcetype;
         }
-        $mform->addElement('select', 'outputformat', get_string('outputformat', 'hotpot'), hotpot::available_outputformats_list($sourcetype));
+        $mform->addElement('select', 'outputformat', get_string('outputformat', 'mod_hotpot'), hotpot::available_outputformats_list($sourcetype));
         $mform->setDefault('outputformat', get_user_preferences('hotpot_outputformat', ''));
         $mform->addHelpButton('outputformat', 'outputformat', 'hotpot');
 
         // Navigation
-        $mform->addElement('select', 'navigation', get_string('navigation', 'hotpot'), hotpot::available_navigations_list());
+        $mform->addElement('select', 'navigation', get_string('navigation', 'mod_hotpot'), hotpot::available_navigations_list());
         $mform->setDefault('navigation', get_user_preferences('hotpot_navigation', hotpot::NAVIGATION_MOODLE));
         $mform->addHelpButton('navigation', 'navigation', 'hotpot');
 
         // Title
-        $mform->addElement('select', 'title', get_string('title', 'hotpot'), hotpot::available_titles_list());
+        $mform->addElement('select', 'title', get_string('title', 'mod_hotpot'), hotpot::available_titles_list());
         $mform->setDefault('title', get_user_preferences('hotpot_title', hotpot::TEXTSOURCE_SPECIFIC));
         $mform->addHelpButton('title', 'title', 'hotpot');
         $mform->setAdvanced('title');
 
         // Show stop button
         $options = array(
-            'hotpot_giveup' => get_string('giveup', 'hotpot'),
-            'specific' => get_string('stopbutton_specific', 'hotpot')
+            'hotpot_giveup' => get_string('giveup', 'mod_hotpot'),
+            'specific' => get_string('stopbutton_specific', 'mod_hotpot')
         );
         $elements = array(
             $mform->createElement('selectyesno', 'stopbutton_yesno', ''),
             $mform->createElement('select', 'stopbutton_type', '', $options),
             $mform->createElement('text', 'stopbutton_text', '', array('size' => '20'))
         );
-        $mform->addGroup($elements, 'stopbutton_elements', get_string('stopbutton', 'hotpot'), ' ', false);
+        $mform->addGroup($elements, 'stopbutton_elements', get_string('stopbutton', 'mod_hotpot'), ' ', false);
         $mform->addHelpButton('stopbutton_elements', 'stopbutton', 'hotpot');
         $mform->setAdvanced('stopbutton_elements');
 
@@ -267,28 +267,28 @@ class mod_hotpot_mod_form extends moodleform_mod {
         $mform->disabledIf('stopbutton_text', 'stopbutton_type', 'ne', 'specific');
 
         // Allow paste
-        $mform->addElement('selectyesno', 'allowpaste', get_string('allowpaste', 'hotpot'));
+        $mform->addElement('selectyesno', 'allowpaste', get_string('allowpaste', 'mod_hotpot'));
         $mform->setType('allowpaste', PARAM_INT);
         $mform->setDefault('allowpaste', get_user_preferences('hotpot_quiz_allowpaste', 1));
         $mform->addHelpButton('allowpaste', 'allowpaste', 'hotpot');
         $mform->setAdvanced('allowpaste');
 
         // Use filters
-        $mform->addElement('selectyesno', 'usefilters', get_string('usefilters', 'hotpot'));
+        $mform->addElement('selectyesno', 'usefilters', get_string('usefilters', 'mod_hotpot'));
         $mform->setType('usefilters', PARAM_INT);
         $mform->setDefault('usefilters', get_user_preferences('hotpot_quiz_usefilters', 1));
         $mform->addHelpButton('usefilters', 'usefilters', 'hotpot');
         $mform->setAdvanced('usefilters');
 
         // Use glossary
-        $mform->addElement('selectyesno', 'useglossary', get_string('useglossary', 'hotpot'));
+        $mform->addElement('selectyesno', 'useglossary', get_string('useglossary', 'mod_hotpot'));
         $mform->setType('useglossary', PARAM_INT);
         $mform->setDefault('useglossary', get_user_preferences('hotpot_quiz_useglossary', 1));
         $mform->addHelpButton('useglossary', 'useglossary', 'hotpot');
         $mform->setAdvanced('useglossary');
 
         // Use media filters
-        $mform->addElement('select', 'usemediafilter', get_string('usemediafilter', 'hotpot'), hotpot::available_mediafilters_list());
+        $mform->addElement('select', 'usemediafilter', get_string('usemediafilter', 'mod_hotpot'), hotpot::available_mediafilters_list());
         $mform->setType('usemediafilter', PARAM_SAFEDIR); // [a-zA-Z0-9_-]
         $mform->setDefault('usemediafilter', get_user_preferences('hotpot_quiz_usemediafilter', 'moodle'));
         $mform->addHelpButton('usemediafilter', 'usemediafilter', 'hotpot');
@@ -299,7 +299,7 @@ class mod_hotpot_mod_form extends moodleform_mod {
             $mform->createElement('select', 'studentfeedback', '', hotpot::available_feedbacks_list()),
             $mform->createElement('text', 'studentfeedbackurl', '', array('size'=>'40'))
         );
-        $mform->addGroup($elements, 'studentfeedback_elements', get_string('studentfeedback', 'hotpot'), array(' '), false);
+        $mform->addGroup($elements, 'studentfeedback_elements', get_string('studentfeedback', 'mod_hotpot'), array(' '), false);
         $mform->disabledIf('studentfeedback_elements', 'studentfeedback', 'eq', hotpot::FEEDBACK_NONE);
         $mform->disabledIf('studentfeedback_elements', 'studentfeedback', 'eq', hotpot::FEEDBACK_MOODLEFORUM);
         $mform->disabledIf('studentfeedback_elements', 'studentfeedback', 'eq', hotpot::FEEDBACK_MOODLEMESSAGING);
@@ -316,28 +316,28 @@ class mod_hotpot_mod_form extends moodleform_mod {
         $this->add_activity_list('entry');
 
         // Open time
-        $mform->addElement('date_time_selector', 'timeopen', get_string('timeopen', 'hotpot'), array('optional' => true));
+        $mform->addElement('date_time_selector', 'timeopen', get_string('timeopen', 'mod_hotpot'), array('optional' => true));
         $mform->addHelpButton('timeopen', 'timeopenclose', 'hotpot');
         $mform->setAdvanced('timeopen');
 
         // Close time
-        $mform->addElement('date_time_selector', 'timeclose', get_string('timeclose', 'hotpot'), array('optional' => true));
+        $mform->addElement('date_time_selector', 'timeclose', get_string('timeclose', 'mod_hotpot'), array('optional' => true));
         $mform->addHelpButton('timeclose', 'timeopenclose', 'hotpot');
         $mform->setAdvanced('timeclose');
 
         // Time limit
         $options = array(
-            hotpot::TIME_SPECIFIC => get_string('timelimitspecific', 'hotpot'),
-            hotpot::TIME_TEMPLATE => get_string('timelimittemplate', 'hotpot'),
+            hotpot::TIME_SPECIFIC => get_string('timelimitspecific', 'mod_hotpot'),
+            hotpot::TIME_TEMPLATE => get_string('timelimittemplate', 'mod_hotpot'),
             hotpot::TIME_DISABLE  => get_string('disable')
         );
         $elements = array(
-            $mform->createElement('static', '', '', get_string('timelimitsummary', 'hotpot')),
+            $mform->createElement('static', '', '', get_string('timelimitsummary', 'mod_hotpot')),
             $mform->createElement('static', '', '', html_writer::empty_tag('br')),
             $mform->createElement('select', 'timelimit', '', $options),
             $mform->createElement('duration', 'timelimitspecific', '', array('optional'=>0, 'defaultunit'=>1))
         );
-        $mform->addGroup($elements, 'timelimit_elements', get_string('timelimit', 'hotpot'), '', false);
+        $mform->addGroup($elements, 'timelimit_elements', get_string('timelimit', 'mod_hotpot'), '', false);
         $mform->addHelpButton('timelimit_elements', 'timelimit', 'hotpot');
         $mform->setAdvanced('timelimit_elements');
         $mform->setType('timelimit', PARAM_INT);
@@ -346,11 +346,11 @@ class mod_hotpot_mod_form extends moodleform_mod {
 
         // Delay 1
         $elements = array(
-            $mform->createElement('static', '', '', get_string('delay1summary', 'hotpot')),
+            $mform->createElement('static', '', '', get_string('delay1summary', 'mod_hotpot')),
             $mform->createElement('static', '', '', html_writer::empty_tag('br')),
             $mform->createElement('duration', 'delay1', '', array('optional'=>1, 'defaultunit'=>1))
         );
-        $mform->addGroup($elements, 'delay1_elements', get_string('delay1', 'hotpot'), '', false);
+        $mform->addGroup($elements, 'delay1_elements', get_string('delay1', 'mod_hotpot'), '', false);
         $mform->addHelpButton('delay1_elements', 'delay1', 'hotpot');
         $mform->setAdvanced('delay1_elements');
         // the standard disabledIf for the "enable" checkbox doesn't work because we are in group, so ...
@@ -359,11 +359,11 @@ class mod_hotpot_mod_form extends moodleform_mod {
 
         // Delay 2
         $elements = array(
-            $mform->createElement('static', '', '', get_string('delay2summary', 'hotpot')),
+            $mform->createElement('static', '', '', get_string('delay2summary', 'mod_hotpot')),
             $mform->createElement('static', '', '', html_writer::empty_tag('br')),
             $mform->createElement('duration', 'delay2', '', array('optional'=>1, 'defaultunit'=>1))
         );
-        $mform->addGroup($elements, 'delay2_elements', get_string('delay2', 'hotpot'), '', false);
+        $mform->addGroup($elements, 'delay2_elements', get_string('delay2', 'mod_hotpot'), '', false);
         $mform->addHelpButton('delay2_elements', 'delay2', 'hotpot');
         $mform->setAdvanced('delay2_elements');
         // the standard disabledIf for the "enable" checkbox doesn't work because we are in group, so ...
@@ -372,18 +372,18 @@ class mod_hotpot_mod_form extends moodleform_mod {
 
         // Delay 3
         $options = array(
-            hotpot::TIME_SPECIFIC => get_string('delay3specific', 'hotpot'),
-            hotpot::TIME_TEMPLATE => get_string('delay3template', 'hotpot'),
-            hotpot::TIME_AFTEROK  => get_string('delay3afterok', 'hotpot'),
-            hotpot::TIME_DISABLE  => get_string('delay3disable', 'hotpot')
+            hotpot::TIME_SPECIFIC => get_string('delay3specific', 'mod_hotpot'),
+            hotpot::TIME_TEMPLATE => get_string('delay3template', 'mod_hotpot'),
+            hotpot::TIME_AFTEROK  => get_string('delay3afterok', 'mod_hotpot'),
+            hotpot::TIME_DISABLE  => get_string('delay3disable', 'mod_hotpot')
         );
         $elements = array(
-            $mform->createElement('static', '', '', get_string('delay3summary', 'hotpot')),
+            $mform->createElement('static', '', '', get_string('delay3summary', 'mod_hotpot')),
             $mform->createElement('static', '', '', html_writer::empty_tag('br')),
             $mform->createElement('select', 'delay3', '', $options),
             $mform->createElement('duration', 'delay3specific', '', array('optional'=>0, 'defaultunit'=>1))
         );
-        $mform->addGroup($elements, 'delay3_elements', get_string('delay3', 'hotpot'), '', false);
+        $mform->addGroup($elements, 'delay3_elements', get_string('delay3', 'mod_hotpot'), '', false);
         $mform->addHelpButton('delay3_elements', 'delay3', 'hotpot');
         $mform->setAdvanced('delay3_elements');
         $mform->setType('delay3', PARAM_INT);
@@ -391,13 +391,13 @@ class mod_hotpot_mod_form extends moodleform_mod {
         $mform->disabledIf('delay3specific[timeunit]', 'delay3', 'ne', hotpot::TIME_SPECIFIC);
 
         // Allow review?
-        //$mform->addElement('selectyesno', 'allowreview', get_string('allowreview', 'hotpot'));
+        //$mform->addElement('selectyesno', 'allowreview', get_string('allowreview', 'mod_hotpot'));
         //$mform->setDefault('allowreview', get_user_preferences('hotpot_review', 1));
         //$mform->addHelpButton('allowreview', 'allowreview', 'hotpot');
         //$mform->setAdvanced('allowreview');
 
         // Review options -------------------------------------------------------------
-        $mform->addElement('header', 'reviewoptionshdr', get_string('reviewoptions', 'hotpot'));
+        $mform->addElement('header', 'reviewoptionshdr', get_string('reviewoptions', 'mod_hotpot'));
         //-----------------------------------------------------------------------------
 
         list($times, $items) = hotpot::reviewoptions_times_items();
@@ -416,7 +416,7 @@ class mod_hotpot_mod_form extends moodleform_mod {
             $text .= html_writer::tag('a', get_string('none'), array('onclick' => 'deselect_all_in("DIV", "fitem", "'.$id.'")'));
             $elements[] = &$mform->createElement('static', '', '', html_writer::tag('span', $text));
 
-            $mform->addGroup($elements, $timename.'_elements', get_string('review'.$timename, 'hotpot'), null, false);
+            $mform->addGroup($elements, $timename.'_elements', get_string('review'.$timename, 'mod_hotpot'), null, false);
             if ($timename=='afterclose') {
                 $mform->disabledIf('afterclose_elements', 'timeclose[off]', 'checked');
             }
@@ -449,13 +449,13 @@ class mod_hotpot_mod_form extends moodleform_mod {
         //-----------------------------------------------------------------------------
 
         // Grading method
-        $mform->addElement('select', 'grademethod', get_string('grademethod', 'hotpot'), hotpot::available_grademethods_list());
+        $mform->addElement('select', 'grademethod', get_string('grademethod', 'mod_hotpot'), hotpot::available_grademethods_list());
         $mform->setDefault('grademethod', get_user_preferences('hotpot_grademethod', hotpot::GRADEMETHOD_HIGHEST));
         $mform->addHelpButton('grademethod', 'grademethod', 'hotpot');
         // $mform->setAdvanced('grademethod');
 
         // Grade weighting
-        $mform->addElement('select', 'gradeweighting', get_string('gradeweighting', 'hotpot'), hotpot::available_gradeweightings_list());
+        $mform->addElement('select', 'gradeweighting', get_string('gradeweighting', 'mod_hotpot'), hotpot::available_gradeweightings_list());
         $mform->setDefault('gradeweighting', get_user_preferences('hotpot_gradeweighting', 100));
         $mform->addHelpButton('gradeweighting', 'gradeweighting', 'hotpot');
         $mform->setAdvanced('gradeweighting');
@@ -465,7 +465,7 @@ class mod_hotpot_mod_form extends moodleform_mod {
             $mform->addElement('hidden', 'removegradeitem', 0);
             $mform->setType('removegradeitem', PARAM_INT);
         } else {
-            $mform->addElement('selectyesno', 'removegradeitem', get_string('removegradeitem', 'hotpot'));
+            $mform->addElement('selectyesno', 'removegradeitem', get_string('removegradeitem', 'mod_hotpot'));
             $mform->addHelpButton('removegradeitem', 'removegradeitem', 'hotpot');
             $mform->setType('removegradeitem', PARAM_INT);
             $mform->setAdvanced('removegradeitem');
@@ -491,20 +491,20 @@ class mod_hotpot_mod_form extends moodleform_mod {
 
         if ($this->is_add()) {
             $options = array(
-                hotpot::TEXTSOURCE_FILE => get_string('textsourcefile', 'hotpot'),
-                hotpot::TEXTSOURCE_SPECIFIC => get_string('textsourcespecific', 'hotpot')
+                hotpot::TEXTSOURCE_FILE => get_string('textsourcefile', 'mod_hotpot'),
+                hotpot::TEXTSOURCE_SPECIFIC => get_string('textsourcespecific', 'mod_hotpot')
             );
             $elements = array(
                 $mform->createElement('selectyesno', $type.'page'),
                 $mform->createElement('select', $type.'textsource', '', $options)
             );
-            $mform->addGroup($elements, $type.'page_elements', get_string($type.'page', 'hotpot'), array(' '), false);
+            $mform->addGroup($elements, $type.'page_elements', get_string($type.'page', 'mod_hotpot'), array(' '), false);
             $mform->setDefault($type.'page', get_user_preferences('hotpot_'.$type.'page', 0));
             $mform->setAdvanced($type.'page_elements');
             $mform->addHelpButton($type.'page_elements', $type.'page', 'hotpot');
             $mform->disabledIf($type.'page_elements', $type.'page', 'ne', 1);
         } else {
-            $mform->addElement('selectyesno', $type.'page', get_string($type.'page', 'hotpot'));
+            $mform->addElement('selectyesno', $type.'page', get_string($type.'page', 'mod_hotpot'));
             $mform->setType($type.'page', PARAM_INT);
             $mform->addHelpButton($type.'page', $type.'page', 'hotpot');
             $mform->addElement('hidden', $type.'textsource', hotpot::TEXTSOURCE_SPECIFIC);
@@ -513,7 +513,7 @@ class mod_hotpot_mod_form extends moodleform_mod {
         $mform->setType($type.'textsource', PARAM_INT);
 
         $options = hotpot::text_editors_options($this->context);
-        $mform->addElement('editor', $type.'editor', get_string($type.'text', 'hotpot'), null, $options);
+        $mform->addElement('editor', $type.'editor', get_string($type.'text', 'mod_hotpot'), null, $options);
         $mform->setType($type.'editor', PARAM_RAW); // no XSS prevention here, users must be trusted
         $mform->setAdvanced($type.'editor');
 
@@ -547,10 +547,10 @@ class mod_hotpot_mod_form extends moodleform_mod {
                 hotpot::ACTIVITY_NONE => get_string('none')
             ),
             get_string($type=='entry' ? 'previous' : 'next') => array(
-                hotpot::ACTIVITY_COURSE_ANY     => get_string($type.'cmcourse', 'hotpot'),
-                hotpot::ACTIVITY_SECTION_ANY    => get_string($type.'cmsection', 'hotpot'),
-                hotpot::ACTIVITY_COURSE_HOTPOT  => get_string($type.'hotpotcourse', 'hotpot'),
-                hotpot::ACTIVITY_SECTION_HOTPOT => get_string($type.'hotpotsection', 'hotpot')
+                hotpot::ACTIVITY_COURSE_ANY     => get_string($type.'cmcourse', 'mod_hotpot'),
+                hotpot::ACTIVITY_SECTION_ANY    => get_string($type.'cmsection', 'mod_hotpot'),
+                hotpot::ACTIVITY_COURSE_HOTPOT  => get_string($type.'hotpotcourse', 'mod_hotpot'),
+                hotpot::ACTIVITY_SECTION_HOTPOT => get_string($type.'hotpotsection', 'mod_hotpot')
             )
         );
 
@@ -609,7 +609,7 @@ class mod_hotpot_mod_form extends moodleform_mod {
             $mform->createElement('selectgroups', $type.'cm', '', $optgroups),
             $mform->createElement('select', $type.'grade', '', $options)
         );
-        $mform->addGroup($elements, $type.'cm_elements', get_string($type.'cm', 'hotpot'), array(' '), false);
+        $mform->addGroup($elements, $type.'cm_elements', get_string($type.'cm', 'mod_hotpot'), array(' '), false);
         $mform->addHelpButton($type.'cm_elements', $type.'cm', 'hotpot');
         if ($type=='entry') {
             $defaultcm = hotpot::ACTIVITY_NONE;

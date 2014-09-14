@@ -402,7 +402,7 @@ function xmldb_hotpot_upgrade($oldversion) {
         /////////////////////////////////////
 
         // set up sql strings to select HotPots with Moodle 1.x file paths (i.e. no leading slash)
-        $strupdating = get_string('migratingfiles', 'hotpot');
+        $strupdating = get_string('migratingfiles', 'mod_hotpot');
         $select = 'h.*, cm.id AS cmid';
         $from   = '{hotpot} h, {course_modules} cm, {modules} m';
         $where  = 'm.name=? AND m.id=cm.module AND cm.instance=h.id AND h.sourcefile<>?'.
@@ -541,7 +541,7 @@ function xmldb_hotpot_upgrade($oldversion) {
                     }
                     $params = array('update'=>$hotpot->cmid, 'onclick'=>'this.target="_blank"');
                     $msg = html_writer::link(new moodle_url('/course/modedit.php', $params), $msg);
-                    $msg = get_string('sourcefilenotfound', 'hotpot', $msg);
+                    $msg = get_string('sourcefilenotfound', 'mod_hotpot', $msg);
                     echo html_writer::tag('div', $msg, array('class'=>'notifyproblem'));
                 }
 
@@ -573,7 +573,7 @@ function xmldb_hotpot_upgrade($oldversion) {
                                         );
                                         $msg .= html_writer::empty_tag('br');
                                         $msg .= "filedir path=$l1/$l2/$contenthash";
-                                        $msg = get_string('sourcefilenotfound', 'hotpot', $msg);
+                                        $msg = get_string('sourcefilenotfound', 'mod_hotpot', $msg);
                                         echo html_writer::tag('div', $msg, array('class'=>'notifyproblem'));
                                     }
                                 }
@@ -834,7 +834,7 @@ function xmldb_hotpot_upgrade($oldversion) {
         upgrade_mod_savepoint(true, "$newversion", 'hotpot');
     }
 
-    $newversion = 2014070225;
+    $newversion = 2014091427;
     if ($oldversion < $newversion) {
         $empty_cache = true;
         upgrade_mod_savepoint(true, "$newversion", 'hotpot');

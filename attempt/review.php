@@ -137,15 +137,15 @@ class mod_hotpot_attempt_review {
             if ($hotpot->timeclose && $hotpot->timeclose > $hotpot->time) {
                 // quiz is closed
                 if ($hotpot->reviewoptions & hotpot::REVIEW_AFTERATTEMPT) {
-                    return get_string('noreviewbeforeclose', 'hotpot', userdate($hotpot->timeclose));
+                    return get_string('noreviewbeforeclose', 'mod_hotpot', userdate($hotpot->timeclose));
                 }
             } else {
                 // quiz is still open
                 if ($hotpot->reviewoptions & hotpot::REVIEW_AFTERCLOSE) {
-                    return get_string('noreviewafterclose', 'hotpot');
+                    return get_string('noreviewafterclose', 'mod_hotpot');
                 }
             }
-            return get_string('noreview', 'hotpot');
+            return get_string('noreview', 'mod_hotpot');
         }
 
         // we need to know if this user can review all attempts (i.e. a "teacher")
@@ -211,7 +211,7 @@ class mod_hotpot_attempt_review {
         if (empty($questions) || empty($responses)) {
             $row = new html_table_row();
 
-            $cell = new html_table_cell(get_string('noresponses', 'hotpot'), array('class'=>'noresponses'));
+            $cell = new html_table_cell(get_string('noresponses', 'mod_hotpot'), array('class'=>'noresponses'));
             $cell->colspan = $question_colspan;
 
             $row->cells[] = $cell;
@@ -293,9 +293,9 @@ class mod_hotpot_attempt_review {
     static function format_attempt_heading($field) {
         switch ($field) {
             case 'timemodified': return get_string('time', 'quiz');
-            case 'attempt'     : return get_string('attemptnumber', 'hotpot');
+            case 'attempt'     : return get_string('attemptnumber', 'mod_hotpot');
             case 'score'       : return get_string('score', 'quiz');
-            default            : return get_string($field, 'hotpot');
+            default            : return get_string($field, 'mod_hotpot');
         }
     }
 
@@ -362,7 +362,7 @@ class mod_hotpot_attempt_review {
         $row = new html_table_row();
 
         // heading
-        $cell = new html_table_cell(get_string($field, 'hotpot'), array('class'=>'responsefield'));
+        $cell = new html_table_cell(get_string($field, 'mod_hotpot'), array('class'=>'responsefield'));
         $row->cells[] = $cell;
 
         // data
@@ -382,7 +382,7 @@ class mod_hotpot_attempt_review {
      */
     static function add_num_field(&$row, $field, $value)  {
         // heading
-        $cell = new html_table_cell(get_string($field, 'hotpot'), array('class'=>'responsefield'));
+        $cell = new html_table_cell(get_string($field, 'mod_hotpot'), array('class'=>'responsefield'));
         $row->cells[] = $cell;
 
         // data

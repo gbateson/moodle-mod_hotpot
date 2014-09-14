@@ -71,7 +71,7 @@ $hotpot->set_preferred_pagelayout($PAGE);
 // and load the appropriate renderer class for this attempt
 if (! $subtype = $hotpot->get_attempt_renderer_subtype()) {
     echo $OUTPUT->header();
-    echo get_string('unrecognizedsourcefile', 'hotpot', $hotpot->sourcefile);
+    echo get_string('unrecognizedsourcefile', 'mod_hotpot', $hotpot->sourcefile);
     echo $OUTPUT->footer();
     exit;
 }

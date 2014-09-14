@@ -39,7 +39,7 @@ hotpot_add_to_log($course->id, 'hotpot', 'index', "index.php?id=$course->id", ''
 $PAGE->set_url('/mod/hotpot/index.php', array('id' => $course->id));
 $PAGE->set_title($course->fullname);
 $PAGE->set_heading($course->shortname);
-$PAGE->navbar->add(get_string('modulenameplural', 'hotpot'));
+$PAGE->navbar->add(get_string('modulenameplural', 'mod_hotpot'));
 
 /// Output starts here
 
@@ -48,7 +48,7 @@ echo $OUTPUT->header();
 /// Get all the appropriate data
 
 if (! $hotpots = get_all_instances_in_course('hotpot', $course)) {
-    echo $OUTPUT->heading(get_string('nohotpots', 'hotpot'), 2);
+    echo $OUTPUT->heading(get_string('nohotpots', 'mod_hotpot'), 2);
     echo $OUTPUT->continue_button(new moodle_url('/course/view.php', array('id' => $course->id)));
     echo $OUTPUT->footer();
     die();
@@ -165,7 +165,7 @@ foreach ($hotpots as $hotpot) {
 
         if ($reviewoptions) {
             $text = $aggregates[$hotpot->id]->usercount;
-            $text = get_string('viewreports', 'hotpot', $text);
+            $text = get_string('viewreports', 'mod_hotpot', $text);
             $text = html_writer::tag('a', $text, $params);
         } else {
             $text = '&nbsp;';
@@ -176,7 +176,7 @@ foreach ($hotpots as $hotpot) {
     $table->data[] = $row;
 }
 
-echo $OUTPUT->heading(get_string('modulenameplural', 'hotpot'), 2);
+echo $OUTPUT->heading(get_string('modulenameplural', 'mod_hotpot'), 2);
 echo html_writer::table($table);
 
 /// Finish the page

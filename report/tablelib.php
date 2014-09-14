@@ -184,7 +184,7 @@ class hotpot_report_table extends table_sql {
         echo ' &nbsp; ';
 
         // add button to delete attempts
-        $confirm = addslashes_js(get_string('confirmdeleteattempts', 'hotpot'));
+        $confirm = addslashes_js(get_string('confirmdeleteattempts', 'mod_hotpot'));
         $onclick = ''
             ."if(confirm('$confirm') && this.form && this.form.elements['confirmed']) {"
                 ."this.form.elements['confirmed'].value = '1';"
@@ -193,7 +193,7 @@ class hotpot_report_table extends table_sql {
                 ."return false;"
             ."}"
         ;
-        echo html_writer::empty_tag('input', array('type'=>'submit', 'onclick'=>"$onclick", 'name'=>'delete', 'value'=>get_string('deleteattempts', 'hotpot')));
+        echo html_writer::empty_tag('input', array('type'=>'submit', 'onclick'=>"$onclick", 'name'=>'delete', 'value'=>get_string('deleteattempts', 'mod_hotpot')));
         echo html_writer::empty_tag('input', array('type'=>'hidden', 'name'=>'confirmed', 'value'=>'0'))."\n";
         echo html_writer::empty_tag('input', array('type'=>'hidden', 'name'=>'action', 'value'=>'deleteselected'))."\n";
 
@@ -276,7 +276,7 @@ class hotpot_report_table extends table_sql {
      * @return xxx
      */
     function header_attempt()  {
-        return get_string('attemptnumber', 'hotpot');
+        return get_string('attemptnumber', 'mod_hotpot');
     }
 
     /**
@@ -294,7 +294,7 @@ class hotpot_report_table extends table_sql {
      * @return xxx
      */
     function header_status()  {
-        return get_string('status', 'hotpot');
+        return get_string('status', 'mod_hotpot');
     }
 
     /**
@@ -303,7 +303,7 @@ class hotpot_report_table extends table_sql {
      * @return xxx
      */
     function header_duration()  {
-        return get_string('duration', 'hotpot');
+        return get_string('duration', 'mod_hotpot');
     }
 
     /**
@@ -312,7 +312,7 @@ class hotpot_report_table extends table_sql {
      * @return xxx
      */
     function header_penalties()  {
-        return get_string('penalties', 'hotpot');
+        return get_string('penalties', 'mod_hotpot');
     }
 
     /**
@@ -341,7 +341,7 @@ class hotpot_report_table extends table_sql {
     function header_other($column)  {
         if (substr($column, 0, 2)=='q_') {
             $a = intval(substr($column, 2)) + 1;
-            return get_string('questionshort', 'hotpot', $a);
+            return get_string('questionshort', 'mod_hotpot', $a);
         } else {
             return $column;
         }
@@ -478,7 +478,7 @@ class hotpot_report_table extends table_sql {
         }
 
         if ($column=='responsefield') {
-            return get_string($row->$column, 'hotpot');
+            return get_string($row->$column, 'mod_hotpot');
         }
 
         // format columns Q-1 .. Q-99

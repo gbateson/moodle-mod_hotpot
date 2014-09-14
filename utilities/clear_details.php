@@ -38,7 +38,7 @@ require_capability('moodle/site:config', $context);
 // it is the path below $CFG->wwwroot of this script
 $PAGE->set_url($CFG->wwwroot.$SCRIPT);
 
-$title = get_string('cleardetails', 'hotpot');
+$title = get_string('cleardetails', 'mod_hotpot');
 $PAGE->set_title($title);
 $PAGE->set_heading($title);
 $PAGE->set_pagelayout('admin');
@@ -56,8 +56,8 @@ $count_quizzes = $DB->count_records('hotpot');
 echo $OUTPUT->box_start();
 
 echo '<table style="margin:auto"><tbody>'."\n";
-echo '<tr><th style="text-align:right;">'.get_string('quizzes', 'hotpot').':</th><td>'.$count_quizzes.'</td></tr>'."\n";
-echo '<tr><th style="text-align:right;">'.get_string('detailsrecords', 'hotpot').':</th><td>'.$count_details.'</td></tr>'."\n";
+echo '<tr><th style="text-align:right;">'.get_string('quizzes', 'mod_hotpot').':</th><td>'.$count_quizzes.'</td></tr>'."\n";
+echo '<tr><th style="text-align:right;">'.get_string('detailsrecords', 'mod_hotpot').':</th><td>'.$count_details.'</td></tr>'."\n";
 if ($count_details) {
     echo '<tr><td colspan="2" style="text-align:center;">';
     echo '<form action="'.$CFG->wwwroot.$SCRIPT.'" method="post">';
@@ -67,7 +67,7 @@ if ($count_details) {
     echo '</fieldset>';
     echo '</td></tr>'."\n";
 } else {
-    echo '<tr><td colspan="2" style="text-align:center;">'.get_string('cleareddetails', 'hotpot').'</td></tr>'."\n";
+    echo '<tr><td colspan="2" style="text-align:center;">'.get_string('cleareddetails', 'mod_hotpot').'</td></tr>'."\n";
 }
 echo '</tbody></table>'."\n";
 

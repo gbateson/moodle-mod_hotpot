@@ -320,14 +320,14 @@ class mod_hotpot_attempt_hp_renderer extends mod_hotpot_attempt_renderer {
         // warn user about consequences of navigating away from this page
         switch ($this->can_continue()) {
             case hotpot::CONTINUE_RESUMEQUIZ:
-                $onbeforeunload = ''.get_string('canresumehotpot', 'hotpot', format_string($this->hotpot->name));
+                $onbeforeunload = ''.get_string('canresumehotpot', 'mod_hotpot', format_string($this->hotpot->name));
                 break;
             case hotpot::CONTINUE_RESTARTQUIZ:
             case hotpot::CONTINUE_RESTARTUNIT:
-                $onbeforeunload = get_string('canrestarthotpot', 'hotpot', format_string($this->hotpot->name));
+                $onbeforeunload = get_string('canrestarthotpot', 'mod_hotpot', format_string($this->hotpot->name));
                 break;
             case hotpot::CONTINUE_ABANDONUNIT:
-                $onbeforeunload = get_string('abandonhotpot', 'hotpot');
+                $onbeforeunload = get_string('abandonhotpot', 'mod_hotpot');
                 break;
             default:
                 $onbeforeunload = ''; // shouldn't happen !!
