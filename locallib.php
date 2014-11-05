@@ -1085,7 +1085,7 @@ class hotpot {
      * @param string $noscore return value if $record->score is not set
      * @return string
      */
-    function format_score($record, $default='&nbsp;') {
+    static function format_score($record, $default='&nbsp;') {
         if (isset($record->score)) {
             return $record->score;
         } else {
