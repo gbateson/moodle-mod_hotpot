@@ -840,6 +840,42 @@ function xmldb_hotpot_upgrade($oldversion) {
         upgrade_mod_savepoint(true, "$newversion", 'hotpot');
     }
 
+    $newversion = 2014111133;
+    if ($oldversion < $newversion) {
+        // fix all hotpots with view completion
+        if (defined('COMPLETION_VIEW_REQUIRED')) {
+            $moduleid = $DB->get_field('modules', 'id', array('name' => 'hotpot'));
+            $params = array('module' => $moduleid, 'completionview' => COMPLETION_VIEW_REQUIRED);
+            if ($cms = $DB->get_records('course_modules', $params, 'course,section')) {
+                $time = time();
+                $course = null;
+                foreach ($cms as $cm) {
+                    $params = array('coursemoduleid'  => $cm->id,
+                                    'viewed'          => COMPLETION_VIEWED,
+                                    'completionstate' => COMPLETION_INCOMPLETE);
+                    if ($userids = $DB->get_records_menu('course_modules_completion', $params, '', 'id,userid')) {
+                        if ($course===null || $course->id != $cm->course) {
+                            $params = array('id' => $cm->course);
+                            $course = $DB->get_record('course', $params);
+                            $completion = new completion_info($course);
+                        }
+                        $userids = array_values($userids);
+                        $userids = array_unique($userids);
+                        foreach ($userids as $userid) {
+                            // mimic "set_module_viewed($cm, $userid)"
+                            // but without the warnings about headers
+                            $data = $completion->get_data($cm, false, $userid);
+                            $data->viewed = COMPLETION_VIEWED;
+                            $completion->internal_set_data($cm, $data);
+                            $completion->update_state($cm, COMPLETION_COMPLETE, $userid);
+                        }
+                    }
+                }
+            }
+        }
+        upgrade_mod_savepoint(true, "$newversion", 'hotpot');
+    }
+
     if ($empty_cache) {
         $DB->delete_records('hotpot_cache');
     }

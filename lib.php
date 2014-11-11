@@ -54,7 +54,7 @@ function hotpot_supports($feature) {
         'FEATURE_ADVANCED_GRADING' => true, // default=false
         'FEATURE_BACKUP_MOODLE2'   => true, // default=false
         'FEATURE_COMMENT'          => true,
-        'FEATURE_COMPLETION_HAS_RULES' => true,
+        'FEATURE_COMPLETION_HAS_RULES' => false, // requires "hotpot_get_completion_state()"
         'FEATURE_COMPLETION_TRACKS_VIEWS' => true,
         'FEATURE_CONTROLS_GRADE_VISIBILITY' => true,
         'FEATURE_GRADE_HAS_GRADE'  => true, // default=false
