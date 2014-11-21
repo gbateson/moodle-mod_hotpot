@@ -834,12 +834,6 @@ function xmldb_hotpot_upgrade($oldversion) {
         upgrade_mod_savepoint(true, "$newversion", 'hotpot');
     }
 
-    $newversion = 2014091427;
-    if ($oldversion < $newversion) {
-        $empty_cache = true;
-        upgrade_mod_savepoint(true, "$newversion", 'hotpot');
-    }
-
     $newversion = 2014111133;
     if ($oldversion < $newversion) {
         // fix all hotpots with view completion
@@ -873,6 +867,12 @@ function xmldb_hotpot_upgrade($oldversion) {
                 }
             }
         }
+        upgrade_mod_savepoint(true, "$newversion", 'hotpot');
+    }
+
+    $newversion = 2014112134;
+    if ($oldversion < $newversion) {
+        $empty_cache = true;
         upgrade_mod_savepoint(true, "$newversion", 'hotpot');
     }
 

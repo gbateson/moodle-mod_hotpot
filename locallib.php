@@ -640,7 +640,7 @@ class hotpot {
 
         static $module = null;
         if (is_null($module)) {
-            $module = new stdClass();
+            $plugin = new stdClass();
             require($CFG->dirroot.'/mod/hotpot/version.php');
         }
 
