@@ -1286,10 +1286,9 @@ function hotpot_pluginfile($course, $cm, $context, $filearea, $args, $forcedownl
  * @param string $filearea  'sourcefile', 'entrytext' or 'exittext'
  * @param string $filepath  despite the name, this is a dir path with leading and trailing "/"
  * @param string $filename
- * @param array $file_record
  * @return stdclass if external file found, false otherwise
  */
-function hotpot_pluginfile_externalfile($context, $component, $filearea, $filepath, $filename, $file_record) {
+function hotpot_pluginfile_externalfile($context, $component, $filearea, $filepath, $filename) {
 
     // get file storage
     $fs = get_file_storage();
@@ -1406,41 +1405,73 @@ function hotpot_pluginfile_externalfile($context, $component, $filearea, $filepa
     $params = array();
     if ($encodepath) {
         $listing = $repository->get_listing();
-        if (isset($listing['list'][0]['path'])) {
-            $params = file_storage::unpack_reference($listing['list'][0]['path'], true);
+        switch (true) {
+            case isset($listing['list'][0]['source']): $param = 'source'; break; // file
+            case isset($listing['list'][0]['path']):   $param = 'path';   break; // dir
+            default: return false; // shouldn't happen !!
+        }
+        $params = $listing['list'][0][$param];
+        switch ($type) {
+            case 'user':
+                $params = json_decode(base64_decode($params), true);
+                break;
+            case 'coursefiles':
+                $params = file_storage::unpack_reference($params, true);
+                break;
         }
     }
 
     foreach ($paths as $path => $source) {
 
-        if (! hotpot_pluginfile_dirpath_exists($path, $repository, $encodepath, $params)) {
+        if (! hotpot_pluginfile_dirpath_exists($path, $repository, $type, $encodepath, $params)) {
             continue;
         }
 
         if ($encodepath) {
             $params['filepath'] = '/'.$path.($path=='' ? '' : '/');
             $params['filename'] = '.'; // "." signifies a directory
-            $path = file_storage::pack_reference($params);
+            switch ($type) {
+                case 'user':
+                    $path = base64_encode(json_encode($params));
+                    break;
+                case 'coursefiles':
+                    $path = file_storage::pack_reference($params);
+                    break;
+            }
         }
 
         $listing = $repository->get_listing($path);
         foreach ($listing['list'] as $file) {
 
-            if (empty($file['source'])) {
-                continue; // a directory - shouldn't happen !!
+            switch (true) {
+                case isset($file['source']): $param = 'source'; break; // file
+                case isset($file['path']):   $param = 'path';   break; // dir
+                default: continue; // shouldn't happen !!
             }
 
             if ($encodepath) {
-                $file['source'] = file_storage::unpack_reference($file['source']);
-                $file['source'] = trim($file['source']['filepath'], '/').'/'.$file['source']['filename'];
+                switch ($type) {
+                    case 'user':
+                        $file[$param] = json_decode(base64_decode($file[$param]), true);
+                        break;
+                    case 'coursefiles':
+                        $file[$param] = file_storage::unpack_reference($file[$param]);
+                        break;
+                }
+                $file[$param] = trim($file[$param]['filepath'], '/').'/'.$file[$param]['filename'];
             }
 
-            if ($file['source']==$source) {
+            if ($file[$param]==$source) {
 
                 if ($encodepath) {
                     $params['filename'] = $filename;
                     $source = file_storage::pack_reference($params);
                 }
+
+                $file_record = array(
+                    'contextid' => $context->id, 'component' => $component, 'filearea' => $filearea,
+                    'sortorder' => 0, 'itemid' => 0, 'filepath' => $filepath, 'filename' => $filename
+                );
 
                 if ($file = $fs->create_file_from_reference($file_record, $repositoryid, $source)) {
                     return $file;
@@ -1459,11 +1490,12 @@ function hotpot_pluginfile_externalfile($context, $component, $filearea, $filepa
  *
  * @param string   $dirpath
  * @param stdclass $repository
+ * @param string   $type ("user" or "coursefiles")
  * @param boolean  $encodepath
  * @param array    $params
  * @return boolean true if dir path exists in repository, false otherwise
  */
-function hotpot_pluginfile_dirpath_exists($dirpath, $repository, $encodepath, $params) {
+function hotpot_pluginfile_dirpath_exists($dirpath, $repository, $type, $encodepath, $params) {
     $dirs = explode('/', $dirpath);
     foreach ($dirs as $i => $dir) {
         $dirpath = implode('/', array_slice($dirs, 0, $i));
@@ -1471,17 +1503,22 @@ function hotpot_pluginfile_dirpath_exists($dirpath, $repository, $encodepath, $p
         if ($encodepath) {
             $params['filepath'] = '/'.$dirpath.($dirpath=='' ? '' : '/');
             $params['filename'] = '.'; // "." signifies a directory
-            $dirpath = file_storage::pack_reference($params);
+            switch ($type) {
+                case 'user':
+                    $dirpath = base64_encode(json_encode($params));
+                    break;
+                case 'coursefiles':
+                    $dirpath = file_storage::pack_reference($params);
+                    break;
+            }
         }
 
         $exists = false;
         $listing = $repository->get_listing($dirpath);
         foreach ($listing['list'] as $file) {
-            if (empty($file['source'])) {
-                if ($file['title']==$dir) {
-                    $exists = true;
-                    break;
-                }
+            if (empty($file['source']) && $file['title']==$dir) {
+                $exists = true;
+                break;
             }
         }
         if (! $exists) {
