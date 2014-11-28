@@ -870,9 +870,64 @@ function xmldb_hotpot_upgrade($oldversion) {
         upgrade_mod_savepoint(true, "$newversion", 'hotpot');
     }
 
-    $newversion = 2014112434;
+    $newversion = 2014112836;
     if ($oldversion < $newversion) {
         $empty_cache = true;
+        upgrade_mod_savepoint(true, "$newversion", 'hotpot');
+    }
+
+    $newversion = 2014112837;
+    if ($oldversion < $newversion) {
+        require_once($CFG->dirroot.'/mod/hotpot/lib.php');
+
+        if (function_exists('get_log_manager')) {
+
+            $legacy_log_tablename = 'log';
+            $legacy_log_table = new xmldb_table($legacy_log_tablename);
+
+            $standard_log_tablename = 'logstore_standard_log';
+            $standard_log_table = new xmldb_table($standard_log_tablename);
+
+            if ($dbman->table_exists($legacy_log_table) && $dbman->table_exists($standard_log_table)) {
+
+                $select = 'module = ?';
+                $params = array('hotpot');
+
+                if ($time = $DB->get_field($standard_log_tablename, 'MAX(timecreated)', array('component' => 'hotpot'))) {
+                    $select .= ' AND time > ?';
+                    $params[] = $time;
+                } else if ($time = $DB->get_field($standard_log_tablename, 'MIN(timecreated)', array())) {
+                    $select .= ' AND time > ?';
+                    $params[] = $time;
+                }
+
+                if ($count = $DB->count_records_select($legacy_log_tablename, $select, $params)) {
+                    $rs = $DB->get_recordset_select($legacy_log_tablename, $select, $params);
+                } else {
+                    $rs = false;
+                }
+
+                if ($rs) {
+                    $i = 0;
+                    $bar = new progress_bar('hotpotmigratelogs', 500, true);
+                    $strupdating = get_string('migratinglogs', 'mod_hotpot');
+                    foreach ($rs as $log) {
+                        upgrade_set_timeout(); // 3 mins
+                        hotpot_add_to_log($log->course,
+                                          $log->module,
+                                          $log->action,
+                                          $log->url,
+                                          $log->info,
+                                          $log->cmid,
+                                          $log->userid,
+                                          false); // i.e. skip legacy log
+                        $i++;
+                        $bar->update($i, $count, $strupdating.": ($i/$count)");
+                    }
+                    $rs->close();
+                }
+            }
+        }
         upgrade_mod_savepoint(true, "$newversion", 'hotpot');
     }
 

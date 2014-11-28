@@ -23,24 +23,26 @@
  */
 
 namespace mod_hotpot\event;
+
+/** prevent direct access to this script */
 defined('MOODLE_INTERNAL') || die();
 
 /**
  * Event for when a hotpot activity is viewed.
  *
  * @package    mod_hotpot
- * @copyright  2013 Adrian Greeve
+ * @copyright  2014 Gordon Bateson
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class course_module_viewed extends \core\event\content_viewed {
+class course_module_viewed extends \core\event\course_module_viewed {
 
     /**
      * Init method.
      */
     protected function init() {
-        $this->data['crud'] = 'r';
-        $this->data['level'] = self::LEVEL_PARTICIPATING;
         $this->data['objecttable'] = 'hotpot';
+        $this->data['crud'] = 'r';
+        $this->data['edulevel'] = self::LEVEL_PARTICIPATING;
     }
 
     /**
@@ -48,7 +50,7 @@ class course_module_viewed extends \core\event\content_viewed {
      *
      * @return string legacy event name
      */
-    static public function get_legacy_eventname() {
+    public static function get_legacy_eventname() {
         return 'hotpot_viewed';
     }
 
@@ -66,8 +68,8 @@ class course_module_viewed extends \core\event\content_viewed {
      *
      * @return string
      */
-    static public function get_name() {
-        return get_string('hotpotviewed', 'mod_hotpot');
+    public static function get_name() {
+        return get_string('event_hotpot_viewed', 'mod_hotpot');
     }
 
     /**
@@ -86,18 +88,16 @@ class course_module_viewed extends \core\event\content_viewed {
      */
     protected function get_legacy_eventdata() {
         global $USER;
-
         $hotpot = $this->get_record_snapshot('hotpot', $this->objectid);
-        $course = $this->get_record_snapshot('course', $this->courseid);
-        $cm     = $this->get_record_snapshot('course_modules', $this->context->instanceid);
-        $hotpot = new \hotpot($hotpot, $cm, $course);
-        return (object)array('hotpot' => $hotpot, 'user' => $USER);
+        $course    = $this->get_record_snapshot('course', $this->courseid);
+        $cm        = $this->get_record_snapshot('course_modules', $this->context->instanceid);
+        return (object)array('hotpot' => $hotpot, 'course' => $course, 'cm' => $cm, 'user' => $USER);
     }
 
     /**
      * replace add_to_log() statement.
      *
-     * @return array of parameters to be passed to legacy hotpot_add_to_log() function.
+     * @return array of parameters to be passed to legacy add_to_log() function.
      */
     protected function get_legacy_logdata() {
         $url = new \moodle_url('view.php', array('id' => $this->context->instanceid));

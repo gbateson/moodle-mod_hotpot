@@ -318,6 +318,7 @@ $string['maxeventlength'] = 'Maximum number of days for a single calendar event'
 $string['mediafilter_hotpot'] = 'HotPot media filter';
 $string['mediafilter_moodle'] = 'Moodle\'s standard media filters';
 $string['migratingfiles'] = 'Migrating Hot Potatoes quiz files';
+$string['migratinglogs'] = 'Migrating Hot Potatoes logs';
 $string['missingsourcetype'] = 'HotPot record is missing sourcetype';
 $string['nameadd'] = 'Name';
 $string['nameadd_help'] = 'The name can be specfic text entered by the teacher or it can be automatically generated.
@@ -566,10 +567,21 @@ The square-bracket notation has the following syntax:
 : a comma-separated list options to be passed to the player. Each option can be a simple on/off switch, or a name value pair.
 : **name=value
 : **name="some value with spaces"';
-$string['utilitiesindex'] = 'HotPot Utilities index';
+$string['toolsindex'] = 'HotPot Tools index';
 $string['viewreports'] = 'View reports for {$a} user(s)';
 $string['views'] = 'Views';
 $string['weighting'] = 'Weighting';
 $string['wrong'] = 'Wrong';
 $string['zeroduration'] = 'No duration';
 $string['zeroscore'] = 'Zero score';
+
+$string['event_attempt_started'] = 'attempt_started';
+$string['event_attempt_started_desc'] = 'attempt_started description';
+$string['event_course_module_instance_list_viewed'] = 'course_module_instance_list_viewed';
+$string['event_course_module_instance_list_viewed_desc'] = 'course_module_instance_list_viewed description';
+$string['event_report_viewed'] = 'report_viewed';
+$string['event_report_viewed_desc'] = 'report_viewed description';
+$string['event_attempt_reviewed'] = 'attempt_reviewed';
+$string['event_attempt_reviewed_desc'] = 'attempt_reviewed description';
+$string['event_attempt_submitted'] = 'attempt_submitted';
+$string['event_attempt_submitted_desc'] = 'attempt_submitted description';

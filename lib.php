@@ -1996,11 +1996,47 @@ function hotpot_textlib() {
 /**
  * hotpot_add_to_log
  */
-function hotpot_add_to_log($courseid, $module, $action, $url='', $info='', $cm=0, $user=0) {
+function hotpot_add_to_log($courseid, $module, $action, $url='', $info='', $cm=0, $user=0, $legacy_add_to_log=true) {
+    global $PAGE;
+
+    // detect new event API (Moodle >= 2.6)
     if (function_exists('get_log_manager')) {
-        $manager = get_log_manager();
-        $manager->legacy_add_to_log($courseid, $module, $action, $url, $info, $cm, $user);
+
+        if ($legacy_add_to_log) {
+            $manager = get_log_manager();
+            if (method_exists($manager, 'legacy_add_to_log')) {
+                $manager->legacy_add_to_log($courseid, $module, $action, $url, $info, $cm, $user);
+            }
+        }
+
+        // map old $action to new $eventname
+        switch ($action) {
+            case 'attempt': $eventname = 'attempt_started';      break;
+            case 'index':   $eventname = 'course_module_instance_list_viewed'; break;
+            case 'report':  $eventname = 'report_viewed';        break;
+            case 'review':  $eventname = 'attempt_reviewed';     break;
+            case 'submit':  $eventname = 'attempt_submitted';    break;
+            case 'view':    $eventname = 'course_module_viewed'; break;
+            default: $eventname = $action;
+        }
+
+        $classname = '\\mod_hotpot\\event\\'.$eventname;
+        if (class_exists($classname)) {
+            $params = array('objectid' => $PAGE->cm->instance,
+                            'context'  => $PAGE->context);
+            // use call_user_func() to prevent syntax error in PHP 5.2.x
+            $event = call_user_func(array($classname, 'create'), $params);
+            if (isset($PAGE->course)) {
+                $event->add_record_snapshot('course', $PAGE->course);
+            }
+            if (isset($PAGE->activityrecord)) {
+                $event->add_record_snapshot($PAGE->cm->modname, $PAGE->activityrecord);
+            }
+            $event->trigger();
+        }
+
     } else if (function_exists('add_to_log')) {
+        // Moodle <= 2.6
         add_to_log($courseid, $module, $action, $url, $info, $cm, $user);
     }
 }
