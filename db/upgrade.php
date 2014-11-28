@@ -39,6 +39,12 @@ function xmldb_hotpot_upgrade($oldversion) {
 
     $dbman = $DB->get_manager();
 
+    if (defined('STDIN') && defined('CLI_SCRIPT')) {
+        $interactive = false;
+    } else {
+        $interactive = true;
+    }
+
     //===== 1.9.0 upgrade line ======//
 
     // update hotpot grades from sites earlier than Moodle 1.9, 27th March 2008
@@ -417,8 +423,10 @@ function xmldb_hotpot_upgrade($oldversion) {
             $rs = false;
         }
         if ($rs) {
-            $i = 0;
-            $bar = new progress_bar('hotpotmigratefiles', 500, true);
+            if ($interactive) {
+                $i = 0;
+                $bar = new progress_bar('hotpotmigratefiles', 500, true);
+            }
 
             // get file storage object
             $fs = get_file_storage();
@@ -600,8 +608,10 @@ function xmldb_hotpot_upgrade($oldversion) {
                 $DB->update_record('hotpot', $hotpot);
 
                 // update progress bar
-                $i++;
-                $bar->update($i, $count, $strupdating.": ($i/$count)");
+                if ($interactive) {
+                    $i++;
+                    $bar->update($i, $count, $strupdating.": ($i/$count)");
+                }
             }
             $rs->close();
         }
@@ -908,8 +918,10 @@ function xmldb_hotpot_upgrade($oldversion) {
                 }
 
                 if ($rs) {
-                    $i = 0;
-                    $bar = new progress_bar('hotpotmigratelogs', 500, true);
+                    if ($interactive) {
+                        $i = 0;
+                        $bar = new progress_bar('hotpotmigratelogs', 500, true);
+                    }
                     $strupdating = get_string('migratinglogs', 'mod_hotpot');
                     foreach ($rs as $log) {
                         upgrade_set_timeout(); // 3 mins
@@ -921,8 +933,10 @@ function xmldb_hotpot_upgrade($oldversion) {
                                           $log->cmid,
                                           $log->userid,
                                           false); // i.e. skip legacy log
-                        $i++;
-                        $bar->update($i, $count, $strupdating.": ($i/$count)");
+                        if ($interactive) {
+                            $i++;
+                            $bar->update($i, $count, $strupdating.": ($i/$count)");
+                        }
                     }
                     $rs->close();
                 }
