@@ -1995,8 +1995,17 @@ function hotpot_textlib() {
 
 /**
  * hotpot_add_to_log
+ *
+ * @param integer $courseid
+ * @param string  $module name e.g. "hotpot"
+ * @param string  $action
+ * @param string  $url (optional, default='')
+ * @param string  $info (optional, default='') often a hotpot id
+ * @param string  $cmid (optional, default=0)
+ * @param integer $userid (optional, default=0)
+ * @param boolean $legacy_add_to_log (optional, default=true)
  */
-function hotpot_add_to_log($courseid, $module, $action, $url='', $info='', $cm=0, $user=0, $legacy_add_to_log=true) {
+function hotpot_add_to_log($courseid, $module, $action, $url='', $info='', $cmid=0, $userid=0, $legacy_add_to_log=true) {
     global $PAGE;
 
     // detect new event API (Moodle >= 2.6)
@@ -2005,7 +2014,7 @@ function hotpot_add_to_log($courseid, $module, $action, $url='', $info='', $cm=0
         if ($legacy_add_to_log) {
             $manager = get_log_manager();
             if (method_exists($manager, 'legacy_add_to_log')) {
-                $manager->legacy_add_to_log($courseid, $module, $action, $url, $info, $cm, $user);
+                $manager->legacy_add_to_log($courseid, $module, $action, $url, $info, $cmid, $userid);
             }
         }
 
@@ -2022,22 +2031,59 @@ function hotpot_add_to_log($courseid, $module, $action, $url='', $info='', $cm=0
 
         $classname = '\\mod_hotpot\\event\\'.$eventname;
         if (class_exists($classname)) {
-            $params = array('objectid' => $PAGE->cm->instance,
-                            'context'  => $PAGE->context);
-            // use call_user_func() to prevent syntax error in PHP 5.2.x
-            $event = call_user_func(array($classname, 'create'), $params);
-            if (isset($PAGE->course)) {
-                $event->add_record_snapshot('course', $PAGE->course);
+
+            if ($action=='index') {
+                // course context
+                if ($PAGE->course && $PAGE->course->id==$courseid) {
+                    // normal Moodle use
+                    $objectid = $PAGE->course->id;
+                    $context  = $PAGE->context;
+                    $course   = $PAGE->course;
+                } else if ($courseid) {
+                    // Moodle upgrade
+                    $objectid = $courseid;
+                    $context  = hotpot_get_context(CONTEXT_COURSE, $courseid));
+                    $course   = $DB->get_record('course', array('id' => $courseid));
+                } else {
+                    $objectid = 0; // shouldn't happen !!
+                }
+                $hotpot = null;
+            } else {
+                // course module context
+                if ($PAGE->cm && $PAGE->cm->id==$cmid) {
+                    // normal Moodle use
+                    $objectid = $PAGE->cm->instance;
+                    $context  = $PAGE->context;
+                    $course   = $PAGE->course;
+                    $hotpot   = $PAGE->activityrecord;
+                } else if ($cmid) {
+                    // Moodle upgrade
+                    $objectid = $DB->get_field('course_modules', 'instance', array('id' => $cmid));
+                    $context  = hotpot_get_context(CONTEXT_MODULE, $cmid));
+                    $course   = $DB->get_record('course', array('id' => $courseid));
+                    $hotpot   = $DB->get_record('hotpot', array('id' => $objectid));
+                } else {
+                    $objectid = 0; // shouldn't happen !!
+                }
             }
-            if (isset($PAGE->activityrecord)) {
-                $event->add_record_snapshot($PAGE->cm->modname, $PAGE->activityrecord);
+
+            if ($objectid) {
+                // use call_user_func() to prevent syntax error in PHP 5.2.x
+                $params = array('objectid' => $objectid, 'context' => $context);
+                $event = call_user_func(array($classname, 'create'), $params);
+                if ($course) {
+                    $event->add_record_snapshot('course', $course);
+                }
+                if ($hotpot) {
+                    $event->add_record_snapshot('hotpot', $hotpot);
+                }
+                $event->trigger();
             }
-            $event->trigger();
         }
 
     } else if (function_exists('add_to_log')) {
-        // Moodle <= 2.6
-        add_to_log($courseid, $module, $action, $url, $info, $cm, $user);
+        // Moodle <= 2.5
+        add_to_log($courseid, $module, $action, $url, $info, $cmid, $userid);
     }
 }
 
