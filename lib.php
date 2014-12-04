@@ -2006,7 +2006,7 @@ function hotpot_textlib() {
  * @param boolean $legacy_add_to_log (optional, default=true)
  */
 function hotpot_add_to_log($courseid, $module, $action, $url='', $info='', $cmid=0, $userid=0, $legacy_add_to_log=true) {
-    global $PAGE;
+    global $DB, $PAGE;
 
     // detect new event API (Moodle >= 2.6)
     if (function_exists('get_log_manager')) {

@@ -18,8 +18,9 @@
  * This file contains an event for when a hotpot activity is viewed.
  *
  * @package    mod_hotpot
- * @copyright  2013 Adrian Greeve <adrian@moodle.com>
+ * @copyright  2014 Gordon Bateson (gordon.bateson@gmail.com)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @since      Moodle 2.6
  */
 
 namespace mod_hotpot\event;
@@ -43,64 +44,5 @@ class course_module_viewed extends \core\event\course_module_viewed {
         $this->data['objecttable'] = 'hotpot';
         $this->data['crud'] = 'r';
         $this->data['edulevel'] = self::LEVEL_PARTICIPATING;
-    }
-
-    /**
-     * Does this event replace a legacy event?
-     *
-     * @return string legacy event name
-     */
-    public static function get_legacy_eventname() {
-        return 'hotpot_viewed';
-    }
-
-    /**
-     * Returns non-localised description of what happened.
-     *
-     * @return string
-     */
-    public function get_description() {
-        return 'User with id ' . $this->userid . ' viewed content ' . $this->get_url() . ' In phase ' . $this->other['content'];
-    }
-
-    /**
-     * Returns localised general event name.
-     *
-     * @return string
-     */
-    public static function get_name() {
-        return get_string('event_hotpot_viewed', 'mod_hotpot');
-    }
-
-    /**
-     * Returns relevant URL.
-     * @return \moodle_url
-     */
-    public function get_url() {
-        $url = '/mod/hotpot/view.php';
-        return new \moodle_url($url, array('id'=>$this->context->instanceid));
-    }
-
-    /**
-     * Legacy event data if get_legacy_eventname() is not empty.
-     *
-     * @return mixed
-     */
-    protected function get_legacy_eventdata() {
-        global $USER;
-        $hotpot = $this->get_record_snapshot('hotpot', $this->objectid);
-        $course    = $this->get_record_snapshot('course', $this->courseid);
-        $cm        = $this->get_record_snapshot('course_modules', $this->context->instanceid);
-        return (object)array('hotpot' => $hotpot, 'course' => $course, 'cm' => $cm, 'user' => $USER);
-    }
-
-    /**
-     * replace add_to_log() statement.
-     *
-     * @return array of parameters to be passed to legacy add_to_log() function.
-     */
-    protected function get_legacy_logdata() {
-        $url = new \moodle_url('view.php', array('id' => $this->context->instanceid));
-        return array($this->courseid, 'hotpot', 'view', $url->out(), $this->objectid, $this->context->instanceid);
     }
 }

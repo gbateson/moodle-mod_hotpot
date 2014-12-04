@@ -36,60 +36,6 @@ defined('MOODLE_INTERNAL') || die();
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @since      Moodle 2.6
  */
-class course_module_instance_list_viewed extends \core\event\base {
-
-    /**
-     * Init method
-     */
-    protected function init() {
-        $this->data['objecttable'] = 'hotpot';
-        $this->data['crud'] = 'r';
-        $this->data['edulevel'] = self::LEVEL_PARTICIPATING;
-    }
-
-    /**
-     * Returns localised event name
-     *
-     * @return string
-     */
-    public static function get_name() {
-        return get_string('event_course_module_instance_list_viewed', 'mod_hotpot');
-    }
-
-    /**
-     * Returns description of this event
-     *
-     * @return string
-     */
-    public function get_description() {
-        return get_string('event_course_module_instance_list_viewed_desc', 'mod_hotpot', $this);
-    }
-
-    /**
-     * Returns relevant URL
-     *
-     * @return \moodle_url
-     */
-    public function get_url() {
-        return new \moodle_url('/mod/hotpot/view.php', array('id' => $this->objectid));
-    }
-
-    /**
-     * Return the legacy event log data
-     *
-     * @return array
-     */
-    protected function get_legacy_logdata() {
-        return array($this->courseid, 'hotpot', 'OLD_course_module_instance_list_viewed', 'view.php?id='.$this->objectid, $this->other['hotpotid'], $this->contextinstanceid);
-    }
-
-    /**
-     * Custom validation
-     *
-     * @throws \coding_exception
-     * @return void
-     */
-    protected function validate_data() {
-        parent::validate_data();
-    }
+class course_module_instance_list_viewed extends \core\event\course_module_instance_list_viewed {
+    // No code required here as the parent class handles it all.
 }
