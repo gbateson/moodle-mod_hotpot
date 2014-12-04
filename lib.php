@@ -2042,7 +2042,7 @@ function hotpot_add_to_log($courseid, $module, $action, $url='', $info='', $cmid
                 } else if ($courseid) {
                     // Moodle upgrade
                     $objectid = $courseid;
-                    $context  = hotpot_get_context(CONTEXT_COURSE, $courseid));
+                    $context  = hotpot_get_context(CONTEXT_COURSE, $courseid);
                     $course   = $DB->get_record('course', array('id' => $courseid));
                 } else {
                     $objectid = 0; // shouldn't happen !!
@@ -2059,7 +2059,7 @@ function hotpot_add_to_log($courseid, $module, $action, $url='', $info='', $cmid
                 } else if ($cmid) {
                     // Moodle upgrade
                     $objectid = $DB->get_field('course_modules', 'instance', array('id' => $cmid));
-                    $context  = hotpot_get_context(CONTEXT_MODULE, $cmid));
+                    $context  = hotpot_get_context(CONTEXT_MODULE, $cmid);
                     $course   = $DB->get_record('course', array('id' => $courseid));
                     $hotpot   = $DB->get_record('hotpot', array('id' => $objectid));
                 } else {
