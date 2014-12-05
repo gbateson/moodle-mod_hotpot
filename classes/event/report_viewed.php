@@ -44,7 +44,7 @@ class report_viewed extends \core\event\base {
     protected function init() {
         $this->data['objecttable'] = 'hotpot';
         $this->data['crud'] = 'r';
-        $this->data['edulevel'] = self::LEVEL_PARTICIPATING;
+        $this->data['edulevel'] = self::LEVEL_TEACHING;
     }
 
     /**
