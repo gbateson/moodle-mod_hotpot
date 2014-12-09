@@ -892,6 +892,10 @@ function xmldb_hotpot_upgrade($oldversion) {
 
         if (function_exists('get_log_manager')) {
 
+            if ($loglegacy = get_config('loglegacy', 'logstore_legacy')) {
+                set_config('loglegacy', 0, 'logstore_legacy');
+            }
+
             $legacy_log_tablename = 'log';
             $legacy_log_table = new xmldb_table($legacy_log_tablename);
 
@@ -931,8 +935,7 @@ function xmldb_hotpot_upgrade($oldversion) {
                                           $log->url,
                                           $log->info,
                                           $log->cmid,
-                                          $log->userid,
-                                          false); // i.e. skip legacy log
+                                          $log->userid);
                         if ($interactive) {
                             $i++;
                             $bar->update($i, $count, $strupdating.": ($i/$count)");
@@ -940,6 +943,24 @@ function xmldb_hotpot_upgrade($oldversion) {
                     }
                     $rs->close();
                 }
+            }
+
+            // reset loglegacy config setting
+            if ($loglegacy) {
+                set_config('loglegacy', $loglegacy, 'logstore_legacy');
+            }
+        }
+        upgrade_mod_savepoint(true, "$newversion", 'hotpot');
+    }
+
+    $newversion = 2014120943;
+    if ($oldversion < $newversion) {
+        if (function_exists('get_log_manager')) {
+            if ($dbman->table_exists('log')) {
+                $DB->set_field('log', 'action', 'attempt_started',   array('module' => 'hotpot', 'action' => 'OLD_attempt_started'));
+                $DB->set_field('log', 'action', 'report_viewed',     array('module' => 'hotpot', 'action' => 'OLD_report_viewed'));
+                $DB->set_field('log', 'action', 'attempt_reviewed',  array('module' => 'hotpot', 'action' => 'OLD_attempt_reviewed'));
+                $DB->set_field('log', 'action', 'attempt_submitted', array('module' => 'hotpot', 'action' => 'OLD_attempt_submitted'));
             }
         }
         upgrade_mod_savepoint(true, "$newversion", 'hotpot');

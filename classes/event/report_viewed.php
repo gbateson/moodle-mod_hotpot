@@ -71,7 +71,7 @@ class report_viewed extends \core\event\base {
      * @return \moodle_url
      */
     public function get_url() {
-        return new \moodle_url('/mod/hotpot/view.php', array('id' => $this->objectid));
+        return new \moodle_url('/mod/hotpot/view.php', array('id' => $this->contextinstanceid));
     }
 
     /**
@@ -80,7 +80,7 @@ class report_viewed extends \core\event\base {
      * @return array
      */
     protected function get_legacy_logdata() {
-        return array($this->courseid, 'hotpot', 'OLD_report_viewed', 'view.php?id='.$this->objectid, $this->other['hotpotid'], $this->contextinstanceid);
+        return array($this->courseid, 'hotpot', 'report', 'report.php?id='.$this->contextinstanceid, $this->objectid, $this->contextinstanceid);
     }
 
     /**

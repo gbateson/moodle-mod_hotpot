@@ -2003,20 +2003,12 @@ function hotpot_textlib() {
  * @param string  $info (optional, default='') often a hotpot id
  * @param string  $cmid (optional, default=0)
  * @param integer $userid (optional, default=0)
- * @param boolean $legacy_add_to_log (optional, default=true)
  */
-function hotpot_add_to_log($courseid, $module, $action, $url='', $info='', $cmid=0, $userid=0, $legacy_add_to_log=true) {
+function hotpot_add_to_log($courseid, $module, $action, $url='', $info='', $cmid=0, $userid=0) {
     global $DB, $PAGE;
 
     // detect new event API (Moodle >= 2.6)
     if (function_exists('get_log_manager')) {
-
-        if ($legacy_add_to_log) {
-            $manager = get_log_manager();
-            if (method_exists($manager, 'legacy_add_to_log')) {
-                $manager->legacy_add_to_log($courseid, $module, $action, $url, $info, $cmid, $userid);
-            }
-        }
 
         // map old $action to new $eventname
         switch ($action) {
@@ -2069,7 +2061,9 @@ function hotpot_add_to_log($courseid, $module, $action, $url='', $info='', $cmid
 
             if ($objectid) {
                 // use call_user_func() to prevent syntax error in PHP 5.2.x
-                $params = array('objectid' => $objectid, 'context' => $context);
+                $params = array('context'  => $context,
+                                'objectid' => $objectid,
+                                'relateduserid' => $userid);
                 $event = call_user_func(array($classname, 'create'), $params);
                 if ($course) {
                     $event->add_record_snapshot('course', $course);
