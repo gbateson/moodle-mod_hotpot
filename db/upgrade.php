@@ -953,14 +953,15 @@ function xmldb_hotpot_upgrade($oldversion) {
         upgrade_mod_savepoint(true, "$newversion", 'hotpot');
     }
 
-    $newversion = 2014120943;
+    $newversion = 2014121044;
     if ($oldversion < $newversion) {
         if (function_exists('get_log_manager')) {
             if ($dbman->table_exists('log')) {
-                $DB->set_field('log', 'action', 'attempt_started',   array('module' => 'hotpot', 'action' => 'OLD_attempt_started'));
-                $DB->set_field('log', 'action', 'report_viewed',     array('module' => 'hotpot', 'action' => 'OLD_report_viewed'));
-                $DB->set_field('log', 'action', 'attempt_reviewed',  array('module' => 'hotpot', 'action' => 'OLD_attempt_reviewed'));
-                $DB->set_field('log', 'action', 'attempt_submitted', array('module' => 'hotpot', 'action' => 'OLD_attempt_submitted'));
+                $select = 'module = ? AND '.$DB->sql_like('action', '?');
+                $DB->set_field_select('log', 'action', 'attempt', $select, array('hotpot', '%attempt_started'));
+                $DB->set_field_select('log', 'action', 'report',  $select, array('hotpot', '%report_viewed'));
+                $DB->set_field_select('log', 'action', 'review',  $select, array('hotpot', '%attempt_reviewed'));
+                $DB->set_field_select('log', 'action', 'submit',  $select, array('hotpot', '%attempt_submitted'));
             }
         }
         upgrade_mod_savepoint(true, "$newversion", 'hotpot');
