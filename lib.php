@@ -881,7 +881,7 @@ function hotpot_print_recent_mod_activity($activity, $courseid, $detail, $modnam
 * @return array(string) of text strings used to log HotPot view actions
 */
 function hotpot_get_view_actions() {
-    return array('view', 'viewindex', 'report', 'review');
+    return array('view', 'index', 'report', 'review');
 }
 
 /*

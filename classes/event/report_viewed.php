@@ -36,7 +36,16 @@ defined('MOODLE_INTERNAL') || die();
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @since      Moodle 2.6
  */
-class report_viewed extends \core\event\base {
+class report_viewed extends base {
+
+    /**
+     * Return the legacy event name
+     *
+     * @return array
+     */
+    public static function get_legacy_eventname() {
+        return 'report';
+    }
 
     /**
      * Init method
@@ -45,51 +54,5 @@ class report_viewed extends \core\event\base {
         $this->data['objecttable'] = 'hotpot';
         $this->data['crud'] = 'r';
         $this->data['edulevel'] = self::LEVEL_TEACHING;
-    }
-
-    /**
-     * Returns localised event name
-     *
-     * @return string
-     */
-    public static function get_name() {
-        return get_string('event_report_viewed', 'mod_hotpot');
-    }
-
-    /**
-     * Returns description of this event
-     *
-     * @return string
-     */
-    public function get_description() {
-        return get_string('event_report_viewed_desc', 'mod_hotpot', $this);
-    }
-
-    /**
-     * Returns relevant URL
-     *
-     * @return \moodle_url
-     */
-    public function get_url() {
-        return new \moodle_url('/mod/hotpot/view.php', array('id' => $this->contextinstanceid));
-    }
-
-    /**
-     * Return the legacy event log data
-     *
-     * @return array
-     */
-    protected function get_legacy_logdata() {
-        return array($this->courseid, 'hotpot', 'report', 'report.php?id='.$this->contextinstanceid, $this->objectid, $this->contextinstanceid);
-    }
-
-    /**
-     * Custom validation
-     *
-     * @throws \coding_exception
-     * @return void
-     */
-    protected function validate_data() {
-        parent::validate_data();
     }
 }
