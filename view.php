@@ -44,6 +44,9 @@ if ($id) {
 require_login($course, true, $cm);
 require_capability('mod/hotpot:view', $PAGE->context);
 
+// Log this request
+hotpot_add_to_log($course->id, 'hotpot', 'view', 'view.php?id='.$cm->id, $hotpot->id, $cm->id);
+
 // Create an object to represent the current HotPot activity
 $hotpot = hotpot::create($hotpot, $cm, $course, $PAGE->context);
 
@@ -72,9 +75,6 @@ if ($action=='deleteselected') {
         // show a confirm button ?
     }
 }
-
-// Log this request
-hotpot_add_to_log($course->id, 'hotpot', 'view', 'view.php?id='.$cm->id, $hotpot->id, $cm->id);
 
 // Set editing mode
 if ($PAGE->user_allowed_editing()) {
