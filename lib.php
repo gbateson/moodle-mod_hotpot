@@ -2031,7 +2031,7 @@ function hotpot_add_to_log($courseid, $module, $action, $url='', $info='', $cmid
             $params = null;
             $objectid = 0;
 
-            if ($action=='index') {
+            if ($action=='index' || $action=='view all') {
                 // course context
                 if (isset($PAGE->course) && $PAGE->course->id==$courseid) {
                     // normal Moodle use
