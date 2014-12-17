@@ -51,8 +51,8 @@ class attempt_started extends base {
      * Init method
      */
     protected function init() {
-        $this->data['objecttable'] = 'hotpot';
         $this->data['crud'] = 'u';
         $this->data['edulevel'] = self::LEVEL_PARTICIPATING;
+        $this->data['objecttable'] = 'hotpot';
     }
 }

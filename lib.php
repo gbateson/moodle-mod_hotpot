@@ -2012,37 +2012,42 @@ function hotpot_add_to_log($courseid, $module, $action, $url='', $info='', $cmid
 
         // map old $action to new $eventname
         switch ($action) {
-            case 'attempt': $eventname = 'attempt_started';      break;
-            case 'index':   $eventname = 'course_module_instance_list_viewed'; break;
-            case 'report':  $eventname = 'report_viewed';        break;
-            case 'review':  $eventname = 'attempt_reviewed';     break;
-            case 'submit':  $eventname = 'attempt_submitted';    break;
-            case 'view':    $eventname = 'course_module_viewed'; break;
+            case 'attempt':  $eventname = 'attempt_started';      break;
+            case 'report':   $eventname = 'report_viewed';        break;
+            case 'review':   $eventname = 'attempt_reviewed';     break;
+            case 'submit':   $eventname = 'attempt_submitted';    break;
+            case 'view':     $eventname = 'course_module_viewed'; break;
+            case 'index':    // legacy $action
+            case 'view all': $eventname = 'course_module_instance_list_viewed'; break;
             default: $eventname = $action;
         }
 
         $classname = '\\mod_hotpot\\event\\'.$eventname;
         if (class_exists($classname)) {
 
+            $context = null;
+            $course = null;
+            $hotpot = null;
+            $params = null;
+            $objectid = 0;
+
             if ($action=='index') {
                 // course context
-                if ($PAGE->course && $PAGE->course->id==$courseid) {
+                if (isset($PAGE->course) && $PAGE->course->id==$courseid) {
                     // normal Moodle use
-                    $objectid = $PAGE->course->id;
                     $context  = $PAGE->context;
                     $course   = $PAGE->course;
                 } else if ($courseid) {
                     // Moodle upgrade
-                    $objectid = $courseid;
                     $context  = hotpot_get_context(CONTEXT_COURSE, $courseid);
                     $course   = $DB->get_record('course', array('id' => $courseid));
-                } else {
-                    $objectid = 0; // shouldn't happen !!
                 }
-                $hotpot = null;
+                if ($context) {
+                    $params = array('context' => $context);
+                }
             } else {
                 // course module context
-                if ($PAGE->cm && $PAGE->cm->id==$cmid) {
+                if (isset($PAGE->cm) && $PAGE->cm->id==$cmid) {
                     // normal Moodle use
                     $objectid = $PAGE->cm->instance;
                     $context  = $PAGE->context;
@@ -2054,16 +2059,17 @@ function hotpot_add_to_log($courseid, $module, $action, $url='', $info='', $cmid
                     $context  = hotpot_get_context(CONTEXT_MODULE, $cmid);
                     $course   = $DB->get_record('course', array('id' => $courseid));
                     $hotpot   = $DB->get_record('hotpot', array('id' => $objectid));
-                } else {
-                    $objectid = 0; // shouldn't happen !!
+                }
+                if ($context && $objectid) {
+                    $params = array('context' => $context, 'objectid' => $objectid);
                 }
             }
 
-            if ($objectid) {
+            if ($params) {
+                if ($userid) {
+                    $params['relateduserid'] = $userid;
+                }
                 // use call_user_func() to prevent syntax error in PHP 5.2.x
-                $params = array('context'  => $context,
-                                'objectid' => $objectid,
-                                'relateduserid' => $userid);
                 $event = call_user_func(array($classname, 'create'), $params);
                 if ($course) {
                     $event->add_record_snapshot('course', $course);
