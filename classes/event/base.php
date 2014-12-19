@@ -39,21 +39,54 @@ defined('MOODLE_INTERNAL') || die();
 abstract class base extends \core\event\base {
 
     /**
+     * Returns the name of an language string for this event
+     *
+     * @param string $suffix (optional, default="")
+     * @return string
+     */
+    public static function get_event_string_name($suffix='') {
+        $class = get_called_class();
+        $class = substr($class, strlen(__NAMESPACE__) + 1);
+        return 'event_'.$class.$suffix;
+    }
+
+    /**
      * Returns localised event name
      *
      * @return string
      */
     public static function get_name() {
-        return get_string('event_'.get_class($this), 'mod_hotpot');
+        return get_string(self::get_event_string_name(), 'mod_hotpot');
     }
 
     /**
-     * Returns description of this event
+     * Returns non-localised event description with id's for admin use only.
      *
      * @return string
      */
     public function get_description() {
-        return get_string('event_'.get_class($this).'_desc', 'mod_hotpot', $this);
+        if ($this->contextlevel==CONTEXT_MODULE) {
+            $cmid = $this->contextinstanceid;
+        } else {
+            $cmid = 0; // shouldn't happen !!
+        }
+        $a = (object)array('courseid'      => $this->courseid,
+                           'cmid'          => $cmid,
+                           'objectid'      => $this->objectid,
+                           'objecttable'   => $this->objecttable,
+                           'userid'        => $this->userid,
+                           'relateduserid' => $this->relateduserid,
+                           'other'         => $this->other);
+        return get_string(self::get_event_string_name('_description'), 'mod_hotpot', $a);
+    }
+
+    /**
+     * Get an explanation of what the class does.
+     *
+     * @return string An explanation of the event formatted in markdown style.
+     */
+    public static function get_explanation() {
+        return get_string(self::get_event_string_name('_explanation'), 'mod_hotpot');
     }
 
     /**
