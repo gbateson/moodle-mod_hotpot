@@ -81,7 +81,7 @@ $string['event_base'] = 'HotPot event detected';
 $string['event_base_description'] = 'The user with id "{$a->userid}" initiated an event in the "hotpot" activity with course module id "{$a->cmid}"';
 $string['event_base_explanation'] = 'An event was  detected by the HotPot module';
 $string['event_report_viewed'] = 'HotPot report viewed';
-$string['event_report_viewed_description'] = 'The user with id "{$a->userid}" viewed a report at the "hotpot" activity with course module id "{$a->cmid}"';
+$string['event_report_viewed_description'] = 'The user with id "{$a->userid}" viewed a report on attempts at the "hotpot" activity with course module id "{$a->cmid}"';
 $string['event_report_viewed_explanation'] = 'A user has just viewed a report about attempts at a HotPot activity';
 
 // ===================
