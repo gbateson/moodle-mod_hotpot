@@ -895,6 +895,111 @@ function hotpot_get_post_actions() {
     return array('submit');
 }
 
+/*
+ * For the given list of courses, this function creates an HTML report
+ * of which HotPot activities have been completed and which have not
+
+ * This function is called from: {@link course/lib.php}
+ *
+ * @param array(object) $courses records from the "course" table
+ * @param array(array(string)) $htmlarray array, indexed by courseid, of arrays, indexed by module name (e,g, "hotpot), of HTML strings
+ *     each HTML string shows a list of the following information about each open HotPot in the course
+ *         HotPot name and link to the activity  + open/close dates, if any
+ *             for teachers:
+ *                 how many students have attempted/completed the HotPot
+ *             for students:
+ *                 which HotPots have been completed
+ *                 which HotPots have not been completed yet
+ *                 the time remaining for incomplete HotPots
+ * @return no return value is required, but $htmlarray may be updated
+ */
+function hotpot_print_overview($courses, &$htmlarray) {
+    global $CFG, $DB, $USER;
+    require_once($CFG->dirroot.'/mod/hotpot/locallib.php');
+
+    if (empty($CFG->hotpot_enablemymoodle)) {
+        return; // HotPots are not shown on MyMoodle on this site
+    }
+
+    if (! isset($courses) || ! is_array($courses) || ! count($courses)) {
+        return; // no courses
+    }
+
+    if (! $instances = get_all_instances_in_courses('hotpot', $courses)) {
+        return; // no hotpots
+    }
+
+    $strhotpot     = get_string('modulename', 'mod_hotpot');
+    $strtimeopen   = get_string('timeopen',   'mod_hotpot');
+    $strtimeclose  = get_string('timeclose',  'mod_hotpot');
+    $strdateformat = get_string('strftimerecentfull');
+    $strattempted  = get_string('attempted',  'mod_hotpot');
+    $strcompleted  = get_string('completed',  'mod_hotpot');
+    $strnotattemptedyet = get_string('notattemptedyet', 'mod_hotpot');
+
+    foreach ($instances as $hotpot) {
+        $str = ''
+            .'<div class="hotpot overview">'
+            .'<div class="name">'.$strhotpot. ': '
+            .'<a '.($hotpot->visible ? '':' class="dimmed"')
+            .'title="'.$strhotpot.'" href="'.$CFG->wwwroot
+            .'/mod/hotpot/view.php?id='.$hotpot->coursemodule.'">'
+            .format_string($hotpot->name).'</a></div>'
+        ;
+        if ($hotpot->timeopen) {
+            $str .= '<div class="info">'.$strtimeopen.': '.userdate($hotpot->timeopen, $strdateformat).'</div>';
+        }
+        if ($hotpot->timeclose) {
+            $str .= '<div class="info">'.$strtimeclose.': '.userdate($hotpot->timeclose, $strdateformat).'</div>';
+        }
+
+        $modulecontext = hotpot_get_context(CONTEXT_MODULE, $hotpot->coursemodule);
+        if (has_capability('mod/hotpot:reviewallattempts', $modulecontext)) {
+            // manager: show class grades stats
+            // attempted: 99/99, completed: 99/99
+            if ($students = get_users_by_capability($modulecontext, 'mod/hotpot:attempt', 'u.id,u.id', 'u.id', '', '', 0, '', false)) {
+                $count = count($students);
+                $attempted = 0;
+                $completed = 0;
+                // search hotpot_attempts for highest status for each userid
+                list($where, $params) = $DB->get_in_or_equal(array_keys($students));
+                $select = 'userid, SUM(CASE WHEN status = '.hotpot::STATUS_COMPLETED.' THEN 1 ELSE 0 END) AS iscompleted';
+                $from   = '{hotpot_attempts}';
+                $where  = 'userid '.$where.' AND hotpotid = ?';
+                $params[] = $hotpot->id;
+                if ($attempts = $DB->get_records_sql("SELECT $select FROM $from WHERE $where GROUP BY userid", $params)) {
+                    $attempted = count($attempts);
+                    foreach ($attempts as $attempt) {
+                        if ($attempt->iscompleted) {
+                            $completed++;
+                        }
+                    }
+                }
+                unset($attempts);
+                unset($students);
+                $str .= '<div class="info">'.$strattempted.': '.$attempted.' / '.$count.', '.$strcompleted.': '.$completed.' / '.$count.'</div>';
+            }
+        } else {
+            // student: show grade and status
+            if ($grade = hotpot_get_grades($hotpot, $USER->id, 'timestart')) {
+                $grade = $grade[$USER->id];
+                $href = new moodle_url('/mod/hotpot/report.php', array('hp' => $hotpot->id));
+                if ($hotpot->gradeweighting) {
+                    $str .= '<div class="info">'.get_string('grade').': '.'<a href="'.$href.'">'.$grade->rawgrade.'%</a></div>';
+                }
+                $str .= '<div class="info">'.get_string('status', 'hotpot').': '.'<a href="'.$href.'">'.hotpot::format_status($grade->maxstatus).'</a></div>';
+            }
+        }
+        $str .= "</div>\n";
+
+        if (empty($htmlarray[$hotpot->course]['hotpot'])) {
+            $htmlarray[$hotpot->course]['hotpot'] = $str;
+        } else {
+            $htmlarray[$hotpot->course]['hotpot'] .= $str;
+        }
+    }
+}
+
 /**
  * Function to be run periodically according to the moodle cron
  * This function searches for things that need to be done, such
@@ -1014,6 +1119,69 @@ function hotpot_grade_item_update($hotpot, $grades=null) {
 }
 
 /**
+ * hotpot_get_grades
+ *
+ * @param  stdclass  $hotpot      instance object with extra cmidnumber and modname property
+ * @param  integer   $userid      >0 update grade of specific user only, 0 means all participants
+ * @return array     $grades
+ */
+function hotpot_get_grades($hotpot, $userid, $timefield='timefinish') {
+    global $DB;
+
+    if ($hotpot->grademethod==hotpot::GRADEMETHOD_AVERAGE || $hotpot->gradeweighting<100) {
+        $precision = 1;
+    } else {
+        $precision = 0;
+    }
+    $weighting = $hotpot->gradeweighting / 100;
+
+    // set the SQL string to determine the $grade
+    switch ($hotpot->grademethod) {
+        case hotpot::GRADEMETHOD_HIGHEST:
+            $gradefield = "ROUND(MAX(score) * $weighting, $precision) AS rawgrade";
+            break;
+        case hotpot::GRADEMETHOD_AVERAGE:
+            // the 'AVG' function skips abandoned quizzes, so use SUM(score)/COUNT(id)
+            $gradefield = "ROUND(SUM(score)/COUNT(id) * $weighting, $precision) AS rawgrade";
+            break;
+        case hotpot::GRADEMETHOD_FIRST:
+            $gradefield = "ROUND(score * $weighting, $precision)";
+            $gradefield = $DB->sql_concat('timestart', "'_'", $gradefield);
+            $gradefield = "MIN($gradefield) AS rawgrade";
+            break;
+        case hotpot::GRADEMETHOD_LAST:
+            $gradefield = "ROUND(score * $weighting, $precision)";
+            $gradefield = $DB->sql_concat('timestart', "'_'", $gradefield);
+            $gradefield = "MAX($gradefield) AS rawgrade";
+            break;
+        default:
+            return false; // shouldn't happen !!
+    }
+    $statusfield = 'MAX(status) AS maxstatus';
+
+    $select = "$timefield > ? AND hotpotid= ?";
+    $params = array(0, $hotpot->id);
+    if ($userid) {
+        $select .= ' AND userid = ?';
+        $params[] = $userid;
+    }
+    $sql = "SELECT userid, $gradefield, $statusfield FROM {hotpot_attempts} WHERE $select GROUP BY userid";
+
+    $grades = array();
+    if ($aggregates = $DB->get_records_sql($sql, $params)) {
+        foreach ($aggregates as $hotpotuserid => $aggregate) {
+            if ($hotpot->grademethod==hotpot::GRADEMETHOD_FIRST || $hotpot->grademethod==hotpot::GRADEMETHOD_LAST) {
+                // remove left hand characters in $gradefield (up to and including the underscore)
+                $pos = strpos($aggregate->rawgrade, '_') + 1;
+                $aggregate->rawgrade = substr($aggregate->rawgrade, $pos);
+            }
+            $grades[$hotpotuserid] = (object)array('userid'=>$hotpotuserid, 'rawgrade'=>$aggregate->rawgrade, 'maxstatus' => $aggregate->maxstatus);
+        }
+    }
+    return $grades;
+}
+
+/**
  * Update hotpot grades in the gradebook
  *
  * Needed by grade_update_mod_grades() in lib/gradelib.php
@@ -1089,55 +1257,7 @@ function hotpot_update_grades($hotpot=null, $userid=0, $nullifnone=true) {
         return false;
     }
 
-    if ($hotpot->grademethod==hotpot::GRADEMETHOD_AVERAGE || $hotpot->gradeweighting<100) {
-        $precision = 1;
-    } else {
-        $precision = 0;
-    }
-    $weighting = $hotpot->gradeweighting / 100;
-
-    // set the SQL string to determine the $grade
-    switch ($hotpot->grademethod) {
-        case hotpot::GRADEMETHOD_HIGHEST:
-            $gradefield = "ROUND(MAX(score) * $weighting, $precision) AS grade";
-            break;
-        case hotpot::GRADEMETHOD_AVERAGE:
-            // the 'AVG' function skips abandoned quizzes, so use SUM(score)/COUNT(id)
-            $gradefield = "ROUND(SUM(score)/COUNT(id) * $weighting, $precision) AS grade";
-            break;
-        case hotpot::GRADEMETHOD_FIRST:
-            $gradefield = "ROUND(score * $weighting, $precision)";
-            $gradefield = $DB->sql_concat('timestart', "'_'", $gradefield);
-            $gradefield = "MIN($gradefield) AS grade";
-            break;
-        case hotpot::GRADEMETHOD_LAST:
-            $gradefield = "ROUND(score * $weighting, $precision)";
-            $gradefield = $DB->sql_concat('timestart', "'_'", $gradefield);
-            $gradefield = "MAX($gradefield) AS grade";
-            break;
-        default:
-            return false; // shouldn't happen !!
-    }
-
-    $select = 'timefinish>0 AND hotpotid= ?';
-    $params = array($hotpot->id);
-    if ($userid) {
-        $select .= ' AND userid = ?';
-        $params[] = $userid;
-    }
-    $sql = "SELECT userid, $gradefield FROM {hotpot_attempts} WHERE $select GROUP BY userid";
-
-    $grades = array();
-    if ($hotpotgrades = $DB->get_records_sql_menu($sql, $params)) {
-        foreach ($hotpotgrades as $hotpotuserid => $hotpotgrade) {
-            if ($hotpot->grademethod==hotpot::GRADEMETHOD_FIRST || $hotpot->grademethod==hotpot::GRADEMETHOD_LAST) {
-                // remove left hand characters in $gradefield (up to and including the underscore)
-                $pos = strpos($hotpotgrade, '_') + 1;
-                $hotpotgrade = substr($hotpotgrade, $pos);
-            }
-            $grades[$hotpotuserid] = (object)array('userid'=>$hotpotuserid, 'rawgrade'=>$hotpotgrade);
-        }
-    }
+    $grades = hotpot_get_grades($hotpot, $userid);
 
     if (count($grades)) {
         hotpot_grade_item_update($hotpot, $grades);
