@@ -1209,14 +1209,21 @@ function hotpot_update_grades($hotpot=null, $userid=0, $nullifnone=true) {
         $params = array('hotpot');
 
         // get previous record index (if any)
-        if (! $config = $DB->get_record('config', array('name'=>'hotpot_update_grades'))) {
-            $config = (object)array('id'=>0, 'name'=>'hotpot_update_grades', 'value'=>'0');
+        $configname = 'update_grades';
+        $configvalue = get_config('mod_hotpot', $configname);
+        if (is_numeric($configvalue)) {
+            $i_min = intval($configvalue);
+        } else {
+            $i_min = 0;
         }
-        $i_min = intval($config->value);
 
         if ($i_max = $DB->count_records_sql("SELECT COUNT('x') FROM $from WHERE $where", $params)) {
             if ($rs = $DB->get_recordset_sql("SELECT $select FROM $from WHERE $where", $params)) {
-                $bar = new progress_bar('hotpotupgradegrades', 500, true);
+                if (defined('CLI_SCRIPT') && CLI_SCRIPT) {
+                    $bar = false;
+                } else {
+                    $bar = new progress_bar('hotpotupgradegrades', 500, true);
+                }
                 $i = 0;
                 foreach ($rs as $hotpot) {
 
@@ -1228,16 +1235,13 @@ function hotpot_update_grades($hotpot=null, $userid=0, $nullifnone=true) {
 
                     // update progress bar
                     $i++;
-                    $bar->update($i, $i_max, $strupdating.": ($i/$i_max)");
+                    if ($bar) {
+                        $bar->update($i, $i_max, $strupdating.": ($i/$i_max)");
+                    }
 
                     // update record index
                     if ($i > $i_min) {
-                        $config->value = "$i";
-                        if ($config->id) {
-                            $DB->update_record('config', $config);
-                        } else {
-                            $config->id = $DB->insert_record('config', $config);
-                        }
+                        set_config($configname, $i, 'mod_hotpot');
                     }
                 }
                 $rs->close();
@@ -1245,9 +1249,7 @@ function hotpot_update_grades($hotpot=null, $userid=0, $nullifnone=true) {
         }
 
         // delete the record index
-        if ($config->id) {
-            $DB->delete_records('config', array('id'=>$config->id));
-        }
+        unset_config($configname, 'mod_hotpot');
 
         return; // finish here
     }

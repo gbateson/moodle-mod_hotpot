@@ -872,8 +872,8 @@ class hotpot {
         if (empty($ids)) {
             return array();
         } else {
-            list($filter, $params) = $DB->get_in_or_equal($ids);
-            return $DB->get_records_select('hotpot_strings', "id $filter", $params, '', 'id,string');
+            list($select, $params) = $DB->get_in_or_equal($ids);
+            return $DB->get_records_select('hotpot_strings', "id $select", $params, '', 'id,string');
         }
     }
 
