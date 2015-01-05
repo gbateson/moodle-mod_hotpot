@@ -50,7 +50,7 @@ echo html_writer::start_tag('ul')."\n";
 
 $items = new DirectoryIterator($dirpath);
 foreach ($items as $item) {
-    if ($item->isDot() || substr($item, 0, 1)=='.' || $item=='index.php') {
+    if ($item->isDot() || substr($item, 0, 1)=='.' || $item=='index.php' || trim($item)=='') {
         continue;
     }
     if ($item->isFile()) {

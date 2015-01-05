@@ -925,7 +925,7 @@ function hotpot_print_overview($courses, &$htmlarray) {
         return; // no courses
     }
 
-    if (! $instances = get_all_instances_in_courses('hotpot', $courses)) {
+    if (! $hotpots = get_all_instances_in_courses('hotpot', $courses)) {
         return; // no hotpots
     }
 
@@ -937,7 +937,13 @@ function hotpot_print_overview($courses, &$htmlarray) {
     $strcompleted  = get_string('completed',  'mod_hotpot');
     $strnotattemptedyet = get_string('notattemptedyet', 'mod_hotpot');
 
-    foreach ($instances as $hotpot) {
+    $now = time();
+    foreach ($hotpots as $hotpot) {
+
+        if ($hotpot->timeopen > $now || $hotpot->timeclose < $now) {
+            continue; // skip activities that are not open, or are closed
+        }
+
         $str = ''
             .'<div class="hotpot overview">'
             .'<div class="name">'.$strhotpot. ': '
