@@ -687,28 +687,34 @@ function hotpot_get_recent_mod_activity(&$activities, &$index, $timestart, $cour
         return; // no hotpots
     }
 
-    list($filter, $params) = $DB->get_in_or_equal(array_keys($hotpots));
-    $duration = '(ha.timemodified - ha.timestart) AS duration';
-    $select = 'ha.*, '.$duration.', u.firstname, u.lastname, u.picture, u.imagealt, u.email';
-    $from   = "{hotpot_attempts} ha, {user} u";
-    $where  = "ha.hotpotid $filter AND ha.userid=u.id";
-    $orderby = 'ha.userid, ha.attempt';
+    $select = 'ha.*, (ha.timemodified - ha.timestart) AS duration, ';
+    if (class_exists('user_picture')) {
+        // Moodle >= 2.6
+        $select .= user_picture::fields('u', null, 'useruserid');
+    } else {
+        // Moodle <= 2.5
+        $select .= 'u.firstname, u.lastname, u.picture, u.imagealt, u.email';
+    }
+    $from   = '{hotpot_attempts} ha JOIN {user} u ON ha.userid = u.id';
+    list($where, $params) = $DB->get_in_or_equal(array_keys($hotpots));
+    $where  = 'ha.hotpotid '.$where;
+    $order  = 'ha.userid, ha.attempt';
 
     if ($groupid) {
         // restrict search to a users from a particular group
         $from   .= ', {groups_members} gm';
-        $where  .= ' AND ha.userid=gm.userid AND gm.id=?';
+        $where  .= ' AND ha.userid = gm.userid AND gm.id = ?';
         $params[] = $groupid;
     }
     if ($userid) {
         // restrict search to a single user
-        $where .= ' AND ha.userid=?';
+        $where .= ' AND ha.userid = ?';
         $params[] = $userid;
     }
-    $where .= ' AND ha.timemodified>?';
+    $where .= ' AND ha.timemodified > ?';
     $params[] = $timestart;
 
-    if (! $attempts = $DB->get_records_sql("SELECT $select FROM $from WHERE $where ORDER BY $orderby", $params)) {
+    if (! $attempts = $DB->get_records_sql("SELECT $select FROM $from WHERE $where ORDER BY $order", $params)) {
         return; // no recent attempts at these hotpots
     }
 
