@@ -880,12 +880,6 @@ function xmldb_hotpot_upgrade($oldversion) {
         upgrade_mod_savepoint(true, "$newversion", 'hotpot');
     }
 
-    $newversion = 2014112836;
-    if ($oldversion < $newversion) {
-        $empty_cache = true;
-        upgrade_mod_savepoint(true, "$newversion", 'hotpot');
-    }
-
     $newversion = 2014112837;
     if ($oldversion < $newversion) {
         require_once($CFG->dirroot.'/mod/hotpot/lib.php');
@@ -964,6 +958,12 @@ function xmldb_hotpot_upgrade($oldversion) {
                 $DB->set_field_select('log', 'action', 'submit',  $select, array('hotpot', '%attempt_submitted'));
             }
         }
+        upgrade_mod_savepoint(true, "$newversion", 'hotpot');
+    }
+
+    $newversion = 2015012057;
+    if ($oldversion < $newversion) {
+        $empty_cache = true;
         upgrade_mod_savepoint(true, "$newversion", 'hotpot');
     }
 

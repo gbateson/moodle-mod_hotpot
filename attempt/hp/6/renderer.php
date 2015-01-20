@@ -1753,6 +1753,12 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      */
     function filter_text_bodycontent()  {
 
+        // prevent faulty conversion of HTML entities with leading zero in Moodle <= 2.5
+        // specifically, this affects non-breaking spaces (&#0160;) in a JCloze WordList
+        if (hotpot_textlib('entities_to_utf8', '&#0160;')=='p') {
+            $this->bodycontent = preg_replace('/(?<=&#)0+([0-9]+)(?=;)/', '$1', $this->bodycontent);
+        }
+
         // convert entities to utf8
         $this->bodycontent = hotpot_textlib('entities_to_utf8', $this->bodycontent);
 

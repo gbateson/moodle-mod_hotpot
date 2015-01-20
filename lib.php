@@ -2118,7 +2118,7 @@ function hotpot_textlib() {
         // Moodle 2.0 - 2.1
         $textlib = textlib_get_instance();
     } else {
-        // Moodle 2.3 - 2.5
+        // Moodle 2.2 - 2.5
         $textlib = 'textlib';
     }
     $args = func_get_args();
