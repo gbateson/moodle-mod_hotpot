@@ -28,5 +28,4 @@ defined('MOODLE_INTERNAL') or die();
 
 $plugin->component = 'hotpotsource_qedoc';
 $plugin->requires  = 2010112400;
-$plugin->dependencies = array('mod_hotpot' => 2015012057)
-$plugin->version   = 2015012057;
+$plugin->version   = 2010112400;
