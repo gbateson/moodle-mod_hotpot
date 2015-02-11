@@ -795,10 +795,11 @@ function HP_add_listener(obj, evt, fnc, useCapture) {
 		fnc = new Function('event', fnc);
 	}
 
+    // convert mouse <=> touch events
 	var evts = HP_fix_event(evt, obj);
-	var i_max = evts.length;
 
-    // add event handlers for all recognised events
+    // add event handler(s)
+	var i_max = evts.length;
 	for (var i=0; i<i_max; i++) {
 	    evt = evts[i];
 
@@ -840,18 +841,31 @@ function HP_add_listener(obj, evt, fnc, useCapture) {
  * @return void, but may remove event handler to DOM
  */
 function HP_remove_listener(obj, evt, fnc, useCapture) {
-	var onevent = 'on' + evt;
-	if (obj.removeEventListener) {
-		obj.removeEventListener(evt, fnc, (useCapture ? true : false));
-	} else if (obj.attachEvent) {
-		obj.detachEvent(onevent, fnc);
-	} else if (obj.evts && obj.evts[onevent]) {
-		var i_max = obj.evts[onevent].length;
-		for (var i=(i_max - 1); i>=0; i--) {
-			if (obj.evts[onevent][i]==fnc) {
-				obj.evts[onevent].splice(i, 1);
-			}
-		}
+
+    // convert fnc to Function, if necessary
+	fnc = HP_fix_function(fnc);
+
+    // convert mouse <=> touch events
+	var evts = HP_fix_event(evt, obj);
+
+    // remove event handler(s)
+	var i_max = evts.length;
+	for (var i=0; i<i_max; i++) {
+	    evt = evts[i];
+
+        var onevent = 'on' + evt;
+        if (obj.removeEventListener) {
+            obj.removeEventListener(evt, fnc, (useCapture ? true : false));
+        } else if (obj.attachEvent) {
+            obj.detachEvent(onevent, fnc);
+        } else if (obj.evts && obj.evts[onevent]) {
+            var i_max = obj.evts[onevent].length;
+            for (var i=(i_max - 1); i>=0; i--) {
+                if (obj.evts[onevent][i]==fnc) {
+                    obj.evts[onevent].splice(i, 1);
+                }
+            }
+        }
 	}
 }
 
