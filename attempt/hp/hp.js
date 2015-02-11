@@ -744,6 +744,20 @@ function hpField(name, value) {
 ///////////////////////////////////////////
 
 /**
+ * HP_fix_function
+ *
+ * @param  mixed fnc : the function (object) or code (string)
+ * @return function
+ */
+function HP_fix_function(fnc) {
+	if (typeof(fnc)=='function') {
+		return fnc;
+	} else {
+		return new Function('event', fnc);
+	}
+}
+
+/**
  * HP_fix_event
  *
  * @param  string evt : the name of the event (without leading 'on')
@@ -791,9 +805,8 @@ function HP_fix_event(evt, obj) {
  */
 function HP_add_listener(obj, evt, fnc, useCapture) {
 
-	if (typeof(fnc)=='string') {
-		fnc = new Function('event', fnc);
-	}
+    // convert fnc to Function, if necessary
+	fnc = HP_fix_function(fnc);
 
     // convert mouse <=> touch events
 	var evts = HP_fix_event(evt, obj);
