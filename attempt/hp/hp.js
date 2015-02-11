@@ -747,25 +747,37 @@ function hpField(name, value) {
  * HP_fix_event
  *
  * @param  string evt : the name of the event (without leading 'on')
- * @return string
+ * @param  object obj : the destination object for evt
+ * @return array evts : names of events which obj can handle
  */
-function HP_fix_event(evt) {
-	if (typeof(document.body.ontouchstart)==='undefined') {
-		switch (evt) {
-			case 'tap'        : return 'click';
-			case 'touchstart' : return 'mousedown';
-			case 'touchmove'  : return 'mousemove';
-			case 'touchend'   : return 'mouseup';
-		}
-	} else {
-		switch (evt) {
-			case 'click'     : return 'tap';
-			case 'mousedown' : return 'touchstart';
-			case 'mousemove' : return 'touchmove';
-			case 'mouseup'   : return 'touchend';
-		}
-	}
-	return evt;
+function HP_fix_event(evt, obj) {
+    var i = 0;
+    var evts = new Array();
+
+    if ('onmousedown' in obj) {
+        switch (evt) {
+            case 'tap'        : evts[i++] = 'click';     break;
+            case 'touchstart' : evts[i++] = 'mousedown'; break;
+            case 'touchmove'  : evts[i++] = 'mousemove'; break;
+            case 'touchend'   : evts[i++] = 'mouseup';   break;
+        }
+    }
+
+    if ('ontouchstart' in obj) {
+        switch (evt) {
+            case 'click'      : evts[i++] = 'tap';        break;
+            case 'mousedown'  : evts[i++] = 'touchstart'; break;
+            case 'mousemove'  : evts[i++] = 'touchmove';  break;
+            case 'mouseup'    : evts[i++] = 'touchend';   break;
+        }
+    }
+
+    var onevent = 'on' + evt;
+    if (onevent in obj) {
+        evts[i++] = evt;
+    }
+
+    return evts;
 }
 
 /**
@@ -783,30 +795,38 @@ function HP_add_listener(obj, evt, fnc, useCapture) {
 		fnc = new Function('event', fnc);
 	}
 
-	// transfer object's old event handler (if any)
-	var evt = HP_fix_event(evt);
-	var onevent = 'on' + evt;
-	if (obj[onevent]) {
-		var old_fnc = obj[onevent];
-		obj[onevent] = null;
-		HP_add_listener(obj, evt, old_fnc, useCapture);
-	}
+	var evts = HP_fix_event(evt, obj);
+	var i_max = evts.length;
 
-	if (obj.addEventListener) {
-		obj.addEventListener(evt, fnc, (useCapture ? true : false));
-	} else if (obj.attachEvent) {
-		obj.attachEvent(onevent, fnc);
-	} else { // old browser NS4, IE5 ...
-		if (! obj.evts) {
-			obj.evts = new Array();
-		}
-		if (obj.evts && ! obj.evts[onevent]) {
-			obj.evts[onevent] = new Array();
-		}
-		if (obj.evts && obj.evts[onevent] && ! obj.evts[onevent]) {
-			obj.evts[onevent][obj.evts[onevent].length] = fnc;
-			obj[onevent] = new Function('HP_handle_event(this, \"'+onevent+'\")');
-		}
+    // add event handlers for all recognised events
+	for (var i=0; i<i_max; i++) {
+	    evt = evts[i];
+
+        // transfer object's old event handler (if any)
+        var onevent = 'on' + evt;
+        if (obj[onevent]) {
+            var old_fnc = obj[onevent];
+            obj[onevent] = null;
+            HP_add_listener(obj, evt, old_fnc, useCapture);
+        }
+
+        // add new event handler
+        if (obj.addEventListener) {
+            obj.addEventListener(evt, fnc, (useCapture ? true : false));
+        } else if (obj.attachEvent) {
+            obj.attachEvent(onevent, fnc);
+        } else { // old browser NS4, IE5 ...
+            if (! obj.evts) {
+                obj.evts = new Array();
+            }
+            if (obj.evts && ! obj.evts[onevent]) {
+                obj.evts[onevent] = new Array();
+            }
+            if (obj.evts && obj.evts[onevent] && ! obj.evts[onevent]) {
+                obj.evts[onevent][obj.evts[onevent].length] = fnc;
+                obj[onevent] = new Function('HP_handle_event(this, \"'+onevent+'\")');
+            }
+        }
 	}
 }
 
