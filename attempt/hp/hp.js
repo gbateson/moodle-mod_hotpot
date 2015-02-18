@@ -768,22 +768,15 @@ function HP_fix_event(evt, obj) {
     var i = 0;
     var evts = new Array();
 
-    if ('onmousedown' in obj) {
-        switch (evt) {
-            case 'tap'        : evts[i++] = 'click';     break;
-            case 'touchstart' : evts[i++] = 'mousedown'; break;
-            case 'touchmove'  : evts[i++] = 'mousemove'; break;
-            case 'touchend'   : evts[i++] = 'mouseup';   break;
-        }
-    }
-
-    if ('ontouchstart' in obj) {
-        switch (evt) {
-            case 'click'      : evts[i++] = 'tap';        break;
-            case 'mousedown'  : evts[i++] = 'touchstart'; break;
-            case 'mousemove'  : evts[i++] = 'touchmove';  break;
-            case 'mouseup'    : evts[i++] = 'touchend';   break;
-        }
+    switch (evt) {
+        case 'click'      : if ('ontap'        in obj) evts[i++] = 'tap';        break;
+        case 'mousedown'  : if ('ontouchstart' in obj) evts[i++] = 'touchstart'; break;
+        case 'mousemove'  : if ('ontouchmove'  in obj) evts[i++] = 'touchmove';  break;
+        case 'mouseup'    : if ('ontouchend'   in obj) evts[i++] = 'touchend';   break;
+        case 'tap'        : if ('onclick'      in obj) evts[i++] = 'click';      break;
+        case 'touchend'   : if ('onmouseup'    in obj) evts[i++] = 'mouseup';    break;
+        case 'touchmove'  : if ('onmousemove'  in obj) evts[i++] = 'mousemove';  break;
+        case 'touchstart' : if ('onmousedown'  in obj) evts[i++] = 'mousedown';  break;
     }
 
     var onevent = 'on' + evt;
