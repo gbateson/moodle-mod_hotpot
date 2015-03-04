@@ -976,7 +976,7 @@ function xmldb_hotpot_upgrade($oldversion) {
     return true;
 }
 
-xmldb_hotpot_locate_externalfile($contextid, $component, $filearea, $itemid, $filepath, $filename) {
+function xmldb_hotpot_locate_externalfile($contextid, $component, $filearea, $itemid, $filepath, $filename) {
     global $CFG, $DB;
 
     if (! class_exists('repository')) {
