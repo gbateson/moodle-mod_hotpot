@@ -527,7 +527,9 @@ function xmldb_hotpot_upgrade($oldversion) {
                     // anyway we must do this check, so that create_file_from_xxx() does not abort
                 } else if ($url) {
                     // file is on an external url - unusual ?!
-                    $file = false; // $fs->create_file_from_url($file_record, $url);
+                    $file = $fs->create_file_from_url($file_record, $url);
+                } else if ($file = xmldb_hotpot_locate_externalfile($modulecontext->id, 'mod_hotpot', 'sourcefile', 0, $old_filepath, $old_filename)) {
+                    // file exists in external repository - great !
                 } else if ($file = $fs->get_file_by_hash($filehash)) {
                     // $file has already been migrated to Moodle's file system
                     // this is the route we expect most people to come :-)
@@ -972,6 +974,145 @@ function xmldb_hotpot_upgrade($oldversion) {
     }
 
     return true;
+}
+
+xmldb_hotpot_locate_externalfile($contextid, $component, $filearea, $itemid, $filepath, $filename) {
+    global $CFG, $DB;
+
+    if (! class_exists('repository')) {
+        return false; // Moodle <= 2.2 has no repositories
+    }
+
+    static $repositories = null;
+    if ($repositories===null) {
+        $exclude_types = array('recent', 'upload', 'user', 'areafiles');
+        $repositories = repository::get_instances();
+        foreach (array_keys($repositories) as $id) {
+            if (method_exists($repositories[$id], 'get_typename')) {
+                $type = $repositories[$id]->get_typename();
+            } else {
+                $type = $repositories[$id]->options['type'];
+            }
+            if (in_array($type, $exclude_types)) {
+                unset($repositories[$id]);
+            }
+        }
+        // ensure upgraderunning is set
+        if (empty($CFG->upgraderunning)) {
+            $CFG->upgraderunning = null;
+        }
+    }
+
+    // get file storage
+    $fs = get_file_storage();
+
+    // the following types repository use encoded params
+    $encoded_types = array('user', 'areafiles', 'coursefiles');
+
+    foreach ($repositories as $id => $repository) {
+
+        // "filesystem" path is in plain text, others are encoded
+        if (method_exists($repositories[$id], 'get_typename')) {
+            $type = $repositories[$id]->get_typename();
+        } else {
+            $type = $repositories[$id]->options['type'];
+        }
+        $encodepath = in_array($type, $encoded_types);
+
+        // save $root_path, because it may get messed up by
+        // $repository->get_listing($path), if $path is non-existant
+        if (method_exists($repository, 'get_rootpath')) {
+            $root_path = $repository->get_rootpath();
+        } else if (isset($repository->root_path)) {
+            $root_path = $repository->root_path;
+        } else {
+            $root_path = false;
+        }
+
+        // get repository type
+        switch (true) {
+            case isset($repository->options['type']):
+                $type = $repository->options['type'];
+                break;
+            case isset($repository->instance->typeid):
+                $type = repository::get_type_by_id($repository->instance->typeid);
+                $type = $type->get_typename();
+                break;
+            default:
+                $type = ''; // shouldn't happen !!
+        }
+
+        $path = $filepath;
+        $source = trim($filepath.$filename, '/');
+
+        // setup $params for path encoding, if necessary
+        $params = array();
+        if ($encodepath) {
+            $listing = $repository->get_listing();
+            switch (true) {
+                case isset($listing['list'][0]['source']): $param = 'source'; break; // file
+                case isset($listing['list'][0]['path']):   $param = 'path';   break; // dir
+                default: return false; // shouldn't happen !!
+            }
+            $params = file_storage::unpack_reference($listing['list'][0][$param], true);
+
+            $params['filepath'] = '/'.$path.($path=='' ? '' : '/');
+            $params['filename'] = '.'; // "." signifies a directory
+            $path = file_storage::pack_reference($params);
+        }
+
+        // reset $repository->root_path (filesystem repository only)
+        if ($root_path) {
+            $repository->root_path = $root_path;
+        }
+
+        // unset upgraderunning because it can cause get_listing() to fail
+        $upgraderunning = $CFG->upgraderunning;
+        $CFG->upgraderunning = null;
+
+        // Note: we use "@" to suppress warnings in case $path does not exist
+        $listing = @$repository->get_listing($path);
+
+        // restore upgraderunning flag
+        $CFG->upgraderunning = $upgraderunning;
+
+        // check each file to see if it is the one we want
+        foreach ($listing['list'] as $file) {
+
+            switch (true) {
+                case isset($file['source']): $param = 'source'; break; // file
+                case isset($file['path']):   $param = 'path';   break; // dir
+                default: continue; // shouldn't happen !!
+            }
+
+            if ($encodepath) {
+                $file[$param] = file_storage::unpack_reference($file[$param]);
+                $file[$param] = trim($file[$param]['filepath'], '/').'/'.$file[$param]['filename'];
+            }
+
+            if ($file[$param]==$source) {
+
+                if ($encodepath) {
+                    $params['filename'] = $filename;
+                    $source = file_storage::pack_reference($params);
+                }
+
+                $file_record = array(
+                    'contextid' => $contextid, 'component' => $component, 'filearea' => $filearea,
+                    'sortorder' => 0, 'itemid' => 0, 'filepath' => $filepath, 'filename' => $filename
+                );
+
+                if ($file = $fs->create_file_from_reference($file_record, $id, $source)) {
+                    return $file;
+                }
+
+                break; // try another repository
+            }
+        }
+    }
+
+    // external file not found (or found but not created)
+    return false;
 }
 
 /**
