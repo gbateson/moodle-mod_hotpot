@@ -1468,8 +1468,8 @@ function hotpot_pluginfile_externalfile($context, $component, $filearea, $filepa
             $maindirname   = dirname($mainreference);
             $encodepath    = false;
             break;
-        case 'user':
         case 'coursefiles':
+        case 'user':
             $params        = file_storage::unpack_reference($mainreference, true);
             $maindirname   = $params['filepath'];
             $encodepath    = true;
@@ -1545,14 +1545,7 @@ function hotpot_pluginfile_externalfile($context, $component, $filearea, $filepa
             default: return false; // shouldn't happen !!
         }
         $params = $listing['list'][0][$param];
-        switch ($type) {
-            case 'user':
-                $params = json_decode(base64_decode($params), true);
-                break;
-            case 'coursefiles':
-                $params = file_storage::unpack_reference($params, true);
-                break;
-        }
+        $params = json_decode(base64_decode($params), true);
     }
 
     foreach ($paths as $path => $source) {
@@ -1564,14 +1557,7 @@ function hotpot_pluginfile_externalfile($context, $component, $filearea, $filepa
         if ($encodepath) {
             $params['filepath'] = '/'.$path.($path=='' ? '' : '/');
             $params['filename'] = '.'; // "." signifies a directory
-            switch ($type) {
-                case 'user':
-                    $path = base64_encode(json_encode($params));
-                    break;
-                case 'coursefiles':
-                    $path = file_storage::pack_reference($params);
-                    break;
-            }
+            $path = base64_encode(json_encode($params));
         }
 
         $listing = $repository->get_listing($path);
@@ -1584,14 +1570,7 @@ function hotpot_pluginfile_externalfile($context, $component, $filearea, $filepa
             }
 
             if ($encodepath) {
-                switch ($type) {
-                    case 'user':
-                        $file[$param] = json_decode(base64_decode($file[$param]), true);
-                        break;
-                    case 'coursefiles':
-                        $file[$param] = file_storage::unpack_reference($file[$param]);
-                        break;
-                }
+                $file[$param] = json_decode(base64_decode($file[$param]), true);
                 $file[$param] = trim($file[$param]['filepath'], '/').'/'.$file[$param]['filename'];
             }
 
@@ -1637,14 +1616,7 @@ function hotpot_pluginfile_dirpath_exists($dirpath, $repository, $type, $encodep
         if ($encodepath) {
             $params['filepath'] = '/'.$dirpath.($dirpath=='' ? '' : '/');
             $params['filename'] = '.'; // "." signifies a directory
-            switch ($type) {
-                case 'user':
-                    $dirpath = base64_encode(json_encode($params));
-                    break;
-                case 'coursefiles':
-                    $dirpath = file_storage::pack_reference($params);
-                    break;
-            }
+            $dirpath = base64_encode(json_encode($params));
         }
 
         $exists = false;

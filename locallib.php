@@ -2074,7 +2074,14 @@ class hotpot {
                 continue; // skip labels
             }
             if ($found || $cm->id==$id) {
-                if (coursemodule_visible_for_user($cm)) {
+                if (class_exists('\core_availability\info_module')) {
+                    // Moodle >= 2.7
+                    $is_visible = \core_availability\info_module::is_user_visible($cm);
+                } else {
+                    // Moodle <= 2.6
+                    $is_visible = coursemodule_visible_for_user($cm);
+                }
+                if ($is_visible) {
                     return $cm;
                 }
                 if ($cm->id==$id) {
