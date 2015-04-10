@@ -53,7 +53,6 @@ $string['hotpot:view'] = 'View the entry page of a HotPot activity';
 //
 $string['configbodystyles'] = 'By default, Moodle theme styles will override HotPot activity styles. However, for any styles selected here, the HotPot activity styles will be given priority over the Moodle theme styles.';
 $string['configenablecache'] = 'Maintaining a cache of HotPot quizzes can dramatically speed up the delivery of quizzes to the students.';
-$string['configenablecron'] = 'Specify the hours in your time zone at which the HotPot cron script may run';
 $string['configenablemymoodle'] = 'This settings controls whether HotPots are listed on the MyMoodle page or not';
 $string['configenableobfuscate'] = 'Obfuscating the javascript code to insert media players makes it more difficult to determine the media file name and guess what the file contains.';
 $string['configenableswf'] = 'Allow embedding of SWF files in HotPot activities. If enabled, this setting overrides filter_mediaplugin_enable_swf.';
@@ -177,7 +176,6 @@ $string['deleteattempts'] = 'Delete attempts';
 $string['detailsrecords'] = 'HotPot details records';
 $string['duration'] = 'Duration';
 $string['enablecache'] = 'Enable HotPot cache';
-$string['enablecron'] = 'Enable HotPot cron';
 $string['enablemymoodle'] = 'Show HotPots on MyMoodle';
 $string['enableobfuscate'] = 'Enable obfuscation of media player code';
 $string['enableswf'] = 'Allow embedding of SWF files in HotPot activities';
