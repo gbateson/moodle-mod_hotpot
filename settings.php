@@ -47,21 +47,6 @@ $settings->add(
     new admin_setting_configcheckbox('hotpot_enablecache', get_string('enablecache', 'mod_hotpot'), get_string('configenablecache', 'mod_hotpot').' '.$link, 1)
 );
 
-// restrict cron job to certain hours of the day (default=never)
-$timezone = get_user_timezone_offset();
-if (abs($timezone) > 13) {
-    $timezone = 0;
-} else if ($timezone>0) {
-    $timezone = $timezone - 24;
-}
-$options = array();
-for ($i=0; $i<=23; $i++) {
-    $options[($i - $timezone) % 24] = gmdate('H:i', $i * HOURSECS);
-}
-$settings->add(
-    new admin_setting_configmultiselect('hotpot_enablecron', get_string('enablecron', 'mod_hotpot'), get_string('configenablecron', 'mod_hotpot'), array(), $options)
-);
-
 // enable embedding of swf media objects inhotpot quizzes (default=1)
 $settings->add(
     new admin_setting_configcheckbox('hotpot_enableswf', get_string('enableswf', 'mod_hotpot'), get_string('configenableswf', 'mod_hotpot'), 1)
@@ -105,4 +90,4 @@ $setting = new admin_setting_configtext('hotpot_maxeventlength', get_string('max
 $setting->set_updatedcallback('hotpot_refresh_events');
 $settings->add($setting);
 
-unset($i, $link, $options, $setting, $str, $timezone, $url);
+unset($i, $link, $options, $setting, $str, $url);
