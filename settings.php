@@ -111,4 +111,4 @@ $setting = new admin_setting_configtext('hotpot_maxeventlength', get_string('max
 $setting->set_updatedcallback('hotpot_refresh_events');
 $settings->add($setting);
 
-unset($i, $link, $options, $setting, $str, $timezone, $url);
+unset($i, $link, $options, $setting, $str, $timezone, $datetime, $url);
