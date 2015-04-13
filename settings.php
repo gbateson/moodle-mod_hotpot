@@ -49,10 +49,12 @@ $settings->add(
 
 // restrict cron job to certain hours of the day (default=never)
 if (class_exists('core_date') && method_exists('core_date', 'get_user_timezone')) {
+    // Moodle >= 2.9
     $timezone = core_date::get_user_timezone(99);
     $datetime = new DateTime('now', new DateTimeZone($timezone));
     $timezone = ($datetime->getOffset() - dst_offset_on(time(), $timezone)) / (3600.0);
 } else {
+    // Moodle <= 2.8
     $timezone = get_user_timezone_offset();
 }
 if (abs($timezone) > 13) {
