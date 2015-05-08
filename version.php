@@ -29,8 +29,8 @@
 // prevent direct access to this script
 defined('MOODLE_INTERNAL') || die();
 
-if (floatval($GLOBALS['CFG']->release) <= 2.6) {
-    $plugin = new stdClass();
+if (empty($plugin)) {
+	$plugin = new StdClass();
 }
 
 $plugin->cron      = 0;
@@ -40,6 +40,4 @@ $plugin->requires  = 2010112400;      // Moodle 2.0
 $plugin->release   = '2015.04.12 (66)';
 $plugin->version   = 2015041266;
 
-if (floatval($GLOBALS['CFG']->release) <= 2.6) {
-    $module = clone($plugin);
-}
+$module = clone($plugin);
