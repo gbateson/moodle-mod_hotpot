@@ -154,8 +154,8 @@ $string['delay2summary'] = 'Time delay between later attempts';
 $string['delay3'] = 'Delay 3';
 $string['delay3_help'] = 'The setting specifies the delay between finishing the quiz and returning control of the display to Moodle.
 
-**Use specific time (in seconds)**
-: control will be returned to Moodle after the specified number of seconds.
+**Use specific delay**
+: control will be returned to Moodle after the specified delay.
 
 **Use settings in source/template file**
 : control will be returned to Moodle after the number of seconds specified in the source file or the template files for this output format.
@@ -169,7 +169,7 @@ $string['delay3_help'] = 'The setting specifies the delay between finishing the 
 Note, the quiz results are always returned to Moodle immediately the quiz is completed or abandoned, regardless of this setting.';
 $string['delay3afterok'] = 'Wait till student clicks OK';
 $string['delay3disable'] = 'Do not continue automatically';
-$string['delay3specific'] = 'Use specific time (in seconds)';
+$string['delay3specific'] = 'Use specific delay';
 $string['delay3summary'] = 'Time delay at the end of the quiz';
 $string['delay3template'] = 'Use settings in source/template file';
 $string['deleteallattempts'] = 'Delete all attempts';
