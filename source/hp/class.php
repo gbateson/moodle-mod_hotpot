@@ -16,25 +16,29 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Class to represent the source of a HotPot quiz
- * Source type: hp
+ * mod/hotpot/source/hp/class.php
  *
- * @package   mod-hotpot
- * @copyright 2010 Gordon Bateson <gordon.bateson@gmail.com>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    mod
+ * @subpackage hotpot
+ * @copyright  2010 Gordon Bateson (gordon.bateson@gmail.com)
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @since      Moodle 2.0
  */
 
+/** Prevent direct access to this script */
 defined('MOODLE_INTERNAL') || die();
 
-// get parent class
+/** Include required files */
 require_once($CFG->dirroot.'/mod/hotpot/source/class.php');
 
 /**
  * hotpot_source_hp
  *
- * @copyright 2010 Gordon Bateson
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @since     Moodle 2.0
+ * @copyright  2010 Gordon Bateson (gordon.bateson@gmail.com)
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @since      Moodle 2.0
+ * @package    mod
+ * @subpackage hotpot
  */
 class hotpot_source_hp extends hotpot_source {
     public $xml; // an array containing the xml tree for hp xml files
@@ -42,6 +46,30 @@ class hotpot_source_hp extends hotpot_source {
 
     public $hbs_software; // hotpot or textoys
     public $hbs_quiztype; //  jcloze, jcross, jmatch, jmix, jquiz, quandary, rhubarb, sequitur
+
+    // encode a string for javascript
+    public $javascript_replace_pairs = array(
+        // backslashes and quotes
+        '\\'=>'\\\\', "'"=>"\\'", '"'=>'\\"',
+        // newlines (win = "\r\n", mac="\r", linux/unix="\n")
+        "\r\n"=>'\\n', "\r"=>'\\n', "\n"=>'\\n',
+        // other (closing tag is for XHTML compliance)
+        "\0"=>'\\0', '</'=>'<\\/'
+    );
+
+    // unicode characters can be detected by checking the hex value of a character
+    //  00 - 7F : ascii char (roman alphabet + punctuation)
+    //  80 - BF : byte 2, 3 or 4 of a unicode char
+    //  C0 - DF : 1st byte of 2-byte char
+    //  E0 - EF : 1st byte of 3-byte char
+    //  F0 - FF : 1st byte of 4-byte char
+    // if the string doesn't match any of the above, it might be
+    //  80 - FF : single-byte, non-ascii char
+    public $search_unicode_chars = '/'.'[\xc0-\xdf][\x80-\xbf]'.
+                                   '|'.'[\xe0-\xef][\x80-\xbf]{2}'.
+                                   '|'.'[\xf0-\xff][\x80-\xbf]{3}'.
+                                   '|'.'[\x00-\xff]'.'/';
+
 
     /**
      * is_html
@@ -527,6 +555,10 @@ class hotpot_source_hp extends hotpot_source {
                 $callback = array($this, 'xml_value_nl2br');
                 $value = preg_replace_callback($search, $callback, $value);
             }
+
+            // encode unicode characters as HTML entities
+            // (in particular, accented charaters that have not been encoded by HP)
+            $value = hotpot_textlib('utf8_to_entities', $value);
         }
         return $value;
     }
@@ -619,31 +651,17 @@ class hotpot_source_hp extends hotpot_source {
      * @return xxx
      */
     function js_value_safe($str, $convert_to_unicode=false) {
-        // encode a string for javascript
-        static $replace_pairs = array(
-            // backslashes and quotes
-            '\\'=>'\\\\', "'"=>"\\'", '"'=>'\\"',
-            // newlines (win = "\r\n", mac="\r", linux/unix="\n")
-            "\r\n"=>'\\n', "\r"=>'\\n', "\n"=>'\\n',
-            // other (closing tag is for XHTML compliance)
-            "\0"=>'\\0', '</'=>'<\\/'
-        );
+        global $CFG;
 
-        // convert unicode chars to html entities, if required
-        // Note that this will also decode named entities such as &apos; and &quot;
-        // so we have to put "strtr()" AFTER this call to textlib::utf8_to_entities()
-        if ($convert_to_unicode) {
-            $str = hotpot_textlib('utf8_to_entities', $str, false, true);
-        }
-
-        $str = strtr($str, $replace_pairs);
-
-        // convert (hex and decimal) html entities to javascript unicode, if required
-        if ($convert_to_unicode) {
-            $search = '/&#x([0-9A-F]+);/i';
+        if ($convert_to_unicode && $CFG->hotpot_enableobfuscate) {
+            // convert ALL chars to Javascript unicode
             $callback = array($this, 'js_unicode_char');
-            $str = preg_replace_callback($search, $callback, $str);
+            $str = preg_replace_callback($this->search_unicode_chars, $callback, $str);
+        } else {
+            // escape backslashes, quotes, etc
+            $str = strtr($str, $this->javascript_replace_pairs);
         }
+
         return $str;
     }
 
@@ -654,7 +672,10 @@ class hotpot_source_hp extends hotpot_source {
      * @return xxx
      */
     function js_unicode_char($match) {
-        return sprintf('\\u%04s', $match[1]);
+        $num = $match[0]; // the UTF-8 char
+        $num = hotpot_textlib('utf8ord', $num);
+        $num = strtoupper(dechex($num));
+        return sprintf('\\u%04s', $num);
     }
 
     /**
