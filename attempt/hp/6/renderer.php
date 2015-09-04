@@ -19,22 +19,27 @@
  * Render an attempt at a HotPot quiz
  * Output format: hp_6
  *
- * @package   mod-hotpot
- * @copyright 2010 Gordon Bateson <gordon.bateson@gmail.com>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    mod
+ * @subpackage hotpot
+ * @copyright  2010 Gordon Bateson (gordon.bateson@gmail.com)
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @since      Moodle 2.0
  */
 
+/** Prevent direct access to this script */
 defined('MOODLE_INTERNAL') || die();
 
-// get parent class
+/** Include required files */
 require_once($CFG->dirroot.'/mod/hotpot/attempt/hp/renderer.php');
 
 /**
  * mod_hotpot_attempt_hp_6_renderer
  *
- * @copyright 2010 Gordon Bateson
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @since     Moodle 2.0
+ * @copyright  2010 Gordon Bateson (gordon.bateson@gmail.com)
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @since      Moodle 2.0
+ * @package    mod
+ * @subpackage hotpot
  */
 class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
 
@@ -361,11 +366,11 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
             ."	switch (type){\n"
             ."		case 'Width':\n"
             ."		case 'Height':\n"
-            ."			return eval('(obj.offset'+type+'||0)');\n"
+            ."			return (obj['offset'+type]||0);\n"
             ."\n"
             ."		case 'Top':\n"
             ."		case 'Left':\n"
-            ."			return eval('(obj.offset'+type+'||0) + getOffset(obj.offsetParent, type)');\n"
+            ."			return (obj['offset'+type]||0) + getOffset(obj.offsetParent, type);\n"
             ."\n"
             ."		case 'Right':\n"
             ."			return getOffset(obj, 'Left') + getOffset(obj, 'Width');\n"
@@ -962,6 +967,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
     /**
      * fix_js_HideFeedback
      *
+     * @uses $CFG
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
@@ -1713,9 +1719,8 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
         $search = '/\\\\u([0-9a-f]{4})/i';
         $str = $this->filter_text_to_utf8($str, $search);
 
-        // convert html entities
-        $search = '/&#x([0-9a-f]+);/i';
-        $str = $this->filter_text_to_utf8($str, $search);
+        // convert dec, hex and named entities to unicode chars
+        $str = hotpot_textlib('entities_to_utf8', $str, true);
 
         // fix relative urls
         $str = $this->fix_relativeurls($str);
