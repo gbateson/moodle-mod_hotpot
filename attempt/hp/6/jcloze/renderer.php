@@ -24,20 +24,17 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-/** Prevent direct access to this script */
 defined('MOODLE_INTERNAL') || die();
 
-/** Include required files */
+// get parent class
 require_once($CFG->dirroot.'/mod/hotpot/attempt/hp/6/renderer.php');
 
 /**
  * mod_hotpot_attempt_hp_6_jcloze_renderer
  *
- * @copyright  2010 Gordon Bateson (gordon.bateson@gmail.com)
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @since      Moodle 2.0
- * @package    mod
- * @subpackage hotpot
+ * @copyright 2010 Gordon Bateson
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @since     Moodle 2.0
  */
 class mod_hotpot_attempt_hp_6_jcloze_renderer extends mod_hotpot_attempt_hp_6_renderer {
     public $icon = 'pix/f/jcl.gif';
@@ -47,7 +44,7 @@ class mod_hotpot_attempt_hp_6_jcloze_renderer extends mod_hotpot_attempt_hp_6_re
     public $templatestrings = 'PreloadImageList';
 
     // Glossary autolinking settings
-    public $headcontent_strings = 'Feedback|Correct|Incorrect|GiveHint|YourScoreIs|Guesses|(?:I\[\d+\]\[[12]\])';
+    public $headcontent_strings = 'Feedback|Correct|Incorrect|GiveHint|YourScoreIs|Guesses|(?:I\[\d+\]\[1\]\[\d+\]\[2\])';
     public $headcontent_arrays = '';
 
     /**
@@ -137,6 +134,7 @@ class mod_hotpot_attempt_hp_6_jcloze_renderer extends mod_hotpot_attempt_hp_6_re
         //   GapId   : Find It (a) + (b) + ANCT-Scan
         //   ClueNum : JCross (has its own fix function)
         // so it is safest to refer to it using "ShowClue.arguments[0]"
+
 
         // intercept Clues
         if ($pos = strpos($substr, '{')) {
