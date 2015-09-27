@@ -49,8 +49,8 @@ $plugin->cron      = 0;
 $plugin->component = 'mod_hotpot';
 $plugin->maturity  = MATURITY_STABLE; // ALPHA=50, BETA=100, RC=150, STABLE=200
 $plugin->requires  = 2010112400;      // Moodle 2.0
-$plugin->release   = '2015.09.03 (73)';
-$plugin->version   = 2015090373;
+$plugin->release   = '2015.09.27 (74)';
+$plugin->version   = 2015092774;
 
 if ($moodle_26) {
     $module = clone($plugin);
