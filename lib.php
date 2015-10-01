@@ -51,7 +51,7 @@ function hotpot_supports($feature) {
     // they are not all defined in Moodle 2.0, so we
     // check each one is defined before trying to use it
     $constants = array(
-        'FEATURE_ADVANCED_GRADING' => true, // default=false
+        'FEATURE_ADVANCED_GRADING' => false,
         'FEATURE_BACKUP_MOODLE2'   => true, // default=false
         'FEATURE_COMMENT'          => true,
         'FEATURE_COMPLETION_HAS_RULES' => false, // requires "hotpot_get_completion_state()"
