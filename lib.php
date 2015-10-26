@@ -54,7 +54,7 @@ function hotpot_supports($feature) {
         'FEATURE_ADVANCED_GRADING' => false,
         'FEATURE_BACKUP_MOODLE2'   => true, // default=false
         'FEATURE_COMMENT'          => true,
-        'FEATURE_COMPLETION_HAS_RULES' => false, // requires "hotpot_get_completion_state()"
+        'FEATURE_COMPLETION_HAS_RULES' => true,
         'FEATURE_COMPLETION_TRACKS_VIEWS' => true,
         'FEATURE_CONTROLS_GRADE_VISIBILITY' => false,
         'FEATURE_GRADE_HAS_GRADE'  => true, // default=false
@@ -2203,7 +2203,7 @@ function hotpot_add_to_log($courseid, $module, $action, $url='', $info='', $cmid
  * @param bool $type Type of comparison (or/and; can be used as return value if no conditions)
  * @return bool True if completed, false if not, $type if conditions not set
  */
-function hotpot_get_completion_state($course, $cm, $userid, $type) {
+function hotpot_get_completion_state_old($course, $cm, $userid, $type) {
     global $CFG, $DB;
     require_once($CFG->dirroot.'/mod/hotpot/locallib.php');
     $params = array('hotpotid'   => $cm->instance,
@@ -2211,3 +2211,77 @@ function hotpot_get_completion_state($course, $cm, $userid, $type) {
                     'status'     => hotpot::STATUS_COMPLETED);
     return $DB->record_exists('hotpot_attempts', $params);
 }
+/**
+ * Obtains the automatic completion state for this hotpot
+ * based on the conditions in hotpot settings.
+ *
+ * @param  object  $course record from "course" table
+ * @param  object  $cm     record from "course_modules" table
+ * @param  integer $userid id from "user" table
+ * @param  bool    $type   of comparison (or/and; used as return value if there are no conditions)
+ * @return mixed   TRUE if completed, FALSE if not, or $type if no conditions are set
+ */
+function hotpot_get_completion_state($course, $cm, $userid, $type) {
+    global $CFG, $DB;
+
+    // set default return $state
+    $state = $type;
+
+    // get the hotpot record
+    if ($hotpot = $DB->get_record('hotpot', array('id' => $cm->instance))) {
+
+        // get grade, if necessary
+        $grade = false;
+        if ($hotpot->completionmingrade || $hotpot->completionpass) {
+            require_once($CFG->dirroot.'/lib/gradelib.php');
+            $params = array('courseid'     => $course->id,
+                            'itemtype'     => 'mod',
+                            'itemmodule'   => 'hotpot',
+                            'iteminstance' => $cm->instance);
+            if ($grade_item = grade_item::fetch($params)) {
+                $grades = grade_grade::fetch_users_grades($grade_item, array($userid), false);
+                if (isset($grades[$userid])) {
+                    $grade = $grades[$userid];
+                }
+                unset($grades);
+            }
+            unset($grade_item);
+        }
+
+        // the HotPot completion conditions
+        $conditions = array('completionmingrade',
+                            'completionpass',
+                            'completioncompleted');
+
+        foreach ($conditions as $condition) {
+            if (empty($hotpot->$condition)) {
+                continue;
+            }
+            switch ($condition) {
+                case 'completionmingrade':
+                    $state = ($grade && $grade->finalgrade >= $hotpot->completionmingrade);
+                    break;
+                case 'completionpass':
+                    $state = ($grade && $grade->is_passed());
+                    break;
+                case 'completioncompleted':
+                    $params = array('id'     => $cm->instance,
+                                    'userid' => $userid,
+                                    'status' => $hotpot->$condition);
+                    $state = $DB->record_exists('hotpot_attempts', $params);
+                    break;
+
+            }
+            // finish early if possible
+            if ($type==COMPLETION_AND && $state==false) {
+                return false;
+            }
+            if ($type==COMPLETION_OR && $state) {
+                return true;
+            }
+        }
+    }
+
+    return $state;
+}
+

@@ -797,4 +797,81 @@ class mod_hotpot_mod_form extends moodleform_mod {
 
         return $errors;
     }
+
+    /**
+     * Display module-specific activity completion rules.
+     * Part of the API defined by moodleform_mod
+     * @return array Array of string IDs of added items, empty array if none
+     */
+    public function add_completion_rules() {
+        $mform = $this->_form;
+
+        // array of elements names to be returned by this method
+        $names = array();
+
+        // these fields will be disabled if gradelimit x gradeweighting = 0
+        $disablednames = array('completionusegrade');
+
+        // add "minimum grade" completion condition
+        $name = 'completionmingrade';
+        $label = get_string($name, 'hotpot');
+        if (empty($this->current->$name)) {
+            $value = 0.0;
+        } else {
+            $value = floatval($this->current->$name);
+        }
+        $group = array();
+        $group[] = &$mform->createElement('checkbox', $name.'disabled', '', $label);
+        $group[] = &$mform->createElement('static', $name.'space', '', ' &nbsp; ');
+        $group[] = &$mform->createElement('text', $name, '', array('size' => 3));
+        $mform->addGroup($group, $name.'group', '', '', false);
+        $mform->setType($name, PARAM_FLOAT);
+        $mform->setDefault($name, 0.00);
+        $mform->setType($name.'disabled', PARAM_INT);
+        $mform->setDefault($name.'disabled', empty($value) ? 0 : 1);
+        $mform->disabledIf($name, $name.'disabled', 'notchecked');
+        $names[] = $name.'group';
+        $disablednames[] = $name.'group';
+
+        // add "grade passed" completion condition
+        $name = 'completionpass';
+        $label = get_string($name, 'hotpot');
+        $mform->addElement('checkbox', $name, '', $label);
+        $mform->setType($name, PARAM_INT);
+        $mform->setDefault($name, 0);
+        $names[] = $name;
+        $disablednames[] = $name;
+
+        // add "status completed" completion condition
+        $name = 'completioncompleted';
+        $label = get_string($name, 'hotpot');
+        $mform->addElement('checkbox', $name, '', $label);
+        $mform->setType($name, PARAM_INT);
+        $mform->setDefault($name, 0);
+        $names[] = $name;
+        // no need to disable this field :-)
+
+        // disable grade conditions, if necessary
+        foreach ($disablednames as $name) {
+            if ($mform->elementExists($name)) {
+                $mform->disabledIf($name, 'gradeweighting', 'eq', 0);
+            }
+        }
+
+        return $names;
+    }
+
+    /**
+     * Called during validation. Indicates whether a module-specific completion rule is selected.
+     *
+     * @param array $data Input data (not yet validated)
+     * @return bool True if one or more rules is enabled, false if none are.
+     */
+    public function completion_rule_enabled($data) {
+        if (empty($data['completiongradepassed']) && empty($data['completioncompletedcompleted']) && empty($data['completionmingrade'])) {
+            return false;
+        } else {
+            return true;
+        }
+    }
 }
