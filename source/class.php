@@ -789,11 +789,34 @@ class hotpot_source {
 
     /**
      * compact_filecontents
+     *
+     * @param array $tags (optional, default=null) specific tags to remove comments from
+     * @todo Finish documenting this function
      */
-    function compact_filecontents()  {
+    public function compact_filecontents($tags=null) {
         if (isset($this->filecontents)) {
+            if ($tags) {
+                $callback = array($this, 'compact_filecontents_callback');
+                foreach ($tags as $tag) {
+                    $search = '/(?<=<'.$tag.'>).*(?=<\/'.$tag.'>)/is';
+                    $this->filecontents = preg_replace_callback($search, $callback, $this->filecontents);
+                }
+            }
             $this->filecontents = preg_replace('/(?<=>)'.'\s+'.'(?=<)/s', '', $this->filecontents);
         }
+    }
+
+    /**
+     * compact_filecontents_callback
+     *
+     * @todo Finish documenting this function
+     */
+    public function compact_filecontents_callback($match) {
+        $search = array(
+            '/\/\/[^\n\r]*/',  // single line js comments
+            '/\/\*.*?\*\//s',  // multiline comments (js and css)
+        );
+        return preg_replace($search, '', $match[0]);
     }
 
     /**

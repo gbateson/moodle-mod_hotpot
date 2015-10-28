@@ -86,8 +86,11 @@ class mod_hotpot_attempt_hp_6_jquiz_renderer extends mod_hotpot_attempt_hp_6_ren
     function fix_headcontent() {
         if ($pos = strrpos($this->headcontent, '</style>')) {
             $insert = ''
-                .'ol.QuizQuestions{'."\n"
-                .'	margin-bottom:0px;'."\n"
+                .'#'.$this->themecontainer.' ol.QuizQuestions{'."\n"
+                .'	margin-bottom: 0px;'."\n"
+                .'}'."\n"
+                .'#'.$this->themecontainer.' li.QuizQuestion{'."\n"
+                .'	overflow: auto;'."\n"
                 .'}'."\n"
             ;
             $this->headcontent = substr_replace($this->headcontent, $insert, $pos, 0);

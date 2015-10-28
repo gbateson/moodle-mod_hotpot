@@ -963,12 +963,6 @@ function xmldb_hotpot_upgrade($oldversion) {
         upgrade_mod_savepoint(true, "$newversion", 'hotpot');
     }
 
-    $newversion = 2015090373;
-    if ($oldversion < $newversion) {
-        $empty_cache = true;
-        upgrade_mod_savepoint(true, "$newversion", 'hotpot');
-    }
-
     $newversion = 2015102678;
     if ($oldversion < $newversion) {
         // add custom completion fields for TaskChain module
@@ -986,6 +980,12 @@ function xmldb_hotpot_upgrade($oldversion) {
                 $dbman->add_field($table, $field);
             }
         }
+        upgrade_mod_savepoint(true, "$newversion", 'hotpot');
+    }
+
+    $newversion = 2015102879;
+    if ($oldversion < $newversion) {
+        $empty_cache = true;
         upgrade_mod_savepoint(true, "$newversion", 'hotpot');
     }
 

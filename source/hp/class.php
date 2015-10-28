@@ -67,6 +67,24 @@ class hotpot_source_hp extends hotpot_source {
     //  80 - FF : single-byte, non-ascii char
     public $search_unicode_chars = '/[\xc0-\xdf][\x80-\xbf]|[\xe0-\xef][\x80-\xbf]{2}|[\xf0-\xff][\x80-\xbf]{3}|[\x00-\xff]/';
 
+    // array used to figure what number to decrement from character order value
+    // according to number of characters used to map unicode to ascii by utf-8
+    public $utf8_decrement = array(
+        1 => 0,
+        2 => 192,
+        3 => 224,
+        4 => 240
+    );
+
+    // the number of bits to shift each character by
+    public $utf8_shift = array(
+        1 => array(0=>0),
+        2 => array(0=>6,  1=>0),
+        3 => array(0=>12, 1=>6,  2=>0),
+        4 => array(0=>18, 1=>12, 2=>6, 3=>0)
+    );
+
+
     /**
      * is_html
      *
@@ -357,18 +375,20 @@ class hotpot_source_hp extends hotpot_source {
             $this->compact_filecontents();
             $this->pre_xmlize_filecontents();
 
+            // define root of XML tree
+            $this->xml_root = $this->hbs_software.'-'.$this->hbs_quiztype.'-file';
+
+            // convert to XML tree using xmlize()
             if (! $this->xml = xmlize($this->filecontents, 0)) {
                 debugging('Could not parse XML file: '.$this->filepath);
-            }
-
-            $this->xml_root = $this->hbs_software.'-'.$this->hbs_quiztype.'-file';
-            if (! array_key_exists($this->xml_root, $this->xml)) {
+            } else if (! array_key_exists($this->xml_root, $this->xml)) {
                 debugging('Could not find XML root node: '.$this->xml_root);
             }
 
-            if (isset($this->config) && $this->config->get_filecontents()) {
+            // merge config settings, if necessary
+            if (isset($this->config) && $this->config && $this->config->get_filecontents()) {
 
-                $this->config->compact_filecontents();
+                $this->config->compact_filecontents(array('header-code'));
                 $xml = xmlize($this->config->filecontents, 0);
 
                 $config_file = $this->hbs_software.'-config-file';
@@ -414,12 +434,8 @@ class hotpot_source_hp extends hotpot_source {
             $search = '/&(?!(?:[a-zA-Z]+|#[0-9]+|#x[0-9a-fA-F]+);)/';
             $this->filecontents = preg_replace($search, '&amp;', $this->filecontents);
 
-            //$this->filecontents = $hotpot_textlib('utf8_to_entities', $this->filecontents);
-            // unfortunately textlib does not convert single-byte non-ascii chars
-            // i.e. "Latin-1 Supplement" e.g. latin small letter with acute (&#237;)
-
             // unicode characters can be detected by checking the hex value of a character
-            //  00 - 7F : ascii char (roman alphabet + punctuation)
+            //  00 - 7F : ascii char (control chars + roman alphabet + punctuation)
             //  80 - BF : byte 2, 3 or 4 of a unicode char
             //  C0 - DF : 1st byte of 2-byte char
             //  E0 - EF : 1st byte of 3-byte char
@@ -432,39 +448,27 @@ class hotpot_source_hp extends hotpot_source {
                           '[\x80-\xff]'.'/';
             $callback = array($this, 'utf8_char_to_html_entity');
             $this->filecontents = preg_replace_callback($search, $callback, $this->filecontents);
+
+            // the following control characters are not allowed in XML
+            // and need to be removed because they will break xmlize()
+            // basically this is the range 00-1F and the delete key 7F
+            // but excluding tab 09, newline 0A and carriage return 0D
+            $search = '/[\x00-\x08\x0b-\x0c\x0e-\x1f\x7f]/';
+            $this->filecontents = preg_replace($search, '', $this->filecontents);
         }
     }
 
     function utf8_char_to_html_entity($char, $ampersand='&') {
         // thanks to: http://www.zend.com/codex.php?id=835&single=1
-
         if (is_array($char)) {
             $char = $char[0];
         }
-
-        // array used to figure what number to decrement from character order value
-        // according to number of characters used to map unicode to ascii by utf-8
-        static $HOTPOT_UTF8_DECREMENT = array(
-            1 => 0,
-            2 => 192,
-            3 => 224,
-            4 => 240
-        );
-
-        // the number of bits to shift each character by
-        static $HOTPOT_UTF8_SHIFT = array(
-            1 => array(0=>0),
-            2 => array(0=>6,  1=>0),
-            3 => array(0=>12, 1=>6,  2=>0),
-            4 => array(0=>18, 1=>12, 2=>6, 3=>0)
-        );
-
         $dec = 0;
         $len = strlen($char);
         for ($pos=0; $pos<$len; $pos++) {
             $ord = ord ($char{$pos});
-            $ord -= ($pos ? 128 : $HOTPOT_UTF8_DECREMENT[$len]);
-            $dec += ($ord << $HOTPOT_UTF8_SHIFT[$len][$pos]);
+            $ord -= ($pos ? 128 : $this->utf8_decrement[$len]);
+            $dec += ($ord << $this->utf8_shift[$len][$pos]);
         }
 
         return $ampersand.'#x'.sprintf('%04X', $dec).';';
@@ -473,9 +477,11 @@ class hotpot_source_hp extends hotpot_source {
     /**
      * xml_value
      *
+     * @uses $CFG
      * @param xxx $tags
      * @param xxx $more_tags (optional, default=null)
      * @param xxx $default (optional, default='')
+     * @param xxx $nl2br (optional, default=true)
      * @return xxx
      */
     function xml_value($tags, $more_tags=null, $default='', $nl2br=true) {
@@ -503,7 +509,7 @@ class hotpot_source_hp extends hotpot_source {
             if (! is_array($value)) {
                 return null;
             }
-            if(! array_key_exists($tag, $value)) {
+            if (! array_key_exists($tag, $value)) {
                 return null;
             }
             $value = $value[$tag];
@@ -613,7 +619,7 @@ class hotpot_source_hp extends hotpot_source {
      *
      * @param xxx $tags
      * @param xxx $more_tags (optional, default=null)
-     * @param xxx $default (optional, default='')
+     * @param xxx $default (optional, default=0)
      * @return xxx
      */
     function xml_value_int($tags, $more_tags=null, $default=0) {
@@ -631,7 +637,8 @@ class hotpot_source_hp extends hotpot_source {
      * @param xxx $tags
      * @param xxx $more_tags (optional, default=null)
      * @param xxx $default (optional, default='')
-     * @param xxx $convert_to_unicode (optional, default=false)
+     * @param xxx $nl2br (optional, default=true)
+     * @param xxx $convert_to_unicode (optional, default=true)
      * @return xxx
      */
     function xml_value_js($tags, $more_tags=null, $default='', $nl2br=true, $convert_to_unicode=true) {
