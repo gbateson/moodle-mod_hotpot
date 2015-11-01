@@ -177,13 +177,13 @@ class mod_hotpot_attempt_hp_6_jquiz_renderer extends mod_hotpot_attempt_hp_6_ren
         // catch errors due to invalid XHTML syntax (e.g. unclosed <font> tags)
         $search  = "/\s+while \(Qs\.getElementsByTagName\('li'\)\.length > 0\)\{.*?\}/s";
         $replace = "\n"
-            ."	while (Qs.firstChild){\n"
+            ."	while (Qs.firstChild) {\n"
             ."		var Q = Qs.removeChild(Qs.firstChild);\n"
             ."		if (Q.nodeType==1) {\n"
             ."			if (Q.tagName=='LI') {\n"
             ."				QList.push(Q);\n"
-            ."			} else if (Q.nodeType==1) {\n"
-            ."				alert('Sorry, SetUpQuestions() failed.\\n\\n'+'Perhaps there are some invalid\\n'+'HTML tags in question ' + QList.length + '?');\n"
+            ."			} else {\n"
+            ."				alert('Sorry, SetUpQuestions() failed.\\n\\n'+'Perhaps there are some invalid\\n'+'HTML tags in question ' + QList.length + ' ?');\n"
             ."			}\n"
             ."		}\n"
             ."	}\n"
