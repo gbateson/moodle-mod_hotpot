@@ -51,9 +51,9 @@ class hotpot_source_hp_6_jcloze_xml extends hotpot_source_hp_6_jcloze {
     /**
      * compact_filecontents
      */
-    function compact_filecontents()  {
+    function compact_filecontents($tags=null) {
         // remove white space within tags
-        parent::compact_filecontents();
+        parent::compact_filecontents($tags);
 
         // fix white space and html entities in open text
 
