@@ -2223,6 +2223,7 @@ function hotpot_get_completion_state_old($course, $cm, $userid, $type) {
  */
 function hotpot_get_completion_state($course, $cm, $userid, $type) {
     global $CFG, $DB;
+    require_once($CFG->dirroot.'/mod/hotpot/locallib.php');
 
     // set default return $state
     $state = $type;
@@ -2265,9 +2266,9 @@ function hotpot_get_completion_state($course, $cm, $userid, $type) {
                     $state = ($grade && $grade->is_passed());
                     break;
                 case 'completioncompleted':
-                    $params = array('id'     => $cm->instance,
-                                    'userid' => $userid,
-                                    'status' => $hotpot->$condition);
+                    $params = array('hotpotid' => $cm->instance,
+                                    'userid'   => $userid,
+                                    'status'   => hotpot::STATUS_COMPLETED);
                     $state = $DB->record_exists('hotpot_attempts', $params);
                     break;
 

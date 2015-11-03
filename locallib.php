@@ -42,18 +42,23 @@ require_once($CFG->libdir . '/gradelib.php');   // we use some rounding and comp
  */
 class hotpot {
 
-    /**
+    /**#@+
      * internal codes to indicate what text is to be used
      * for the name and introduction of a HotPot instance
+     *
+     * @var integer
      */
     const TEXTSOURCE_FILE           = 0; // was TEXTSOURCE_QUIZ
     const TEXTSOURCE_FILENAME       = 1;
     const TEXTSOURCE_FILEPATH       = 2;
     const TEXTSOURCE_SPECIFIC       = 3;
+    /**#@-*/
 
-    /**
+    /**#@+
      * database codes to indicate what navigation aids are used
      * when the quiz apears in the browser
+     *
+     * @var integer
      */
     const NAVIGATION_NONE           = 0; // was 6
     const NAVIGATION_MOODLE         = 1; // was NAVIGATION_BAR
@@ -61,74 +66,134 @@ class hotpot {
     const NAVIGATION_EMBED          = 3; // was NAVIGATION_IFRAME
     const NAVIGATION_ORIGINAL       = 4;
     const NAVIGATION_TOPBAR         = 5; // was NAVIGATION_GIVEUP but that was replaced by stopbutton
+    /**#@-*/
 
-    /**
+    /**#@+
      * database codes to indicate the grading method for a HotPot instance
+     *
+     * @var integer
      */
     const GRADEMETHOD_HIGHEST       = 1;
     const GRADEMETHOD_AVERAGE       = 2;
     const GRADEMETHOD_FIRST         = 3;
     const GRADEMETHOD_LAST          = 4;
+    /**#@-*/
 
-    /**
+    /**#@+
      * database codes to indicate the source/config location for a HotPot instance
+     *
+     * @var integer
      */
     const LOCATION_COURSEFILES      = 0;
     const LOCATION_SITEFILES        = 1;
     const LOCATION_WWW              = 2;
+    /**#@-*/
 
-    /**
+    /**#@+
      * bit-masks used to extract bits from the hotpot "title" setting
+     *
+     * @var integer
      */
     const TITLE_SOURCE              = 0x03; // 1st - 2nd bits
     const TITLE_UNITNAME            = 0x04; // 3rd bit
     const TITLE_SORTORDER           = 0x08; // 4th bit
+    /**#@-*/
 
-    /**
+    /**#@+
      * database codes for the following time fields
      *  - timelimit : the maximum length of one attempt
      *  - delay3 : the delay after end of quiz before control returns to Moodle
+     *
+     * @var integer
      */
     const TIME_SPECIFIC             = 0;
     const TIME_TEMPLATE             = -1;
     const TIME_AFTEROK              = -2;
     const TIME_DISABLE              = -3;
+    /**#@-*/
 
+    /**#@+
+     * internal codes to indicate whether a HotPot can resume or restart
+     *
+     * @var integer
+     */
     const CONTINUE_RESUMEQUIZ       = 1;
     const CONTINUE_RESTARTQUIZ      = 2;
     const CONTINUE_RESTARTUNIT      = 3;
     const CONTINUE_ABANDONUNIT      = 4;
+    /**#@-*/
 
+    /**#@+
+     * internal codes to refer to the HTTP return code
+     *
+     * @var integer
+     */
     const HTTP_NO_RESPONSE          = 0; // was false
     const HTTP_204_RESPONSE         = 1; // was true
+    /**#@-*/
 
+    /**#@+
+     * database code to indicate current state of HotPot attempt
+     *
+     * @var integer
+     */
     const STATUS_INPROGRESS         = 1;
     const STATUS_TIMEDOUT           = 2;
     const STATUS_ABANDONED          = 3;
     const STATUS_COMPLETED          = 4;
     const STATUS_PAUSED             = 5;
+    /**#@-*/
 
+    /**#@+
+     * database code to indicate the kind of feedback link, if any
+     *
+     * @var integer
+     */
     const FEEDBACK_NONE             = 0;
     const FEEDBACK_WEBPAGE          = 1;
     const FEEDBACK_FORMMAIL         = 2;
     const FEEDBACK_MOODLEFORUM      = 3;
     const FEEDBACK_MOODLEMESSAGING  = 4;
+    /**#@-*/
 
+    /**#@+
+     * database code to indicate the kind of STOP button
+     *
+     * @var integer
+     */
     const STOPBUTTON_NONE           = 0;
     const STOPBUTTON_LANGPACK       = 1;
     const STOPBUTTON_SPECIFIC       = 2;
+    /**#@-*/
 
+    /**#@+
+     * database code to indicate the kind of previous/next activity
+     *
+     * @var integer
+     */
     const ACTIVITY_NONE             = 0;
     const ACTIVITY_COURSE_ANY       = -1;
     const ACTIVITY_SECTION_ANY      = -2;
     const ACTIVITY_COURSE_HOTPOT    = -3;
     const ACTIVITY_SECTION_HOTPOT   = -4;
+    /**#@-*/
 
+    /**#@+
+     * database code to indicate options on the entry page
+     *
+     * @var integer
+     */
     const ENTRYOPTIONS_TITLE        = 0x01;
     const ENTRYOPTIONS_GRADING      = 0x02;
     const ENTRYOPTIONS_DATES        = 0x04;
     const ENTRYOPTIONS_ATTEMPTS     = 0x08;
+    /**#@-*/
 
+    /**#@+
+     * database code to indicate options on the exit page
+     *
+     * @var integer
+     */
     const EXITOPTIONS_TITLE         = 0x01;
     const EXITOPTIONS_ENCOURAGEMENT = 0x02;
     const EXITOPTIONS_ATTEMPTSCORE  = 0x04;
@@ -137,28 +202,41 @@ class hotpot {
     const EXITOPTIONS_INDEX         = 0x20;
     const EXITOPTIONS_COURSE        = 0x40;
     const EXITOPTIONS_GRADES        = 0x80;
+    /**#@-*/
 
+    /**#@+
+     * database code to indicate which CSS styles should be overridden
+     *
+     * @var integer
+     */
     const BODYSTYLES_BACKGROUND     = 0x01;
     const BODYSTYLES_COLOR          = 0x02;
     const BODYSTYLES_FONT           = 0x04;
     const BODYSTYLES_MARGIN         = 0x08;
+    /**#@-*/
 
-    /**
+    /**#@+
      * three sets of 6 bits define the times at which a quiz may be reviewed
      * e.g. 0x3f = 0011 1111 (i.e. right most 6 bits)
+     *
+     * @var integer
      */
     const REVIEW_DURINGATTEMPT = 0x0003f; // 1st set of 6 bits : during attempt
     const REVIEW_AFTERATTEMPT  = 0x00fc0; // 2nd set of 6 bits : after attempt (but before quiz closes)
     const REVIEW_AFTERCLOSE    = 0x3f000; // 3rd set of 6 bits : after the quiz closes
+    /**#@-*/
 
-    /**
+    /**#@+
      * within each group of 6 bits we determine what should be shown
      * e.g. 0x1041 = 00-0001 0000-01 00-0001 (i.e. 3 sets of 6 bits)
+     *
+     * @var integer
      */
     const REVIEW_RESPONSES = 0x1041; // 1*0x1041 : 1st bit of each 6-bit set : Show student responses
     const REVIEW_ANSWERS   = 0x2082; // 2*0x1041 : 2nd bit of each 6-bit set : Show correct answers
     const REVIEW_SCORES    = 0x4104; // 3*0x1041 : 3rd bit of each 6-bit set : Show scores
     const REVIEW_FEEDBACK  = 0x8208; // 4*0x1041 : 4th bit of each 6-bit set : Show feedback
+    /**#@-*/
 
     /** @var stdclass course module record */
     public $cm;
@@ -306,6 +384,12 @@ class hotpot {
 
     /** @var int timestamp of when the module was created */
     public $timecreated;
+
+    /**#@+ @var int completion settings */
+    public $completionmingrade;
+    public $completionpass;
+    public $completioncompleted;
+    /**#@-*/
 
     /** @var int timestamp of when this object was created */
     public $time;

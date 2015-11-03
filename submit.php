@@ -86,6 +86,11 @@ if (! ($hotpot->can_attempt() || $hotpot->can_preview())) {
 $class = 'mod_hotpot_'.$subtype.'_storage';
 $storage = call_user_func(array($class, 'store'), $hotpot);
 
+if ($hotpot->completionmingrade || $hotpot->completionpass || $hotpot->completioncompleted) {
+    $completion = new completion_info($course);
+    $completion->update_state($cm);
+}
+
 // redirect the browser (only if necessary)
 if ($response = $output->require_response($hotpot)) {
     $output->send_response($response); // script stops here

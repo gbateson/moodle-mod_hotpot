@@ -989,6 +989,36 @@ function xmldb_hotpot_upgrade($oldversion) {
         upgrade_mod_savepoint(true, "$newversion", 'hotpot');
     }
 
+    $newversion = 2015110382;
+    if ($oldversion < $newversion) {
+        $select = 'cm.*, m.name AS modname';
+        $from   = '{course_modules} as cm '.
+                  'JOIN {modules} m ON cm.module = m.id '.
+                  'JOIN {hotpot} h ON cm.instance = h.id';
+        $where  = 'm.name = ? AND (h.completionmingrade > ? OR h.completionpass = ? OR h.completioncompleted = ?)';
+        $order  = 'cm.course';
+        $params = array('hotpot', 0.00, 1, 1);
+        if ($cms = $DB->get_records_sql("SELECT $select FROM $from WHERE $where ORDER BY $order", $params)) {
+            $course = null;
+            $completion = null;
+            foreach ($cms as $cm) {
+                if ($course && $course->id==$cm->course) {
+                    // same course as previous $cm
+                } else {
+                    if ($course = $DB->get_record('course', array('id' => $cm->course))) {
+                        $completion = new completion_info($course);
+                    } else {
+                        $completion = null; // shouldn't happen !!
+                    }
+                }
+                if ($completion) {
+                    $completion->reset_all_state($cm);
+                }
+            }
+        }
+        upgrade_mod_savepoint(true, "$newversion", 'hotpot');
+    }
+
     if ($empty_cache) {
         $DB->delete_records('hotpot_cache');
     }
