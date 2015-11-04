@@ -99,7 +99,7 @@ echo $output->header();
 if (isguestuser()) {
     $message = html_writer::tag('p', get_string('guestsno', 'quiz'));
     $message .= html_writer::tag('p', get_string('liketologin'));
-    echo $output->confirm($message, get_login_url(), get_referer(false));
+    echo $output->confirm($message, get_login_url(), function_exists('get_local_referer') ? get_local_referer(false) : get_referer(false));
     echo $output->footer();
     exit;
 }
