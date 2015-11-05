@@ -983,12 +983,6 @@ function xmldb_hotpot_upgrade($oldversion) {
         upgrade_mod_savepoint(true, "$newversion", 'hotpot');
     }
 
-    $newversion = 2015102879;
-    if ($oldversion < $newversion) {
-        $empty_cache = true;
-        upgrade_mod_savepoint(true, "$newversion", 'hotpot');
-    }
-
     $newversion = 2015110382;
     if ($oldversion < $newversion) {
         $select = 'cm.*, m.name AS modname';
@@ -1016,6 +1010,12 @@ function xmldb_hotpot_upgrade($oldversion) {
                 }
             }
         }
+        upgrade_mod_savepoint(true, "$newversion", 'hotpot');
+    }
+
+    $newversion = 2015110583;
+    if ($oldversion < $newversion) {
+        $empty_cache = true;
         upgrade_mod_savepoint(true, "$newversion", 'hotpot');
     }
 

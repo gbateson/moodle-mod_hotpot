@@ -329,7 +329,7 @@ class mod_hotpot_attempt_hp_6_jmatch_renderer extends mod_hotpot_attempt_hp_6_re
 
         $event = $this->get_send_results_event();
         $search = '/(\s*)return;/';
-        $replace = '$1'.'HP_send_results($event);$0';
+        $replace = '$1'."HP_send_results($event);".'$0';
         $substr = preg_replace($search, $replace, $substr);
 
         if ($pos = strrpos($substr, '}')) {
