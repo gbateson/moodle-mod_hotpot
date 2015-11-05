@@ -2194,24 +2194,6 @@ function hotpot_add_to_log($courseid, $module, $action, $url='', $info='', $cmid
 }
 
 /**
- * Obtains the automatic completion state for this hotpot based on the condition
- * in hotpot settings.
- *
- * @param object  $course record from "course" table
- * @param object  $cm     record from "course_modules" table
- * @param integer $userid id from "user" table
- * @param bool $type Type of comparison (or/and; can be used as return value if no conditions)
- * @return bool True if completed, false if not, $type if conditions not set
- */
-function hotpot_get_completion_state_old($course, $cm, $userid, $type) {
-    global $CFG, $DB;
-    require_once($CFG->dirroot.'/mod/hotpot/locallib.php');
-    $params = array('hotpotid'   => $cm->instance,
-                    'userid'     => $userid,
-                    'status'     => hotpot::STATUS_COMPLETED);
-    return $DB->record_exists('hotpot_attempts', $params);
-}
-/**
  * Obtains the automatic completion state for this hotpot
  * based on the conditions in hotpot settings.
  *
