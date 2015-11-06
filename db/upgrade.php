@@ -986,7 +986,7 @@ function xmldb_hotpot_upgrade($oldversion) {
     $newversion = 2015110382;
     if ($oldversion < $newversion) {
         $select = 'cm.*, m.name AS modname';
-        $from   = '{course_modules} as cm '.
+        $from   = '{course_modules} cm '.
                   'JOIN {modules} m ON cm.module = m.id '.
                   'JOIN {hotpot} h ON cm.instance = h.id';
         $where  = 'm.name = ? AND (h.completionmingrade > ? OR h.completionpass = ? OR h.completioncompleted = ?)';
