@@ -65,9 +65,16 @@ $output = $PAGE->get_renderer('mod_hotpot', $subtype);
 // Guests can't do a HotPot, so offer them a choice of logging in or going back.
 if (isguestuser()) {
     echo $output->header();
+    if (function_exists('get_local_referer')) {
+        // Moodle >= 2.8
+        $referer = get_local_referer(false);
+    } else {
+        // Moodle <= 2.7
+        $referer = get_referer(false);
+    }
     $message = html_writer::tag('p', get_string('guestsno', 'quiz')).
                html_writer::tag('p', get_string('liketologin'));
-    echo $output->confirm($message, get_login_url(), get_referer(false));
+    echo $output->confirm($message, get_login_url(), $referer);
     echo $output->footer();
     exit;
 }
