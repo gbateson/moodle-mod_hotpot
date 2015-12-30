@@ -67,7 +67,7 @@ if (isguestuser()) {
     echo $output->header();
     $message = html_writer::tag('p', get_string('guestsno', 'quiz')).
                html_writer::tag('p', get_string('liketologin'));
-    echo $output->confirm($message, get_login_url(), function_exists('get_local_referer') ? get_local_referer(false) : get_referer(false));
+    echo $output->confirm($message, get_login_url(), get_referer(false));
     echo $output->footer();
     exit;
 }
