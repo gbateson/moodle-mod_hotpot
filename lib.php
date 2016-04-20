@@ -2215,7 +2215,7 @@ function hotpot_get_completion_state($course, $cm, $userid, $type) {
 
         // get grade, if necessary
         $grade = false;
-        if ($hotpot->completionmingrade || $hotpot->completionpass) {
+        if ($hotpot->completionmingrade > 0.0 || $hotpot->completionpass) {
             require_once($CFG->dirroot.'/lib/gradelib.php');
             $params = array('courseid'     => $course->id,
                             'itemtype'     => 'mod',

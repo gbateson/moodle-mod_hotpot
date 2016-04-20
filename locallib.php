@@ -2220,4 +2220,18 @@ class hotpot {
         }
         return $this->gradeitem;
     }
+
+    /**
+     * update_completion_state
+     *
+     * @param object $completion
+     * @return void, but may updated completion status
+     */
+    public function update_completion_state($completion) {
+        if ($this->completionmingrade > 0.0 || $this->completionpass || $this->completioncompleted) {
+            if ($completion->is_enabled($this->cm) && ($this->cm->completion==COMPLETION_TRACKING_AUTOMATIC)) {
+                $completion->update_state($this->cm);
+            }
+        }
+    }
 }

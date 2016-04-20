@@ -71,7 +71,7 @@ if ($action=='deleteselected') {
     require_sesskey();
     if ($confirmed) {
         $hotpot->delete_attempts($selected);
-        $completion->update_state($cm);
+        $hotpot->update_completion_state($completion);
     } else {
         // show a confirm button ?
     }
