@@ -1458,6 +1458,14 @@ function hotpot_pluginfile_externalfile($context, $component, $filearea, $filepa
             $type = ''; // shouldn't happen !!
     }
 
+    // "user" and "coursefiles" repositories
+    // will set this flag to TRUE
+    $encodepath = false;
+
+    // "filesytem" repository on Moodle >= 3.1
+    // will set this flag to 'browse'
+    $nodepathmode = '';
+
     // set paths (within repository) to required file
     // how we do this depends on the repository $typename
     // "filesystem" path is in plain text, others are encoded
@@ -1465,14 +1473,16 @@ function hotpot_pluginfile_externalfile($context, $component, $filearea, $filepa
     $mainreference = $mainfile->get_reference();
     switch ($type) {
         case 'filesystem':
-            $maindirname   = dirname($mainreference);
-            $encodepath    = false;
+            $maindirname = dirname($mainreference);
+            if (method_exists($repository, 'build_node_path')) {
+                $nodepathmode = 'browse';
+            }
             break;
         case 'coursefiles':
         case 'user':
-            $params        = file_storage::unpack_reference($mainreference, true);
-            $maindirname   = $params['filepath'];
-            $encodepath    = true;
+            $params      = file_storage::unpack_reference($mainreference, true);
+            $maindirname = $params['filepath'];
+            $encodepath  = true;
             break;
         default:
             echo 'unknown repository type in hotpot_pluginfile_externalfile(): '.$type;
@@ -1550,7 +1560,7 @@ function hotpot_pluginfile_externalfile($context, $component, $filearea, $filepa
 
     foreach ($paths as $path => $source) {
 
-        if (! hotpot_pluginfile_dirpath_exists($path, $repository, $type, $encodepath, $params)) {
+        if (! hotpot_pluginfile_dirpath_exists($path, $repository, $type, $encodepath, $nodepathmode, $params)) {
             continue;
         }
 
@@ -1558,6 +1568,13 @@ function hotpot_pluginfile_externalfile($context, $component, $filearea, $filepa
             $params['filepath'] = '/'.$path.($path=='' ? '' : '/');
             $params['filename'] = '.'; // "." signifies a directory
             $path = base64_encode(json_encode($params));
+        }
+
+        if ($nodepathmode) {
+            // for "filesystem" repository on Moodle >= 3.1
+            // the following code mimics the protected method
+            // $repository->build_node_path($nodepathmode, $dirpath)
+            $path = $nodepathmode.':'.base64_encode($path).':';
         }
 
         $listing = $repository->get_listing($path);
@@ -1608,7 +1625,7 @@ function hotpot_pluginfile_externalfile($context, $component, $filearea, $filepa
  * @param array    $params
  * @return boolean true if dir path exists in repository, false otherwise
  */
-function hotpot_pluginfile_dirpath_exists($dirpath, $repository, $type, $encodepath, $params) {
+function hotpot_pluginfile_dirpath_exists($dirpath, $repository, $type, $encodepath, $nodepathmode, $params) {
     $dirs = explode('/', $dirpath);
     foreach ($dirs as $i => $dir) {
         $dirpath = implode('/', array_slice($dirs, 0, $i));
@@ -1617,6 +1634,13 @@ function hotpot_pluginfile_dirpath_exists($dirpath, $repository, $type, $encodep
             $params['filepath'] = '/'.$dirpath.($dirpath=='' ? '' : '/');
             $params['filename'] = '.'; // "." signifies a directory
             $dirpath = base64_encode(json_encode($params));
+        }
+
+        if ($nodepathmode) {
+            // for "filesystem" repository on Moodle >= 3.1
+            // the following code mimics the protected method
+            // $repository->build_node_path($nodepathmode, $dirpath)
+            $dirpath = $nodepathmode.':'.base64_encode($dirpath).':';
         }
 
         $exists = false;

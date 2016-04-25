@@ -1111,6 +1111,17 @@ function xmldb_hotpot_locate_externalfile($contextid, $component, $filearea, $it
             $path = file_storage::pack_reference($params);
         }
 
+        // set $nodepathmode for filesystem repository on Moodle >= 3.1
+        $nodepathmode = '';
+        if ($type=='filesystem') {
+            if (method_exists($repository, 'build_node_path')) {
+                $nodepathmode = 'browse';
+                // the following code mimics the protected method
+                // $repository->build_node_path($nodepathmode, $path)
+                $path = $nodepathmode.':'.base64_encode($path).':';
+            }
+        }
+
         // reset $repository->root_path (filesystem repository only)
         if ($root_path) {
             $repository->root_path = $root_path;
