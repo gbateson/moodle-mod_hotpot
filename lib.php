@@ -2224,7 +2224,8 @@ function hotpot_add_to_log($courseid, $module, $action, $url='', $info='', $cmid
  * @param  object  $course record from "course" table
  * @param  object  $cm     record from "course_modules" table
  * @param  integer $userid id from "user" table
- * @param  bool    $type   of comparison (or/and; used as return value if there are no conditions)
+ * @param  bool    $type   of comparison (used as return value if there are no conditions)
+ *                         COMPLETION_AND (=true) or COMPLETION_OR (=false)
  * @return mixed   TRUE if completed, FALSE if not, or $type if no conditions are set
  */
 function hotpot_get_completion_state($course, $cm, $userid, $type) {
@@ -2261,7 +2262,9 @@ function hotpot_get_completion_state($course, $cm, $userid, $type) {
                             'completioncompleted');
 
         foreach ($conditions as $condition) {
-            if (empty($hotpot->$condition)) {
+            // decimal (e.g. completionmingrade) fields are returned by MySQL as a string
+            // and since empty('0.0') returns false (!!), so we must use numeric comparison
+            if (empty($hotpot->$condition) || floatval($hotpot->$condition)==0.0) {
                 continue;
             }
             switch ($condition) {

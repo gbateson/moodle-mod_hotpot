@@ -821,15 +821,15 @@ class mod_hotpot_mod_form extends moodleform_mod {
             $value = floatval($this->current->$name);
         }
         $group = array();
-        $group[] = &$mform->createElement('checkbox', $name.'disabled', '', $label);
+        $group[] = &$mform->createElement('checkbox', $name.'enabled', '', $label);
         $group[] = &$mform->createElement('static', $name.'space', '', ' &nbsp; ');
         $group[] = &$mform->createElement('text', $name, '', array('size' => 3));
         $mform->addGroup($group, $name.'group', '', '', false);
         $mform->setType($name, PARAM_FLOAT);
         $mform->setDefault($name, 0.00);
-        $mform->setType($name.'disabled', PARAM_INT);
-        $mform->setDefault($name.'disabled', empty($value) ? 0 : 1);
-        $mform->disabledIf($name, $name.'disabled', 'notchecked');
+        $mform->setType($name.'enabled', PARAM_INT);
+        $mform->setDefault($name.'enabled', empty($value) ? 0 : 1);
+        $mform->disabledIf($name, $name.'enabled', 'notchecked');
         $names[] = $name.'group';
         $disablednames[] = $name.'group';
 
@@ -868,10 +868,30 @@ class mod_hotpot_mod_form extends moodleform_mod {
      * @return bool True if one or more rules is enabled, false if none are.
      */
     public function completion_rule_enabled($data) {
-        if (empty($data['completionmingrade']) && empty($data['completionpass']) && empty($data['completioncompleted'])) {
-            return false;
-        } else {
-            return true;
+        if (empty($data['completionmingradeenabled']) || empty($data['completionmingrade'])) {
+            if (empty($data['completionpass']) && empty($data['completioncompleted'])) {
+                return false;
+            }
         }
+        return true; // at least one of the module-specific completion conditions is set
+    }
+
+    /**
+     * Return submitted data if properly submitted
+     * or returns NULL if there is no submitted data or validation fails.
+     *
+     * note: $slashed param removed
+     *
+     * @return object submitted data; NULL if not valid or not submitted or cancelled
+     */
+    public function get_data($slashed = true) {
+        if ($data = parent::get_data($slashed)) {
+            // Remove completionmingrade, if it is not enabled and greater than 0.0
+            if (empty($data->completionmingradeenabled) || empty($data->completionmingrade) || floatval($data->completionmingrade)==0.0) {
+                $data->completionmingradeenabled = 0;
+                $data->completionmingrade = 0.0;
+            }
+        }
+        return $data;
     }
 }
