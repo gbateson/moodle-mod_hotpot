@@ -61,7 +61,7 @@ class hotpot_source_html_xerte extends hotpot_source_html {
         if (! preg_match('/<script[^>]*src\s*=\s*"[^"]*rloObject.js"[^>]*>/', $content)) {
             return false;
         }
-        if (! preg_match("/myRLO = new rloObject\('\d*','\d*','[^']*.rl[to]'\)/", $content)) {
+        if (! preg_match("/myRLO = new rloObject\('\d*','\d*','[^']*.rl[ot]'[^)]*\)/", $content)) {
             return false;
         }
         return true;
