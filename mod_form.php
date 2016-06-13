@@ -119,6 +119,8 @@ class mod_hotpot_mod_form extends moodleform_mod {
 
         $plugin = 'mod_hotpot';
 
+        $textoptions = array('size' => '40');
+
         // General --------------------------------------------------------------------
         $mform->addElement('header', 'general', get_string('general', 'form'));
         //-----------------------------------------------------------------------------
@@ -129,14 +131,14 @@ class mod_hotpot_mod_form extends moodleform_mod {
         if ($this->is_add()) {
             $elements = array(
                 $mform->createElement('select', 'namesource', '', hotpot::available_namesources_list()),
-                $mform->createElement('text', $name, '', array('size' => '40'))
+                $mform->createElement('text', $name, '', $textoptions)
             );
             $mform->addGroup($elements, $name.'_elements', $label, array(' '), false);
             $mform->disabledIf($name.'_elements', 'namesource', 'ne', hotpot::TEXTSOURCE_SPECIFIC);
             $mform->setDefault('namesource', get_user_preferences('hotpot_namesource', hotpot::TEXTSOURCE_FILE));
             $mform->addHelpButton($name.'_elements', 'nameadd', $plugin);
         } else {
-            $mform->addElement('text', $name, $label, array('size' => '40'));
+            $mform->addElement('text', $name, $label, $textoptions);
             $mform->addElement('hidden', 'namesource', hotpot::TEXTSOURCE_SPECIFIC);
             $mform->addHelpButton($name, 'nameedit', $plugin);
             $mform->addRule($name, null, 'required', null, 'client');
@@ -328,7 +330,7 @@ class mod_hotpot_mod_form extends moodleform_mod {
         $label = get_string($name, $plugin);
         $elements = array(
             $mform->createElement('select', $name, '', hotpot::available_feedbacks_list()),
-            $mform->createElement('text', 'studentfeedbackurl', '', array('size' => '40'))
+            $mform->createElement('text', 'studentfeedbackurl', '', $textoptions)
         );
         $mform->addGroup($elements, $name.'_elements', $label, array(' '), false);
         $mform->disabledIf($name.'_elements', $name, 'eq', hotpot::FEEDBACK_NONE);
@@ -513,10 +515,20 @@ class mod_hotpot_mod_form extends moodleform_mod {
         $mform->addHelpButton($name, $name, $plugin);
         $mform->setAdvanced($name);
 
-        // Grade category
-        // Note: field must be called "gradecat" so that it is recognized
-        // by the edit_module_post_actions() function in "course/modlib.php"
-        // Also, FEATURE_GRADE_HAS_GRADE must be enabled in "mod/hotpot/lib.php"
+        // Note: the min pass grade field must be called "gradepass" so that
+        // it is recognized by edit_module_post_actions() in "course/modlib.php"
+        // Also, FEATURE_GRADE_HAS_GRADE must be enabled in "mod/reader/lib.php"
+        $name = 'gradepass';
+        $label = get_string($name, 'grades');
+        $mform->addElement('text', $name, $label, array('size' => '10'));
+        $mform->addHelpButton($name, $name, 'grades');
+        $mform->setType($name, PARAM_INT);
+        $mform->setAdvanced($name);
+        $mform->disabledIf($name, 'gradeweighting', 'eq', '0');
+
+        // Note: the grade category field must be called "gradecat" so that
+        // it is recognized by edit_module_post_actions() in "course/modlib.php"
+        // Also, FEATURE_GRADE_HAS_GRADE must be enabled in "mod/reader/lib.php"
         $name = 'gradecat';
         $label = get_string('gradecategoryonmodform', 'grades');
         $options = grade_get_categories_menu($PAGE->course->id);
@@ -524,6 +536,7 @@ class mod_hotpot_mod_form extends moodleform_mod {
         $mform->addHelpButton($name, 'gradecategoryonmodform', 'grades');
         $mform->setType($name, PARAM_INT);
         $mform->setAdvanced($name);
+        $mform->disabledIf($name, 'gradeweighting', 'eq', '0');
 
         // Standard settings (groups etc), common to all modules ----------------------
         $this->standard_coursemodule_elements();
