@@ -468,14 +468,6 @@ $string['pressoktocontinue'] = 'Press OK to continue, or Cancel to stay on the c
 $string['questionshort'] = 'Q-{$a}';
 $string['quizname_help'] = 'help text for Quiz name';
 $string['quizzes'] = 'Quizzes';
-$string['removegradeitem'] = 'Remove grade item';
-$string['removegradeitem_help'] = 'Should the grade item for this activity be removed?
-
-**No**
-: the grade item for this activity in the Moodle gradebook will not be removed
-
-**Yes**
-: If the maximum grade or the grade weighting for this HotPot is set to zero, then the grade item for this activity will be removed from the Moodle gradebook';
 $string['responses'] = 'Responses';
 $string['responsesreport'] = 'Responses';
 $string['reviewafterattempt'] = 'Allow review after attempt';
