@@ -366,7 +366,7 @@ class mod_hotpot_mod_form extends moodleform_mod {
         $name = 'timelimit';
         $label = get_string($name, $plugin);
         $options = array(
-            hotpot::TIME_SPECIFIC => get_string($name.'specific', $plugin),
+            hotpot::TIME_SPECIFIC => get_string('timelimitspecific', $plugin),
             hotpot::TIME_TEMPLATE => get_string('timelimittemplate', $plugin),
             hotpot::TIME_DISABLE  => get_string('disable')
         );
@@ -450,7 +450,7 @@ class mod_hotpot_mod_form extends moodleform_mod {
             $elements = array();
             foreach ($items as $itemname => $itemvalue) {
                 $name = $timename.$itemname; // e.g. duringattemptresponses
-                $elements[] = &$mform->createElement('checkbox', $name, '', get_string($itemname, 'quiz'));
+                $elements[] = &$mform->createElement('checkbox', $name, '', get_string($itemname, 'mod_quiz'));
                 $mform->setType($name, PARAM_INT);
             }
 
@@ -468,12 +468,12 @@ class mod_hotpot_mod_form extends moodleform_mod {
         }
 
         // Security -------------------------------------------------------------------
-        $mform->addElement('header', 'securityhdr', get_string('extraattemptrestrictions', 'quiz'));
+        $mform->addElement('header', 'securityhdr', get_string('extraattemptrestrictions', 'mod_quiz'));
         //-----------------------------------------------------------------------------
 
         // Maximum number of attempts
         $name = 'attemptlimit';
-        $label = get_string('attemptsallowed', 'quiz');
+        $label = get_string('attemptsallowed', 'mod_quiz');
         $mform->addElement('select', $name, $label, hotpot::available_attemptlimits_list());
         $mform->setDefault($name, get_user_preferences('hotpot_attempts', 0)); // 0=unlimited
         $mform->setAdvanced($name);
@@ -481,7 +481,7 @@ class mod_hotpot_mod_form extends moodleform_mod {
 
         // Password
         $name = 'password';
-        $label = get_string('requirepassword', 'quiz');
+        $label = get_string('requirepassword', 'mod_quiz');
         $mform->addElement('text', $name, $label);
         $mform->setType($name, PARAM_TEXT);
         $mform->addHelpButton($name, 'requirepassword', 'mod_quiz');
@@ -489,7 +489,7 @@ class mod_hotpot_mod_form extends moodleform_mod {
 
         // IP address.
         $name = 'subnet';
-        $label = get_string('requiresubnet', 'quiz');
+        $label = get_string('requiresubnet', 'mod_quiz');
         $mform->addElement('text', $name, $label);
         $mform->setType($name, PARAM_TEXT);
         $mform->addHelpButton($name, 'requiresubnet', 'mod_quiz');
@@ -517,7 +517,7 @@ class mod_hotpot_mod_form extends moodleform_mod {
 
         // Note: the min pass grade field must be called "gradepass" so that
         // it is recognized by edit_module_post_actions() in "course/modlib.php"
-        // Also, FEATURE_GRADE_HAS_GRADE must be enabled in "mod/reader/lib.php"
+        // Also, FEATURE_GRADE_HAS_GRADE must be enabled in "mod/hotpot/lib.php"
         $name = 'gradepass';
         $label = get_string($name, 'grades');
         $mform->addElement('text', $name, $label, array('size' => '10'));
@@ -528,7 +528,7 @@ class mod_hotpot_mod_form extends moodleform_mod {
 
         // Note: the grade category field must be called "gradecat" so that
         // it is recognized by edit_module_post_actions() in "course/modlib.php"
-        // Also, FEATURE_GRADE_HAS_GRADE must be enabled in "mod/reader/lib.php"
+        // Also, FEATURE_GRADE_HAS_GRADE must be enabled in "mod/hotpot/lib.php"
         $name = 'gradecat';
         $label = get_string('gradecategoryonmodform', 'grades');
         $options = grade_get_categories_menu($PAGE->course->id);
