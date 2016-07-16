@@ -151,7 +151,7 @@ class mod_hotpot_renderer extends plugin_renderer_base {
         if ($return) {
             return $commands;
         } else {
-            print $commands;
+            echo $commands;
         }
     }
 
@@ -236,7 +236,7 @@ class mod_hotpot_renderer extends plugin_renderer_base {
         if ($return) {
             return ' '.$command;
         } else {
-            print ' '.$command;
+            echo ' '.$command;
         }
     }
 

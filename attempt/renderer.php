@@ -1108,7 +1108,8 @@ class mod_hotpot_attempt_renderer extends mod_hotpot_renderer {
                         if (empty($CFG->hotpot_bodystyles)) {
                             $bodystyles = 0;
                         } else {
-                        	$callback = create_function('$x,$y', 'return ($x | $y);');
+                            // reduce body styles using logical OR
+                            $callback = array($this, 'fix_css_reduce_bodystyles');
                             $bodystyles = explode(',', $CFG->hotpot_bodystyles);
                             $bodystyles = array_reduce($bodystyles, $callback, 0);
                         }
@@ -1169,6 +1170,18 @@ class mod_hotpot_attempt_renderer extends mod_hotpot_renderer {
         } else {
             return implode(",\n", $selectors)."\n".'{'.$css_definition.'}'.$listitem_css;
         }
+    }
+
+    /**
+     * fix_css_reduce_bodystyles
+     *
+     * @param xxx $carry
+     * @param xxx $item
+     * @return xxx
+     * @todo Finish documenting this function
+     */
+    function fix_css_reduce_bodystyles($carry, $item) {
+        return ($carry | $item);
     }
 
     /**
