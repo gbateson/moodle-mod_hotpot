@@ -183,4 +183,53 @@ class mod_hotpot_attempt_hp_6_jmatch_xml_jmemori_renderer extends mod_hotpot_att
             ."	if (id>=0) HP.onclickCheck(id);\n"
         ;
     }
+
+    /**
+     * return JS-safe version of expand_BackCaption()
+     *
+     * @return xxx
+     */
+    function expand_BackCaption()  {
+        return $this->expand_CaptionJS('Back');
+    }
+
+    /**
+     * return JS-safe version of expand_ContentsCaption()
+     *
+     * @return xxx
+     */
+    function expand_ContentsCaption()  {
+        return $this->expand_CaptionJS('Contents');
+    }
+
+    /**
+     * return JS-safe version of expand_NextExCaption()
+     *
+     * @return xxx
+     */
+    function expand_NextExCaption()  {
+        return $this->expand_CaptionJS('NextEx');
+    }
+
+    /**
+     * return JS-safe version of expand_CheckCaption()
+     *
+     * @return xxx
+     */
+    function expand_CheckCaption()  {
+        return $this->expand_CaptionJS('Check');
+    }
+
+    /**
+     * return JS-safe version of expand_XXX()
+     *
+     * @param string ProperCase name of string, without tailing "Caption"
+     * @param string suffix (optional, default="Caption") to be appended $name
+     * @return string
+     */
+    function expand_CaptionJS($name, $suffix='Caption')  {
+        $method = 'expand_'.$name.$suffix;
+        $caption = call_user_func(array($this, 'parent::'.$method));
+        return $this->hotpot->source->js_value_safe($caption, true);
+    }
 }
