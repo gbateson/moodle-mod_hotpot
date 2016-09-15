@@ -2022,18 +2022,25 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
             'id' => $this->formid, 'autocomplete' => 'off'
         );
         $form_start = $this->form_start('submit.php', $params, $attributes);
+        $form_end = $this->form_end();
 
         $search = '<!-- BeginSubmissionForm -->';
-        if (! $pos = strpos($this->bodycontent, $search)) {
-            throw new moodle_exception('couldnotinsertsubmissionform', 'hotpot');
+        $pos = strpos($this->bodycontent, $search);
+        if ($pos===false) {
+            $this->bodycontent .= $form_start;
+            //throw new moodle_exception('couldnotinsertsubmissionform', 'hotpot');
+        } else {
+            $this->bodycontent = substr_replace($this->bodycontent, $form_start, $pos, strlen($search));
         }
-        $this->bodycontent = substr_replace($this->bodycontent, $form_start, $pos, strlen($search));
 
         $search = '<!-- EndSubmissionForm -->';
-        if (! $pos = strpos($this->bodycontent, $search)) {
-            throw new moodle_exception('couldnotinsertsubmissionform', 'hotpot');
+        $pos = strpos($this->bodycontent, $search);
+        if ($pos===false) {
+            $this->bodycontent .= $form_end;
+            //throw new moodle_exception('couldnotinsertsubmissionform', 'hotpot');
+        } else {
+            $this->bodycontent = substr_replace($this->bodycontent, $form_end, $pos, strlen($search));
         }
-        $this->bodycontent = substr_replace($this->bodycontent, $this->form_end(), $pos, strlen($search));
     }
 
     /**
