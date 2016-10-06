@@ -43,6 +43,16 @@ require_once($CFG->dirroot.'/mod/hotpot/attempt/hp/renderer.php');
  */
 class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
 
+    /**#@+
+     * internal codes for filter actions
+     *
+     * @var integer
+     */
+    const FILTER_ACTION_ADD    =  1;
+    const FILTER_ACTION_KEEP   =  0;
+    const FILTER_ACTION_REMOVE = -1;
+    /**#@-*/
+
     /**
      * init
      *
@@ -1592,32 +1602,106 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * @return xxx
      */
     function fix_filters()  {
-        global $CFG;
-        if (isset($CFG->textfilters)) {
-            $textfilters = $CFG->textfilters;
-        } else {
-            $textfilters = '';
-        }
-        if ($this->hotpot->usefilters) {
-            $filters = filter_get_active_in_context($this->hotpot->context);
-            $filters = array_keys($filters);
-        } else {
-            $filters = array();
-        }
-        if ($this->hotpot->useglossary && ! in_array('mod/glossary', $filters)) {
-            $filters[] = 'mod/glossary';
-        }
-        if ($this->hotpot->usemediafilter) {
-            // exclude certain unnecessary or miscreant $filters
-            //  - "mediaplugins" because it duplicates work done by "usemediafilter" setting
-            //  - "asciimath" because it does not behave like a filter is supposed to behave
-            $filters = preg_grep('/^filter\/(mediaplugin|asciimath)$/', $filters, PREG_GREP_INVERT);
+
+        ////////////////////////////////////////////////
+        // adjust filters
+        ////////////////////////////////////////////////
+
+        $context = $this->hotpot->context;
+
+        list($oldactives, $configs) = filter_get_all_local_settings($context->id);
+        if ($oldactives===false) {
+            $oldactives = array();
         }
 
-        $CFG->textfilters = implode(',', $filters);
+        $filters = filter_get_active_in_context($context);
+
+        if ($this->hotpot->usefilters) {
+            $action = self::FILTER_ACTION_KEEP;
+        } else {
+            $action = self::FILTER_ACTION_REMOVE;
+        }
+
+        foreach (array_keys($filters) as $filter) {
+            $filters[$filter] = $action;
+        }
+
+        // decide whether to keep, add or remove the glossary filter
+        $filter = 'glossary';
+        if ($this->hotpot->useglossary) {
+            if (array_key_exists($filter, $filters)) {
+                $filters[$filter] = self::FILTER_ACTION_KEEP;
+            } else {
+                $filters[$filter] = self::FILTER_ACTION_ADD;
+            }
+        } else if (array_key_exists($filter, $filters)) {
+            $filters[$filter] = self::FILTER_ACTION_REMOVE;
+        }
+
+        // remove "mediaplugins" because it duplicates
+        // work done by "usemediafilter" setting
+        if (array_key_exists('mediaplugin', $filters)) {
+            $filters['mediaplugin'] = self::FILTER_ACTION_REMOVE;
+        }
+
+        // remove "asciimath" because it does not
+        // behave like a filter is supposed to behave
+        if (array_key_exists('asciimath', $filters)) {
+            $filters['asciimath'] = self::FILTER_ACTION_REMOVE;
+        }
+
+        // if necessary, add/remove filters for this context
+        $reset_caches = false;
+        foreach ($filters as $filter => $action) {
+            switch ($action) {
+                case self::FILTER_ACTION_ADD:
+                    filter_set_local_state($filter, $context->id, TEXTFILTER_ON);
+                    $reset_caches = true;
+                    break;
+                case self::FILTER_ACTION_REMOVE:
+                    filter_set_local_state($filter, $context->id, TEXTFILTER_OFF);
+                    $reset_caches = true;
+                    break;
+            }
+        }
+
+        if ($reset_caches) {
+            filter_manager::reset_caches();
+            //unset($FILTERLIB_PRIVATE->active[$context->id]);
+        }
+
+        ////////////////////////////////////////////////
+        // filter the content
+        ////////////////////////////////////////////////
+
         $this->filter_text_headcontent();
         $this->filter_text_bodycontent();
-        $CFG->textfilters = $textfilters;
+
+        ////////////////////////////////////////////////
+        // reset filters
+        ////////////////////////////////////////////////
+
+        list($newactives, $configs) = filter_get_all_local_settings($context->id);
+        if ($newactives===false) {
+            $newactives = array();
+        }
+
+        // restore old filters
+        foreach ($oldactives as $id => $active) {
+            filter_set_local_state($active->filter, $context->id, $active->active);
+            if (isset($newactives[$id])) {
+                unset($newactives[$id]);
+            }
+        }
+
+        // remove new filters
+        foreach ($newactives as $id => $active) {
+            filter_set_local_state($active->filter, $context->id, TEXTFILTER_INHERIT);
+        }
+
+        ////////////////////////////////////////////////
+        // tidy up
+        ////////////////////////////////////////////////
 
         // fix unwanted conversions by the Moodle's Tex filter
         // http://moodle.org/mod/forum/discuss.php?d=68435
