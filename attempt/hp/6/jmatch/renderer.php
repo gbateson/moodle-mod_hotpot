@@ -362,9 +362,7 @@ class mod_hotpot_attempt_hp_6_jmatch_renderer extends mod_hotpot_attempt_hp_6_re
         if (preg_match($search, $this->bodycontent, $matches)) {
             $title = $this->get_title();
             if ($this->hotpot->can_manage()) {
-                $url = new moodle_url('/course/modedit.php', array('update' => $this->hotpot->cm->id, 'return' => 1, 'sesskey' => sesskey()));
-                $img = html_writer::empty_tag('img', array('src' => $this->pix_url('t/edit')));
-                $title .= html_writer::link($url, $img);
+                $title .= $this->modedit_icon();
             }
             $replace = $matches[1].$title.$matches[3];
             $this->bodycontent = str_replace($matches[0], $replace, $this->bodycontent);
