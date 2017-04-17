@@ -362,7 +362,7 @@ class mod_hotpot_attempt_hp_6_jmatch_renderer extends mod_hotpot_attempt_hp_6_re
         if (preg_match($search, $this->bodycontent, $matches)) {
             $title = $this->get_title();
             if ($this->hotpot->can_manage()) {
-                $title .= $this->modedit_icon();
+                $title .= $this->modedit_icon($this->hotpot);
             }
             $replace = $matches[1].$title.$matches[3];
             $this->bodycontent = str_replace($matches[0], $replace, $this->bodycontent);

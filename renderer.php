@@ -257,11 +257,12 @@ class mod_hotpot_renderer extends plugin_renderer_base {
     /**
      * modedit_icon
      *
+     * @param $hotpot
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function modedit_icon() {
-        $params = array('update' => $this->TC->coursemodule->id,
+    public function modedit_icon($hotpot) {
+        $params = array('update' => $hotpot->cm->id,
                         'return' => 1,
                         'sesskey' => sesskey());
         $url = new moodle_url('/course/modedit.php', $params);
