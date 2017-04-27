@@ -694,15 +694,30 @@ class mod_hotpot_mod_form extends moodleform_mod {
 
         // add module icons, if possible
         if ($modinfo) {
+            // in some browsers (e.g. Chrome) the icons only display
+            // when the "size" attribute is set for the SELECT tag
+            // but this also means that you MUST scroll to see all
+            // item in the SELECT list, so perhaps the code below
+            // could be removed.
             $element = reset($mform->getElement($type.'cm_elements')->getElements());
+            if (method_exists($PAGE->theme, 'image_url')) {
+                $image_url = 'image_url'; // Moodle >= 3.3
+            } else {
+                $image_url = 'pix_url'; // Moodle <= 3.2
+            }
             for ($i=0; $i<count($element->_optGroups); $i++) {
                 $optgroup = &$element->_optGroups[$i];
                 for ($ii=0; $ii<count($optgroup['options']); $ii++) {
                     $option = &$optgroup['options'][$ii];
                     if (isset($option['attr']['value']) && $option['attr']['value']>0) {
                         $cmid = $option['attr']['value'];
-                        $url = $PAGE->theme->pix_url('icon', $modinfo->cms[$cmid]->modname)->out();
-                        $option['attr']['style'] = "background-image: url($url); background-repeat: no-repeat; background-position: 1px 2px; min-height: 20px;";
+                        $modname = $modinfo->cms[$cmid]->modname;
+                        $url = $PAGE->theme->$image_url('icon', $modname)->out();
+                        $option['attr']['style'] = 'background-image: url('.$url.'); '.
+                                                   'background-repeat: no-repeat; '.
+                                                   'background-position: 1px 2px; '.
+                                                   'min-height: 20px; '.
+                                                   'padding-left: 12px;';
                     }
                 }
             }
