@@ -640,7 +640,7 @@ function hotpot_print_recent_activity($course, $viewfullnames, $timestart) {
  *     $activity->timestamp : the time that the content was recorded in the database
  */
 function hotpot_get_recent_mod_activity(&$activities, &$index, $timestart, $courseid, $coursemoduleid=0, $userid=0, $groupid=0) {
-    global $CFG, $DB, $USER;
+    global $CFG, $DB, $OUTPUT, $USER;
 
     // CONTRIB-4025 don't allow students to see each other's scores
     $coursecontext = hotpot_get_context(CONTEXT_COURSE, $courseid);
@@ -729,15 +729,10 @@ function hotpot_get_recent_mod_activity(&$activities, &$index, $timestart, $cour
         $userid = $attempt->userid;
         if (! array_key_exists($userid, $users[$cmid])) {
             $users[$cmid][$userid] = (object)array(
-                'id'        => $userid,
-                'userid'    => $userid,
-                'firstname' => $attempt->firstname,
-                'lastname'  => $attempt->lastname,
-                'fullname'  => fullname($attempt),
-                'picture'   => $attempt->picture,
-                'imagealt'  => $attempt->imagealt,
-                'email'     => $attempt->email,
-                'attempts'  => array()
+                'userid'   => $userid,
+                'fullname' => fullname($attempt),
+                'picture'  => $OUTPUT->user_picture($attempt, array('courseid' => $courseid)),
+                'attempts' => array(),
             );
         }
         // add this attempt by this user at this course module
@@ -765,16 +760,7 @@ function hotpot_get_recent_mod_activity(&$activities, &$index, $timestart, $cour
                 'type' => 'hotpot',
                 'cmid' => $cmid,
                 'name' => $name,
-                'user' => (object)array(
-                    'id'        => $user->id,
-                    'userid'    => $user->userid,
-                    'firstname' => $user->firstname,
-                    'lastname'  => $user->lastname,
-                    'fullname'  => $user->fullname,
-                    'picture'   => $user->picture,
-                    'imagealt'  => $user->imagealt,
-                    'email'     => $user->email
-                ),
+                'user' => $user,
                 'attempts'  => $user->attempts,
                 'timestamp' => $user->attempts[$max_unumber]->timemodified
             );
@@ -850,8 +836,7 @@ function hotpot_print_recent_mod_activity($activity, $courseid, $detail, $modnam
     $cell->rowspan = $rowspan;
     $row->cells[] = $cell;
 
-    $picture = $OUTPUT->user_picture($activity->user, array('courseid'=>$courseid));
-    $cell = new html_table_cell($picture, array('width'=>35, 'valign'=>'top', 'class'=>'forumpostpicture'));
+    $cell = new html_table_cell($activity->user->picture, array('width'=>35, 'valign'=>'top', 'class'=>'forumpostpicture'));
     $cell->rowspan = $rowspan;
     $row->cells[] = $cell;
 

@@ -208,7 +208,11 @@ class hotpot_filter_group extends user_filter_select {
             }
         }
 
-        parent::user_filter_select($filtername, $label, $advanced, '', $options, $default);
+        if (method_exists('user_filter_select', '__construct')) {
+            parent::__construct($filtername, $label, $advanced, '', $options, $default);
+        } else {
+            parent::user_filter_select($filtername, $label, $advanced, '', $options, $default);
+        }
     }
 
     /**
@@ -292,7 +296,11 @@ class hotpot_filter_status extends user_filter_select {
     function __construct($name, $advanced, $default=null) {
         $label = get_string($name, 'mod_hotpot');
         $options = hotpot::available_statuses_list();
-        parent::__construct($name, $label, $advanced, '', $options, $default);
+        if (method_exists('user_filter_select', '__construct')) {
+            parent::__construct($name, $label, $advanced, '', $options, $default);
+        } else {
+            parent::user_filter_select($name, $label, $advanced, '', $options, $default);
+        }
     }
 
     /**
@@ -350,10 +358,11 @@ class hotpot_filter_number extends user_filter_select {
      * @param mixed $default option
      */
     function __construct($name, $label, $advanced, $default=null) {
-        parent::user_filter_type($name, $label, $advanced);
-
-        $this->_field   = '';
-        $this->_default = $default;
+        if (method_exists('user_filter_select', '__construct')) {
+            parent::__construct($name, $label, $advanced, '', array(), $default);
+        } else {
+            parent::user_filter_type($name, $label, $advanced, '', array(), $default);
+        }
     }
 
     /**
