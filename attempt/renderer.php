@@ -727,7 +727,11 @@ class mod_hotpot_attempt_renderer extends mod_hotpot_renderer {
 
         // transfer $CFG fields to cache record
         foreach ($this->cache_CFG_fields as $field) {
-            $this->cache->$field = trim($CFG->$field);
+            if (($field === 'slasharguments') && (!empty(trim($CFG->$field)))) {
+        		$this->cache->$field = '1';
+        	} else {
+                $this->cache->$field = trim($CFG->$field);
+            }
         }
 
         // transfer quiz fields to cache record
