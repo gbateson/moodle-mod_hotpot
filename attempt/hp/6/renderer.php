@@ -106,7 +106,6 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
         $search = '/(Highest|WidestRight)-12;/';
         $replace = '$1;';
         $this->headcontent = preg_replace($search, $replace, $this->headcontent);
-
     }
 
     /**
