@@ -78,7 +78,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
             '/(?<=function CardSetL).*/',
             '/(?<=function CardSetT).*/',
             '/(?<=function CardSetW).*/',
-            '/(?<=function CardSetH).*/',
+            '/(?<=function CardSetH).*/'
         );
         $replace = array(
             "(){return getOffset(this.elm, 'Left')}",
@@ -93,6 +93,20 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
             "(NewH){setOffset(this.elm, 'Height', NewH)}"
         );
         $this->headcontent = preg_replace($search, $replace, $this->headcontent, 1);
+
+        // force box sizing to include border and padding
+        // then we don't have to worry about "strict" HTML
+        $search = '/(div\\.CardStyle\\s*\\{.*?)(?=\\})/s';
+        $replace = '$1'."\t".'box-sizing: border-box;'."\n";
+        $this->headcontent = preg_replace($search, $replace, $this->headcontent, 1);
+
+        // remove previous fix for "content-box" sizing
+        // 12 = border-left (1px) + padding-left (5px)
+        //    + border-right (1px) + padding-right (5px)
+        $search = '/(Highest|WidestRight)-12;/';
+        $replace = '$1;';
+        $this->headcontent = preg_replace($search, $replace, $this->headcontent);
+
     }
 
     /**
@@ -261,67 +275,6 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
             $obj = "document.getElementsByTagName('body')[0]"; // original
         }
         $replace = ''
-            ."function getStyleValue(obj, property_name, propertyName){\n"
-            ."	var value = 0;\n"
-            ."	// Watch out for HTMLDocument which has no style property\n"
-            ."	// as this causes errors later in getComputedStyle() in FF\n"
-            ."	if (obj && obj.style){\n"
-            ."		// based on http://www.quirksmode.org/dom/getstyles.html\n"
-            ."		if (document.defaultView && document.defaultView.getComputedStyle){\n"
-            ."			// Firefox, Opera, Safari\n"
-            ."			value = document.defaultView.getComputedStyle(obj, null).getPropertyValue(property_name);\n"
-            ."		} else if (obj.currentStyle) {"
-            ."			// IE (and Opera)\n"
-            ."			value = obj.currentStyle[propertyName];\n"
-            ."		}\n"
-            ."		if (typeof(value)=='string'){\n"
-            ."			var r = new RegExp('([0-9.]*)([a-z]+)');\n"
-            ."			var m = value.match(r);\n"
-            ."			if (m){\n"
-            ."				switch (m[2]){\n"
-            ."					case 'em':\n"
-            ."						// as far as I can see, only IE needs this\n"
-            ."						// other browsers have getComputedStyle() in px\n"
-            ."						if (typeof(obj.EmInPx)=='undefined'){\n"
-            ."							var div = obj.parentNode.appendChild(document.createElement('div'));\n"
-            ."							div.style.margin = '0px';\n"
-            ."							div.style.padding = '0px';\n"
-            ."							div.style.border = 'none';\n"
-            ."							div.style.height = '1em';\n"
-            ."							obj.EmInPx = getOffset(div, 'Height');\n"
-            ."							obj.parentNode.removeChild(div);\n"
-            ."						}\n"
-            ."						value = parseFloat(m[1] * obj.EmInPx);\n"
-            ."						break;\n"
-            ."					case 'px':\n"
-            ."						value = parseFloat(m[1]);\n"
-            ."						break;\n"
-            ."					default:\n"
-            ."						value = 0;\n"
-            ."				}\n"
-            ."			} else {\n"
-            ."				value = 0 ;\n"
-            ."			}\n"
-            ."		} else {\n"
-            ."			value = 0;\n"
-            ."		}\n"
-            ."	}\n"
-            ."	return value;\n"
-            ."}\n"
-            ."function isStrict(){\n"
-            ."	return false;\n"
-            ."	if (typeof(window.cache_isStrict)=='undefined'){\n"
-            ."		if (document.compatMode) { // ie6+\n"
-            ."			window.cache_isStrict = (document.compatMode=='CSS1Compat');\n"
-            ."		} else if (document.doctype){\n"
-            ."			var s = document.doctype.systemId || document.doctype.name; // n6 OR ie5mac\n"
-            ."			window.cache_isStrict = (s && s.indexOf('strict.dtd') >= 0);\n"
-            ."		} else {\n"
-            ."			window.cache_isStrict = false;\n"
-            ."		}\n"
-            ."	}\n"
-            ."	return window.cache_isStrict;\n"
-            ."}\n"
             ."function setOffset(obj, type, value){\n"
             ."	if (! obj){\n"
             ."		return false;\n"
@@ -334,34 +287,6 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
             ."			return setOffset(obj, 'Height', value - getOffset(obj, 'Top'));\n"
             ."	}\n"
             ."\n"
-            ."	if (isStrict()){\n"
-            ."		// set arrays of p(roperties) and s(ub-properties)\n"
-            ."		var properties = new Array('margin', 'border', 'padding');\n"
-            ."		switch (type){\n"
-            ."			case 'Top':\n"
-            ."				var sides = new Array('Top');\n"
-            ."				break;\n"
-            ."			case 'Left':\n"
-            ."				var sides = new Array('Left');\n"
-            ."				break;\n"
-            ."			case 'Width':\n"
-            ."				var sides = new Array('Left', 'Right');\n"
-            ."				break;\n"
-            ."			case 'Height':\n"
-            ."				var sides = new Array('Top', 'Bottom');\n"
-            ."				break;\n"
-            ."			default:\n"
-            ."				return 0;\n"
-            ."		}\n"
-            ."		for (var p=0; p<properties.length; p++){\n"
-            ."			for (var s=0; s<sides.length; s++){\n"
-            ."				var propertyName = properties[p] + sides[s];\n"
-            ."				var property_name = properties[p] + '-' + sides[s].toLowerCase();\n"
-            ."				value -= getStyleValue(obj, property_name, propertyName);\n"
-            ."			}\n"
-            ."		}\n"
-            ."		value = Math.floor(value);\n"
-            ."	}\n"
             ."	if (type=='Top' || type=='Left') {\n"
             ."		value -= getOffset(obj.offsetParent, type);\n"
             ."	}\n"
