@@ -154,6 +154,7 @@ class hotpot_report_table extends table_sql {
      * wrap_html_finish
      */
     function wrap_html_finish() {
+        global $PAGE;
 
         // check this table has a "selected" column
         if (! $this->has_column('selected')) {
@@ -169,17 +170,31 @@ class hotpot_report_table extends table_sql {
         $params = array('id' => 'commands');
         echo html_writer::start_tag('div', $params);
 
-        // add "select all" link
-        $text = get_string('selectall', 'quiz');
-        $href = "javascript:select_all_in('TABLE',null,'attempts');";
-        echo html_writer::tag('a', $text, array('href' => $href));
-
-        echo ' / ';
-
-        // add "deselect all" link
-        $text = get_string('selectnone', 'quiz');
-        $href = "javascript:deselect_all_in('TABLE',null,'attempts');";
-        echo html_writer::tag('a', $text, array('href' => $href));
+        // add "select all/none" links
+        if ( method_exists($PAGE->requires, 'js_amd_inline')) {
+            // Moodle >= 3.3
+            echo html_writer::tag('a', get_string('selectall', 'quiz'), array('href' => '#', 'id' => 'selectall'));
+            echo ' / ';
+            echo html_writer::tag('a', get_string('selectnone', 'quiz'), array('href' => '#', 'id' => 'selectnone'));
+            $PAGE->requires->js_amd_inline("
+            require(['jquery'], function($) {
+                $('#selectall').click(function(e) {
+                    $('#attempts').find('input:checkbox').prop('checked', true);
+                    e.preventDefault();
+                });
+                $('#selectnone').click(function(e) {
+                    $('#attempts').find('input:checkbox').prop('checked', false);
+                    e.preventDefault();
+                });
+            });");
+        } else {
+            // Moodle <= 3.2
+            $href = "javascript:select_all_in('TABLE',null,'attempts');";
+            echo html_writer::tag('a', get_string('selectall', 'quiz'), array('href' => $href));
+            echo ' / ';
+            $href = "javascript:deselect_all_in('TABLE',null,'attempts');";
+            echo html_writer::tag('a', get_string('selectnone', 'quiz'), array('href' => $href));
+        }
 
         echo ' &nbsp; ';
 

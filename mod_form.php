@@ -454,16 +454,40 @@ class mod_hotpot_mod_form extends moodleform_mod {
                 $mform->setType($name, PARAM_INT);
             }
 
-            $id = 'fgroup_id_'.$timename.'_elements';
+            // js_amd_inline is available in Moodle >= 3.3
+            $js_amd_inline = method_exists($PAGE->requires, 'js_amd_inline');
+
             $text = '';
-            $text .= html_writer::tag('a', get_string('all'), array('onclick' => 'select_all_in("DIV", "fitem", "'.$id.'")'));
-            $text .= ' / ';
-            $text .= html_writer::tag('a', get_string('none'), array('onclick' => 'deselect_all_in("DIV", "fitem", "'.$id.'")'));
+            $id = 'fgroup_id_'.$timename.'_elements';
+
+            if ($js_amd_inline) {
+                $text .= html_writer::tag('a', get_string('all'), array('href' => '#', 'id' => $name.'selectall'));
+                $text .= ' / ';
+                $text .= html_writer::tag('a', get_string('none'), array('href' => '#', 'id' => $name.'selectnone'));
+            } else {
+                $text .= html_writer::tag('a', get_string('all'), array('onclick' => 'select_all_in("DIV", "fitem", "'.$id.'")'));
+                $text .= ' / ';
+                $text .= html_writer::tag('a', get_string('none'), array('onclick' => 'deselect_all_in("DIV", "fitem", "'.$id.'")'));
+            }
             $elements[] = &$mform->createElement('static', '', '', html_writer::tag('span', $text));
 
             $mform->addGroup($elements, $timename.'_elements', get_string('review'.$timename, $plugin), null, false);
             if ($timename=='afterclose') {
                 $mform->disabledIf('afterclose_elements', 'timeclose[off]', 'checked');
+            }
+
+            if ($js_amd_inline) {
+                $PAGE->requires->js_amd_inline("
+                require(['jquery'], function($) {
+                    $('#{$name}selectall').click(function(e) {
+                        $('#{$id}').find('input:checkbox').prop('checked', true);
+                        e.preventDefault();
+                    });
+                    $('#{$name}selectnone').click(function(e) {
+                        $('#{$id}').find('input:checkbox').prop('checked', false);
+                        e.preventDefault();
+                    });
+                });");
             }
         }
 
