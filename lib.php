@@ -2324,4 +2324,3 @@ function mod_hotpot_core_calendar_provide_event_action(calendar_event $event,
             true
     );
 }
-
