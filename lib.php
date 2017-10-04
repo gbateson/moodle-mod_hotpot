@@ -140,8 +140,10 @@ function hotpot_update_instance(stdclass $data, $mform) {
         hotpot_update_grades($data);
     }
 
-    $completiontimeexpected = !empty($data->completionexpected) ? $data->completionexpected : null;
-    \core_completion\api::update_completion_date_event($data->coursemodule, 'hotpot', $data->id, $completiontimeexpected);
+    if (class_exists('\core_completion\api')) {
+        $completiontimeexpected = (empty($data->completionexpected) ? null : $data->completionexpected);
+        \core_completion\api::update_completion_date_event($data->coursemodule, 'hotpot', $data->id, $completiontimeexpected);
+    }
 
     return true;
 }
