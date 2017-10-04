@@ -105,8 +105,10 @@ function hotpot_add_instance(stdclass $data, $mform) {
     // update gradebook item
     hotpot_grade_item_update($data);
 
-    $completiontimeexpected = !empty($data->completionexpected) ? $data->completionexpected : null;
-    \core_completion\api::update_completion_date_event($data->coursemodule, 'hotpot', $data->id, $completiontimeexpected);
+    if (class_exists('\core_completion\api')) {
+        $completiontimeexpected = (empty($data->completionexpected) ? null : $data->completionexpected);
+        \core_completion\api::update_completion_date_event($data->coursemodule, 'hotpot', $data->id, $completiontimeexpected);
+    }
 
     return $data->id;
 }
