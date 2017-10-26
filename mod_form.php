@@ -786,7 +786,11 @@ class mod_hotpot_mod_form extends moodleform_mod {
 
             // extract boolean switches for page options
             foreach (hotpot::text_page_options($type) as $name => $mask) {
-                $data[$type.'_'.$name] = $data[$type.'options'] & $mask;
+                if (array_key_exists($type.'options', $data)) {
+                    $data[$type.'_'.$name] = $data[$type.'options'] & $mask;
+                } else {
+                    $data[$type.'_'.$name] = 0;
+                }
             }
 
             // setup custom wysiwyg editor
