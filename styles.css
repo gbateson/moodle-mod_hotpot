@@ -85,9 +85,11 @@ body.path-course-view div.hotpotrecentactivity ul {font-size: 0.8em; margin: 0em
 /* ================= */
 #page-mod-hotpot-report ul.response{text-align: left; padding: 0px; margin-top: 0px; text-indent: -6px;}
 #page-mod-hotpot-report ul.response li {list-style: none; text-align: left;} /* white-space:nowrap; */
-#page-mod-hotpot-report ul.response li.correct {color: green; list-style-image: url([[pix:i/tick_green_small]]);}
+#page-mod-hotpot-report ul.response li.correct.tick_green_small {color: green; list-style-image: url([[pix:i/tick_green_small]]);}
+#page-mod-hotpot-report ul.response li.correct.grade_correct {color: green; list-style-image: url([[pix:i/grade_correct]]);}
 #page-mod-hotpot-report ul.response li.ignored {color: grey; list-style-image: url([[pix:i/show]]);}
-#page-mod-hotpot-report ul.response li.wrong {color: red; list-style-image: url([[pix:i/cross_red_small]]);}
+#page-mod-hotpot-report ul.response li.wrong.cross_red_small {color: red; list-style-image: url([[pix:i/cross_red_small]]);}
+#page-mod-hotpot-report ul.response li.wrong.grade_incorrect {color: red; list-style-image: url([[pix:i/grade_incorrect]]);}
 #page-mod-hotpot-report ul.response li.score {color: inherit; list-style-image: url([[pix:i/item]]);}
 #page-mod-hotpot-report ul.response li.hintsclueschecks {color: #666666; list-style-image: url([[pix:i/item]]);}
 

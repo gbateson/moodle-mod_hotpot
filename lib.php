@@ -2119,8 +2119,22 @@ function hotpot_textlib() {
     }
     $args = func_get_args();
     $method = array_shift($args);
-    $callback = array($textlib, $method);
-    return call_user_func_array($callback, $args);
+    if (method_exists($textlib, $method)) {
+        $callback = array($textlib, $method);
+        return call_user_func_array($callback, $args);
+    }
+    if ($method=='utf8ord') {
+        // Moodle <= 2.4
+        $args = array($args[0], true); // force decimal entity
+        $callback = array($textlib, 'utf8_to_entities');
+        $str = call_user_func_array($callback, $args);
+        if (substr($str, 0, 2)=='&#' && substr($str, -1)==';') {
+            return intval(substr($str, 2, -1));
+        }
+        return ord($str);
+    }
+    debugging("Textlib method does not exist: $method");
+    die;
 }
 
 /**

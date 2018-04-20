@@ -62,7 +62,7 @@ class mod_hotpot_report_responses_renderer extends mod_hotpot_report_renderer {
         $text = '';
 
         static $str = null;
-        if (is_null($str)) {
+        if ($str===null) {
             $str = (object)array(
                 'correct' => get_string('correct', 'mod_hotpot'),
                 'wrong'   => get_string('wrong', 'mod_hotpot'),
@@ -72,10 +72,21 @@ class mod_hotpot_report_responses_renderer extends mod_hotpot_report_renderer {
             );
         }
 
+        static $class = null;
+        if ($class===null) {
+            $class = array(
+                'correct' => 'correct '.$this->get_css_class('grade_correct', 'tick_green_big'),
+                'wrong'   => 'wrong '.$this->get_css_class('grade_incorrect', 'cross_red_small'),
+                'ignored' => 'ignored',
+                'score'   => 'score',
+                'hintsclueschecks' => 'hintsclueschecks',
+            );
+        }
+
         // correct
         if ($value = $response->correct) {
             $value = $table->set_legend($column, $value);
-            $text .= html_writer::tag('li', $value, array('class'=>'correct'));
+            $text .= html_writer::tag('li', $value, array('class'=>$class['correct']));
         }
 
         // wrong
@@ -84,7 +95,7 @@ class mod_hotpot_report_responses_renderer extends mod_hotpot_report_renderer {
             foreach (explode(',', $value) as $v) {
                 $values[] = $table->set_legend($column, $v);
             }
-            $text .= html_writer::tag('li', implode(',', $values), array('class'=>'wrong'));
+            $text .= html_writer::tag('li', implode(',', $values), array('class'=>$class['wrong']));
         }
 
         // ignored
@@ -93,20 +104,20 @@ class mod_hotpot_report_responses_renderer extends mod_hotpot_report_renderer {
             foreach (explode(',', $value) as $v) {
                 $values[] = $table->set_legend($column, $v);
             }
-            $text .= html_writer::tag('li', implode(',', $values), array('class'=>'ignored'));
+            $text .= html_writer::tag('li', implode(',', $values), array('class'=>$class['ignored']));
         }
 
         // numeric
         if (is_numeric($response->score)) {
             $value = $response->score.'%';
-            $text .= html_writer::tag('li', $value, array('class'=>'score'));
+            $text .= html_writer::tag('li', $value, array('class'=>$class['score']));
 
             $hints = empty($response->hints) ? 0 : $response->hints;
             $clues = empty($response->clues) ? 0 : $response->clues;
             $checks = empty($response->checks) ? 0 : $response->checks;
 
             $value = '('.$hints.','.$clues.','.$checks.')';
-            $text .= html_writer::tag('li', $value, array('class'=>'hintsclueschecks'));
+            $text .= html_writer::tag('li', $value, array('class'=>$class['hintsclueschecks']));
         }
 
         if ($text) {
@@ -114,5 +125,22 @@ class mod_hotpot_report_responses_renderer extends mod_hotpot_report_renderer {
         }
 
         $table->rawdata[$attemptid]->$column = $text;
+    }
+
+    /**
+     * get_css_class
+     *
+     * @param xxx $new filename of icon
+     * @param xxx $old filename of icon
+     */
+    function get_css_class($new, $old)  {
+        global $CFG;
+        if (file_exists($CFG->dirroot."/pix/i/$new.png")) {
+            // Moodle >= 2.4
+            return $new;
+        } else {
+            // Moodle 2.0 - 2.5
+            return $old;
+        }
     }
 }
