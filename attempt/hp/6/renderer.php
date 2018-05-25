@@ -3285,24 +3285,21 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
         }
 
         // initialize loop values
-        $q = 0;
+        $i = 0;
         $tags = 'data,gap-fill';
-        $question_record = "$tags,question-record";
-
-        // initialize loop values
-        $q = 0;
-        $tags = 'data,gap-fill';
+        $open_text = "$tags,open-text";
         $question_record = "$tags,question-record";
 
         // loop through text and gaps
         $looping = true;
         while ($looping) {
-            $text = $this->hotpot->source->xml_value($tags, "[0]['#'][$q]");
+            $item = "[$i]['#']";
+            $text = $this->hotpot->source->xml_value($open_text, $item);
             $gap = '';
-            if (($question="[$q]['#']") && $this->hotpot->source->xml_value($question_record, $question)) {
-                $gap .= '<span class="GapSpan" id="GapSpan'.$q.'">';
+            if ($this->hotpot->source->xml_value($question_record, $item)) {
+                $gap .= '<span class="GapSpan" id="GapSpan'.$i.'">';
                 if ($this->use_DropDownList()) {
-                    $gap .= '<select id="Gap'.$q.'"><option value=""></option>'.$dropdownlist.'</select>';
+                    $gap .= '<select id="Gap'.$i.'"><option value=""></option>'.$dropdownlist.'</select>';
                 } else {
                     // minimum gap size
                     if (! $gapsize = $this->hotpot->source->xml_value_int($this->hotpot->source->hbs_software.'-config-file,'.$this->hotpot->source->hbs_quiztype.',minimum-gap-size')) {
@@ -3311,19 +3308,19 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
 
                     // increase gap size to length of longest answer for this gap
                     $a = 0;
-                    while (($answer=$question."['answer'][$a]['#']") && $this->hotpot->source->xml_value($question_record, $answer)) {
+                    while (($answer=$item."['answer'][$a]['#']") && $this->hotpot->source->xml_value($question_record, $answer)) {
                         $answertext = $this->hotpot->source->xml_value($question_record,  $answer."['text'][0]['#']");
                         $answertext = preg_replace('/&[#a-zA-Z0-9]+;/', 'x', $answertext);
                         $gapsize = max($gapsize, strlen($answertext));
                         $a++;
                     }
 
-                    $gap .= '<input type="text" id="Gap'.$q.'" onfocus="TrackFocus('.$q.')" onblur="LeaveGap()" class="GapBox" size="'.$gapsize.'"></input>';
+                    $gap .= '<input type="text" id="Gap'.$i.'" onfocus="TrackFocus('.$i.')" onblur="LeaveGap()" class="GapBox" size="'.$gapsize.'"></input>';
                 }
                 if ($includeclues) {
-                    $clue = $this->hotpot->source->xml_value($question_record, $question."['clue'][0]['#']");
+                    $clue = $this->hotpot->source->xml_value($question_record, $item."['clue'][0]['#']");
                     if (strlen($clue)) {
-                        $gap .= '<button style="line-height: 1.0" class="FuncButton" onfocus="FuncBtnOver(this)" onmouseover="FuncBtnOver(this)" onblur="FuncBtnOut(this)" onmouseout="FuncBtnOut(this)" onmousedown="FuncBtnDown(this)" onmouseup="FuncBtnOut(this)" onclick="ShowClue('.$q.')">'.$cluecaption.'</button>';
+                        $gap .= '<button style="line-height: 1.0" class="FuncButton" onfocus="FuncBtnOver(this)" onmouseover="FuncBtnOver(this)" onblur="FuncBtnOut(this)" onmouseout="FuncBtnOut(this)" onmousedown="FuncBtnDown(this)" onmouseup="FuncBtnOut(this)" onclick="ShowClue('.$i.')">'.$cluecaption.'</button>';
                     }
                 }
                 $gap .= '</span>';
@@ -3334,13 +3331,13 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
                 } else {
                     $str .= $text.$gap;
                 }
-                $q++;
+                $i++;
             } else {
                 // no text or gap, so force end of loop
                 $looping = false;
             }
         }
-        if ($q==0) {
+        if ($i==0) {
             // oops, no gaps found!
             return $this->hotpot->source->xml_value($tags);
         } else {

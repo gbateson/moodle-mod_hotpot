@@ -78,6 +78,14 @@ class hotpot_source_hp_6_jcloze_xml extends hotpot_source_hp_6_jcloze {
             $search = '/(?<=<\/question-record>)(?=<question-record>)/';
             $match = preg_replace($search, ' ', $match);
 
+            // add <open-text> tags around open text
+            $search = array(
+                '/(^>)([^<>]+?)(<question-record>)/', // start text
+                '/(<\/question-record>)([^<>]+?)(<question-record>)/',
+                '/(<\/question-record>)([^<>]+?)(<$)/', // end text
+            );
+            $match = preg_replace($search, '$1<open-text>$2</open-text>$3', $match);
+
             // surround ampersands in open text by CDATA start and end tags
             $search = '/(?<=>)([^<]*)(?=<)/s';
             $callback = array($this, 'compact_filecontents_opentext');
