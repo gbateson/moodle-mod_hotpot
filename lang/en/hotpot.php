@@ -423,8 +423,10 @@ $string['outputformat_help'] = 'The output format specifies how the content will
 The output formats that are available depend on the type of the source file. Some types of source file have just one output format, while other types of source file have several output formats.
 
 The "best" setting will display the content using the optimal output format for the student\'s browser.';
+$string['outputformat_hp_6_jcloze_html_dropdown'] = 'DropDown from html';
 $string['outputformat_hp_6_jcloze_html_findit_a'] = 'FindIt (a) from html';
 $string['outputformat_hp_6_jcloze_html_findit_b'] = 'FindIt (b) from html';
+$string['outputformat_hp_6_jcloze_html_jgloss'] = 'JGloss from html';
 $string['outputformat_hp_6_jcloze_html'] = 'JCloze (v6) from html';
 $string['outputformat_hp_6_jcloze_xml_anctscan'] = 'ANCT-Scan from HP6 JCloze xml';
 $string['outputformat_hp_6_jcloze_xml_dropdown'] = 'DropDown from HP6 JCloze xml';
