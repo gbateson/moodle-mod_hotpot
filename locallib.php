@@ -1599,7 +1599,9 @@ class hotpot {
         $ignored = array('CVS', '_vti_cnf', 'simpletest', 'db', 'yui', 'phpunit');
 
         // get all the subplugins for this $plugintype
-        foreach ($types as $type => $dir) {
+        reset($types);
+        while ($type = key($types)) {
+            $dir = current($types);
             $fulldir = $CFG->dirroot.'/'.$dir;
             if (is_dir($fulldir) && file_exists($fulldir.'/'.$classfilename)) {
 
@@ -1622,6 +1624,7 @@ class hotpot {
                     }
                 }
             }
+            next($types);
         }
         sort($classes);
         return $classes;
