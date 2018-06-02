@@ -201,6 +201,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * get_js_functionnames
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function get_js_functionnames()  {
         // return a comma-separated list of js functions to be "fixed".
@@ -266,6 +267,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * @param xxx $start
      * @param xxx $length
      * @return xxx
+     * @todo Finish documenting this function
      */
     function fix_js_PageDim(&$str, $start, $length)  {
         if ($this->usemoodletheme) {
@@ -386,6 +388,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * @param xxx $start
      * @param xxx $length
      * @return xxx
+     * @todo Finish documenting this function
      */
     function fix_js_GetViewportHeight(&$str, $start, $length)  {
         $replace = ''
@@ -422,6 +425,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * @param xxx $start
      * @param xxx $length
      * @return xxx
+     * @todo Finish documenting this function
      */
     function fix_js_SuppressBackspace(&$str, $start, $length)  {
         // could also check "window.InTextBox" which is HP's standard way of detecting INPUT and TEXTAREA
@@ -491,6 +495,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * @param xxx $start
      * @param xxx $length
      * @return xxx
+     * @todo Finish documenting this function
      */
     function fix_js_TrimString(&$str, $start, $length)  {
         $replace = ''
@@ -551,6 +556,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * fix_js_TypeChars_init
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function fix_js_TypeChars_init()  {
         return '';
@@ -560,6 +566,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * fix_js_TypeChars_obj
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function fix_js_TypeChars_obj()  {
         return '';
@@ -626,6 +633,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * @param xxx $start
      * @param xxx $length
      * @return xxx
+     * @todo Finish documenting this function
      */
     function fix_js_WriteToInstructions(&$str, $start, $length)  {
         $substr = substr($str, $start, $length);
@@ -655,6 +663,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * @param xxx $start
      * @param xxx $length
      * @return xxx
+     * @todo Finish documenting this function
      */
     function fix_js_ShowMessage(&$str, $start, $length)  {
         // the ShowMessage function is used by all HP6 quizzes
@@ -970,13 +979,11 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
     /**
      * fix_js_HideFeedback
      *
-     * @uses $CFG
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
      */
     function fix_js_HideFeedback(&$str, $start, $length)  {
-        global $CFG;
         $substr = substr($str, $start, $length);
 
         // unhide <embed> elements on Chrome browser
@@ -1130,6 +1137,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      *
      * @param xxx $match
      * @return xxx
+     * @todo Finish documenting this function
      */
     function fix_js_CheckAnswers_arguments($match)  {
         if (empty($match[2])) {
@@ -1143,6 +1151,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * get_stop_onclick
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function get_stop_onclick() {
         if ($name = $this->get_stop_function_name()) {
@@ -1156,6 +1165,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * get_stop_function_confirm
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function get_stop_function_confirm()  {
         // Note: "&&" in onclick must be encoded as html-entities for strict XHTML
@@ -1172,6 +1182,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * get_stop_function_name
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function get_stop_function_name()  {
         // the name of the javascript function into which the "give up" code should be inserted
@@ -1182,6 +1193,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * get_stop_function_args
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function get_stop_function_args()  {
         // the arguments required by the javascript function which the stop_function() code calls
@@ -1192,6 +1204,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * get_stop_function_intercept
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function get_stop_function_intercept()  {
         // JMix and JQuiz each have their own version of this function
@@ -1205,6 +1218,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * get_stop_function_search
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function get_stop_function_search()  {
         // JCloze : AllCorrect || Finished
@@ -1219,6 +1233,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * get_stop_function_replace
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function get_stop_function_replace()  {
         // $1 : name of the "all correct/done" variable
@@ -1474,6 +1489,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * fix_navigation_buttons
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function fix_navigation_buttons()  {
         if ($this->hotpot->navigation==hotpot::NAVIGATION_ORIGINAL) {
@@ -1592,9 +1608,12 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
     /**
      * fix_filters
      *
+     * @uses $CFG
      * @return xxx
+     * @todo Finish documenting this function
      */
     function fix_filters()  {
+        global $CFG;
 
         ////////////////////////////////////////////////
         // adjust filters
@@ -1704,32 +1723,6 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
             $replace = '\['.'$1'.'\]';
             $this->headcontent = preg_replace($search, $replace, $this->headcontent);
         }
-
-        // make sure openpopup() function is available if needed (for glossary entries)
-        // Note: this could also be done using filter_add_javascript($this->htmlcontent)
-        // but that function expects entire htmlcontent, where we would prefer just the headcontent
-        if ($this->hotpot->navigation==hotpot::NAVIGATION_ORIGINAL && in_array('mod/glossary', $filters)) {
-            // add openwindow() function (from lib/javascript.php)
-            $this->headcontent .= "\n"
-                .'<script type="text/javascript">'."\n"
-                .'//<![CDATA['."\n"
-                .'function openpopup(url, name, options, fullscreen) {'."\n"
-                .'    var fullurl = "'.$CFG->httpswwwroot.'" + url;'."\n"
-                .'    var windowobj = window.open(fullurl, name, options);'."\n"
-                .'    if (!windowobj) {'."\n"
-                .'        return true;'."\n"
-                .'    }'."\n"
-                .'    if (fullscreen) {'."\n"
-                .'        windowobj.moveTo(0, 0);'."\n"
-                .'        windowobj.resizeTo(screen.availWidth, screen.availHeight);'."\n"
-                .'    }'."\n"
-                .'    windowobj.focus();'."\n"
-                .'    return false;'."\n"
-                .'}'."\n"
-                .'//]]>'."\n"
-                .'</script>'
-            ;
-        }
     }
 
     /**
@@ -1753,6 +1746,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      *
      * @param xxx $match
      * @return xxx
+     * @todo Finish documenting this function
      */
     function filter_text_headcontent_array($match)  {
         // I[q][0][a] = new Array('JQuiz answer text', 'feedback', 0, 0, 0)
@@ -1770,11 +1764,11 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      *
      * @param xxx $match
      * @return xxx
+     * @todo Finish documenting this function
      */
     function filter_text_headcontent_string($match)  {
         // var YourScoreIs = 'Your score is';
         // I[q][1][a][2] = 'JCloze clue';
-        global $CFG;
 
         static $replace_pairs = array(
             // backslashes and quotes
@@ -1935,6 +1929,10 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
 
     /**
      * fix_feedbackform
+     *
+     * @uses $CFG
+     * @uses $USER
+     * @todo Finish documenting this function
      */
     function fix_feedbackform()  {
         // we are aiming to generate the following javascript to send to the client
@@ -1997,8 +1995,8 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
                 }
                 switch (count($cmids)) {
                     case 0: $this->hotpot->studentfeedback = hotpot::FEEDBACK_NONE; break; // no forums !!
-                    case 1: $feedback[0] = "'".$CFG->wwwroot.'/mod/forum/view.php?id='.$cmids[0]."'"; break;
-                    default: $feedback[0] = "'".$CFG->wwwroot.'/mod/forum/index.php?id='.$this->hotpot->course->id."'";
+                    case 1: $feedback[0] = "'".$CFG->httpswwwroot.'/mod/forum/view.php?id='.$cmids[0]."'"; break;
+                    default: $feedback[0] = "'".$CFG->httpswwwroot.'/mod/forum/index.php?id='.$this->hotpot->course->id."'";
                 }
                 break;
 
@@ -2009,7 +2007,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
                     $teachers = '';
                 }
                 if ($teachers) {
-                    $feedback[0] = "'$CFG->wwwroot/message/discussion.php?id='";
+                    $feedback[0] = "'$CFG->httpswwwroot/message/discussion.php?id='";
                     $feedback[1] = $teachers;
                     $feedback[4] = 400; // width
                     $feedback[5] = 500; // height
@@ -2054,6 +2052,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * get_feedback_teachers
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function get_feedback_teachers()  {
         $context = hotpot_get_context(CONTEXT_COURSE, $this->hotpot->source->courseid);
@@ -2124,6 +2123,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * fix_mediafilter_onload_extra
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function fix_mediafilter_onload_extra()  {
         return ''
@@ -2139,6 +2139,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_AlsoCorrect
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_AlsoCorrect()  {
         return $this->hotpot->source->xml_value($this->hotpot->source->hbs_software.'-config-file,'.$this->hotpot->source->hbs_quiztype.',also-correct');
@@ -2148,6 +2149,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_BottomNavBar
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_BottomNavBar()  {
         return $this->expand_NavBar('BottomNavBar');
@@ -2157,6 +2159,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_CapitalizeFirst
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_CapitalizeFirst()  {
         return $this->hotpot->source->xml_value_bool($this->hotpot->source->hbs_software.'-config-file,'.$this->hotpot->source->hbs_quiztype.',capitalize-first-letter');
@@ -2166,6 +2169,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_CheckCaption
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_CheckCaption()  {
         return $this->hotpot->source->xml_value($this->hotpot->source->hbs_software.'-config-file,global,check-caption');
@@ -2175,6 +2179,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_ContentsURL
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_ContentsURL()  {
         return $this->hotpot->source->xml_value($this->hotpot->source->hbs_software.'-config-file,global,contents-url');
@@ -2184,6 +2189,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_CorrectIndicator
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_CorrectIndicator()  {
         return $this->hotpot->source->xml_value_js($this->hotpot->source->hbs_software.'-config-file,global,correct-indicator');
@@ -2193,6 +2199,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_Back
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_Back()  {
         return $this->hotpot->source->xml_value_int($this->hotpot->source->hbs_software.'-config-file,global,include-back');
@@ -2202,6 +2209,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_BackCaption
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_BackCaption()  {
         return $this->hotpot->source->xml_value($this->hotpot->source->hbs_software.'-config-file,global,back-caption');
@@ -2211,6 +2219,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_CaseSensitive
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_CaseSensitive()  {
         return $this->hotpot->source->xml_value_bool($this->hotpot->source->hbs_software.'-config-file,'.$this->hotpot->source->hbs_quiztype.',case-sensitive');
@@ -2220,6 +2229,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_ClickToAdd
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_ClickToAdd()  {
         return $this->hotpot->source->xml_value($this->hotpot->source->hbs_software.'-config-file,'.$this->hotpot->source->hbs_quiztype.',click-to-add');
@@ -2229,6 +2239,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_ClueCaption
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_ClueCaption()  {
         return $this->hotpot->source->xml_value($this->hotpot->source->hbs_software.'-config-file,global,clue-caption');
@@ -2238,6 +2249,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_Clues
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_Clues()  {
         // Note: WinHotPot6 uses "include-clues", but JavaHotPotatoes6 uses "include-clue" (missing "s")
@@ -2248,6 +2260,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_Contents
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_Contents()  {
         return $this->hotpot->source->xml_value_int($this->hotpot->source->hbs_software.'-config-file,global,include-contents');
@@ -2257,6 +2270,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_ContentsCaption
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_ContentsCaption()  {
         return $this->hotpot->source->xml_value($this->hotpot->source->hbs_software.'-config-file,global,contents-caption');
@@ -2266,6 +2280,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_Correct
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_Correct()  {
         if ($this->hotpot->source->hbs_quiztype=='jcloze') {
@@ -2280,6 +2295,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_DeleteCaption
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_DeleteCaption()  {
         return $this->hotpot->source->xml_value($this->hotpot->source->hbs_software.'-config-file,'.$this->hotpot->source->hbs_quiztype.',delete-caption');
@@ -2289,6 +2305,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_DublinCoreMetadata
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_DublinCoreMetadata()  {
         $dc = '';
@@ -2318,6 +2335,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_EMail
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_EMail()  {
         return $this->hotpot->source->xml_value($this->hotpot->source->hbs_software.'-config-file,global,email');
@@ -2328,6 +2346,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * this string only used in resultsp6sendresults.js_ which is not required in Moodle
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_EscapedExerciseTitle()  {
         return $this->hotpot->source->xml_value_js('data,title');
@@ -2337,6 +2356,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_ExBGColor
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_ExBGColor()  {
         return $this->hotpot->source->xml_value($this->hotpot->source->hbs_software.'-config-file,global,ex-bg-color');
@@ -2346,6 +2366,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_ExerciseSubtitle
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_ExerciseSubtitle()  {
         return $this->hotpot->source->xml_value($this->hotpot->source->hbs_software.'-config-file,'.$this->hotpot->source->hbs_quiztype.',exercise-subtitle');
@@ -2355,6 +2376,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_ExerciseTitle
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_ExerciseTitle()  {
         return $this->hotpot->source->xml_value('data,title');
@@ -2364,6 +2386,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_FontFace
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_FontFace()  {
         return $this->hotpot->source->xml_value($this->hotpot->source->hbs_software.'-config-file,global,font-face');
@@ -2373,6 +2396,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_FontSize
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_FontSize()  {
         $value = $this->hotpot->source->xml_value($this->hotpot->source->hbs_software.'-config-file,global,font-size');
@@ -2383,6 +2407,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_FormMailURL
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_FormMailURL()  {
         return $this->hotpot->source->xml_value($this->hotpot->source->hbs_software.'-config-file,global,formmail-url');
@@ -2391,7 +2416,9 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
     /**
      * expand_FullVersionInfo
      *
+     * @uses $CFG
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_FullVersionInfo()  {
         global $CFG;
@@ -2402,6 +2429,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_FuncLightColor
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_FuncLightColor()  { // top-left of buttons
         $color = $this->hotpot->source->xml_value($this->hotpot->source->hbs_software.'-config-file,global,ex-bg-color');
@@ -2412,6 +2440,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_FuncShadeColor
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_FuncShadeColor()  { // bottom right of buttons
         $color = $this->hotpot->source->xml_value($this->hotpot->source->hbs_software.'-config-file,global,ex-bg-color');
@@ -2422,6 +2451,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_GiveHint
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_GiveHint()  {
         return $this->hotpot->source->xml_value_js($this->hotpot->source->hbs_software.'-config-file,'.$this->hotpot->source->hbs_quiztype.',next-correct-letter');
@@ -2431,6 +2461,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_GraphicURL
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_GraphicURL()  {
         return $this->hotpot->source->xml_value($this->hotpot->source->hbs_software.'-config-file,global,graphic-url');
@@ -2440,6 +2471,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_GuessCorrect
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_GuessCorrect()  {
         return $this->hotpot->source->xml_value_js($this->hotpot->source->hbs_software.'-config-file,'.$this->hotpot->source->hbs_quiztype.',guess-correct');
@@ -2449,6 +2481,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_GuessIncorrect
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_GuessIncorrect()  {
         return $this->hotpot->source->xml_value_js($this->hotpot->source->hbs_software.'-config-file,'.$this->hotpot->source->hbs_quiztype.',guess-incorrect');
@@ -2458,6 +2491,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_HeaderCode
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_HeaderCode()  {
         return $this->hotpot->source->xml_value($this->hotpot->source->hbs_software.'-config-file,global,header-code');
@@ -2467,6 +2501,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_Hint
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_Hint()  {
         return $this->hotpot->source->xml_value_int($this->hotpot->source->hbs_software.'-config-file,'.$this->hotpot->source->hbs_quiztype.',include-hint');
@@ -2476,6 +2511,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_HintCaption
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_HintCaption()  {
         return $this->hotpot->source->xml_value($this->hotpot->source->hbs_software.'-config-file,global,hint-caption');
@@ -2485,6 +2521,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_Incorrect
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_Incorrect()  {
         if ($this->hotpot->source->hbs_quiztype=='jcloze') {
@@ -2499,6 +2536,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_IncorrectIndicator
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_IncorrectIndicator()  {
         return $this->hotpot->source->xml_value_js($this->hotpot->source->hbs_software.'-config-file,global,incorrect-indicator');
@@ -2508,6 +2546,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_Instructions
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_Instructions()  {
         return $this->hotpot->source->xml_value($this->hotpot->source->hbs_software.'-config-file,'.$this->hotpot->source->hbs_quiztype.',instructions');
@@ -2517,6 +2556,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_JSBrowserCheck
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_JSBrowserCheck()  {
         return $this->expand_template('hp6browsercheck.js_');
@@ -2526,6 +2566,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_JSButtons
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_JSButtons()  {
         return $this->expand_template('hp6buttons.js_');
@@ -2535,6 +2576,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_JSCard
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_JSCard()  {
         return $this->expand_template('hp6card.js_');
@@ -2544,6 +2586,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_JSCheckShortAnswer
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_JSCheckShortAnswer()  {
         return $this->expand_template('hp6checkshortanswer.js_');
@@ -2553,6 +2596,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_JSHotPotNet
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_JSHotPotNet()  {
         return $this->expand_template('hp6hotpotnet.js_');
@@ -2562,6 +2606,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_JSSendResults
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_JSSendResults()  {
         return $this->expand_template('hp6sendresults.js_');
@@ -2571,6 +2616,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_JSShowMessage
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_JSShowMessage()  {
         return $this->expand_template('hp6showmessage.js_');
@@ -2580,6 +2626,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_JSTimer
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_JSTimer()  {
         return $this->expand_template('hp6timer.js_');
@@ -2589,6 +2636,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_JSUtilities
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_JSUtilities()  {
         return $this->expand_template('hp6utilities.js_');
@@ -2598,6 +2646,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_LastQCaption
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_LastQCaption()  {
         $caption = $this->hotpot->source->xml_value($this->hotpot->source->hbs_software.'-config-file,global,last-q-caption');
@@ -2608,6 +2657,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_LinkColor
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_LinkColor()  {
         return $this->hotpot->source->xml_value($this->hotpot->source->hbs_software.'-config-file,global,link-color');
@@ -2617,6 +2667,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_NamePlease
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_NamePlease()  {
         return $this->hotpot->source->xml_value_js($this->hotpot->source->hbs_software.'-config-file,global,name-please');
@@ -2627,6 +2678,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      *
      * @param xxx $navbarid (optional, default='')
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_NavBar($navbarid='')  {
         $this->navbarid = $navbarid;
@@ -2639,6 +2691,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_NavBarID
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_NavBarID()  {
         // $this->navbarid is set in "$this->expand_NavBar"
@@ -2649,6 +2702,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_NavBarJS
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_NavBarJS()  {
         return $this->expand_NavButtons();
@@ -2658,6 +2712,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_NavButtons
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_NavButtons()  {
         return ($this->expand_Back() || $this->expand_NextEx() || $this->expand_Contents());
@@ -2667,6 +2722,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_NavTextColor
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_NavTextColor()  {
         // might be 'title-color' ?
@@ -2677,6 +2733,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_NavBarColor
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_NavBarColor()  {
         return $this->hotpot->source->xml_value($this->hotpot->source->hbs_software.'-config-file,global,nav-bar-color');
@@ -2686,6 +2743,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_NavLightColor
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_NavLightColor()  {
         $color = $this->hotpot->source->xml_value($this->hotpot->source->hbs_software.'-config-file,global,nav-bar-color');
@@ -2696,6 +2754,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_NavShadeColor
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_NavShadeColor()  {
         $color = $this->hotpot->source->xml_value($this->hotpot->source->hbs_software.'-config-file,global,nav-bar-color');
@@ -2706,6 +2765,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_NextCaption
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_NextCaption()  {
         return $this->hotpot->source->xml_value($this->hotpot->source->hbs_software.'-config-file,'.$this->hotpot->source->hbs_quiztype.',next-caption');
@@ -2715,6 +2775,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_NextCorrect
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_NextCorrect()  {
         if ($this->hotpot->source->hbs_quiztype=='jquiz') {
@@ -2729,6 +2790,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_NextEx
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_NextEx()  {
         return $this->hotpot->source->xml_value_int($this->hotpot->source->hbs_software.'-config-file,global,include-next-ex');
@@ -2738,6 +2800,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_NextExCaption
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_NextExCaption()  {
         $caption = $this->hotpot->source->xml_value($this->hotpot->source->hbs_software.'-config-file,global,next-ex-caption');
@@ -2748,6 +2811,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_NextQCaption
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_NextQCaption()  {
         return $this->hotpot->source->xml_value($this->hotpot->source->hbs_software.'-config-file,global,next-q-caption');
@@ -2757,6 +2821,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_NextExURL
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_NextExURL()  {
         return $this->hotpot->source->xml_value($this->hotpot->source->hbs_software.'-config-file,'.$this->hotpot->source->hbs_quiztype.',next-ex-url');
@@ -2766,6 +2831,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_OKCaption
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_OKCaption()  {
         return $this->hotpot->source->xml_value($this->hotpot->source->hbs_software.'-config-file,global,ok-caption');
@@ -2775,6 +2841,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_PageBGColor
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_PageBGColor()  {
         return $this->hotpot->source->xml_value($this->hotpot->source->hbs_software.'-config-file,global,page-bg-color');
@@ -2784,6 +2851,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_PlainTitle
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_PlainTitle()  {
         return $this->hotpot->source->xml_value('data,title');
@@ -2793,6 +2861,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_PreloadImages
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_PreloadImages()  {
         $value = $this->expand_PreloadImageList();
@@ -2803,6 +2872,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_PreloadImageList
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_PreloadImageList()  {
         if (! isset($this->PreloadImageList)) {
@@ -2835,6 +2905,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_Reading
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_Reading()  {
         return $this->hotpot->source->xml_value_int('data,reading,include-reading');
@@ -2844,6 +2915,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_ReadingText
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_ReadingText()  {
         $title = $this->expand_ReadingTitle();
@@ -2859,6 +2931,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_ReadingTitle
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_ReadingTitle()  {
         $value = $this->hotpot->source->xml_value('data,reading,reading-title');
@@ -2869,6 +2942,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_Restart
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_Restart()  {
         return $this->hotpot->source->xml_value_int($this->hotpot->source->hbs_software.'-config-file,'.$this->hotpot->source->hbs_quiztype.',include-restart');
@@ -2878,6 +2952,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_RestartCaption
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_RestartCaption()  {
         return $this->hotpot->source->xml_value($this->hotpot->source->hbs_software.'-config-file,global,restart-caption');
@@ -2887,6 +2962,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_Scorm12
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_Scorm12()  {
         return false; // HP scorm functionality is always disabled in Moodle
@@ -2896,6 +2972,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_Seconds
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_Seconds()  {
         return $this->hotpot->source->xml_value('data,timer,seconds');
@@ -2905,6 +2982,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_SendResults
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_SendResults()  {
         return false; // send results (via formmail) is always disabled in Moodle
@@ -2916,6 +2994,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_ShowAllQuestionsCaption
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_ShowAllQuestionsCaption($convert_to_unicode=false)  {
         return $this->hotpot->source->xml_value($this->hotpot->source->hbs_software.'-config-file,global,show-all-questions-caption');
@@ -2925,6 +3004,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_ShowAnswer
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_ShowAnswer()  {
         return $this->hotpot->source->xml_value_int($this->hotpot->source->hbs_software.'-config-file,'.$this->hotpot->source->hbs_quiztype.',include-show-answer');
@@ -2934,6 +3014,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_SolutionCaption
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_SolutionCaption() {
         return $this->hotpot->source->xml_value_js($this->hotpot->source->hbs_software.'-config-file,global,solution-caption');
@@ -2943,6 +3024,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_ShowOneByOneCaption
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_ShowOneByOneCaption()  {
         return $this->hotpot->source->xml_value($this->hotpot->source->hbs_software.'-config-file,global,show-one-by-one-caption');
@@ -2952,6 +3034,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_StyleSheet
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_StyleSheet()  {
         return $this->expand_template('hp6.cs_');
@@ -2961,6 +3044,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_TextColor
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_TextColor()  {
         return $this->hotpot->source->xml_value($this->hotpot->source->hbs_software.'-config-file,global,text-color');
@@ -2970,6 +3054,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_TheseAnswersToo
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_TheseAnswersToo()  {
         return $this->hotpot->source->xml_value_js($this->hotpot->source->hbs_software.'-config-file,'.$this->hotpot->source->hbs_quiztype.',also-correct');
@@ -2979,6 +3064,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_ThisMuch
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_ThisMuch()  {
         return $this->hotpot->source->xml_value_js($this->hotpot->source->hbs_software.'-config-file,'.$this->hotpot->source->hbs_quiztype.',this-much-correct');
@@ -2988,6 +3074,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_Timer
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_Timer()  {
         if ($this->hotpot->timelimit < 0) {
@@ -3003,6 +3090,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_TimesUp
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_TimesUp()  {
         return $this->hotpot->source->xml_value_js($this->hotpot->source->hbs_software.'-config-file,global,times-up');
@@ -3012,6 +3100,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_TitleColor
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_TitleColor()  {
         return $this->hotpot->source->xml_value($this->hotpot->source->hbs_software.'-config-file,global,title-color');
@@ -3021,6 +3110,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_TopNavBar
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_TopNavBar()  {
         return $this->expand_NavBar('TopNavBar');
@@ -3030,6 +3120,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_Undo
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_Undo()  {
         return $this->hotpot->source->xml_value_int($this->hotpot->source->hbs_software.'-config-file,'.$this->hotpot->source->hbs_quiztype.',include-undo');
@@ -3039,6 +3130,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_UndoCaption
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_UndoCaption()  {
         return $this->hotpot->source->xml_value($this->hotpot->source->hbs_software.'-config-file,global,undo-caption');
@@ -3048,6 +3140,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_UserDefined1
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_UserDefined1()  {
         return $this->hotpot->source->xml_value($this->hotpot->source->hbs_software.'-config-file,global,user-string-1');
@@ -3057,6 +3150,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_UserDefined2
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_UserDefined2()  {
         return $this->hotpot->source->xml_value($this->hotpot->source->hbs_software.'-config-file,global,user-string-2');
@@ -3066,6 +3160,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_UserDefined3
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_UserDefined3()  {
         return $this->hotpot->source->xml_value($this->hotpot->source->hbs_software.'-config-file,global,user-string-3');
@@ -3075,6 +3170,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_VLinkColor
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_VLinkColor()  {
         return $this->hotpot->source->xml_value($this->hotpot->source->hbs_software.'-config-file,global,vlink-color');
@@ -3084,6 +3180,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_YourScoreIs
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_YourScoreIs()  {
         return $this->hotpot->source->xml_value_js($this->hotpot->source->hbs_software.'-config-file,global,your-score-is');
@@ -3093,6 +3190,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_Keypad
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_Keypad()  {
         $str = '';
@@ -3165,6 +3263,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * @param xxx $a_char
      * @param xxx $b_char
      * @return xxx
+     * @todo Finish documenting this function
      */
     function hotpot_keypad_chars_sort($a_char, $b_char)  {
         $a_value = $this->hotpot_keypad_char_value($a_char);
@@ -3184,6 +3283,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      *
      * @param xxx $char
      * @return xxx
+     * @todo Finish documenting this function
      */
     function hotpot_keypad_char_value($char)  {
 
@@ -3251,6 +3351,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_JSJCloze6
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_JSJCloze6()  {
         return $this->expand_template('jcloze6.js_');
@@ -3260,6 +3361,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_ClozeBody
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_ClozeBody()  {
         $str = '';
@@ -3349,6 +3451,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_ItemArray
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_ItemArray()  {
         // this method is overridden by JCloze and JQuiz output formats
@@ -3358,6 +3461,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_WordList
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_WordList()  {
         $str = '';
@@ -3372,6 +3476,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * include_WordList
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function include_WordList()  {
         return $this->hotpot->source->xml_value_int($this->hotpot->source->hbs_software.'-config-file,'.$this->hotpot->source->hbs_quiztype.',include-word-list');
@@ -3381,6 +3486,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * use_DropDownList
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function use_DropDownList()  {
         return $this->hotpot->source->xml_value_int($this->hotpot->source->hbs_software.'-config-file,'.$this->hotpot->source->hbs_quiztype.',use-drop-down-list');
@@ -3427,6 +3533,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_JSJCross6
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_JSJCross6()  {
         return $this->expand_template('jcross6.js_');
@@ -3436,6 +3543,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_CluesAcrossLabel
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_CluesAcrossLabel()  {
         return $this->hotpot->source->xml_value($this->hotpot->source->hbs_software.'-config-file,'.$this->hotpot->source->hbs_quiztype.',clues-across');
@@ -3445,6 +3553,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_CluesDownLabel
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_CluesDownLabel()  {
         return $this->hotpot->source->xml_value($this->hotpot->source->hbs_software.'-config-file,'.$this->hotpot->source->hbs_quiztype.',clues-down');
@@ -3454,6 +3563,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_EnterCaption
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_EnterCaption()  {
         return $this->hotpot->source->xml_value($this->hotpot->source->hbs_software.'-config-file,'.$this->hotpot->source->hbs_quiztype.',enter-caption');
@@ -3463,6 +3573,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_ShowHideClueList
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_ShowHideClueList()  {
         $value = $this->hotpot->source->xml_value_int($this->hotpot->source->hbs_software.'-config-file,'.$this->hotpot->source->hbs_quiztype.',include-clue-list');
@@ -3473,6 +3584,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_CluesDown
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_CluesDown()  {
         return $this->expand_jcross_clues('D');
@@ -3482,6 +3594,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_CluesAcross
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_CluesAcross()  {
         return $this->expand_jcross_clues('A');
@@ -3492,6 +3605,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      *
      * @param xxx $direction
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_jcross_clues($direction)  {
         // $direction: A(cross) or D(own)
@@ -3536,6 +3650,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_LetterArray
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_LetterArray()  {
         $row = null;
@@ -3558,6 +3673,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_GuessArray
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_GuessArray()  {
         $row = null;
@@ -3576,6 +3692,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_ClueNumArray
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_ClueNumArray()  {
         $row = null;
@@ -3609,6 +3726,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_GridBody
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_GridBody()  {
         $row = null;
@@ -3673,6 +3791,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * @param xxx $c
      * @param xxx $c_max
      * @return xxx
+     * @todo Finish documenting this function
      */
     function get_jcross_dword(&$row, $r, $r_max, $c, $c_max)  {
         $str = '';
@@ -3691,6 +3810,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * @param xxx $c
      * @param xxx $c_max
      * @return xxx
+     * @todo Finish documenting this function
      */
     function get_jcross_aword(&$row, $r, $r_max, $c, $c_max)  {
         $str = '';
@@ -3710,6 +3830,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * @param xxx $c_max
      * @param xxx $go_down (optional, default=false)
      * @return xxx
+     * @todo Finish documenting this function
      */
     function get_jcross_word(&$row, $r, $r_max, $c, $c_max, $go_down=false)  {
         $str = '';
@@ -3730,6 +3851,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_JSJMatch6
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_JSJMatch6()  {
         return $this->expand_template('jmatch6.js_');
@@ -3739,6 +3861,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_JSDJMatch6
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_JSDJMatch6()  {
         return $this->expand_template('djmatch6.js_');
@@ -3748,6 +3871,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_JSFJMatch6
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_JSFJMatch6()  {
         return $this->expand_template('fjmatch6.js_');
@@ -3757,6 +3881,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_ShuffleQs
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_ShuffleQs()  {
         return $this->hotpot->source->xml_value_bool($this->hotpot->source->hbs_software.'-config-file,'.$this->hotpot->source->hbs_quiztype.',shuffle-questions');
@@ -3766,6 +3891,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_QsToShow
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_QsToShow()  {
         $i = $this->hotpot->source->xml_value($this->hotpot->source->hbs_software.'-config-file,'.$this->hotpot->source->hbs_quiztype.',show-limited-questions');
@@ -3794,6 +3920,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_MatchDivItems
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_MatchDivItems()  {
         $this->set_jmatch_items();
@@ -3832,6 +3959,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_FixedArray
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_FixedArray()  {
         $this->set_jmatch_items();
@@ -3848,6 +3976,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_DragArray
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_DragArray()  {
         $this->set_jmatch_items();
@@ -3865,6 +3994,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_Slide
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_Slide()  {
         // return true if any JMatch drag-and-drop RH items are fixed and therefore need to slide to the LHS
@@ -3925,6 +4055,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      *
      * @param xxx $items (passed by reference)
      * @return xxx
+     * @todo Finish documenting this function
      */
     function shuffle_jmatch_items(&$items)  {
         // get moveable items
@@ -3968,6 +4099,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_TRows
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_TRows()  {
         $str = '';
@@ -3985,6 +4117,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_JSJMix6
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_JSJMix6()  {
         return $this->expand_template('jmix6.js_');
@@ -3994,6 +4127,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_JSFJMix6
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_JSFJMix6()  {
         return $this->expand_template('fjmix6.js_');
@@ -4003,6 +4137,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_JSDJMix6
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_JSDJMix6()  {
         return $this->expand_template('djmix6.js_');
@@ -4012,6 +4147,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_Punctuation
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_Punctuation()  {
         $chars = array();
@@ -4076,6 +4212,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_OpenPunctuation
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_OpenPunctuation()  {
         $chars = array();
@@ -4115,6 +4252,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      *
      * @param xxx $str
      * @return xxx
+     * @todo Finish documenting this function
      */
     function jmix_encode_punctuation($str)  {
         $entities = array();
@@ -4140,6 +4278,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * but it can be added manually, for example to a HP config file
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
      function expand_ForceLowercase() {
         $tag = $this->hotpot->source->hbs_software.'-config-file,'.$this->hotpot->source->hbs_quiztype.',force-lowercase';
@@ -4150,6 +4289,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_SegmentArray
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_SegmentArray($more_values=array()) {
 
@@ -4204,6 +4344,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_AnswerArray
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_AnswerArray()  {
 
@@ -4266,6 +4407,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_RemainingWords
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_RemainingWords()  {
         return $this->hotpot->source->xml_value($this->hotpot->source->hbs_software.'-config-file,'.$this->hotpot->source->hbs_quiztype.',remaining-words');
@@ -4275,6 +4417,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_DropTotal
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_DropTotal()  {
         return $this->hotpot->source->xml_value_int($this->hotpot->source->hbs_software.'-config-file,global,drop-total');
@@ -4286,6 +4429,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_JSJQuiz6
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_JSJQuiz6()  {
         return $this->expand_template('jquiz6.js_');
@@ -4295,6 +4439,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_QuestionOutput
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_QuestionOutput()  {
         // start question list
@@ -4422,6 +4567,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * @param xxx $q
      * @param xxx $defaultsize (optional, default=9)
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_jquiz_textbox_details($tags, $answers, $q, $defaultsize=9) {
         $prefix = '';
@@ -4445,6 +4591,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * @param xxx $caption
      * @param xxx $onclick
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_jquiz_button($caption, $onclick)  {
         return '<button class="FuncButton" onfocus="FuncBtnOver(this)" onblur="FuncBtnOut(this)" onmouseover="FuncBtnOver(this)" onmouseout="FuncBtnOut(this)" onmousedown="FuncBtnDown(this)" onmouseup="FuncBtnOut(this)" onclick="'.$onclick.'">'.$caption.'</button>';
@@ -4454,6 +4601,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_MultiChoice
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_MultiChoice()  {
         return $this->jquiz_has_question_type(1);
@@ -4463,6 +4611,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_ShortAnswer
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_ShortAnswer()  {
         return $this->jquiz_has_question_type(2);
@@ -4472,6 +4621,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_MultiSelect
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_MultiSelect()  {
         return $this->jquiz_has_question_type(4);
@@ -4482,6 +4632,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      *
      * @param xxx $type
      * @return xxx
+     * @todo Finish documenting this function
      */
     function jquiz_has_question_type($type) {
         // does this JQuiz have any questions of the given $type?
@@ -4502,6 +4653,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_CompletedSoFar
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_CompletedSoFar()  {
         return $this->hotpot->source->xml_value_js($this->hotpot->source->hbs_software.'-config-file,global,completed-so-far');
@@ -4511,6 +4663,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_ContinuousScoring
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_ContinuousScoring()  {
         return $this->hotpot->source->xml_value_bool($this->hotpot->source->hbs_software.'-config-file,'.$this->hotpot->source->hbs_quiztype.',continuous-scoring');
@@ -4520,6 +4673,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_CorrectFirstTime
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_CorrectFirstTime()  {
         return $this->hotpot->source->xml_value_js($this->hotpot->source->hbs_software.'-config-file,global,correct-first-time');
@@ -4529,6 +4683,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_ExerciseCompleted
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_ExerciseCompleted()  {
         return $this->hotpot->source->xml_value_js($this->hotpot->source->hbs_software.'-config-file,global,exercise-completed');
@@ -4538,6 +4693,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_ShowCorrectFirstTime
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_ShowCorrectFirstTime()  {
         return $this->hotpot->source->xml_value_bool($this->hotpot->source->hbs_software.'-config-file,'.$this->hotpot->source->hbs_quiztype.',show-correct-first-time');
@@ -4547,6 +4703,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_ShuffleAs
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_ShuffleAs()  {
         return $this->hotpot->source->xml_value_bool($this->hotpot->source->hbs_software.'-config-file,'.$this->hotpot->source->hbs_quiztype.',shuffle-answers');
@@ -4556,6 +4713,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_DefaultRight
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_DefaultRight()  {
         return $this->expand_GuessCorrect();
@@ -4565,6 +4723,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_DefaultWrong
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_DefaultWrong()  {
         return $this->expand_GuessIncorrect();
@@ -4574,6 +4733,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_ShowAllQuestionsCaptionJS
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_ShowAllQuestionsCaptionJS()  {
         return $this->hotpot->source->xml_value_js($this->hotpot->source->hbs_software.'-config-file,global,show-all-questions-caption');
@@ -4583,6 +4743,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_ShowOneByOneCaptionJS
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_ShowOneByOneCaptionJS()  {
         return $this->hotpot->source->xml_value_js($this->hotpot->source->hbs_software.'-config-file,global,show-one-by-one-caption');
@@ -4592,6 +4753,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_CorrectList
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_CorrectList()  {
         return $this->hotpot->source->xml_value_js($this->hotpot->source->hbs_software.'-config-file,'.$this->hotpot->source->hbs_quiztype.',correct-answers');
@@ -4601,6 +4763,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_HybridTries
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_HybridTries()  {
         return $this->hotpot->source->xml_value($this->hotpot->source->hbs_software.'-config-file,'.$this->hotpot->source->hbs_quiztype.',short-answer-tries-on-hybrid-q');
@@ -4610,6 +4773,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_PleaseEnter
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_PleaseEnter()  {
         return $this->hotpot->source->xml_value_js($this->hotpot->source->hbs_software.'-config-file,'.$this->hotpot->source->hbs_quiztype.',enter-a-guess');
@@ -4619,6 +4783,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_PartlyIncorrect
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_PartlyIncorrect()  {
         return $this->hotpot->source->xml_value_js($this->hotpot->source->hbs_software.'-config-file,'.$this->hotpot->source->hbs_quiztype.',partly-incorrect');
@@ -4628,6 +4793,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_ShowAnswerCaption
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_ShowAnswerCaption()  {
         return $this->hotpot->source->xml_value($this->hotpot->source->hbs_software.'-config-file,'.$this->hotpot->source->hbs_quiztype.',show-answer-caption');
@@ -4637,6 +4803,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_ShowAlsoCorrect
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_ShowAlsoCorrect()  {
         return $this->hotpot->source->xml_value_bool($this->hotpot->source->hbs_software.'-config-file,global,show-also-correct');
@@ -4648,6 +4815,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_isRTL
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_isRTL()  {
         // this may require some clever detection of RTL languages (e.g. Hebrew)
@@ -4659,6 +4827,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_isLTR
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_isLTR()  {
         if ($this->expand_isRTL()) {
@@ -4672,6 +4841,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * expand_RTLText
      *
      * @return xxx
+     * @todo Finish documenting this function
      */
     function expand_RTLText()  {
         return $this->expand_isRTL();
