@@ -2333,7 +2333,7 @@ function mod_hotpot_core_calendar_provide_event_action(calendar_event $event,
 
     return $factory->create_instance(
             get_string('view'),
-            new \moodle_url('/mod/hotpot/view.php', ['id' => $cm->id]),
+            new \moodle_url('/mod/hotpot/view.php', array('id' => $cm->id)),
             1,
             true
     );
