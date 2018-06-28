@@ -218,7 +218,7 @@ class mod_hotpot_attempt_hp_6_jmix_renderer extends mod_hotpot_attempt_hp_6_rend
         $drag = 'beginDrag,doDrag,endDrag';
         // start list of function names
         $names = parent::get_js_functionnames();
-        $names .= ($names ? ',' : '')."CardSetHTML,$drag,CheckAnswer,TimesUp,WriteToGuess,$drag";
+        $names .= ($names ? ',' : '')."CardSetHTML,$drag,CheckAnswer,TimesUp,WriteToGuess,$drag,SetInitialPositions";
         return $names;
     }
 
@@ -422,6 +422,25 @@ class mod_hotpot_attempt_hp_6_jmix_renderer extends mod_hotpot_attempt_hp_6_rend
             ;
             //$substr = substr_replace($substr, $insert, $pos, 0);
         }
+    }
+
+    /**
+     * fix_js_SetInitialPositions
+     *
+     * @param xxx $str (passed by reference)
+     * @param xxx $start
+     * @param xxx $length
+     */
+    function fix_js_SetInitialPositions(&$str, $start, $length)  {
+        $substr = substr($str, $start, $length);
+
+        // prevent error on Boost-based themes
+        if ($pos = strpos($substr, '(RowWidth + Cds[i].GetW() + 5) < DivWidth')) {
+            $insert = 'RowWidth==0 || ';
+            $substr = substr_replace($substr, $insert, $pos, 0);
+        }
+
+        $str = substr_replace($str, $substr, $start, $length);
     }
 
     /**

@@ -768,20 +768,24 @@ function HP_fix_event(evt, obj) {
     var i = 0;
     var evts = new Array();
 
-    switch (evt) {
-        case 'click'      : if ('ontap'        in obj) evts[i++] = 'tap';        break;
-        case 'mousedown'  : if ('ontouchstart' in obj) evts[i++] = 'touchstart'; break;
-        case 'mousemove'  : if ('ontouchmove'  in obj) evts[i++] = 'touchmove';  break;
-        case 'mouseup'    : if ('ontouchend'   in obj) evts[i++] = 'touchend';   break;
-        case 'tap'        : if ('onclick'      in obj) evts[i++] = 'click';      break;
-        case 'touchend'   : if ('onmouseup'    in obj) evts[i++] = 'mouseup';    break;
-        case 'touchmove'  : if ('onmousemove'  in obj) evts[i++] = 'mousemove';  break;
-        case 'touchstart' : if ('onmousedown'  in obj) evts[i++] = 'mousedown';  break;
-    }
+    // prevent "Cannot use 'in' operator to search for 'onbeforeunload' in window"
+    if (obj && typeof(obj)=="object") {
 
-    var onevent = 'on' + evt;
-    if (onevent in obj) {
-        evts[i++] = evt;
+        switch (evt) {
+            case 'click'      : if ('ontap'        in obj) evts[i++] = 'tap';        break;
+            case 'mousedown'  : if ('ontouchstart' in obj) evts[i++] = 'touchstart'; break;
+            case 'mousemove'  : if ('ontouchmove'  in obj) evts[i++] = 'touchmove';  break;
+            case 'mouseup'    : if ('ontouchend'   in obj) evts[i++] = 'touchend';   break;
+            case 'tap'        : if ('onclick'      in obj) evts[i++] = 'click';      break;
+            case 'touchend'   : if ('onmouseup'    in obj) evts[i++] = 'mouseup';    break;
+            case 'touchmove'  : if ('onmousemove'  in obj) evts[i++] = 'mousemove';  break;
+            case 'touchstart' : if ('onmousedown'  in obj) evts[i++] = 'mousedown';  break;
+        }
+
+        var onevent = 'on' + evt;
+        if (onevent in obj) {
+            evts[i++] = evt;
+        }
     }
 
     return evts;
