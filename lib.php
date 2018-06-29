@@ -1745,6 +1745,7 @@ function hotpot_get_file_info($browser, $areas, $course, $cm, $context, $fileare
 
 /**
  * Extends the global navigation tree by adding hotpot nodes if there is a relevant content
+ * These settings are added to the "Navigation" menu
  *
  * This can be called by an AJAX request so do not rely on $PAGE as it might not be set up properly.
  *
@@ -1755,24 +1756,54 @@ function hotpot_get_file_info($browser, $areas, $course, $cm, $context, $fileare
  */
 function hotpot_extend_navigation(navigation_node $hotpotnode, stdclass $course, stdclass $module, cm_info $cm) {
     global $CFG, $DB;
+
+    // don't add nodes in Moodle >= 2.5, because they will
+    // be added to the Administration menu by
+    // "hotpot_extend_settings_navigation()" ... see below
+    if (isset($CFG->branch) && $CFG->branch >= '25') {
+        return;
+    }
+
+    // make sure we have HotPot's locallib.php
     require_once($CFG->dirroot.'/mod/hotpot/locallib.php');
 
     $hotpot = $DB->get_record('hotpot', array('id' => $cm->instance), '*', MUST_EXIST);
     $hotpot = hotpot::create($hotpot, $cm, $course);
 
-    if ($hotpot->can_reviewattempts()) {
-        $icon = new pix_icon('i/report', '');
+    if ($hotpot->can>cancanpreview()) {
+        $text = get_string('previewquiznow', 'quiz');
+        $action = $hotpot->attempt_url();
         $type = navigation_node::TYPE_SETTING;
-        foreach ($hotpot->get_report_modes() as $mode) {
-            $url = $hotpot->report_url($mode);
-            $label = get_string($mode.'report', 'mod_hotpot');
-            $hotpotnode->add($label, $url, $type, null, null, $icon);
+        $icon = new pix_icon('t/preview', '');
+        $hotpotnode->add($text, $action, $type, null, 'preview', $icon);
+    } 
+
+    if ($hotpot->can_reviewattempts()) {
+        $type = navigation_node::TYPE_SETTING;
+
+        // create report parent node
+        $modes = $hotpot->get_report_modes();
+        $mode = key($modes); // first report
+        $params = array('text' => get_string('reports'),
+                        'action' => $hotpot->report_url($mode),
+                        'key' => 'reports',
+                        'type' => $type,
+                        'icon' => new pix_icon('i/report', ''));
+        $node = new navigation_node($params);
+
+        $icon = new pix_icon('i/item', '');
+        foreach ($modes as $mode) {
+            $text = get_string($mode.'report', 'mod_hotpot');
+            $action = $hotpot->report_url($mode);
+            $node->add($text, $action, $type, null, $mode.'report', $icon);
         }
+        $hotpotnode->add_node($node);
     }
 }
 
 /**
  * Extends the settings navigation with the Hotpot settings
+ * These settings are added to the "Administration" menu
 
  * This function is called when the context for the page is a hotpot module. This is not called by AJAX
  * so it is safe to rely on the $PAGE.
@@ -1781,6 +1812,96 @@ function hotpot_extend_navigation(navigation_node $hotpotnode, stdclass $course,
  * @param navigation_node $hotpotnode {@link navigation_node}
  */
 function hotpot_extend_settings_navigation(settings_navigation $settingsnav, navigation_node $hotpotnode=null) {
+    global $CFG, $DB, $PAGE;
+
+    // don't add nodes in Moodle <= 2.4, because they were
+    // already added to the Navigation menu by
+    // "hotpot_settings_navigation()" ... see above
+    if (empty($CFG->branch) || $CFG->branch <= '24') {
+        return;
+    }
+
+    require_once($CFG->dirroot.'/mod/hotpot/locallib.php');
+
+    $hotpot = $DB->get_record('hotpot', array('id' => $PAGE->cm->instance), '*', MUST_EXIST);
+    $hotpot = hotpot::create($hotpot, $PAGE->cm, $PAGE->course);
+
+    $nodes = array();
+    if ($hotpot->can_reviewattempts()) {
+        $type = navigation_node::TYPE_SETTING;
+
+        // create report parent node
+        $modes = $hotpot->get_report_modes();
+        $mode = key($modes); // first report
+        $params = array('text' => get_string('reports'),
+                        'action' => $hotpot->report_url($mode),
+                        'key' => 'reports',
+                        'type' => $type,
+                        'icon' => new pix_icon('i/report', ''));
+        $node = new navigation_node($params);
+
+        // add reports
+        $icon = new pix_icon('i/item', '');
+        foreach ($modes as $mode) {
+            $action = $hotpot->report_url($mode);
+            $text = get_string($mode.'report', 'mod_hotpot');
+            $node->add($text, $action, $type, null, $mode.'report', $icon);
+        }
+        $nodes[] = $node;
+    }
+
+    // only teachers/admins will have new nodes to add
+    if (count($nodes)) {
+
+        // We want to add these new nodes after the Edit settings node,
+        // and before the locally assigned roles node.
+
+        // detect Moodle >= 2.2 (it has an easy way to do what we want)
+        if (method_exists($hotpotnode, 'get_children_key_list')) {
+
+            // in Moodle >= 2.2, we can locate the "Edit settings" node
+            // by its key and use that as the "beforekey" for the new nodes
+            $keys = $hotpotnode->get_children_key_list();
+            $i = array_search('modedit', $keys);
+            if ($i===false) {
+                $i = 0;
+            } else {
+                $i = ($i + 1);
+            }
+            if (array_key_exists($i, $keys)) {
+                $beforekey = $keys[$i];
+            } else {
+                $beforekey = null;
+            }
+            foreach ($nodes as $node) {
+                $hotpotnode->add_node($node, $beforekey);
+            }
+
+        } else {
+            // in Moodle 2.0 - 2.1, we don't have the $beforekey functionality,
+            // so instead, we create a new collection of child nodes by copying
+            // the current child nodes one by one and inserting our news nodes
+            // after the node whose plain url ends with "/course/modedit.php"
+            // Note: this would also work on Moodle >= 2.2, but is obviously
+            // rather a hack and not the way things should to be done
+            $found = false;
+            $children = new navigation_node_collection();
+            $max_i = ($hotpotnode->children->count() - 1);
+            foreach ($hotpotnode->children as $i => $child) {
+                $children->add($child);
+                if ($found==false) {
+                    $action = $child->action->out_omit_querystring();
+                    if (($i==$max_i) || substr($action, -19)=='/course/modedit.php') {
+                        $found = true;
+                        foreach ($nodes as $node) {
+                            $children->add($node);
+                        }
+                    }
+                }
+            }
+            $hotpotnode->children = $children;
+        }
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
