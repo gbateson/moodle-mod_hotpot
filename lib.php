@@ -1770,7 +1770,7 @@ function hotpot_extend_navigation(navigation_node $hotpotnode, stdclass $course,
     $hotpot = $DB->get_record('hotpot', array('id' => $cm->instance), '*', MUST_EXIST);
     $hotpot = hotpot::create($hotpot, $cm, $course);
 
-    if ($hotpot->can>cancanpreview()) {
+    if ($hotpot->can_preview()) {
         $text = get_string('previewquiznow', 'quiz');
         $action = $hotpot->attempt_url();
         $type = navigation_node::TYPE_SETTING;
@@ -1797,7 +1797,13 @@ function hotpot_extend_navigation(navigation_node $hotpotnode, stdclass $course,
             $action = $hotpot->report_url($mode);
             $node->add($text, $action, $type, null, $mode.'report', $icon);
         }
-        $hotpotnode->add_node($node);
+        if (method_exists($hotpotnode, 'add_node')) {
+            $hotpotnode->add_node($node); // Moodle >= 2.2
+        } else {
+            $node->key = $hotpotnode->children->count();
+            $hotpotnode->nodetype = navigation_node::NODETYPE_BRANCH;
+            $hotpotnode->children->add($node);
+        }
     }
 }
 
