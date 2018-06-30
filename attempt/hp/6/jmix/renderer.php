@@ -162,7 +162,7 @@ class mod_hotpot_attempt_hp_6_jmix_renderer extends mod_hotpot_attempt_hp_6_rend
                 ."	div.setAttribute('id', 'JMixPrefix');\n"
                 ."	div.setAttribute('class', 'CardStyle');\n"
                 ."	div.innerHTML = '$prefix';\n"
-                ."	myParentNode.appendChild(div);\n"
+                ."	myParentNode.insertBefore(div, myNextNode);\n"
                 ."} else {\n"
                 ."	document.write('".'<div id="JMixPrefix" class="CardStyle"'.">$prefix</div>');\n"
                 ."}\n"
@@ -174,7 +174,7 @@ class mod_hotpot_attempt_hp_6_jmix_renderer extends mod_hotpot_attempt_hp_6_rend
             ."		var div = document.createElement('div');\n"
             ."		div.setAttribute('id', 'D' + i);\n"
             ."		div.setAttribute('class', 'CardStyle');\n"
-            ."		div = myParentNode.appendChild(div);\n"
+            ."		div = myParentNode.insertBefore(div, myNextNode);\n"
             ."		HP_add_listener(div, 'mousedown', 'beginDrag(event, ' + i + ')');\n"
             ."	} else {\n"
             ."		document.write('".'<div id="'."D' + i + '".'" class="CardStyle" onmousedown="'."beginDrag(event, ' + i + ')".'"'."></div>');\n"
@@ -189,14 +189,14 @@ class mod_hotpot_attempt_hp_6_jmix_renderer extends mod_hotpot_attempt_hp_6_rend
                 ."	div.setAttribute('id', 'JMixSuffix');\n"
                 ."	div.setAttribute('class', 'CardStyle');\n"
                 ."	div.innerHTML = '$suffix';\n"
-                ."	myParentNode.appendChild(div);\n"
+                ."	myParentNode.insertBefore(div, myNextNode);\n"
                 ."} else {\n"
                 ."	document.write('".'<div id="JMixsuffix" class="CardStyle"'.">$suffix</div>');\n"
                 ."}\n"
             ;
         }
         $replace .= ''
-            ."myParentNode = div = null;"
+            ."myParentNode = myNextNode = div = null;"
         ;
         $this->bodycontent = preg_replace($search, $replace, $this->bodycontent, 1);
     }
