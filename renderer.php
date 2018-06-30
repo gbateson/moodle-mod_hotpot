@@ -706,7 +706,7 @@ class mod_hotpot_renderer extends plugin_renderer_base {
         $buttontext = '';
 
         if ($hotpot->can_preview()) {
-            $buttontext = get_string('previewquiznow', 'quiz');
+            $buttontext = get_string('preview');
         } else if ($hotpot->can_start()) {
             if ($hotpot->count_distinct_clickreportids()) {
                 $buttontext = get_string('reattemptquiz', 'quiz');

@@ -1771,12 +1771,12 @@ function hotpot_extend_navigation(navigation_node $hotpotnode, stdclass $course,
     $hotpot = hotpot::create($hotpot, $cm, $course);
 
     if ($hotpot->can_preview()) {
-        $text = get_string('previewquiznow', 'quiz');
+        $text = get_string('preview');
         $action = $hotpot->attempt_url();
         $type = navigation_node::TYPE_SETTING;
         $icon = new pix_icon('t/preview', '');
         $hotpotnode->add($text, $action, $type, null, 'preview', $icon);
-    } 
+    }
 
     if ($hotpot->can_reviewattempts()) {
         $type = navigation_node::TYPE_SETTING;
@@ -1833,6 +1833,16 @@ function hotpot_extend_settings_navigation(settings_navigation $settingsnav, nav
     $hotpot = hotpot::create($hotpot, $PAGE->cm, $PAGE->course);
 
     $nodes = array();
+
+    if ($hotpot->can_preview()) {
+        $params = array('text' => get_string('preview'),
+                        'action' => $hotpot->attempt_url(),
+                        'key' => 'preview',
+                        'type' => navigation_node::TYPE_SETTING,
+                        'icon' => new pix_icon('t/preview', ''));
+        $nodes[] = new navigation_node($params);
+    }
+
     if ($hotpot->can_reviewattempts()) {
         $type = navigation_node::TYPE_SETTING;
 
@@ -1865,14 +1875,18 @@ function hotpot_extend_settings_navigation(settings_navigation $settingsnav, nav
         // detect Moodle >= 2.2 (it has an easy way to do what we want)
         if (method_exists($hotpotnode, 'get_children_key_list')) {
 
-            // in Moodle >= 2.2, we can locate the "Edit settings" node
-            // by its key and use that as the "beforekey" for the new nodes
+            // in Moodle >= 2.2, we can locate the "Edit settings" node by its key, and
+            // use the key for the node AFTER that as the "beforekey" for the new nodes
             $keys = $hotpotnode->get_children_key_list();
-            $i = array_search('modedit', $keys);
+            $key = 'modedit';
+            $i = array_search($key, $keys);
             if ($i===false) {
-                $i = 0;
+                $i = 0; // shouldn't happen !!
             } else {
                 $i = ($i + 1);
+                $icon = new pix_icon('t/edit', '');
+                $type = navigation_node::TYPE_SETTING;
+                $hotpotnode->find($key, $type)->icon = $icon;
             }
             if (array_key_exists($i, $keys)) {
                 $beforekey = $keys[$i];
