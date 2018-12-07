@@ -45,14 +45,20 @@ defined('MOODLE_INTERNAL') || die();
  * @author     Anupama Dharmajan <anupamadharmajan@catalyst-au.net>
  */
 class provider implements
-        // This plugin stores personal data.
-        \core_privacy\local\metadata\provider,
 
-        // This plugin is a core_user_data_provider.
-        \core_privacy\local\request\plugin\provider,
+    // This polyfill allows the provider to work on both old (pre-7)
+    // and new PHP versions. Thanks to Dan Marsden for this suggestion.
+    use \core_privacy\local\legacy_polyfill;
 
-        // This plugin is capable of determining which users have data within it.
-        \core_privacy\local\request\core_userlist_provider {
+    // This plugin stores personal data.
+    \core_privacy\local\metadata\provider,
+
+    // This plugin is a core_user_data_provider.
+    \core_privacy\local\request\plugin\provider,
+
+    // This plugin is capable of determining which users have data within it.
+    \core_privacy\local\request\core_userlist_provider {
+
     /**
      * Return the fields which contain personal data.
      *
