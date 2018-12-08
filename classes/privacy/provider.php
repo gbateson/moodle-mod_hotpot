@@ -46,10 +46,6 @@ defined('MOODLE_INTERNAL') || die();
  */
 class provider implements
 
-    // This polyfill allows the provider to work on both old (pre-7)
-    // and new PHP versions. Thanks to Dan Marsden for this suggestion.
-    use \core_privacy\local\legacy_polyfill;
-
     // This plugin stores personal data.
     \core_privacy\local\metadata\provider,
 
