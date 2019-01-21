@@ -268,6 +268,9 @@ function hotpot_process_formdata(stdclass &$data, $mform) {
         if (! isset($data->$optionsfield)) {
             $data->$optionsfield = $mform->get_original_value($optionsfield, 0);
         }
+        if (! is_numeric($data->$optionsfield)) {
+            $data->$optionsfield = 0; // prevent "non-numeric" warnings in PHP 7.1
+        }
 
         // set text and format fields
         if ($data->$sourcefield==hotpot::TEXTSOURCE_SPECIFIC) {

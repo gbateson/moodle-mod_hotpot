@@ -36,6 +36,7 @@ function xmldb_hotpot_upgrade($oldversion) {
 
     // this flag will be set to true if any upgrade needs to empty the HotPot cache
     $empty_cache = false;
+    $update_grades = false;
 
     $dbman = $DB->get_manager();
 
@@ -50,9 +51,7 @@ function xmldb_hotpot_upgrade($oldversion) {
     // update hotpot grades from sites earlier than Moodle 1.9, 27th March 2008
     $newversion = 2007101511;
     if ($oldversion < $newversion) {
-        // ensure "hotpot_upgrade_grades" function is available
-        require_once $CFG->dirroot.'/mod/hotpot/lib.php';
-        hotpot_upgrade_grades();
+        $update_grades = true;
         upgrade_mod_savepoint(true, "$newversion", 'hotpot');
     }
 
@@ -841,8 +840,7 @@ function xmldb_hotpot_upgrade($oldversion) {
 
     $newversion = 2014011694;
     if ($oldversion < $newversion) {
-        require_once($CFG->dirroot.'/mod/hotpot/lib.php');
-        hotpot_update_grades();
+        $update_grades = true;
         upgrade_mod_savepoint(true, "$newversion", 'hotpot');
     }
 
@@ -1034,6 +1032,24 @@ function xmldb_hotpot_upgrade($oldversion) {
 
     if ($empty_cache) {
         $DB->delete_records('hotpot_cache');
+    }
+
+    if ($update_grades) {
+        // ensure "hotpot_update_grades" function is available
+        require_once $CFG->dirroot.'/mod/hotpot/lib.php';
+
+        // unset upgraderunning because it can cause hotpot_update_grades() to fail
+        if (isset($CFG->upgraderunning)) {
+            $upgraderunning = $CFG->upgraderunning;
+            $CFG->upgraderunning = null;
+        } else {
+            $upgraderunning = null;
+        }
+
+        hotpot_update_grades();
+
+        // restore upgraderunning flag
+        $CFG->upgraderunning = $upgraderunning;
     }
 
     return true;

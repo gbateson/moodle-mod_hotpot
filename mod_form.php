@@ -784,13 +784,17 @@ class mod_hotpot_mod_form extends moodleform_mod {
         // set entry/exit page settings
         foreach (hotpot::text_page_types() as $type) {
 
+            // CONTRIB-7098: "A non-numeric value encountered mod/hotpot/mod_form.php on line 789"
+            // force entry/exit options to be numeric (this is to prevent errors in PHP 7.1)
+            if (array_key_exists($type.'options', $data) && is_numeric($data[$type.'options'])) {
+                $data[$type.'options'] = intval($data[$type.'options']);
+            } else {
+                $data[$type.'options'] = 0;
+            }
+
             // extract boolean switches for page options
             foreach (hotpot::text_page_options($type) as $name => $mask) {
-                if (array_key_exists($type.'options', $data)) {
-                    $data[$type.'_'.$name] = $data[$type.'options'] & $mask;
-                } else {
-                    $data[$type.'_'.$name] = 0;
-                }
+                $data[$type.'_'.$name] = $data[$type.'options'] & $mask;
             }
 
             // setup custom wysiwyg editor
