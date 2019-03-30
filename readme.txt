@@ -30,7 +30,7 @@ The HotPot module for Moodle 2.x
 
         (a) GIT: https://github.com/gbateson/moodle-qformat_hotpot.git
         (b) zip: the Moodle.org -> Plugins repository (search for HotPot)
-        (c) zip: http://bateson.kanazawa-gu.ac.jp/zip/plugins_qformat_hotpot.zip
+        (c) zip: https://bateson.kochi-tech.ac.jp/zip/plugins_qformat_hotpot.zip
 
 ======================================
 To INSTALL or UPDATE the HotPot module
@@ -41,7 +41,7 @@ To INSTALL or UPDATE the HotPot module
         (a) GIT: https://github.com/gbateson/moodle-mod_hotpot.git
         (b) CVS: the Moodle CVS repository (contrib/plugins/mod/hotpot)
         (c) zip: the Moodle.org -> Plugins repository (search for HotPot)
-        (d) zip: http://bateson.kanazawa-gu.ac.jp/zip/plugins_mod_hotpot.zip
+        (d) zip: https://bateson.kochi-tech.ac.jp/zip/plugins_mod_hotpot.zip
 
        If you are installing from a zip file, unzip the zip file, to create a folder called "hotpot"
        and upload or move this "hotpot" folder to the "mod" folder on your Moodle 2.x site
