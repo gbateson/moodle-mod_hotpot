@@ -1172,7 +1172,11 @@ function xmldb_hotpot_locate_externalfile($contextid, $component, $filearea, $it
             switch (true) {
                 case isset($file['source']): $param = 'source'; break; // file
                 case isset($file['path']):   $param = 'path';   break; // dir
-                default: continue; // shouldn't happen !!
+                default: $param = ''; // shouldn't happen !!
+            }
+
+            if ($param=='') {
+                continue;
             }
 
             if ($encodepath) {
