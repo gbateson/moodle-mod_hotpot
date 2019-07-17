@@ -1657,7 +1657,7 @@ class hotpot {
         if (empty($this->attempt)) {
 
             // get max attempt number so far
-            $sql = "SELECT MAX(attempt) FROM {hotpot_attempts} WHERE hotpotid=? AND userid=?";
+            $sql = "SELECT MAX(attempt) FROM {hotpot_attempts} WHERE hotpotid = ? AND userid = ?";
             if ($max_attempt = $DB->get_field_sql($sql, array($this->id, $USER->id))) {
                 $max_attempt ++;
             } else {
@@ -1685,7 +1685,7 @@ class hotpot {
             }
 
             // set previous "in progress" attempt(s) to adandoned
-            $select = 'hotpotid=? AND userid=? AND attempt<? AND status=?';
+            $select = 'hotpotid = ? AND userid = ? AND attempt < ? AND status = ?';
             $params = array($this->id, $USER->id, $max_attempt, self::STATUS_INPROGRESS);
             if ($attempts = $DB->get_records_select('hotpot_attempts', $select, $params)) {
                 foreach ($attempts as $attempt) {
@@ -1738,10 +1738,10 @@ class hotpot {
             }
             if (count($ids)) {
                 list($filter, $params) = $DB->get_in_or_equal($ids);
-                $select = "id $filter AND hotpotid=?";
+                $select = "id $filter AND hotpotid = ?";
                 $params[] = $this->id;
                 if ($userid) {
-                    $select .= " AND userid=?";
+                    $select .= " AND userid = ?";
                     $params[] = $userid;
                 }
                 $this->attempts = $DB->get_records_select('hotpot_attempts', $select, $params, 'timemodified DESC');
@@ -1966,12 +1966,12 @@ class hotpot {
             switch ($cm->modname) {
                 case 'resource':
                     $table = 'log';
-                    $select = 'cmid=? AND userid=? AND action=?';
+                    $select = 'cmid = ? AND userid = ? AND action = ?';
                     $params = array($cm->id, $this->userid, 'view');
                     break;
                 case 'lesson':
                     $table = 'lesson_grades';
-                    $select = 'userid=? AND lessonid==? AND completed>?';
+                    $select = 'userid = ? AND lessonid = ? AND completed > ?';
                     $params = array($this->userid, $cm->instance, 0);
                     break;
                 default:

@@ -1038,7 +1038,7 @@ function hotpot_get_participants($hotpotid) {
 
     $select = 'DISTINCT u.id, u.id';
     $from   = '{user} u, {hotpot_attempts} a';
-    $where  = 'u.id=a.userid AND a.hotpot=?';
+    $where  = 'u.id=a.userid AND a.hotpot = ?';
     $params = array($hotpotid);
 
     return $DB->get_records_sql("SELECT $select FROM $from WHERE $where", $params);
@@ -1966,7 +1966,7 @@ function hotpot_reset_gradebook($courseid, $type='') {
     $sql = ''
         .'SELECT h.*, cm.idnumber AS cmidnumber, cm.course AS courseid '
         .'FROM {hotpot} h, {course_modules} cm, {modules} m '
-        ."WHERE m.name='hotpot' AND m.id=cm.module AND cm.instance=h.id AND h.course=?"
+        ."WHERE m.name='hotpot' AND m.id=cm.module AND cm.instance=h.id AND h.course = ?"
     ;
     if ($hotpots = $DB->get_records_sql($sql, array($courseid))) {
         foreach ($hotpots as $hotpot) {

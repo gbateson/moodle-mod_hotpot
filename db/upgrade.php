@@ -410,7 +410,7 @@ function xmldb_hotpot_upgrade($oldversion) {
         $strupdating = get_string('migratingfiles', 'mod_hotpot');
         $select = 'h.*, cm.id AS cmid';
         $from   = '{hotpot} h, {course_modules} cm, {modules} m';
-        $where  = 'm.name=? AND m.id=cm.module AND cm.instance=h.id AND h.sourcefile<>?'.
+        $where  = 'm.name = ? AND m.id = cm.module AND cm.instance = h.id AND h.sourcefile != ?'.
                   ' AND '.$DB->sql_like('h.sourcefile', '?', false, false, true); // NOT LIKE
         $params = array('hotpot', '', '/%', 0);
         $orderby = 'h.course, h.id';
@@ -765,10 +765,10 @@ function xmldb_hotpot_upgrade($oldversion) {
                   ' AND h.id=cm.instance'.
                   ' AND cm.id=c.instanceid'.
                   ' AND c.id=f.contextid'.
-                  ' AND f.component=?'.
-                  ' AND f.filearea=?'.
-                  ' AND f.filepath=?'.
-                  ' AND f.filename=?';
+                  ' AND f.component = ?'.
+                  ' AND f.filearea = ?'.
+                  ' AND f.filepath = ?'.
+                  ' AND f.filename = ?';
 
         $params = array('/course_files/%', 'mod_hotpot', 'sourcefile', '/course_files/', '.');
         if ($filerecords = $DB->get_records_sql("SELECT $select FROM $from WHERE $where", $params)) {

@@ -262,7 +262,7 @@ class mod_hotpot_attempt_html_renderer extends mod_hotpot_attempt_renderer {
 
 
         list($select, $params) = $DB->get_in_or_equal($urls);
-        $select = "course=? AND sourcefile $select";
+        $select = "course = ? AND sourcefile $select";
         array_unshift($params, $this->hotpot->course->id);
 
         if ($quizzes = $DB->get_records_select('hotpot', $select, $params, 'id', 'id,sourcefile')) {
