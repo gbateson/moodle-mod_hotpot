@@ -2,6 +2,9 @@
 Change log for mod_hotpot
 ========================================
 
+2020-03-01 (43)
+ - include current version in tool to redo upgrade
+
 2019-10-12 (41)
  - msd_hotpot standardize layout and spelling in CHANGES.txt
 
