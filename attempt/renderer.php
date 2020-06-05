@@ -1419,8 +1419,7 @@ class mod_hotpot_attempt_renderer extends mod_hotpot_renderer {
             'object' => 'data',
             'param'  => 'value',
             'script' => 'src',
-            'source' => 'src', // HTML5
-            'track'  => 'src', // HTML5
+            '(?:audio|source|track|video)' => 'src', // HTML5
             '(?:table|th|td)' => 'background',
             '[a-z]+' => 'style'
         );
