@@ -37,44 +37,12 @@ require_once($CFG->dirroot.'/mod/hotpot/source/hp/6/jcloze/html/findit/class.php
  * @since     Moodle 2.0
  */
 class hotpot_source_hp_6_jcloze_html_findit_b extends hotpot_source_hp_6_jcloze_html_findit {
-
-    /**
-     * is_quizfile
-     *
-     * @param xxx $sourcefile
-     * @return xxx
-     */
-    static public function is_quizfile($sourcefile)  {
-        if (! preg_match('/\.html?$/', $sourcefile->get_filename())) {
-            // wrong file type
-            return false;
-        }
-
-        if (! $content = self::get_content($sourcefile)) {
-            // empty or non-existant file
-            return false;
-        }
-
-        if (! strpos($content, '<div id="MainDiv" class="StdDiv">')) {
-            // not an hp6 file
-            return false;
-        }
-
-        if (! strpos($content, 'function Create_StateArray()')) {
-            // not a Rottmeier file
-            return false;
-        }
-
-        if (! strpos($content, 'this.ErrorFound = false;')) {
-            // not a Rottmeier FindIt file
-            return false;
-        }
-
-        if (! strpos($content, 'this.GapSolved = false;')) {
-            // not a Rottmeier FindIt (b) file
-            return false;
-        }
-
-        return true;
-    }
+    const REQUIRED_FILETYPES = array(
+        'htm', 'html'
+    );
+    const REQUIRED_STRINGS = array(
+        'function Create_StateArray()', // Rottmeier file
+        'this.ErrorFound = false;', // Rottmeier FindIt file
+        'this.GapSolved = false;' //Rottmeier FindIt (b) file
+    );
 }

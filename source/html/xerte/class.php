@@ -37,35 +37,20 @@ require_once($CFG->dirroot.'/mod/hotpot/source/html/class.php');
  * @since     Moodle 2.0
  */
 class hotpot_source_html_xerte extends hotpot_source_html {
+
+    const REQUIRED_FILETYPES = array(
+        'htm', 'html'
+    );
+    const REQUIRED_MATCHES = array(
+        '/<script[^>]*src\s*=\s*"[^"]*rloObject.js"[^>]*>/',
+        "/myRLO = new rloObject\('\d*','\d*','[^']*.rl[ot]'[^)]*\)/"
+    );
+
     // properties of the icon for this source file type
     var $icon = 'mod/hotpot/file/html/xerte/icon.gif';
 
     // xmlized content of template.xml
     var $template_xml = null;
-
-    /**
-     * is_quizfile
-     * returns hotpot_file object if $filename is a quiz file, or false otherwise
-     *
-     * @return xxx
-     */
-    static public function is_quizfile($sourcefile) {
-        if (! preg_match('/\.html?$/', $sourcefile->get_filename())) {
-            // not an html file
-            return false;
-        }
-        if (! $content = self::get_content($sourcefile)) {
-            // empty or non-existant file
-            return false;
-        }
-        if (! preg_match('/<script[^>]*src\s*=\s*"[^"]*rloObject.js"[^>]*>/', $content)) {
-            return false;
-        }
-        if (! preg_match("/myRLO = new rloObject\('\d*','\d*','[^']*.rl[ot]'[^)]*\)/", $content)) {
-            return false;
-        }
-        return true;
-    }
 
     /**
      * get_template_xml
@@ -129,4 +114,4 @@ class hotpot_source_html_xerte extends hotpot_source_html {
     function get_entrytext() {
         return '';
     }
-} // end class
+}

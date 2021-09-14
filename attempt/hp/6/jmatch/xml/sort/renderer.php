@@ -63,7 +63,7 @@ class mod_hotpot_attempt_hp_6_jmatch_xml_sort_renderer extends mod_hotpot_attemp
      * @return array of strings
      */
     static public function sourcetypes()  {
-        return array('hp_6_jmatch_xml');
+        return array('hp_6_jmatch_xml', 'hp_7_jmatch_xml');
     }
 
     /**

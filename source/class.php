@@ -36,6 +36,13 @@ require_once($CFG->dirroot.'/lib/xmlize.php');
  * @since     Moodle 2.0
  */
 class hotpot_source {
+    const BEST_OUTPUT_FORMAT = '';
+
+    const REQUIRED_FILETYPES = array();
+    const REQUIRED_MATCHES = array();
+    const REQUIRED_STRINGS = array();
+    const BANNED_STRINGS = array();
+
     /** @var stored_file object representing stored file */
     public $file;
 
@@ -123,9 +130,6 @@ class hotpot_source {
 
     /** @var string output formats which can use this file type */
     public $outputformats;
-
-    /** @var string the best output format type for this file */
-    public $best_outputformat;
 
     /**
      * properties of the quiz file - each one has a correspinding get_xxx() function
@@ -426,8 +430,69 @@ class hotpot_source {
      * @param stdclass $sourcefile a Moodle stored_file object representing the source file
      * @return boolean true if the file is a recognized quiz file, or false otherwise
      */
-    static public function is_quizfile($sourcefile) {
-        return false;
+    static public function is_quizfile($sourcefile)  {
+
+        if (empty(static::REQUIRED_FILETYPES)) {
+            return false;
+        }
+
+        $filename = $sourcefile->get_filename();
+        if (! $pos = strrpos($filename, '.')) {
+            // no file type (or hidden file) - shouldn't happen!!
+            return false;
+        }
+
+        $filetype = substr($filename, $pos + 1);
+        if (! in_array($filetype, static::REQUIRED_FILETYPES)) {
+            // wrong file type
+            return false;
+        }
+
+        if (! $content = static::get_content($sourcefile)) {
+            // empty or non-existant file
+            return false;
+        }
+
+        // Build array of required strings
+        if ($filetype == 'htm' || $filetype == 'html') {
+            $strings = static::required_strings_html($content);
+        } else {
+            $strings = static::REQUIRED_STRINGS;
+        }
+
+        // Check that required strings are present in $content
+        foreach ($strings as $string) {
+            if (! is_numeric(strpos($content, $string))) {
+                // required string not found
+                return false;
+            }
+        }
+
+        foreach (static::REQUIRED_MATCHES as $string) {
+            if (! preg_match($string, $content)) {
+                // required match not found
+                return false;
+            }
+        }
+
+        foreach (static::BANNED_STRINGS as $string) {
+            if (is_numeric(strpos($content, $string))) {
+                // banned string found
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /*
+     * required_strings_html
+     *
+     * @param string $content of HTML file (passed by reference)
+     * @return array of strings required in HTML content
+     */
+    static public function required_strings_html(&$content)  {
+        return static::REQUIRED_STRINGS;
     }
 
     /*
@@ -443,20 +508,16 @@ class hotpot_source {
     /**
      * get_content
      *
-     * @param xxx $sourcefile
+     * @param xxx $file
      * @return xxx
      */
     static public function get_content($file, $hotpot=null)  {
-        global $CFG, $DB;
-
         if ($content = $file->get_content()) {
             return $content;
         }
-
         if ($path = self::get_real_path($file, $hotpot)) {
             return file_get_contents($path);
         }
-
         return ''; // shouldn't happen !!
     }
 
@@ -853,12 +914,16 @@ class hotpot_source {
      * @return xxx
      */
     function get_best_outputformat()  {
-        if (! isset($this->best_outputformat)) {
+        if (static::BEST_OUTPUT_FORMAT) {
+            $format = static::BEST_OUTPUT_FORMAT;
+        } else {
             // the default outputformat is the same as the sourcefile format
             // assuming class name starts with "hotpot_source_"
-            $this->best_outputformat = substr(get_class($this), 14);
+            $format = substr(get_class($this), 14);
+            // PHP >= 5.3 allows "get_called_class()"
+            // PHP >= 5.5 allows "static::class"
         }
-        return $this->best_outputformat;
+        return $format;
     }
 
 
@@ -873,4 +938,4 @@ class hotpot_source {
     function synchronize_moodle_settings(&$quiz)  {
         return false;
     }
-} // end class
+}

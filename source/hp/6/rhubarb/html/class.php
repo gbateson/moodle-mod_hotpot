@@ -37,34 +37,10 @@ require_once($CFG->dirroot.'/mod/hotpot/source/hp/6/rhubarb/class.php');
  * @since     Moodle 2.0
  */
 class hotpot_source_hp_6_rhubarb_html extends hotpot_source_hp_6_rhubarb {
-
-    /**
-     * is_quizfile
-     *
-     * @param xxx $sourcefile
-     * @return xxx
-     */
-    static public function is_quizfile($sourcefile)  {
-        if (! preg_match('/\.html?$/', $sourcefile->get_filename())) {
-            // wrong file type
-            return false;
-        }
-
-        if (! $content = self::get_content($sourcefile)) {
-            // empty or non-existant file
-            return false;
-        }
-
-        if (! strpos($content, '<div class="StdDiv">')) {
-            // not an tt3 file
-            return false;
-        }
-
-        if (! strpos($content, '<form id="Rhubarb" action="" onsubmit="CheckGuess(); return false">')) {
-            // not an rhubarb file
-            return false;
-        }
-
-        return true;
-    }
+    const REQUIRED_FILETYPES = array(
+        'htm', 'html'
+    );
+    const REQUIRED_STRINGS = array(
+        '<form id="Rhubarb" action="" onsubmit="CheckGuess(); return false">'
+    );
 }

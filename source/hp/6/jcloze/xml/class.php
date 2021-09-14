@@ -38,15 +38,11 @@ require_once($CFG->dirroot.'/mod/hotpot/source/hp/6/jcloze/class.php');
  */
 class hotpot_source_hp_6_jcloze_xml extends hotpot_source_hp_6_jcloze {
 
-    /**
-     * is_quizfile
-     *
-     * @param xxx $sourcefile
-     * @return xxx
-     */
-    static public function is_quizfile($sourcefile)  {
-        return preg_match('/\.jcl$/', $sourcefile->get_filename());
-    }
+    const REQUIRED_FILETYPES = array('jcl');
+    const REQUIRED_STRINGS = array(
+        '<hotpot-jcloze-file>',
+        '<version>6</version>'
+    );
 
     /**
      * compact_filecontents

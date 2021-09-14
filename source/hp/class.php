@@ -41,11 +41,15 @@ require_once($CFG->dirroot.'/mod/hotpot/source/class.php');
  * @subpackage hotpot
  */
 class hotpot_source_hp extends hotpot_source {
+
     public $xml; // an array containing the xml tree for hp xml files
     public $xml_root; // the array key of the root of the xml tree
 
     public $hbs_software; // hotpot or textoys
-    public $hbs_quiztype; //  jcloze, jcross, jmatch, jmix, jquiz, quandary, rhubarb, sequitur
+    public $hbs_quiztype; // jcloze, jcross, jmatch, jmix, jquiz, quandary, rhubarb, sequitur
+
+    public $hbs_version; // 6 or 7
+    public $hbs_filetype;
 
     // encode a string for javascript
     public $javascript_replace_pairs = array(
@@ -84,14 +88,26 @@ class hotpot_source_hp extends hotpot_source {
         4 => array(0=>18, 1=>12, 2=>6, 3=>0)
     );
 
-
     /**
-     * is_html
+     *  
      *
      * @return xxx
      */
     function is_html() {
         return preg_match('/\.html?$/', $this->file->get_filename());
+    }
+
+    /**
+     * get_hbs_version
+     *
+     * @return xxx
+     */
+    function get_hbs_version() {
+        if (is_html) {
+            return $this->html_get_hbs_version();
+        } else {
+            return $this->xml_get_hbs_version();
+        }
     }
 
     /**
@@ -147,6 +163,21 @@ class hotpot_source_hp extends hotpot_source {
     }
 
     // function for html files
+
+    function html_get_hbs_version() {
+        if (! isset($this->hbs_version)) {
+            $this->hbs_version = '';
+
+            if (! $this->get_filecontents()) {
+                // empty file - shouldn't happen !!
+                return false;
+            }
+            if (preg_match('/<!-- Made with executable version (\d+)\.\d+ Release \d+ Build \d+ -->/is', $this->filecontents, $match)) {
+                $this->hbs_version = intval($matches[1]);
+            }
+        }
+        return $this->hbs_version;
+    }
 
     /**
      * html_get_name
@@ -237,6 +268,24 @@ class hotpot_source_hp extends hotpot_source {
     // functions for xml files
 
     /**
+     * xml_get_hbs_version
+     *
+     * @return xxx
+     */
+    function xml_get_hbs_version() {
+        if (! isset($this->hbs_version)) {
+            $this->hbs_version = '';
+
+            if (! $this->xml_get_filecontents()) {
+                // could not get file contents - shouldn't happen !!
+                return false;
+            }
+            $this->hbs_version = $this->xml_value('version');
+        }
+        return $this->hbs_version;
+    }
+
+    /**
      * xml_get_name
      *
      * @param xxx $textonly (optional, default=true)
@@ -248,7 +297,7 @@ class hotpot_source_hp extends hotpot_source {
             $this->title = '';
 
             if (! $this->xml_get_filecontents()) {
-                // could not detect Hot Potatoes quiz type - shouldn't happen !!
+                // could not get file contents - shouldn't happen !!
                 return false;
             }
             $this->title = $this->xml_value('data,title');
@@ -272,7 +321,7 @@ class hotpot_source_hp extends hotpot_source {
             $this->entrytext = '';
 
             if (! $this->xml_get_filecontents()) {
-                // could not detect Hot Potatoes quiz type - shouldn't happen !!
+                // could not get file contents - shouldn't happen !!
                 return false;
             }
             if ($intro = $this->xml_value($this->hbs_software.'-config-file,'.$this->hbs_quiztype.',exercise-subtitle')) {
@@ -295,7 +344,7 @@ class hotpot_source_hp extends hotpot_source {
             $this->nextquiz = false;
 
             if (! $this->xml_get_filecontents()) {
-                // could not detect Hot Potatoes quiz type in xml file - shouldn't happen !!
+                // could not get file contents - shouldn't happen !!
                 return false;
             }
 
@@ -699,4 +748,4 @@ class hotpot_source_hp extends hotpot_source {
             return true;
         }
     }
-} // end class
+}

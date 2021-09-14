@@ -37,19 +37,14 @@ require_once($CFG->dirroot.'/mod/hotpot/source/html/class.php');
  * @since     Moodle 2.0
  */
 class hotpot_source_html_xhtml extends hotpot_source_html {
+
+    const REQUIRED_FILETYPES = array(
+        'xhtm', 'xhtml'
+    );
+
     // the icon for this source file type
     public $icon = 'pix/f/html.gif';
     public $iconwidth = '16';
     public $iconheight = '16';
     public $iconclass = 'icon';
-
-    /**
-     * is_quizfile
-     *
-     * @param xxx $sourcefile
-     * @return xxx
-     */
-    static public function is_quizfile($sourcefile)  {
-        return preg_match('/\.x?html?$/', $sourcefile->get_filename());
-    }
-} // end class
+}

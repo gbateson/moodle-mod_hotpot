@@ -37,39 +37,11 @@ require_once($CFG->dirroot.'/mod/hotpot/source/hp/6/jcloze/html/class.php');
  * @since     Moodle 2.0
  */
 class hotpot_source_hp_6_jcloze_html_dropdown extends hotpot_source_hp_6_jcloze_html {
-
-    /**
-     * is_quizfile
-     *
-     * @param xxx $sourcefile
-     * @return xxx
-     */
-    static public function is_quizfile($sourcefile)  {
-        if (! preg_match('/\.html?$/', $sourcefile->get_filename())) {
-            // wrong file type
-            return false;
-        }
-
-        if (! $content = self::get_content($sourcefile)) {
-            // empty or non-existant file
-            return false;
-        }
-
-        if (! strpos($content, '<div id="MainDiv" class="StdDiv">')) {
-            // not an hp6 file
-            return false;
-        }
-
-        if (! strpos($content, 'function Create_StateArray()')) {
-            // not a Rottmeier file
-            return false;
-        }
-
-        if (! strpos($content, 'this.GapLocked = false;')) {
-            // not a Rottmeier DropDown file
-            return false;
-        }
-
-        return true;
-    }
+    const REQUIRED_FILETYPES = array(
+        'htm', 'html'
+    );
+    const REQUIRED_STRINGS = array(
+        'function Create_StateArray()',
+        'this.GapLocked = false;'
+    );
 }

@@ -97,11 +97,11 @@ $string['added'] = 'Added';
 $string['addquizchain'] = 'Add quiz chain';
 $string['addquizchain_help'] = 'Should all the quizzes in a quiz chain be added?
 
-**No**
-: only one quiz will be added to the course
+**No**  
+&nbsp; only one quiz will be added to the course
 
-**Yes**
-: if the source file is a **quiz file**, it is treated as the start of a chain of quizzes and all quizzes in the chain will be added to the course with identical settings. Each quiz in the chain must have a link to the next file in the chain.
+**Yes**  
+&nbsp; if the source file is a **quiz file**, it is treated as the start of a chain of quizzes and all quizzes in the chain will be added to the course with identical settings. Each quiz in the chain must have a link to the next file in the chain.
 
 If the source file is a **folder**, all recognizable quizzes in the folder will be added to the course to form a chain of quizzes with identical settings.
 
@@ -158,17 +158,17 @@ $string['delay2summary'] = 'Time delay between later attempts';
 $string['delay3'] = 'Delay 3';
 $string['delay3_help'] = 'The setting specifies the delay between finishing the quiz and returning control of the display to Moodle.
 
-**Use specific delay**
-: control will be returned to Moodle after the specified delay.
+**Use specific delay**  
+&nbsp; control will be returned to Moodle after the specified delay.
 
-**Use settings in source/template file**
-: control will be returned to Moodle after the number of seconds specified in the source file or the template files for this output format.
+**Use settings in source/template file**  
+&nbsp; control will be returned to Moodle after the number of seconds specified in the source file or the template files for this output format.
 
-**Wait till student clicks OK**
-: control will be returned to Moodle after the student clicks the OK button on the completion message in the quiz.
+**Wait till student clicks OK**  
+&nbsp; control will be returned to Moodle after the student clicks the OK button on the completion message in the quiz.
 
-**Do not continue automatically**
-: control will not be returned to Moodle after the quiz is finished. The student will be free to navigate away from the quiz page.
+**Do not continue automatically**  
+&nbsp; control will not be returned to Moodle after the quiz is finished. The student will be free to navigate away from the quiz page.
 
 Note, the quiz results are always returned to Moodle immediately the quiz is completed or abandoned, regardless of this setting.';
 $string['delay3afterok'] = 'Wait till student clicks OK';
@@ -209,25 +209,25 @@ $string['entryhotpotsection'] = 'Previous HotPot in this course section';
 $string['entryoptions'] = 'Entry page options';
 $string['entryoptions_help'] = 'These check boxes enable and disable the display of items on the HotPot\'s entry page.
 
-**Unit name as title**
-: if checked, the unit name will be displayed as the title of the entry page.
+**Unit name as title**  
+&nbsp; if checked, the unit name will be displayed as the title of the entry page.
 
-**Grading**
-: if checked, the HotPot\'s grading information will be displayed on the entry page.
+**Grading**  
+&nbsp; if checked, the HotPot\'s grading information will be displayed on the entry page.
 
-**Dates**
-: if checked, the HotPot\'s open and close dates will be displayed on the entry page.
+**Dates**  
+&nbsp; if checked, the HotPot\'s open and close dates will be displayed on the entry page.
 
-**Attempts**
-: if checked, a table showing details of a user\'s previous attempts at this HotPot will be displayed on the entry page. Attempts that may be resumed will have a resume button displayed in the rightmost column.';
+**Attempts**  
+&nbsp; if checked, a table showing details of a user\'s previous attempts at this HotPot will be displayed on the entry page. Attempts that may be resumed will have a resume button displayed in the rightmost column.';
 $string['entrypage'] = 'Show entry page';
 $string['entrypage_help'] = 'Should the students be shown an initial page before starting the HotPot activity?
 
-**Yes**
-: the students will be shown an entry page before starting the HotPot. The contents of the entry page are determined by the HotPot\'s entry page options.
+**Yes**  
+&nbsp; the students will be shown an entry page before starting the HotPot. The contents of the entry page are determined by the HotPot\'s entry page options.
 
-**No**
-: the students will not be shown an entry page, and will start the HotPot immediately.
+**No**  
+&nbsp; the students will not be shown an entry page, and will start the HotPot immediately.
 
 An entry page is always shown to the teacher, in order to provide access to the reports and edit quizzes page';
 $string['entrypagehdr'] = 'Entry page';
@@ -241,21 +241,21 @@ $string['exit_excellent'] = 'Excellent!';
 $string['exit_feedback'] = 'Exit page feedback';
 $string['exit_feedback_help'] = 'These options enable and disable the display of feedback items on a HotPot\'s exit page.
 
-**Unit name as title**
-: if checked, the unit name will be displayed as the title of the exit page.
+**Unit name as title**  
+&nbsp; if checked, the unit name will be displayed as the title of the exit page.
 
-**Encouragement**
-: if checked, some encouragement will displayed on the exit page. The encouragement depends on the HotPot grade:
-: **&gt; 90%**: Excellent!
-: **&gt; 60%**: Well done
-: **&gt; 0%**: Good try
-: **= 0%**: Are you OK?
+**Encouragement**  
+&nbsp; if checked, some encouragement will displayed on the exit page. The encouragement depends on the HotPot grade:
+&nbsp; **&gt; 90%**: Excellent!
+&nbsp; **&gt; 60%**: Well done
+&nbsp; **&gt; 0%**: Good try
+&nbsp; **= 0%**: Are you OK?
 
-**Unit attempt grade**
-: if checked, the grade for the unit attempt that has just been completed will be displayed on the exit page.
+**Unit attempt grade**  
+&nbsp; if checked, the grade for the unit attempt that has just been completed will be displayed on the exit page.
 
-**Unit grade**
-: if checked the HotPot grade will be displayed on the exit page.
+**Unit grade**  
+&nbsp; if checked the HotPot grade will be displayed on the exit page.
 
 In addition, if the unit grading method is highest a message to tell the user if the most recent attempt was equal to or better than their previous will be displayed.';
 $string['exit_goodtry'] = 'Good try!';
@@ -272,17 +272,17 @@ $string['exit_index_text'] = 'Go to the index of activities';
 $string['exit_links'] = 'Exit page links';
 $string['exit_links_help'] = 'These options enable and disable the display of certain navigation links on a HotPot\'s exit page.
 
-**Retry**
-: if multiple attempts are allowed at this HotPot and the student still has some attempts left, a link to allow the student to retry the HotPot will be displayed
+**Retry**  
+&nbsp; if multiple attempts are allowed at this HotPot and the student still has some attempts left, a link to allow the student to retry the HotPot will be displayed
 
-**Index**
-: if checked, a link to the HotPot index page will be displayed.
+**Index**  
+&nbsp; if checked, a link to the HotPot index page will be displayed.
 
-**Course**
-: if checked, a link to the Moodle course page will be displayed.
+**Course**  
+&nbsp; if checked, a link to the Moodle course page will be displayed.
 
-**Grades**
-: if checked, a link to the Moodle gradebook will be displayed.';
+**Grades**  
+&nbsp; if checked, a link to the Moodle gradebook will be displayed.';
 $string['exit_next'] = 'Next';
 $string['exit_next_text'] = 'Try the next activity';
 $string['exit_noscore'] = 'You have successfully completed this activity!';
@@ -312,11 +312,11 @@ $string['exitoptions'] = 'Exit page options';
 $string['exitpage'] = 'Show exit page';
 $string['exitpage_help'] = 'Should a exit page displayed after the HotPot quiz has been completed?
 
-**Yes**
-: the students will be shown an exit page when the HotPot is completed. The contents of the exit page are determined by the settings for the HotPot\'s exit page feedback and links.
+**Yes**  
+&nbsp; the students will be shown an exit page when the HotPot is completed. The contents of the exit page are determined by the settings for the HotPot\'s exit page feedback and links.
 
-**No**
-: the students will not be shown an exit page. Instead, they will either go immediately to the next activity or return to the Moodle course page.';
+**No**  
+&nbsp; the students will not be shown an exit page. Instead, they will either go immediately to the next activity or return to the Moodle course page.';
 $string['exitpagehdr'] = 'Exit page';
 $string['exittext'] = 'Exit page text';
 $string['feedbackdiscuss'] = 'Discuss this quiz in a forum';
@@ -334,17 +334,17 @@ $string['giveup'] = 'Give Up';
 $string['grademethod'] = 'Grading method';
 $string['grademethod_help'] = 'This setting defines how the HotPot grade is calculated from the attempt scores.
 
-**Highest score**
-: the grade will be set to the highest score for an attempt at this HotPot activity.
+**Highest score**  
+&nbsp; the grade will be set to the highest score for an attempt at this HotPot activity.
 
-**Average scsore**
-: the grade will be set to the average score for attempts at this HotPot activity.
+**Average scsore**  
+&nbsp; the grade will be set to the average score for attempts at this HotPot activity.
 
-**First attempt**
-: the grade will be set to the score of the first attempt at this HotPot activity.
+**First attempt**  
+&nbsp; the grade will be set to the score of the first attempt at this HotPot activity.
 
-**Last attempt**
-: the grade will be set to the score of the most recent attempt at this HotPot activity.';
+**Last attempt**  
+&nbsp; the grade will be set to the score of the most recent attempt at this HotPot activity.';
 $string['gradeweighting'] = 'Grade weighting';
 $string['gradeweighting_help'] = 'Grades for this HotPot activity will be scaled to this number in the Moodle gradebook.';
 $string['highestscore'] = 'Highest score';
@@ -366,17 +366,17 @@ $string['missingsourcetype'] = 'HotPot record is missing sourcetype';
 $string['nameadd'] = 'Name';
 $string['nameadd_help'] = 'The name can be specfic text entered by the teacher or it can be automatically generated.
 
-**Get from source file**
-: the name will be extracted from the source file.
+**Get from source file**  
+&nbsp; the name will be extracted from the source file.
 
-**Use source file name**
-: the source file name will be used as the name.
+**Use source file name**  
+&nbsp; the source file name will be used as the name.
 
-**Use source file path**
-: the source file path will be used as the name. Any slashes in the file path will be replaced by spaces.
+**Use source file path**  
+&nbsp; the source file path will be used as the name. Any slashes in the file path will be replaced by spaces.
 
-**Specific text**
-: the specific text entered by the teacher will be used as the name.';
+**Specific text**  
+&nbsp; the specific text entered by the teacher will be used as the name.';
 $string['nameedit'] = 'Name';
 $string['nameedit_help'] = 'The specific text that is displayed to the students';
 $string['navigation'] = 'Navigation';
@@ -385,23 +385,23 @@ $string['navigation_frame'] = 'Moodle navigation frame';
 $string['navigation_give_up'] = 'A single &quot;Give Up&quot; button';
 $string['navigation_help'] = 'This setting specifies the navigation used in the quiz:
 
-**Moodle navigation bar**
-: the Moodle navigation bar will be displayed in the same window as the quiz at the top of the page
+**Moodle navigation bar**  
+&nbsp; the Moodle navigation bar will be displayed in the same window as the quiz at the top of the page
 
-**Moodle navigation frame**
-: the Moodle navigation bar will be displayed in a separate frame at the top of the quiz
+**Moodle navigation frame**  
+&nbsp; the Moodle navigation bar will be displayed in a separate frame at the top of the quiz
 
-**Embedded web page**
-: the Moodle navigation bar will be displayed in with the Hot Potatoes quiz embedded within the window
+**Embedded web page**  
+&nbsp; the Moodle navigation bar will be displayed in with the Hot Potatoes quiz embedded within the window
 
-**Original navigation aids**
-: the quiz will be displayed with the navigation buttons, if any, defined in the quiz
+**Original navigation aids**  
+&nbsp; the quiz will be displayed with the navigation buttons, if any, defined in the quiz
 
-**A single "Give Up" button**
-: the quiz will be displayed with a single "Give Up" button at the top of the page
+**A single "Give Up" button**  
+&nbsp; the quiz will be displayed with a single "Give Up" button at the top of the page
 
-**None**
-: the quiz will be displayed without any navigation aids, so when all questions have been answered correctly, depending on the "Show next quiz?" setting, Moodle will either return to the course page or display the next quiz';
+**None**  
+&nbsp; the quiz will be displayed without any navigation aids, so when all questions have been answered correctly, depending on the "Show next quiz?" setting, Moodle will either return to the course page or display the next quiz';
 $string['navigation_moodle'] = 'Standard Moodle navigation bars (top and side)';
 $string['navigation_none'] = 'None';
 $string['navigation_original'] = 'Original navigation aids';
@@ -423,42 +423,54 @@ $string['outputformat_help'] = 'The output format specifies how the content will
 The output formats that are available depend on the type of the source file. Some types of source file have just one output format, while other types of source file have several output formats.
 
 The "best" setting will display the content using the optimal output format for the student\'s browser.';
-$string['outputformat_hp_6_jcloze_html_dropdown'] = 'DropDown from html';
-$string['outputformat_hp_6_jcloze_html_findit_a'] = 'FindIt (a) from html';
-$string['outputformat_hp_6_jcloze_html_findit_b'] = 'FindIt (b) from html';
-$string['outputformat_hp_6_jcloze_html_jgloss'] = 'JGloss from html';
-$string['outputformat_hp_6_jcloze_html'] = 'JCloze (v6) from html';
-$string['outputformat_hp_6_jcloze_xml_anctscan'] = 'ANCT-Scan from HP6 JCloze xml';
-$string['outputformat_hp_6_jcloze_xml_dropdown'] = 'DropDown from HP6 JCloze xml';
-$string['outputformat_hp_6_jcloze_xml_findit_a'] = 'FindIt (a) from HP6 JCloze xml';
-$string['outputformat_hp_6_jcloze_xml_findit_b'] = 'FindIt (b) from HP6 JCloze xml';
-$string['outputformat_hp_6_jcloze_xml_jgloss'] = 'JGloss from HP6 JCloze xml';
-$string['outputformat_hp_6_jcloze_xml_v6_autoadvance'] = 'JCloze (v6) from HP6 xml (Auto-advance)';
-$string['outputformat_hp_6_jcloze_xml_v6'] = 'JCloze (v6) from HP6 xml';
-$string['outputformat_hp_6_jcross_html'] = 'JCross (v6) from html';
-$string['outputformat_hp_6_jcross_xml_v6'] = 'JCross (v6) from xml';
-$string['outputformat_hp_6_jmatch_html'] = 'JMatch (v6) from html';
-$string['outputformat_hp_6_jmatch_xml_flashcard'] = 'JMatch (flashcard) from xml';
-$string['outputformat_hp_6_jmatch_xml_jmemori'] = 'JMemori from xml';
-$string['outputformat_hp_6_jmatch_xml_sort'] = 'JMatch Sort from xml';
-$string['outputformat_hp_6_jmatch_xml_v6'] = 'JMatch (v6) from xml';
-$string['outputformat_hp_6_jmatch_xml_v6_plus'] = 'JMatch (v6+) from xml';
-$string['outputformat_hp_6_jmatch_html_sort'] = 'JMatch Sort from html';
-$string['outputformat_hp_6_jmix_html'] = 'JMix (v6) from html';
-$string['outputformat_hp_6_jmix_xml_v6'] = 'JMix (v6) from xml';
-$string['outputformat_hp_6_jmix_xml_v6_plus'] = 'JMix (v6+) from xml';
-$string['outputformat_hp_6_jmix_xml_v6_plus_deluxe'] = 'JMix (v6+ with prefix, suffix with distractors) from xml';
-$string['outputformat_hp_6_jmix_xml_v6_plus_keypress'] = 'JMix (v6+ with key press) from xml';
-$string['outputformat_hp_6_jquiz_html'] = 'JQuiz (v6) from html';
-$string['outputformat_hp_6_jquiz_xml_v6'] = 'JQuiz (v6) from xml';
-$string['outputformat_hp_6_jquiz_xml_v6_autoadvance'] = 'JQuiz (v6) from xml (Auto-advance)';
-$string['outputformat_hp_6_jquiz_xml_v6_exam'] = 'JQuiz (v6) from xml (Exam)';
-$string['outputformat_hp_6_rhubarb_html'] = 'Rhubarb (v6) from html';
-$string['outputformat_hp_6_rhubarb_xml'] = 'Rhubarb (v6) from xml';
-$string['outputformat_hp_6_sequitur_html'] = 'Sequitur (v6) from html';
-$string['outputformat_hp_6_sequitur_html_incremental'] = 'Sequitur (v6) from html, incremental scoring';
-$string['outputformat_hp_6_sequitur_xml'] = 'Sequitur (v6) from xml';
-$string['outputformat_hp_6_sequitur_xml_incremental'] = 'Sequitur (v6) from xml, incremental scoring';
+$string['outputformat_hp_6_jcloze_html_dropdown'] = 'DropDown from HP6 HTML';
+$string['outputformat_hp_6_jcloze_html_findit_a'] = 'FindIt (a) from HP6 HTML';
+$string['outputformat_hp_6_jcloze_html_findit_b'] = 'FindIt (b) from HP6 HTML';
+$string['outputformat_hp_6_jcloze_html_jgloss'] = 'JGloss from HP6 HTML';
+$string['outputformat_hp_6_jcloze_html'] = 'JCloze (v6) from HP6 HTML';
+$string['outputformat_hp_6_jcloze_xml_anctscan'] = 'ANCT-Scan from JCloze XML';
+$string['outputformat_hp_6_jcloze_xml_dropdown'] = 'DropDown from JCloze XML';
+$string['outputformat_hp_6_jcloze_xml_findit_a'] = 'FindIt (a) from JCloze XML';
+$string['outputformat_hp_6_jcloze_xml_findit_b'] = 'FindIt (b) from JCloze XML';
+$string['outputformat_hp_6_jcloze_xml_jgloss'] = 'JGloss from JCloze XML';
+$string['outputformat_hp_6_jcloze_xml_v6_autoadvance'] = 'JCloze (v6) from XML (Auto-advance)';
+$string['outputformat_hp_6_jcloze_xml_v6'] = 'JCloze (v6) from XML';
+$string['outputformat_hp_6_jcross_html'] = 'JCross (v6) from HP6 HTML';
+$string['outputformat_hp_6_jcross_xml_v6'] = 'JCross (v6) from XML';
+$string['outputformat_hp_6_jmatch_html_sort'] = 'JMatch Sort from HP6 HTML';
+$string['outputformat_hp_6_jmatch_html'] = 'JMatch (v6) from HP6 HTML';
+$string['outputformat_hp_6_jmatch_xml_flashcard'] = 'JMatch (flashcard) from XML';
+$string['outputformat_hp_6_jmatch_xml_jmemori'] = 'JMemori from XML';
+$string['outputformat_hp_6_jmatch_xml_sort'] = 'JMatch Sort from XML';
+$string['outputformat_hp_6_jmatch_xml_v6_plus'] = 'JMatch (v6+) from XML';
+$string['outputformat_hp_6_jmatch_xml_v6'] = 'JMatch (v6) from XML';
+$string['outputformat_hp_6_jmix_html'] = 'JMix (v6) from HP6 HTML';
+$string['outputformat_hp_6_jmix_xml_v6_plus_deluxe'] = 'JMix (v6+ with prefix, suffix with distractors) from XML';
+$string['outputformat_hp_6_jmix_xml_v6_plus_keypress'] = 'JMix (v6+ with key press) from XML';
+$string['outputformat_hp_6_jmix_xml_v6_plus'] = 'JMix (v6+) from XML';
+$string['outputformat_hp_6_jmix_xml_v6'] = 'JMix (v6) from XML';
+$string['outputformat_hp_6_jquiz_html'] = 'JQuiz (v6) from HP6 HTML';
+$string['outputformat_hp_6_jquiz_xml_v6_autoadvance'] = 'JQuiz (v6) from XML (Auto-advance)';
+$string['outputformat_hp_6_jquiz_xml_v6_exam'] = 'JQuiz (v6) from XML (Exam)';
+$string['outputformat_hp_6_jquiz_xml_v6'] = 'JQuiz (v6) from XML';
+$string['outputformat_hp_6_rhubarb_html'] = 'Rhubarb from TexToys (v3) HTML';
+$string['outputformat_hp_6_rhubarb_xml'] = 'Rhubarb from TexToys XML';
+$string['outputformat_hp_6_sequitur_html_incremental'] = 'Sequitur from TexToys (v3) HTML, incremental scoring';
+$string['outputformat_hp_6_sequitur_html'] = 'Sequitur from TexToys HTML';
+$string['outputformat_hp_6_sequitur_xml_incremental'] = 'Sequitur from XML, incremental scoring';
+$string['outputformat_hp_6_sequitur_xml'] = 'Sequitur (from XML';
+$string['outputformat_hp_7_jcloze_html'] = 'JCloze (v7) from HP7 HTML';
+$string['outputformat_hp_7_jcloze_xml_v7'] = 'JCloze (v7) from XML';
+$string['outputformat_hp_7_jcross_html'] = 'JCross (v7) from HP7 HTML';
+$string['outputformat_hp_7_jcross_xml_v7'] = 'JCross (v7) from XML';
+$string['outputformat_hp_7_jmatch_html'] = 'JMatch (v7) from HP7 HTML';
+$string['outputformat_hp_7_jmatch_xml_v7_plus'] = 'JMatch (v7+) from XML';
+$string['outputformat_hp_7_jmatch_xml_v7'] = 'JMatch (v7) from XML';
+$string['outputformat_hp_7_jmix_html'] = 'JMix (v7) from HP7 HTML';
+$string['outputformat_hp_7_jmix_xml_v7_plus'] = 'JMix (v7+) from XML';
+$string['outputformat_hp_7_jmix_xml_v7'] = 'JMix (v7) from XML';
+$string['outputformat_hp_7_jquiz_html'] = 'JQuiz (v7) from HP7 HTML';
+$string['outputformat_hp_7_jquiz_xml_v7'] = 'JQuiz (v7) from XML';
 $string['outputformat_html_ispring'] = 'iSpring HTML file';
 $string['outputformat_html_xerte'] = 'Xerte HTML file';
 $string['outputformat_html_xhtml'] = 'Standard HTML file';
@@ -507,17 +519,17 @@ $string['storedetails'] = 'Store the raw XML details of HotPot quiz attempts';
 $string['studentfeedback'] = 'Student feedback';
 $string['studentfeedback_help'] = 'If enabled, a link to a pop-up feedback window will be displayed whenever the student clicks on the "Check" button. The feedback window allows students to discuss this quiz with their teacher and classmates in one of the following ways:
 
-**Web page**
-: requires URL of the web page, for example http://myserver.com/feedbackform.html
+**Web page**  
+&nbsp; requires URL of the web page, for example http://myserver.com/feedbackform.html
 
-**Feedback form**
-: requires URL of the form script, for example http://myserver.com/cgi-bin/formmail.pl
+**Feedback form**  
+&nbsp; requires URL of the form script, for example http://myserver.com/cgi-bin/formmail.pl
 
-**Moodle forum**
-: the forum index for the course will be displayed
+**Moodle forum**  
+&nbsp; the forum index for the course will be displayed
 
-**Moodle messaging**
-: the Moodle instant messaging window will be displayed. If the course has several teachers, the student will be prompted to select a teacher before the messaging window appears.';
+**Moodle messaging**  
+&nbsp; the Moodle instant messaging window will be displayed. If the course has several teachers, the student will be prompted to select a teacher before the messaging window appears.';
 $string['submits'] = 'Submissions';
 $string['textsourcefile'] = 'Get from source file';
 $string['textsourcefilename'] = 'Use source file name';
@@ -529,14 +541,14 @@ $string['timedout'] = 'Timed out';
 $string['timelimit'] = 'Time limit';
 $string['timelimit_help'] = 'This setting specifies the maximum duration of a single attempt.
 
-**Use settings in source/template file**
-: the time limit will be taken from the source file or the template files for this output format
+**Use settings in source/template file**  
+&nbsp; the time limit will be taken from the source file or the template files for this output format
 
-**Use specific time**
-: the time limit specified on the HotPot quiz settings page will be used as the time limit for an attempt at this quiz. This setting overrides time limits in the source file, configuration file, or template files for this output format.
+**Use specific time**  
+&nbsp; the time limit specified on the HotPot quiz settings page will be used as the time limit for an attempt at this quiz. This setting overrides time limits in the source file, configuration file, or template files for this output format.
 
-**Disable**
-: no time limit will be set for attempts at this quiz.
+**Disable**  
+&nbsp; no time limit will be set for attempts at this quiz.
 
 Note that if an attempt is resumed, the timer continues from where the attempt was previously paused.';
 $string['timelimitexpired'] = 'The time limit for this attempt has expired';
@@ -549,17 +561,17 @@ $string['timeopenclose_help'] = 'You can specify times when the quiz is accessib
 $string['title'] = 'Title';
 $string['title_help'] = 'This setting specifies the title to be displayed on the web page.
 
-**HotPot activity name**
-: the name of this HotPot activity will be displayed as the web page title.
+**HotPot activity name**  
+&nbsp; the name of this HotPot activity will be displayed as the web page title.
 
-**Get from source file**
-: the title, if any, defined in the source file will be used as the web page title.
+**Get from source file**  
+&nbsp; the title, if any, defined in the source file will be used as the web page title.
 
-**Use source file name**
-: the source file name, excluding any folder names, will be used as the web page title.
+**Use source file name**  
+&nbsp; the source file name, excluding any folder names, will be used as the web page title.
 
-**Use source file path**
-: the source file path, including any folder names, will be used as the web page title.';
+**Use source file path**  
+&nbsp; the source file path, including any folder names, will be used as the web page title.';
 $string['toolsindex'] = 'HotPot Tools index';
 $string['unitname_help'] = 'help text for unit name';
 $string['unrecognizedsourcefile'] = 'Sorry, the HotPot module could not detect the type of the source file: {$a}';
@@ -574,39 +586,39 @@ Note that this setting overrides the site administration setting to enable or di
 $string['usemediafilter'] = 'Use media filter';
 $string['usemediafilter_help'] = 'This setting specifies the media filter to be used.
 
-**None**
-: the content will not be passed through any media filters.
+**None**  
+&nbsp; the content will not be passed through any media filters.
 
-**Moodle\'s standard media filters**
-: the content will be passed through Moodle\'s standard media filters. These filters search for links to common types of sound and movie file, and convert those links to suitable media players.
+**Moodle\'s standard media filters**  
+&nbsp; the content will be passed through Moodle\'s standard media filters. These filters search for links to common types of sound and movie file, and convert those links to suitable media players.
 
-**HotPot media filter**
-: the content will be passed through filters which detect links, images, sounds and movies to be specified using a square bracket notation.
+**HotPot media filter**  
+&nbsp; the content will be passed through filters which detect links, images, sounds and movies to be specified using a square bracket notation.
 
 The square-bracket notation has the following syntax:
 <code>[url player width height options]</code>
 
-**url**
-: the relative or absolute url of the media file
+**url**  
+&nbsp; the relative or absolute url of the media file
 
 **player** (optional)
-: the name of the player to be inserted. The default value for this setting is "moodle". The standard version of the HotPot module also offers the following players:
-: **dew**: an mp3 player
-: **dyer**: mp3 player by Bernard Dyer
-: **hbs**: mp3 player from Half-Baked Software
-: **image**: insert an image into the web page
-: **link**: insert a link to another web page
+&nbsp; the name of the player to be inserted. The default value for this setting is "moodle". The standard version of the HotPot module also offers the following players:
+&nbsp; **dew**: an mp3 player
+&nbsp; **dyer**: mp3 player by Bernard Dyer
+&nbsp; **hbs**: mp3 player from Half-Baked Software
+&nbsp; **image**: insert an image into the web page
+&nbsp; **link**: insert a link to another web page
 
 **width** (optional)
-: the required width of the player
+&nbsp; the required width of the player
 
 **height** (optional)
-: the required height of the player. If omitted this value will be set to the same as the width setting.
+&nbsp; the required height of the player. If omitted this value will be set to the same as the width setting.
 
 **options** (optional)
-: a comma-separated list options to be passed to the player. Each option can be a simple on/off switch, or a name value pair.
-: **name=value
-: **name="some value with spaces"';
+&nbsp; a comma-separated list options to be passed to the player. Each option can be a simple on/off switch, or a name value pair.
+&nbsp; **name=value
+&nbsp; **name="some value with spaces"';
 $string['viewreports'] = 'View reports for {$a} user(s)';
 $string['views'] = 'Views';
 $string['weighting'] = 'Weighting';

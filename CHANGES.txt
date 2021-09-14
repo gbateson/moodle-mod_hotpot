@@ -2,6 +2,9 @@
 Change log for mod_hotpot
 ========================================
 
+2021-09-14 (46)
+ - modify markdown syntax for long help messages (for compatability with Moodle 3.11)
+
 2020-06-05 (44)
  - mod/hotpot convert URLs in 'src' attribute of <audio> and <video> tags
 

@@ -66,7 +66,7 @@ class mod_hotpot_attempt_hp_6_jcloze_xml_jgloss_renderer extends mod_hotpot_atte
      * @return array of strings
      */
     static public function sourcetypes()  {
-        return array('hp_6_jcloze_xml');
+        return array('hp_6_jcloze_xml', 'hp_7_jcloze_xml');
     }
 
     /**

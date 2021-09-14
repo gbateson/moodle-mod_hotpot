@@ -37,44 +37,13 @@ require_once($CFG->dirroot.'/mod/hotpot/source/hp/6/jmatch/html/class.php');
  * @since     Moodle 2.0
  */
 class hotpot_source_hp_6_jmatch_html_jmemori extends hotpot_source_hp_6_jmatch_html {
-
-    /**
-     * is_quizfile
-     *
-     * @param xxx $sourcefile
-     * @return xxx
-     */
-    static public function is_quizfile($sourcefile)  {
-        if (! preg_match('/\.html?$/', $sourcefile->get_filename())) {
-            // wrong file type
-            return false;
-        }
-
-        if (! $content = self::get_content($sourcefile)) {
-            // empty or non-existant file
-            return false;
-        }
-
-        if (! strpos($content, 'div id="MainDiv" class="StdDiv"')) {
-            // not a HP file
-            return false;
-        }
-
-        if (! strpos($content, 'div id="MatchDiv"')) {
-            // not a jmatch file
-            return false;
-        }
-
-        if (strpos($content, 'function CheckPair(id){')) {
-            if (strpos($content, 'M = new Array();')) {
-                if (strpos($content, 'clickarray = new Array();')) {
-                    // jmemori
-                    return true;
-                }
-            }
-        }
-
-        // not a jmemori file
-        return false;
-    }
+    const REQUIRED_FILETYPES = array(
+        'htm', 'html'
+    );
+    const REQUIRED_STRINGS = array(
+        'div id="MatchDiv"',
+        'function CheckPair(id){',
+        'M = new Array();',
+        'clickarray = new Array();'
+    );
 }

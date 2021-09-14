@@ -577,12 +577,77 @@ class hotpot {
                     $outputformats[$outputformat] = get_string('outputformat_'.$outputformat, 'mod_hotpot');
                 }
             }
+            uksort($outputformats, array('hotpot', 'uksort_outputformats'));
+
             // remove "best" if there is only one compatible output format
             // if (count($outputformats)==2) {
             //     unset($outputformats[0]);
             // }
         }
         return $outputformats;
+    }
+
+    /**
+     * uksort_outputformats
+     *
+     * @param string $a
+     * @param string $b
+     * @return integer
+     */
+    static public function uksort_outputformats($a, $b) {
+
+        if ($a == '0') {
+            return -1;
+        }
+        if ($b == '0') {
+            return 1;
+        }
+
+        $a = explode('_', $a);
+        $b = explode('_', $b);
+
+        $a_count = count($a);
+        $b_count = count($b);
+
+        // special rules for comparing two "hp" classes
+        $hp = ($a[0] == 'hp' && $b[0] == 'hp');
+
+        $i = 0;
+        while ($i < $a_count && $i < $b_count) {
+            // For HP files, the source format ($i=1) and output version ($i=4)
+            // are sorted in DESCENDING order.
+            if ($hp && ($i == 1 || $i == 4)) {
+                $asc = false;
+            } else {
+                $asc = true;
+            }
+            if ($a[$i] < $b[$i]) {
+                return ($asc ? -1 : 1);
+            }
+            if ($a[$i] > $b[$i]) {
+                return ($asc ? 1 : -1);
+            }
+            $i++;
+        }
+
+        // For Jmatch/JMix, the drag-and-drop formats (v6/v7 plus) come first
+        if ($hp && ($a[2] == 'jmatch' || $a[2] == 'jmix') && ($a[4] == 'v6' || $a[4] == 'v7')) {
+            if ($a_count == 6 && $a[5] == 'plus') {
+                return -1;
+            }
+            if ($b_count == 6 && $b[5] == 'plus') {
+                return 1;
+            }
+        }
+
+        // Otherwise, shorter formats come first.
+        if ($a_count < $b_count) {
+            return -1;
+        }
+        if ($a_count > $b_count) {
+            return 1;
+        }
+        return 0;
     }
 
     /**

@@ -37,15 +37,10 @@ require_once($CFG->dirroot.'/mod/hotpot/source/hp/6/jmix/class.php');
  * @since     Moodle 2.0
  */
 class hotpot_source_hp_6_jmix_xml extends hotpot_source_hp_6_jmix {
-    public $best_outputformat = 'hp_6_jmix_xml_v6_plus';
-
-    /**
-     * is_quizfile
-     *
-     * @param xxx $sourcefile
-     * @return xxx
-     */
-    static public function is_quizfile($sourcefile)  {
-        return preg_match('/\.jmx$/', $sourcefile->get_filename());
-    }
+    const BEST_OUTPUT_FORMAT = 'hp_6_jmix_xml_v6_plus';
+    const REQUIRED_FILETYPES = array('jmx');
+    const REQUIRED_STRINGS = array(
+        '<hotpot-jmix-file>',
+        '<version>6</version>'
+    );
 }

@@ -37,46 +37,29 @@ require_once($CFG->dirroot.'/mod/hotpot/source/hp/6/jmatch/class.php');
  * @since     Moodle 2.0
  */
 class hotpot_source_hp_6_jmatch_html extends hotpot_source_hp_6_jmatch {
+    const REQUIRED_FILETYPES = array(
+        'htm', 'html'
+    );
+    const BANNED_STRINGS = array(
+        // JMatch intro (Michael Rottmeier)
+        '<div class="Feedback" id="DivIntroPage">'
+    );
 
-    /**
-     * is_quizfile
+    /*
+     * required_strings_html()
      *
-     * @param xxx $sourcefile
-     * @return xxx
+     * @param string $content of HTML file (passed by reference)
+     * @return array of required strings for HTML content
      */
-    static public function is_quizfile($sourcefile)  {
-        if (! preg_match('/\.html?$/', $sourcefile->get_filename())) {
-            // wrong file type
-            return false;
+    static public function required_strings_html(&$content)  {
+        $strings = parent::required_strings_html($content);
+        if (is_numeric(in_array('<div id="MainDiv" class="StdDiv">', $strings))) {
+            $strings[] = '<div id="MatchDiv" style="text-align: center;">';
+        } else {
+            // drag-and-drop versions of JMatch and JMix
+            $strings[] = 'F = new Array();';
+            $strings[] = 'D = new Array();';
         }
-
-        if (! $content = self::get_content($sourcefile)) {
-            // empty or non-existant file
-            return false;
-        }
-
-        if (strpos($content, '<div class="Feedback" id="DivIntroPage">')) {
-            // JMatch intro (Michael Rottmeier)
-            return false;
-        }
-
-        if (strpos($content, '<div id="MainDiv" class="StdDiv">')) {
-            if (strpos($content, '<div id="MatchDiv" style="text-align: center;">')) {
-                // hp6 jmatch v6
-                return true;
-            }
-        }
-
-        if (strpos($content, '<div class="StdDiv" id="CheckButtonDiv">')) {
-            if (strpos($content, 'F = new Array();')) {
-                if (strpos($content, 'D = new Array();')) { // overkill?
-                    // hp6 jmatch v6+ (drag and drop)
-                    return true;
-                }
-            }
-        }
-
-        // not a jmatch file
-        return false;
+        return $strings;
     }
 }

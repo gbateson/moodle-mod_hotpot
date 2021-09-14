@@ -37,34 +37,12 @@ require_once($CFG->dirroot.'/mod/hotpot/source/hp/6/jmatch/html/class.php');
  * @since     Moodle 2.0
  */
 class hotpot_source_hp_6_jmatch_html_sort extends hotpot_source_hp_6_jmatch_html {
-
-    /**
-     * is_quizfile
-     *
-     * @param xxx $sourcefile
-     * @return xxx
-     */
-    static public function is_quizfile($sourcefile)  {
-        if (! preg_match('/\.html?$/', $sourcefile->get_filename())) {
-            // wrong file type
-            return false;
-        }
-
-        if (! $content = self::get_content($sourcefile)) {
-            // empty or non-existant file
-            return false;
-        }
-
-        if (strpos($content, '<!-- JMatch_Sort v')) {
-            if (strpos($content, 'var hauteurUserDefined1')) {
-                if (strpos($content, 'var largeurUserDefined2')) {
-                    // jmatch-sort
-                    return true;
-                }
-            }
-        }
-
-        // not a jmatch-sort file
-        return false;
-    }
+    const REQUIRED_FILETYPES = array(
+        'htm', 'html'
+    );
+    const REQUIRED_STRINGS = array(
+        '<!-- JMatch_Sort v',
+        'var hauteurUserDefined1',
+        'var largeurUserDefined2'
+    );
 }

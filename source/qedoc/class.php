@@ -38,20 +38,14 @@ require_once($CFG->dirroot.'/mod/hotpot/source/class.php');
  */
 class hotpot_source_qedoc extends hotpot_source {
 
-    /**
-     * is_quizfile
-     *
-     * @param xxx $sourcefile
-     * @return xxx
-     */
-    static public function is_quizfile($sourcefile)  {
-        // e.g. http://www.qedoc.net/library/PLJUB_019.zip
-        $search = '/http:\/\/www\.qedoc.(?:com|net)\/library\/\w+\.zip/i';
-        return preg_match($search, $sourcefile->get_source());
-
+    const REQUIRED_FILETYPES = array(
+        'htm', 'html' // not sure about these
+    );
+    const REQUIRED_MATCHES = array(
+        '/http:\/\/www\.qedoc.(?:com|net)\/library\/\w+\.zip/i'
         // Note: we may want to detect the following as well:
         // http://www.qedoc.net/qqp/jnlp/PLJUB_019.jnlp
-    }
+    );
 
     /**
      * get_name

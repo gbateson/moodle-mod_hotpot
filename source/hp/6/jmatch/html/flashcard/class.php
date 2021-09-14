@@ -37,32 +37,10 @@ require_once($CFG->dirroot.'/mod/hotpot/source/hp/6/jmatch/html/class.php');
  * @since     Moodle 2.0
  */
 class hotpot_source_hp_6_jmatch_html_flashcard extends hotpot_source_hp_6_jmatch_html {
-
-    /**
-     * is_quizfile
-     *
-     * @param xxx $sourcefile
-     * @return xxx
-     */
-    static public function is_quizfile($sourcefile)  {
-        if (! preg_match('/\.html?$/', $sourcefile->get_filename())) {
-            // wrong file type
-            return false;
-        }
-
-        if (! $content = self::get_content($sourcefile)) {
-            // empty or non-existant file
-            return false;
-        }
-
-        if (strpos($content, '<div id="MainDiv" class="StdDiv">')) {
-            if (strpos($content, '<table class="FlashcardTable" border="0" cellspacing="0">')) {
-                // hp6 jmatch flashcard
-                return true;
-            }
-        }
-
-        // not a jmatch-intro file
-        return false;
-    }
+    const REQUIRED_FILETYPES = array(
+        'htm', 'html'
+    );
+    const REQUIRED_STRINGS = array(
+        '<table class="FlashcardTable" border="0" cellspacing="0">'
+    );
 }

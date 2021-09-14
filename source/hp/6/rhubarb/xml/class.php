@@ -37,14 +37,9 @@ require_once($CFG->dirroot.'/mod/hotpot/source/hp/6/rhubarb/class.php');
  * @since     Moodle 2.0
  */
 class hotpot_source_hp_6_rhubarb_xml extends hotpot_source_hp_6_rhubarb {
-
-    /**
-     * is_quizfile
-     *
-     * @param xxx $sourcefile
-     * @return xxx
-     */
-    static public function is_quizfile($sourcefile)  {
-        return preg_match('/\.rhb$/', $sourcefile->get_filename());
-    }
+    const REQUIRED_FILETYPES = array('rhb');
+    const REQUIRED_STRINGS = array(
+        '<textoys-rhubarb-file>',
+        '<version>3</version>'
+    );
 }

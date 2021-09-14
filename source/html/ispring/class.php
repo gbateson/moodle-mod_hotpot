@@ -37,50 +37,19 @@ require_once($CFG->dirroot.'/mod/hotpot/source/html/class.php');
  * @since     Moodle 2.0
  */
 class hotpot_source_html_ispring extends hotpot_source_html {
+
+    const REQUIRED_FILETYPES = array(
+        'htm', 'html'
+    );
+    const REQUIRED_MATCHES = array(
+        '/<!--\s*<!DOCTYPE[^>]*>\s*-->/',
+        '/<object[^>]*id="presentation"[^>]*>/',
+        '/<embed[^>]*name="presentation"[^>]*>/',
+        '/<script[^>]*src="[^">]*fixprompt.js"[^>]*\/>/'
+    );
+
     // properties of the icon for this source file type
     public $icon = 'mod/hotpot/file/html/ispring/icon.gif';
-
-    // returns hotpot_source object if $filename is a quiz file, or false otherwise
-
-    /**
-     * is_quizfile
-     *
-     * @param xxx $sourcefile
-     * @return xxx
-     */
-    static public function is_quizfile($sourcefile)  {
-        if (! preg_match('/\.html?$/', $sourcefile->get_filename())) {
-            // wrong file type
-            return false;
-        }
-
-        if (! $content = self::get_content($sourcefile)) {
-            // empty or non-existant file
-            return false;
-        }
-
-        if (! preg_match('/<!--\s*<!DOCTYPE[^>]*>\s*-->/', $content)) {
-            // no fancy DOCTYPE workarounds for IE6
-            return false;
-        }
-
-        // detect <object ...>, <embed ...> and self-closing <script ... /> tags
-        if (! preg_match('/<object[^>]*id="presentation"[^>]*>/', $content)) {
-            return false;
-        }
-
-        if (! preg_match('/<embed[^>]*name="presentation"[^>]*>/', $content)) {
-            return false;
-        }
-
-        if (! preg_match('/<script[^>]*src="[^">]*fixprompt.js"[^>]*\/>/', $content)) {
-            return false;
-        }
-
-        return true;
-    }
-
-    // returns the introduction text for a quiz
 
     /**
      * get_entrytext
@@ -90,4 +59,4 @@ class hotpot_source_html_ispring extends hotpot_source_html {
     function get_entrytext()  {
         return '';
     }
-} // end class
+}
