@@ -883,9 +883,9 @@ class hotpot_mediaplayer {
         $strlen = strlen($str);
         for ($i=0; $i<$strlen; $i++) {
             if ($i==0 || mt_rand(0,2)) {
-                $obfuscated .= '\\u'.sprintf('%04X', ord($str{$i}));
+                $obfuscated .= '\\u'.sprintf('%04X', ord($str[$i]));
             } else {
-                $obfuscated .= $str{$i};
+                $obfuscated .= $str[$i];
             }
         }
         return $obfuscated;

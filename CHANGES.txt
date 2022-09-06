@@ -2,6 +2,9 @@
 Change log for mod_hotpot
 ========================================
 
+2022-09-06 (47)
+ - fix compatibility with PHP 8.x and Moodle 4.x (1) remove use of curly braces on strings; (2) add 'intro' and 'introformat' fields; (3) use custom version of utf8_to_entities() that does not convert strings to lowercase;
+
 2021-09-14 (46)
  - modify markdown syntax for long help messages (for compatability with Moodle 3.11)
 

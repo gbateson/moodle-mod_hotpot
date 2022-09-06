@@ -8,8 +8,10 @@
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" NEXT="course"/>
         <FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="id" NEXT="name"/>
-        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="course" NEXT="sourcefile"/>
-        <FIELD NAME="sourcefile" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="name" NEXT="sourcetype"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="course" NEXT="intro"/>
+        <FIELD NAME="intro" TYPE="text" NOTNULL="true" SEQUENCE="false" PREVIOUS="name" NEXT="introformat" COMMENT="Not used but required for Moodle 4.x"/>
+        <FIELD NAME="introformat" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="intro" NEXT="sourcefile" COMMENT="Not used but required for Moodle 4.x"/>
+        <FIELD NAME="sourcefile" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="introformat" NEXT="sourcetype"/>
         <FIELD NAME="sourcetype" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="sourcefile" NEXT="sourcelocation"/>
         <FIELD NAME="sourcelocation" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="sourcetype" NEXT="configfile"/>
         <FIELD NAME="configfile" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="sourcelocation" NEXT="configlocation"/>

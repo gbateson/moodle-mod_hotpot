@@ -515,7 +515,7 @@ class hotpot_source_hp extends hotpot_source {
         $dec = 0;
         $len = strlen($char);
         for ($pos=0; $pos<$len; $pos++) {
-            $ord = ord ($char{$pos});
+            $ord = ord($char[$pos]);
             $ord -= ($pos ? 128 : $this->utf8_decrement[$len]);
             $dec += ($ord << $this->utf8_shift[$len][$pos]);
         }

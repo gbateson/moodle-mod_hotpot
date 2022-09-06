@@ -4259,11 +4259,12 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * @return xxx
      * @todo Finish documenting this function
      */
-    function jmix_encode_punctuation($str)  {
+    function jmix_encode_punctuation($str) {
         $entities = array();
         $i_max = strlen($str);
         for ($i=0; $i<$i_max; $i++) {
-            $entities[$str{$i}] = '&#x'.sprintf('%04X', ord($str{$i})).';';
+            $char = $str[$i];
+            $entities[$char] = '&#x'.sprintf('%04X', ord($char)).';';
         }
         return $entities;
     }
