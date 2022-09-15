@@ -9,7 +9,7 @@
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" NEXT="course"/>
         <FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="id" NEXT="name"/>
         <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="course" NEXT="intro"/>
-        <FIELD NAME="intro" TYPE="text" NOTNULL="true" SEQUENCE="false" PREVIOUS="name" NEXT="introformat" COMMENT="Not used but required for Moodle 4.x"/>
+        <FIELD NAME="intro" TYPE="text" NOTNULL="false" SEQUENCE="false" PREVIOUS="name" NEXT="introformat" COMMENT="Not used but required for Moodle 4.x"/>
         <FIELD NAME="introformat" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="intro" NEXT="sourcefile" COMMENT="Not used but required for Moodle 4.x"/>
         <FIELD NAME="sourcefile" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="introformat" NEXT="sourcetype"/>
         <FIELD NAME="sourcetype" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="sourcefile" NEXT="sourcelocation"/>
@@ -101,11 +101,11 @@
         <FIELD NAME="md5key" TYPE="char" LENGTH="32" NOTNULL="true" SEQUENCE="false" PREVIOUS="timemodified"/>
       </FIELDS>
       <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="id" NEXT="hotpotid"/>
-        <KEY NAME="hotpotid" TYPE="foreign" FIELDS="hotpotid" REFTABLE="hotpot" REFFIELDS="id" PREVIOUS="primary"/>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" NEXT="hotpcach_hot_ix"/>
+        <KEY NAME="hotpcach_hot_ix" TYPE="foreign" FIELDS="hotpotid" REFTABLE="hotpot" REFFIELDS="id" PREVIOUS="primary"/>
       </KEYS>
       <INDEXES>
-        <INDEX NAME="hotpotid-md5key" UNIQUE="false" FIELDS="hotpotid, md5key"/>
+        <INDEX NAME="hotpcach_hotmd5_ix" UNIQUE="false" FIELDS="hotpotid, md5key"/>
       </INDEXES>
     </TABLE>
     <TABLE NAME="hotpot_attempts" COMMENT="Info about user attempts at HotPot activities" PREVIOUS="hotpot_cache" NEXT="hotpot_details">
@@ -125,11 +125,11 @@
         <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="clickreportid"/>
       </FIELDS>
       <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="id" NEXT="hotpotid"/>
-        <KEY NAME="hotpotid" TYPE="foreign" FIELDS="hotpotid" REFTABLE="hotpot" REFFIELDS="id" PREVIOUS="primary"/>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" NEXT="hotpatte_hot_ix"/>
+        <KEY NAME="hotpatte_hot_ix" TYPE="foreign" FIELDS="hotpotid" REFTABLE="hotpot" REFFIELDS="id" PREVIOUS="primary"/>
       </KEYS>
       <INDEXES>
-        <INDEX NAME="userid" UNIQUE="false" FIELDS="userid"/>
+        <INDEX NAME="hotpatte_use_ix" UNIQUE="false" FIELDS="userid"/>
       </INDEXES>
     </TABLE>
     <TABLE NAME="hotpot_details" COMMENT="Raw XML data returned from HotPot attempts" PREVIOUS="hotpot_attempts" NEXT="hotpot_questions">
@@ -139,8 +139,8 @@
         <FIELD NAME="details" TYPE="text" NOTNULL="true" SEQUENCE="false" PREVIOUS="attemptid"/>
       </FIELDS>
       <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="id" NEXT="attemptid"/>
-        <KEY NAME="attemptid" TYPE="foreign" FIELDS="attemptid" REFTABLE="hotpot_attempts" REFFIELDS="id" PREVIOUS="primary"/>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" NEXT="hotpdeta_att_ix"/>
+        <KEY NAME="hotpdeta_att_ix" TYPE="foreign" FIELDS="attemptid" REFTABLE="hotpot_attempts" REFFIELDS="id" PREVIOUS="primary"/>
       </KEYS>
     </TABLE>
     <TABLE NAME="hotpot_questions" COMMENT="details about questions in Hot Potatoes quiz attempts" PREVIOUS="hotpot_details" NEXT="hotpot_responses">
@@ -153,11 +153,11 @@
         <FIELD NAME="md5key" TYPE="char" LENGTH="32" NOTNULL="true" SEQUENCE="false" PREVIOUS="hotpotid"/>
       </FIELDS>
       <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="id" NEXT="hotpotid"/>
-        <KEY NAME="hotpotid" TYPE="foreign" FIELDS="hotpotid" REFTABLE="hotpot" REFFIELDS="id" PREVIOUS="primary"/>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" NEXT="hotpques_hot_ix"/>
+        <KEY NAME="hotpques_hot_ix" TYPE="foreign" FIELDS="hotpotid" REFTABLE="hotpot" REFFIELDS="id" PREVIOUS="primary"/>
       </KEYS>
       <INDEXES>
-        <INDEX NAME="md5key" UNIQUE="false" FIELDS="md5key"/>
+        <INDEX NAME="hotpques_md5_ix" UNIQUE="false" FIELDS="md5key"/>
       </INDEXES>
     </TABLE>
     <TABLE NAME="hotpot_responses" COMMENT="details about responses in Hot Potatoes quiz attempts" PREVIOUS="hotpot_questions" NEXT="hotpot_strings">
@@ -175,9 +175,9 @@
         <FIELD NAME="checks" TYPE="int" LENGTH="6" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="clues"/>
       </FIELDS>
       <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="id" NEXT="attemptid"/>
-        <KEY NAME="attemptid" TYPE="foreign" FIELDS="attemptid" REFTABLE="hotpot_attempts" REFFIELDS="id" PREVIOUS="primary" NEXT="questionid"/>
-        <KEY NAME="questionid" TYPE="foreign" FIELDS="questionid" REFTABLE="hotpot_questions" REFFIELDS="id" PREVIOUS="attemptid"/>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" NEXT="hotpresp_att_ix"/>
+        <KEY NAME="hotpresp_att_ix" TYPE="foreign" FIELDS="attemptid" REFTABLE="hotpot_attempts" REFFIELDS="id" PREVIOUS="primary" NEXT="hotpresp_que_ix"/>
+        <KEY NAME="hotpresp_que_ix" TYPE="foreign" FIELDS="questionid" REFTABLE="hotpot_questions" REFFIELDS="id" PREVIOUS="hotpresp_att_ix"/>
       </KEYS>
     </TABLE>
     <TABLE NAME="hotpot_strings" COMMENT="strings used in Hot Potatoes questions and responses" PREVIOUS="hotpot_responses">
@@ -190,7 +190,7 @@
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
       <INDEXES>
-        <INDEX NAME="md5key" UNIQUE="false" FIELDS="md5key"/>
+        <INDEX NAME="hotpstri_md5_ix" UNIQUE="false" FIELDS="md5key"/>
       </INDEXES>
     </TABLE>
   </TABLES>

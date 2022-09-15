@@ -125,6 +125,14 @@ class mod_hotpot_mod_form extends moodleform_mod {
         $mform->addElement('header', 'general', get_string('general', 'form'));
         //-----------------------------------------------------------------------------
 
+        // The intro field was added in Moodle 4.0 because it is
+        // expected in "lib/classes/output/activity_header.php".
+        $name = 'intro';
+        $mform->addElement('hidden', $name, '');
+        $mform->setType($name, PARAM_TEXT);
+        $mform->addElement('hidden', $name.'format', 0);
+        $mform->setType($name.'format', PARAM_INT);
+
         // Hotpot name
         $name = 'name';
         $label = get_string('name');

@@ -159,6 +159,14 @@ function hotpot_process_formdata(stdclass &$data, $mform) {
     global $CFG;
     require_once($CFG->dirroot.'/mod/hotpot/locallib.php');
 
+    // The intro field was added in Moodle 4.0 because it is expected in
+    // "lib/classes/output/activity_header.php". If left unset, it may
+    // generate a database error, so we force it to a reasonable default.
+    if (! isset($data->intro)) {
+        $data->intro = '';
+        $data->introformat = 0;
+    }
+
     if ($mform->is_add()) {
         $data->timecreated = time();
     } else {
