@@ -46,7 +46,12 @@ defined('MOODLE_INTERNAL') || die();
  * @return mixed true if the feature is supported, null if unknown
  */
 function hotpot_supports($feature) {
-
+    global $CFG;
+    if ($CFG->branch >= 400) {
+        if ($feature == FEATURE_MOD_PURPOSE) {
+            return MOD_PURPOSE_ASSESSMENT;
+        }
+    }
     // these constants are defined in "lib/moodlelib.php"
     // they are not all defined in Moodle 2.0, so we
     // check each one is defined before trying to use it
@@ -70,7 +75,7 @@ function hotpot_supports($feature) {
         'FEATURE_PLAGIARISM'       => false,
         'FEATURE_RATE'             => false,
         'FEATURE_SHOW_DESCRIPTION' => true, // default=false (Moodle 2.2)
-        'FEATURE_USES_QUESTIONS'   => false
+        'FEATURE_USES_QUESTIONS'   => false,
     );
     foreach ($constants as $constant => $value) {
         if (defined($constant) && $feature==constant($constant)) {
