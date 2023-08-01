@@ -410,7 +410,7 @@ class hotpot_filter_number extends user_filter_select {
         $field    = $this->_name;
         $operator = $field.'_op';
 
-        if (array_key_exists($field, $formdata) and !empty($formdata->$operator)) {
+        if (array_key_exists($field, (array) $formdata) and !empty($formdata->$operator)) {
             return array('operator' => (int)$formdata->$operator,
                          'value'    => (int)$formdata->$field);
         }
