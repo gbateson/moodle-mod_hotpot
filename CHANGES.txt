@@ -2,6 +2,9 @@
 Change log for mod_hotpot
 ========================================
 
+2024-02-10 (50)
+ - for compatability with Moodle 4.x, we hide the legacy event functions, and user_picture::fields
+
 2022-09-15 (48)
  - fix error caused by NULL intro field
 

@@ -62,8 +62,7 @@ function hotpot_supports($feature) {
         'FEATURE_GROUPINGS'        => true, // default=false
         'FEATURE_GROUPMEMBERSONLY' => true, // default=false
         'FEATURE_GROUPS'           => true,
-        'FEATURE_IDNUMBER'         => true,
-        'FEATURE_MOD_ARCHETYPE'    => MOD_ARCHETYPE_OTHER,
+        'FEATURE_IDNUMBER'         => true, // Moodle >= 2.0
         'FEATURE_MOD_INTRO'        => false, // default=true
         'FEATURE_MODEDIT_DEFAULT_COMPLETION' => true,
         'FEATURE_NO_VIEW_LINK'     => false,
@@ -72,6 +71,12 @@ function hotpot_supports($feature) {
         'FEATURE_SHOW_DESCRIPTION' => true, // default=false (Moodle 2.2)
         'FEATURE_USES_QUESTIONS'   => false
     );
+    if (defined('MOD_ARCHETYPE_OTHER')) {
+        $constants['FEATURE_MOD_ARCHETYPE'] = MOD_ARCHETYPE_OTHER; // Moodle >= 2.x
+    }
+    if (defined('MOD_PURPOSE_ASSESSMENT')) {
+        $constants['FEATURE_MOD_PURPOSE'] = MOD_PURPOSE_ASSESSMENT; // Moodle >= 4.x
+    }
     foreach ($constants as $constant => $value) {
         if (defined($constant) && $feature==constant($constant)) {
             return $value;
@@ -709,13 +714,7 @@ function hotpot_get_recent_mod_activity(&$activities, &$index, $timestart, $cour
     }
 
     $select = 'ha.*, (ha.timemodified - ha.timestart) AS duration, ';
-    if (class_exists('user_picture')) {
-        // Moodle >= 2.6
-        $select .= user_picture::fields('u', null, 'useruserid');
-    } else {
-        // Moodle <= 2.5
-        $select .= 'u.firstname, u.lastname, u.picture, u.imagealt, u.email';
-    }
+    $select .= hotpot_get_userfields('u', null, 'useruseridid');
     $from   = '{hotpot_attempts} ha JOIN {user} u ON ha.userid = u.id';
     list($where, $params) = $DB->get_in_or_equal(array_keys($hotpots));
     $where  = 'ha.hotpotid '.$where;
@@ -787,6 +786,59 @@ function hotpot_get_recent_mod_activity(&$activities, &$index, $timestart, $cour
             );
         }
     }
+}
+
+/**
+ * hotpot_get_userfields
+ *
+ * @param string $tableprefix name of database table prefix in query
+ * @param array  $extrafields extra fields to be included in result (do not include TEXT columns because it would break SELECT DISTINCT in MSSQL and ORACLE)
+ * @param string $idalias     alias of id field
+ * @param string $fieldprefix prefix to add to all columns in their aliases, does not apply to 'id'
+ * @return string
+ */
+function hotpot_get_userfields($tableprefix = '', array $extrafields = NULL, $idalias = 'id', $fieldprefix = '') {
+
+    // Moodle >= 3.11
+    if (class_exists('\\core_user\\fields')) {
+        $fields = \core_user\fields::for_userpic();
+        if ($extrafields) {
+            $fields->including($extrafields);
+        }
+        $fields = $fields->get_sql($tablealias, false, $fieldprefix, $idalias, false)->selects;
+        if ($tablealias === '') {
+            $fields = str_replace('{user}.', '', $fields);
+        }
+        return str_replace(', ', ',', $fields);
+        // id, picture, firstname, lastname, firstnamephonetic, lastnamephonetic, middlename, alternatename, imagealt, email
+    }
+
+    // Moodle >= 2.6
+    if (class_exists('user_picture')) {
+        return user_picture::fields($tableprefix, $extrafields, $idalias, $fieldprefix);
+    }
+
+    // Moodle <= 2.5
+    $fields = array('id', 'firstname', 'lastname', 'picture', 'imagealt', 'email');
+    if ($tableprefix || $extrafields || $idalias) {
+        if ($tableprefix) {
+            $tableprefix .= '.';
+        }
+        if ($extrafields) {
+            $fields = array_unique(array_merge($fields, $extrafields));
+        }
+        if ($idalias) {
+            $idalias = " AS $idalias";
+        }
+        if ($fieldprefix) {
+            $fieldprefix = " AS $fieldprefix";
+        }
+        foreach ($fields as $i => $field) {
+            $fields[$i] = "$tableprefix$field".($field=='id' ? $idalias : ($fieldprefix=='' ? '' : "$fieldprefix$field"));
+        }
+    }
+    return implode(',', $fields);
+    //return 'u.id AS userid, u.username, u.firstname, u.lastname, u.picture, u.imagealt, u.email';
 }
 
 /**
@@ -1366,13 +1418,13 @@ function hotpot_pluginfile($course, $cm, $context, $filearea, $args, $forcedownl
         send_stored_file($file, $lifetime, $filter, $forcedownload, $options);
     }
 
-    /////////////////////////////////////////////////////////////
+    /*///////////////////////////////////////////////////////////
     // If we get to this point, it is because the requested file
     // is not where is was supposed to be, so we will search for
     // it in some other likely locations.
     // If we find it, we will copy it across to where it is
     // supposed to be, so it can be found more quickly next time
-    /////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////*/
 
     $file_record = array(
         'contextid'=>$context->id, 'component'=>$component, 'filearea'=>$filearea,
