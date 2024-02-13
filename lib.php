@@ -1027,7 +1027,7 @@ function hotpot_print_overview($courses, &$htmlarray) {
                 $grade = $grade[$USER->id];
                 $href = new moodle_url('/mod/hotpot/report.php', array('hp' => $hotpot->id));
                 if ($hotpot->gradeweighting) {
-                    $str .= '<div class="info">'.get_string('grade', 'grades').': '.'<a href="'.$href.'">'.$grade->rawgrade.'%</a></div>';
+                    $str .= '<div class="info">'.get_string('gradenoun').': '.'<a href="'.$href.'">'.$grade->rawgrade.'%</a></div>';
                 }
                 $str .= '<div class="info">'.get_string('status', 'hotpot').': '.'<a href="'.$href.'">'.hotpot::format_status($grade->maxstatus).'</a></div>';
             }
