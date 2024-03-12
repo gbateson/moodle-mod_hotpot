@@ -927,8 +927,17 @@ class mod_hotpot_mod_form extends moodleform_mod {
      * @return array Array of string IDs of added items, empty array if none
      */
     public function add_completion_rules() {
+        global $CFG;
+
         $mform = $this->_form;
         $plugin = 'mod_hotpot';
+
+        // Changes for Moodle 4.3 - MDL-78516.
+        if ($CFG->branch < 403) {
+            $suffix = '';
+        } else {
+            $suffix = $this->get_suffix();
+        }
 
         // array of elements names to be returned by this method
         $names = array();
@@ -945,40 +954,40 @@ class mod_hotpot_mod_form extends moodleform_mod {
             $value = floatval($this->current->$name);
         }
         $group = array();
-        $group[] = &$mform->createElement('checkbox', $name.'enabled', '', $label);
-        $group[] = &$mform->createElement('static', $name.'space', '', ' &nbsp; ');
-        $group[] = &$mform->createElement('text', $name, '', array('size' => 3));
-        $mform->addGroup($group, $name.'group', '', '', false);
-        $mform->setType($name, PARAM_FLOAT);
-        $mform->setDefault($name, 0.00);
-        $mform->setType($name.'enabled', PARAM_INT);
-        $mform->setDefault($name.'enabled', empty($value) ? 0 : 1);
-        $mform->disabledIf($name, $name.'enabled', 'notchecked');
-        $names[] = $name.'group';
-        $disablednames[] = $name.'group';
+        $group[] = &$mform->createElement('checkbox', $name . 'enabled' . $suffix, '', $label);
+        $group[] = &$mform->createElement('static', $name . 'space' . $suffix, '', ' &nbsp; ');
+        $group[] = &$mform->createElement('text', $name . $suffix, '', array('size' => 3));
+        $mform->addGroup($group, $name . 'group' . $suffix, '', '', false);
+        $mform->setType($name . $suffix, PARAM_FLOAT);
+        $mform->setDefault($name . $suffix, 0.00);
+        $mform->setType($name . 'enabled' . $suffix, PARAM_INT);
+        $mform->setDefault($name . 'enabled . $suffix', empty($value) ? 0 : 1);
+        $mform->disabledIf($name, $name . 'enabled' . $suffix, 'notchecked');
+        $names[] = $name . 'group' . $suffix;
+        $disablednames[] = $name . 'group' . $suffix;
 
         // add "grade passed" completion condition
         $name = 'completionpass';
         $label = get_string($name, $plugin);
-        $mform->addElement('checkbox', $name, '', $label);
-        $mform->setType($name, PARAM_INT);
-        $mform->setDefault($name, 0);
-        $names[] = $name;
-        $disablednames[] = $name;
+        $mform->addElement('checkbox', $name . $suffix, '', $label);
+        $mform->setType($name . $suffix, PARAM_INT);
+        $mform->setDefault($name . $suffix, 0);
+        $names[] = $name . $suffix;
+        $disablednames[] = $name . $suffix;
 
         // add "status completed" completion condition
         $name = 'completioncompleted';
         $label = get_string($name, $plugin);
-        $mform->addElement('checkbox', $name, '', $label);
-        $mform->setType($name, PARAM_INT);
-        $mform->setDefault($name, 0);
-        $names[] = $name;
+        $mform->addElement('checkbox', $name . $suffix, '', $label);
+        $mform->setType($name . $suffix, PARAM_INT);
+        $mform->setDefault($name . $suffix, 0);
+        $names[] = $name . $suffix;
         // no need to disable this field :-)
 
         // disable grade conditions, if necessary
         foreach ($disablednames as $name) {
-            if ($mform->elementExists($name)) {
-                $mform->disabledIf($name, 'gradeweighting', 'eq', 0);
+            if ($mform->elementExists($name . $suffix)) {
+                $mform->disabledIf($name . $suffix, 'gradeweighting', 'eq', 0);
             }
         }
 
