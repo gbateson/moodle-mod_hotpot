@@ -62,8 +62,7 @@ function hotpot_supports($feature) {
         'FEATURE_GROUPINGS'        => true, // default=false
         'FEATURE_GROUPMEMBERSONLY' => true, // default=false
         'FEATURE_GROUPS'           => true,
-        'FEATURE_IDNUMBER'         => true,
-        'FEATURE_MOD_ARCHETYPE'    => MOD_ARCHETYPE_OTHER,
+        'FEATURE_IDNUMBER'         => true, // Moodle >= 2.0
         'FEATURE_MOD_INTRO'        => false, // default=true
         'FEATURE_MODEDIT_DEFAULT_COMPLETION' => true,
         'FEATURE_NO_VIEW_LINK'     => false,
@@ -72,6 +71,12 @@ function hotpot_supports($feature) {
         'FEATURE_SHOW_DESCRIPTION' => true, // default=false (Moodle 2.2)
         'FEATURE_USES_QUESTIONS'   => false
     );
+    if (defined('MOD_ARCHETYPE_OTHER')) {
+        $constants['FEATURE_MOD_ARCHETYPE'] = MOD_ARCHETYPE_OTHER; // Moodle >= 2.x
+    }
+    if (defined('MOD_PURPOSE_ASSESSMENT')) {
+        $constants['FEATURE_MOD_PURPOSE'] = MOD_PURPOSE_ASSESSMENT; // Moodle >= 4.x
+    }
     foreach ($constants as $constant => $value) {
         if (defined($constant) && $feature==constant($constant)) {
             return $value;
@@ -408,11 +413,12 @@ function hotpot_delete_instance($id) {
     // remove records from the hotpot cache
     $DB->delete_records('hotpot_cache', array('hotpotid' => $hotpot->id));
 
-    // finally remove the hotpot record itself
-    $DB->delete_records('hotpot', array('id' => $hotpot->id));
-
     // gradebook cleanup
     grade_update('mod/hotpot', $hotpot->course, 'mod', 'hotpot', $hotpot->id, 0, null, array('deleted' => true));
+
+    // Finally, remove the hotpot record itself.
+    // Apparently, this should be done AFTER removing the grade item.
+    $DB->delete_records('hotpot', array('id' => $hotpot->id));
 
     return true;
 }
@@ -708,14 +714,25 @@ function hotpot_get_recent_mod_activity(&$activities, &$index, $timestart, $cour
         return; // no hotpots
     }
 
-    $select = 'ha.*, (ha.timemodified - ha.timestart) AS duration, ';
-    if (class_exists('user_picture')) {
+    $select = 'ha.*, (ha.timemodified - ha.timestart) AS duration';
+
+    // Append name fields required for picture
+    if (class_exists('\\core_user\\fields')) {
+        // Moodle >= 3.11 (leading comma added by default)
+        $fields = \core_user\fields::for_userpic();
+        $select .= $fields->get_sql('u')->selects;
+    } else if (class_exists('user_picture')) {
         // Moodle >= 2.6
-        $select .= user_picture::fields('u', null, 'useruserid');
+        $select .= ','.user_picture::fields('u');
     } else {
         // Moodle <= 2.5
-        $select .= 'u.firstname, u.lastname, u.picture, u.imagealt, u.email';
+        $fields = array('u.id', 'u.firstname', 'u.lastname', 'u.picture', 'u.imagealt', 'u.email');
+        $select .= ','.implode(',', $fields);
     }
+
+    // Remove "u.id".
+    $select = preg_replace('/, *u.id *,/', ',', $select);
+
     $from   = '{hotpot_attempts} ha JOIN {user} u ON ha.userid = u.id';
     list($where, $params) = $DB->get_in_or_equal(array_keys($hotpots));
     $where  = 'ha.hotpotid '.$where;
@@ -746,16 +763,18 @@ function hotpot_get_recent_mod_activity(&$activities, &$index, $timestart, $cour
             continue; // invalid hotpotid - shouldn't happen !!
         }
 
+        $user = clone($attempt);
+        $userid = $user->id = $user->userid;
         $cmid = $hotpots[$attempt->hotpotid];
-        $userid = $attempt->userid;
         if (! array_key_exists($userid, $users[$cmid])) {
             $users[$cmid][$userid] = (object)array(
                 'userid'   => $userid,
-                'fullname' => fullname($attempt),
-                'picture'  => $OUTPUT->user_picture($attempt, array('courseid' => $courseid)),
+                'fullname' => fullname($user),
+                'picture'  => $OUTPUT->user_picture($user, array('courseid' => $courseid)),
                 'attempts' => array(),
             );
         }
+
         // add this attempt by this user at this course module
         $users[$cmid][$userid]->attempts[$attempt->attempt] = &$attempt;
     }
@@ -1008,7 +1027,7 @@ function hotpot_print_overview($courses, &$htmlarray) {
                 $grade = $grade[$USER->id];
                 $href = new moodle_url('/mod/hotpot/report.php', array('hp' => $hotpot->id));
                 if ($hotpot->gradeweighting) {
-                    $str .= '<div class="info">'.get_string('grade').': '.'<a href="'.$href.'">'.$grade->rawgrade.'%</a></div>';
+                    $str .= '<div class="info">'.get_string('grade', 'grades').': '.'<a href="'.$href.'">'.$grade->rawgrade.'%</a></div>';
                 }
                 $str .= '<div class="info">'.get_string('status', 'hotpot').': '.'<a href="'.$href.'">'.hotpot::format_status($grade->maxstatus).'</a></div>';
             }
@@ -1366,13 +1385,13 @@ function hotpot_pluginfile($course, $cm, $context, $filearea, $args, $forcedownl
         send_stored_file($file, $lifetime, $filter, $forcedownload, $options);
     }
 
-    /////////////////////////////////////////////////////////////
+    /*///////////////////////////////////////////////////////////
     // If we get to this point, it is because the requested file
     // is not where is was supposed to be, so we will search for
     // it in some other likely locations.
     // If we find it, we will copy it across to where it is
     // supposed to be, so it can be found more quickly next time
-    /////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////*/
 
     $file_record = array(
         'contextid'=>$context->id, 'component'=>$component, 'filearea'=>$filearea,

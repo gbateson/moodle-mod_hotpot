@@ -493,10 +493,32 @@ class mod_hotpot_report_renderer extends mod_hotpot_renderer {
      * @param string $fieldprefix prefix to add to all columns in their aliases, does not apply to 'id'
      * @return string
      */
-     function get_userfields($tableprefix = '', array $extrafields = null, $idalias = 'id', $fieldprefix = '') {
-        if (class_exists('user_picture')) { // Moodle >= 2.6
+     function get_userfields($tableprefix = '', array $extrafields = NULL, $idalias = 'id', $fieldprefix = '') {
+
+        // Ensure $tableprefix is a string.
+        if ($tableprefix === null) {
+            $tableprefix = '';
+        }
+
+        // Moodle >= 3.11
+        if (class_exists('\\core_user\\fields')) {
+            $fields = \core_user\fields::for_userpic();
+            if ($extrafields) {
+                $fields->including(...$extrafields); // splat operator is available from PHP 5.5
+            }
+            $fields = $fields->get_sql($tableprefix, false, $fieldprefix, $idalias, false)->selects;
+            if ($tableprefix === '') {
+                $fields = str_replace('{user}.', '', $fields);
+            }
+            return str_replace(', ', ',', $fields);
+            // id, picture, firstname, lastname, firstnamephonetic, lastnamephonetic, middlename, alternatename, imagealt, email
+        }
+
+        // Moodle >= 2.6
+        if (class_exists('user_picture')) {
             return user_picture::fields($tableprefix, $extrafields, $idalias, $fieldprefix);
         }
+
         // Moodle <= 2.5
         $fields = array('id', 'firstname', 'lastname', 'picture', 'imagealt', 'email');
         if ($tableprefix || $extrafields || $idalias) {

@@ -272,8 +272,12 @@ class hotpot_report_table extends table_sql {
         $params = array('class' => 'grademethod');
         $grademethod = html_writer::tag('span', $grademethod, $params);
 
+        // In Moodle >= 2.7, we use the "modgrade" string.
+        // In Moodle <= 2.6, we use simply "grade".
+        $modgrade = get_string_manager()->string_exists('modgrade', 'grades');
+        $modgrade = get_string($modgrade ? 'modgrade' : 'grade', 'grades');
         $br = html_writer::empty_tag('br');
-        return get_string('grade').$br.'('.$grademethod.')';
+        return $modgrade.$br.'('.$grademethod.')';
     }
 
     /**
