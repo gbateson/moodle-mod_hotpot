@@ -397,7 +397,7 @@ class mod_hotpot_mod_form extends moodleform_mod {
         $elements = array(
             $mform->createElement('static', '', '', get_string('delay1summary', $plugin)),
             $mform->createElement('static', '', '', html_writer::empty_tag('br')),
-            $mform->createElement('duration', $name, '', array('optional'=>1, 'defaultunit'=>1))
+            $mform->createElement('duration', $name . 'specific', '', array('optional'=>1, 'defaultunit'=>1))
         );
         $mform->addGroup($elements, $name.'_elements', $label, '', false);
         $mform->addHelpButton($name.'_elements', $name, $plugin);
@@ -412,7 +412,7 @@ class mod_hotpot_mod_form extends moodleform_mod {
         $elements = array(
             $mform->createElement('static', '', '', get_string('delay2summary', $plugin)),
             $mform->createElement('static', '', '', html_writer::empty_tag('br')),
-            $mform->createElement('duration', $name, '', array('optional'=>1, 'defaultunit'=>1))
+            $mform->createElement('duration', $name . 'specific', '', array('optional'=>1, 'defaultunit'=>1))
         );
         $mform->addGroup($elements, $name.'_elements', $label, '', false);
         $mform->addHelpButton($name.'_elements', $name, $plugin);
