@@ -1852,7 +1852,7 @@ function hotpot_extend_navigation(navigation_node $hotpotnode, stdclass $course,
  * @param settings_navigation $settingsnav {@link settings_navigation}
  * @param navigation_node $hotpotnode {@link navigation_node}
  */
-function hotpot_extend_settings_navigation(settings_navigation $settingsnav, navigation_node $hotpotnode=null) {
+function hotpot_extend_settings_navigation(settings_navigation $settingsnav, ?navigation_node $hotpotnode = null) {
     global $CFG, $DB, $PAGE;
 
     // don't add nodes in Moodle <= 2.4, because they were

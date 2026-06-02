@@ -769,7 +769,7 @@ class hotpot {
      *        array('flagged', 'question')
      *    )
      */
-    static public function get_js_module(array $requires = null, array $strings = null) {
+        static public function get_js_module(?array $requires = null, ?array $strings = null) {
         return array(
             'name' => 'mod_hotpot',
             'fullpath' => '/mod/hotpot/module.js',
