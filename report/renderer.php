@@ -493,7 +493,7 @@ class mod_hotpot_report_renderer extends mod_hotpot_renderer {
      * @param string $fieldprefix prefix to add to all columns in their aliases, does not apply to 'id'
      * @return string
      */
-     function get_userfields($tableprefix = '', array $extrafields = NULL, $idalias = 'id', $fieldprefix = '') {
+      function get_userfields($tableprefix = '', ?array $extrafields = null, $idalias = 'id', $fieldprefix = '') {
 
         // Ensure $tableprefix is a string.
         if ($tableprefix === null) {
