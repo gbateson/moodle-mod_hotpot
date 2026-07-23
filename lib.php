@@ -60,7 +60,6 @@ function hotpot_supports($feature) {
         'FEATURE_GRADE_HAS_GRADE'  => true, // default=false
         'FEATURE_GRADE_OUTCOMES'   => true,
         'FEATURE_GROUPINGS'        => true, // default=false
-        'FEATURE_GROUPMEMBERSONLY' => true, // default=false
         'FEATURE_GROUPS'           => true,
         'FEATURE_IDNUMBER'         => true, // Moodle >= 2.0
         'FEATURE_MOD_INTRO'        => false, // default=true
