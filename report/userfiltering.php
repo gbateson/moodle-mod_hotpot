@@ -90,7 +90,7 @@ class hotpot_user_filtering extends user_filtering {
      * @param array named params (recommended prefix ex)
      * @return array sql string and $params
      */
-    function get_sql_filter($extra='', array $params=null) {
+    function get_sql_filter($extra='', ?array $params = null) {
         list($filter, $params) = parent::get_sql_filter($extra, $params);
 
         // remove empty " AND " conditions at start, middle and end of filter
