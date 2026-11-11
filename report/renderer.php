@@ -488,12 +488,12 @@ class mod_hotpot_report_renderer extends mod_hotpot_renderer {
      * get_userfields
      *
      * @param string $tableprefix name of database table prefix in query
-     * @param array  $extrafields extra fields to be included in result (do not include TEXT columns because it would break SELECT DISTINCT in MSSQL and ORACLE)
+     * @param array|null $extrafields extra fields to be included in result (do not include TEXT columns because it would break SELECT DISTINCT in MSSQL and ORACLE)
      * @param string $idalias     alias of id field
      * @param string $fieldprefix prefix to add to all columns in their aliases, does not apply to 'id'
      * @return string
      */
-     function get_userfields($tableprefix = '', array $extrafields = NULL, $idalias = 'id', $fieldprefix = '') {
+     function get_userfields($tableprefix = '', $extrafields = NULL, $idalias = 'id', $fieldprefix = '') {
 
         // Ensure $tableprefix is a string.
         if ($tableprefix === null) {

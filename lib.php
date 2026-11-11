@@ -74,6 +74,11 @@ function hotpot_supports($feature) {
     if (defined('MOD_ARCHETYPE_OTHER')) {
         $constants['FEATURE_MOD_ARCHETYPE'] = MOD_ARCHETYPE_OTHER; // Moodle >= 2.x
     }
+    if (! class_exists('\\core_availability\\info')) {
+        $constants['FEATURE_GROUPMEMBERSONLY'] = true; // Moodle <= 2.6
+        // Moodle >= 2.7 uses the availability API (\core_availability\info)
+        // Moodle >= 5.x treats any plugin that declares this feature as broken.
+    }
     if (defined('MOD_PURPOSE_ASSESSMENT')) {
         $constants['FEATURE_MOD_PURPOSE'] = MOD_PURPOSE_ASSESSMENT; // Moodle >= 4.x
     }
@@ -934,6 +939,22 @@ function hotpot_get_post_actions() {
     return array('submit');
 }
 
+/**
+ * Get the best available "Grade" (noun) string for this version of Moodle.
+ *
+ * @return string
+ */
+function hotpot_get_grade_string() {
+    $strman = get_string_manager();
+    if ($strman->string_exists('gradenoun', 'moodle')) {
+        return get_string('gradenoun'); // Moodle >= 4.0
+    }
+    if ($strman->string_exists('modgrade', 'grades')) {
+        return get_string('modgrade', 'grades'); // Moodle >= 2.7
+    }
+    return get_string('grade', 'grades'); // Moodle <= 2.6
+}
+
 /*
  * For the given list of courses, this function creates an HTML report
  * of which HotPot activities have been completed and which have not
@@ -1030,7 +1051,7 @@ function hotpot_print_overview($courses, &$htmlarray) {
                 $grade = $grade[$USER->id];
                 $href = new moodle_url('/mod/hotpot/report.php', array('hp' => $hotpot->id));
                 if ($hotpot->gradeweighting) {
-                    $str .= '<div class="info">'.get_string('grade', 'grades').': '.'<a href="'.$href.'">'.$grade->rawgrade.'%</a></div>';
+                    $str .= '<div class="info">'.hotpot_get_grade_string().': '.'<a href="'.$href.'">'.$grade->rawgrade.'%</a></div>';
                 }
                 $str .= '<div class="info">'.get_string('status', 'hotpot').': '.'<a href="'.$href.'">'.hotpot::format_status($grade->maxstatus).'</a></div>';
             }
@@ -1852,9 +1873,9 @@ function hotpot_extend_navigation(navigation_node $hotpotnode, stdclass $course,
  * so it is safe to rely on the $PAGE.
  *
  * @param settings_navigation $settingsnav {@link settings_navigation}
- * @param navigation_node $hotpotnode {@link navigation_node}
+ * @param navigation_node|null $hotpotnode {@link navigation_node}
  */
-function hotpot_extend_settings_navigation(settings_navigation $settingsnav, navigation_node $hotpotnode=null) {
+function hotpot_extend_settings_navigation(settings_navigation $settingsnav, $hotpotnode=null) {
     global $CFG, $DB, $PAGE;
 
     // don't add nodes in Moodle <= 2.4, because they were

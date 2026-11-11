@@ -840,6 +840,19 @@ class mod_hotpot_mod_form extends moodleform_mod {
             $data['delay3specific'] = 0;
         }
 
+        // delay1 and delay2
+        // CONTRIB-9156: force these to be numeric, because the "duration" element
+        // passes them to fmod(), which throws a TypeError on PHP >= 8 if the value
+        // is a non-numeric string, such as the empty user preference used when
+        // adding a new HotPot. Moodle >= 4.3 handles empty strings (MDL-78544).
+        foreach (array('delay1', 'delay2') as $name) {
+            if (array_key_exists($name, $data) && is_numeric($data[$name])) {
+                $data[$name] = intval($data[$name]);
+            } else {
+                $data[$name] = 0;
+            }
+        }
+
         // set stopbutton options
         switch ($data['stopbutton']) {
             case hotpot::STOPBUTTON_SPECIFIC:

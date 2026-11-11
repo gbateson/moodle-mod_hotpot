@@ -59,10 +59,7 @@ class hotpot_user_filtering extends user_filtering {
             case 'grouping':
                 return new hotpot_filter_group($fieldname, $advanced, $default);
             case 'grade':
-                // In Moodle >= 2.7, we use the "modgrade" string.
-                // In Moodle <= 2.6, we use simply "grade".
-                $modgrade = get_string_manager()->string_exists('modgrade', 'grades');
-                $label = get_string($modgrade ? 'modgrade' : 'grade', 'grades');
+                $label = hotpot_get_grade_string();
                 return new hotpot_filter_grade($fieldname, $label, $advanced, $default);
             case 'timemodified':
                 $label = get_string('time', 'quiz');
@@ -87,10 +84,10 @@ class hotpot_user_filtering extends user_filtering {
     /**
      * Returns sql where statement based on active user filters
      * @param string $extra sql
-     * @param array named params (recommended prefix ex)
+     * @param array|null named params (recommended prefix ex)
      * @return array sql string and $params
      */
-    function get_sql_filter($extra='', array $params=null) {
+    function get_sql_filter($extra='', $params=null) {
         list($filter, $params) = parent::get_sql_filter($extra, $params);
 
         // remove empty " AND " conditions at start, middle and end of filter
