@@ -53,7 +53,7 @@ class hotpot_source_hp_6_jmatch_html extends hotpot_source_hp_6_jmatch {
      */
     static public function required_strings_html(&$content)  {
         $strings = parent::required_strings_html($content);
-        if (is_numeric(in_array('<div id="MainDiv" class="StdDiv">', $strings))) {
+        if (in_array('<div id="MainDiv" class="StdDiv">', $strings)) {
             $strings[] = '<div id="MatchDiv" style="text-align: center;">';
         } else {
             // drag-and-drop versions of JMatch and JMix

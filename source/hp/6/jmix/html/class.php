@@ -50,7 +50,7 @@ class hotpot_source_hp_6_jmix_html extends hotpot_source_hp_6_jmix {
      */
     static public function required_strings_html(&$content)  {
         $strings = parent::required_strings_html($content);
-        if (is_numeric(in_array('<div id="MainDiv" class="StdDiv">', $strings))) {
+        if (in_array('<div id="MainDiv" class="StdDiv">', $strings)) {
             // plain version of JMix
             $strings[] = '<div id="SegmentDiv">';
         } else {

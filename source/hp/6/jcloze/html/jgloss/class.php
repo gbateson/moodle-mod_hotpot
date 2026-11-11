@@ -43,4 +43,7 @@ class hotpot_source_hp_6_jcloze_html_jgloss extends hotpot_source_hp_6_jcloze_ht
     const REQUIRED_STRINGS = array(
         'function Add_GlossFunctionality()' // Rottmeier JGloss file
     );
+
+    // override the BANNED_STRINGS of plain JCloze, which bans Rottmeier files
+    const BANNED_STRINGS = array();
 }

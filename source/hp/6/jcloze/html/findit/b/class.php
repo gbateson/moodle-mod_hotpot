@@ -45,4 +45,7 @@ class hotpot_source_hp_6_jcloze_html_findit_b extends hotpot_source_hp_6_jcloze_
         'this.ErrorFound = false;', // Rottmeier FindIt file
         'this.GapSolved = false;' //Rottmeier FindIt (b) file
     );
+
+    // override the BANNED_STRINGS of plain JCloze, which bans Rottmeier files
+    const BANNED_STRINGS = array();
 }

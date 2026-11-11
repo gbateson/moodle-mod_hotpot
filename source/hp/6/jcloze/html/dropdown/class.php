@@ -44,4 +44,7 @@ class hotpot_source_hp_6_jcloze_html_dropdown extends hotpot_source_hp_6_jcloze_
         'function Create_StateArray()',
         'this.GapLocked = false;'
     );
+
+    // override the BANNED_STRINGS of plain JCloze, which bans Rottmeier files
+    const BANNED_STRINGS = array();
 }
