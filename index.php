@@ -29,7 +29,7 @@ require_once(dirname(__FILE__).'/locallib.php');
 $id = required_param('id', PARAM_INT);   // course
 
 if (! $course = $DB->get_record('course', array('id' => $id))) {
-    print_error('invalidcourseid');
+    throw new moodle_exception('invalidcourseid', 'error');
 }
 
 require_course_login($course);

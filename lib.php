@@ -955,6 +955,30 @@ function hotpot_get_grade_string() {
     return get_string('grade', 'grades'); // Moodle <= 2.6
 }
 
+/**
+ * Convert an XML string to a nested array, using the best available XML parser.
+ *
+ * The xmlize() function was deprecated in Moodle 5.1,
+ * and replaced by the \core\xml_parser class.
+ *
+ * @param string $data the XML source to parse
+ * @param int $whitespace 1 to keep whitespace, 0 to remove it
+ * @param string $encoding the encoding of the XML
+ * @param bool $reporterrors true to throw an exception if the XML is not well-formed
+ * @return array representation of the parsed XML
+ */
+function hotpot_xmlize($data, $whitespace=1, $encoding='UTF-8', $reporterrors=false) {
+    global $CFG;
+    if (class_exists('\\core\\xml_parser')) {
+        // Moodle >= 5.1
+        $parser = new \core\xml_parser();
+        return $parser->parse($data, $whitespace, $encoding, $reporterrors);
+    }
+    // Moodle <= 5.0
+    require_once($CFG->dirroot.'/lib/xmlize.php');
+    return xmlize($data, $whitespace, $encoding, $reporterrors);
+}
+
 /*
  * For the given list of courses, this function creates an HTML report
  * of which HotPot activities have been completed and which have not
@@ -2444,8 +2468,59 @@ function hotpot_add_to_log($courseid, $module, $action, $url='', $info='', $cmid
 }
 
 /**
+ * Returns the information about this HotPot that is cached by course/modinfo.
+ *
+ * In Moodle >= 3.11, this includes the custom completion rules,
+ * which are evaluated by \mod_hotpot\completion\custom_completion.
+ *
+ * Note: when this function exists, Moodle no longer adds the description
+ * to the course page automatically, so we must do that here too.
+ *
+ * @param stdClass $coursemodule record from "course_modules" table
+ * @return cached_cm_info|false|null
+ */
+function hotpot_get_coursemodule_info($coursemodule) {
+    global $DB;
+
+    if (! class_exists('cached_cm_info')) {
+        return null; // Moodle <= 2.1
+    }
+
+    $fields = 'id, name, intro, introformat, completionmingrade, completionpass, completioncompleted';
+    if (! $hotpot = $DB->get_record('hotpot', array('id' => $coursemodule->instance), $fields)) {
+        return false;
+    }
+
+    $info = new cached_cm_info();
+    $info->name = $hotpot->name;
+
+    if (! empty($coursemodule->showdescription)) {
+        // Do not filter the cached version, filters run at display time.
+        $info->content = format_module_intro('hotpot', $hotpot, $coursemodule->id, false);
+    }
+
+    // Moodle >= 3.11: custom completion rules, but only if completion is "automatic".
+    if (class_exists('\\core_completion\\activity_custom_completion')) {
+        if (isset($coursemodule->completion) && $coursemodule->completion == COMPLETION_TRACKING_AUTOMATIC) {
+            // Note: decimal fields are returned as strings, and '0.00' is not empty,
+            // so we convert to a number to make sure "0.00" means "not enabled".
+            $info->customdata['customcompletionrules'] = array(
+                'completionmingrade' => floatval($hotpot->completionmingrade),
+                'completionpass' => intval($hotpot->completionpass),
+                'completioncompleted' => intval($hotpot->completioncompleted),
+            );
+        }
+    }
+
+    return $info;
+}
+
+/**
  * Obtains the automatic completion state for this hotpot
  * based on the conditions in hotpot settings.
+ *
+ * This function is only used by Moodle <= 3.10 (it was removed from Moodle 4.3).
+ * Moodle >= 3.11 uses \mod_hotpot\completion\custom_completion instead.
  *
  * @param  object  $course record from "course" table
  * @param  object  $cm     record from "course_modules" table

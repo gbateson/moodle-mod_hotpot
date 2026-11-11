@@ -26,7 +26,30 @@
 defined('MOODLE_INTERNAL') || die();
 
 // get the standard Moodle mediaplugin filter
-require_once($CFG->dirroot.'/filter/mediaplugin/filter.php');
+if (! class_exists('\\filter_mediaplugin\\text_filter')) {
+    // Moodle <= 4.4 (this file was deprecated in Moodle 4.5)
+    require_once($CFG->dirroot.'/filter/mediaplugin/filter.php');
+}
+
+/**
+ * Create a new instance of Moodle's standard mediaplugin filter
+ *
+ * In Moodle >= 4.5, the "filter_mediaplugin" class was renamed
+ * to "\filter_mediaplugin\text_filter", and using the old name
+ * causes a deprecation warning.
+ *
+ * @param context $context
+ * @param array $localconfig (optional, default=array())
+ * @return filter_mediaplugin|\filter_mediaplugin\text_filter
+ */
+function hotpot_get_mediaplugin_filter($context, $localconfig=array()) {
+    if (class_exists('\\filter_mediaplugin\\text_filter')) {
+        // Moodle >= 4.5
+        return new \filter_mediaplugin\text_filter($context, $localconfig);
+    }
+    // Moodle <= 4.4
+    return new filter_mediaplugin($context, $localconfig);
+}
 
 /**
  * hotpot_mediafilter
@@ -471,7 +494,7 @@ class hotpot_mediafilter {
         // call filter to add media player
         if (empty($options['movie']) && $options['player']=='moodle') {
 
-            $filter = new filter_mediaplugin($output->hotpot->context, array());
+            $filter = hotpot_get_mediaplugin_filter($output->hotpot->context);
             $object = $filter->filter($link);
 
             if ($object==$link) {

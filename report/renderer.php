@@ -43,6 +43,11 @@ require_once($CFG->dirroot.'/mod/hotpot/report/userfiltering.php');
  */
 class mod_hotpot_report_renderer extends mod_hotpot_renderer {
 
+    // declare properties that are set at runtime,
+    // to avoid "dynamic property" deprecation warnings in PHP >= 8.2
+    /** @var mixed */
+    public $hotpot;
+
     protected $tablecolumns = array();
 
     protected $filterfields = array();

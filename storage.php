@@ -25,8 +25,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-// get the standard XML parser supplied with Moodle
-require_once($CFG->dirroot.'/lib/xmlize.php');
+// get hotpot_xmlize(), which uses the standard XML parser supplied with Moodle
+require_once($CFG->dirroot.'/mod/hotpot/lib.php');
 
 /**
  * mod_hotpot_storage
@@ -136,7 +136,7 @@ class mod_hotpot_storage {
                 // add new attempt record
                 unset($hotpot->attempt->id);
                 if (! $hotpot->attempt->id = $DB->insert_record('hotpot_attempts', $hotpot->attempt)) {
-                    print_error('error_insertrecord', 'hotpot', '', 'hotpot_attempts');
+                    throw new moodle_exception('error_insertrecord', 'hotpot', '', 'hotpot_attempts');
                 }
 
             } else {
@@ -160,7 +160,7 @@ class mod_hotpot_storage {
                     'details' => $hotpot->attempt->details
                 );
                 if (! $DB->insert_record('hotpot_details', $details, false)) {
-                    print_error('error_insertrecord', 'hotpot', '', 'hotpot_details');
+                    throw new moodle_exception('error_insertrecord', 'hotpot', '', 'hotpot_details');
                 }
                 unset($details);
             }
@@ -171,7 +171,7 @@ class mod_hotpot_storage {
 
         // update the attempt record
         if (! $DB->update_record('hotpot_attempts', $hotpot->attempt)) {
-            print_error('error_updaterecord', 'hotpot', '', 'hotpot_attempts');
+            throw new moodle_exception('error_updaterecord', 'hotpot', '', 'hotpot_attempts');
         }
 
         // regrade the quiz to take account of the latest quiz attempt score
@@ -209,7 +209,7 @@ class mod_hotpot_storage {
         // $attempt->details = self::pre_xmlize($attempt->details);
 
         // parse the attempt details as xml
-        $details = xmlize($attempt->details);
+        $details = hotpot_xmlize($attempt->details);
         $question_number; // initially unset
         $question = false;
         $response  = false;
@@ -351,7 +351,7 @@ class mod_hotpot_storage {
             if (! $question->id = $DB->get_field('hotpot_questions', 'id', array('hotpotid'=>$attempt->hotpotid, 'md5key'=>$question->md5key))) {
                 // add question record
                 if (! $question->id = $DB->insert_record('hotpot_questions', $question)) {
-                    print_error('error_insertrecord', 'hotpot', '', 'hotpot_questions');
+                    throw new moodle_exception('error_insertrecord', 'hotpot', '', 'hotpot_questions');
                 }
             }
 
@@ -378,7 +378,7 @@ class mod_hotpot_storage {
 
                 // add response record
                 if(! $response->id = $DB->insert_record('hotpot_responses', $response)) {
-                    print_error('error_insertrecord', 'hotpot', '', 'hotpot_responses');
+                    throw new moodle_exception('error_insertrecord', 'hotpot', '', 'hotpot_responses');
                 }
                 $looping = false;
             }

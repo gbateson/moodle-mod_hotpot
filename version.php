@@ -41,8 +41,8 @@ $plugin->cron      = 0;
 $plugin->component = 'mod_hotpot';
 $plugin->maturity  = MATURITY_STABLE; // ALPHA=50, BETA=100, RC=150, STABLE=200
 $plugin->requires  = 2010112400;      // Moodle 2.0
-$plugin->version   = 2025050353;
-$plugin->release   = '2025-05-03 (53)';
+$plugin->version   = 2026111154;
+$plugin->release   = '2026-11-11 (54)';
 
 if (isset($CFG->yui3version) && version_compare($CFG->yui3version, '3.15.0') < 0) {
     $module = clone($plugin); // Moodle <= 2.6

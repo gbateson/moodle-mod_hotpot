@@ -767,11 +767,11 @@ class mod_hotpot_attempt_renderer extends mod_hotpot_renderer {
         // add / update the cache record
         if (isset($this->cache->id)) {
             if (! $DB->update_record('hotpot_cache', $this->cache)) {
-                print_error('error_updaterecord', 'hotpot', '', 'hotpot_cache');
+                throw new moodle_exception('error_updaterecord', 'hotpot', '', 'hotpot_cache');
             }
         } else {
             if (! $this->cache->id = $DB->insert_record('hotpot_cache', $this->cache)) {
-                print_error('error_insertrecord', 'hotpot', '', 'hotpot_cache');
+                throw new moodle_exception('error_insertrecord', 'hotpot', '', 'hotpot_cache');
             }
         }
 

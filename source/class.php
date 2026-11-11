@@ -25,8 +25,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-//  get Moodle's standard xmlize library
-require_once($CFG->dirroot.'/lib/xmlize.php');
+//  get hotpot_xmlize(), which uses Moodle's standard XML parser
+require_once($CFG->dirroot.'/mod/hotpot/lib.php');
 
 /**
  * hotpot_source
@@ -36,6 +36,13 @@ require_once($CFG->dirroot.'/lib/xmlize.php');
  * @since     Moodle 2.0
  */
 class hotpot_source {
+
+    // declare properties that are set at runtime,
+    // to avoid "dynamic property" deprecation warnings in PHP >= 8.2
+    /** @var mixed */
+    public $hotpot;
+    /** @var mixed */
+    public $legacy_baseurl;
     const BEST_OUTPUT_FORMAT = '';
 
     const REQUIRED_FILETYPES = array();
@@ -386,7 +393,7 @@ class hotpot_source {
     function is($methodname, $path, $location) {
         $result = false;
 
-        $types = hotpot_get_classes('file');
+        $types = hotpot::get_classes('hotpotsource');
         foreach ($types as $type) {
 
             //if ($result = $type::$methodname($fullpath)) {
@@ -899,7 +906,7 @@ class hotpot_source {
             if (empty($content)) {
                 $content = array();
             } else {
-                $content = xmlize($content, 0);
+                $content = hotpot_xmlize($content, 0);
             }
         }
         return $content;

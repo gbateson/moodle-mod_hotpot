@@ -995,7 +995,7 @@ class hotpot {
         // create a new string record
         $record = (object)array('string'=>$str, 'md5key'=>$md5key);
         if (! $id = $DB->insert_record('hotpot_strings', $record)) {
-            print_error('error_insertrecord', 'hotpot', '', 'hotpot_strings');
+            throw new moodle_exception('error_insertrecord', 'hotpot', '', 'hotpot_strings');
         }
 
         // new string was successfully added
@@ -1908,7 +1908,24 @@ class hotpot {
             return false;
         }
         // user's IP address is missing or does not match required subnet mask
-        return get_string('subnetwrong', 'quiz');
+        return self::get_quiz_string('subnetwrong', 'quizaccess_ipaddress');
+    }
+
+    /**
+     * Get a string that was originally in the quiz module.
+     *
+     * In Moodle >= 2.2, some quiz strings were moved to the quiz access rule plugins,
+     * e.g. "quizaccess_ipaddress" and "quizaccess_password".
+     *
+     * @param string $name of string
+     * @param string $component where the string is in Moodle >= 2.2
+     * @return string
+     */
+    static public function get_quiz_string($name, $component)  {
+        if (get_string_manager()->string_exists($name, $component)) {
+            return get_string($name, $component); // Moodle >= 2.2
+        }
+        return get_string($name, 'quiz'); // Moodle <= 2.1
     }
 
     /**
@@ -1938,7 +1955,7 @@ class hotpot {
                     } else {
                         $url = $this->attempt_url();
                     }
-                    $error = get_string('requirepasswordmessage', 'quiz');
+                    $error = self::get_quiz_string('requirepasswordmessage', 'quizaccess_password');
                     $error .= html_writer::start_tag('form', array('id'=>'hotpotpasswordform', 'method'=>'post', 'action'=>$url));
                     $error .= html_writer::start_tag('fieldset');
                     $error .= html_writer::tag('b', get_string('password')).' ';
@@ -1947,7 +1964,7 @@ class hotpot {
                     if ($password) {
                         // previously entered password was invalid
                         $error .= html_writer::empty_tag('br');
-                        $error .= get_string('passworderror', 'quiz');
+                        $error .= self::get_quiz_string('passworderror', 'quizaccess_password');
                     }
                     $error .= html_writer::end_tag('fieldset');
                     $error .= html_writer::end_tag('form')."\n";

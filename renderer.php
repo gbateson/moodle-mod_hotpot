@@ -216,13 +216,12 @@ class mod_hotpot_renderer extends plugin_renderer_base {
             } else if (is_string($popup)) {
                 $popup = array('name' => $popup);
             }
-            $name  = (isset($popup['name']) ? $popup['name'] : '');
+            $name  = (empty($popup['name']) ? 'popup' : $popup['name']);
             $width  = (isset($popup['width']) ? $popup['width'] : 650);
             $height = (isset($popup['height']) ? $popup['height'] : 400);
-            $command = element_to_popup_window(
-                // $type, $url, $name, $linktext, $height, $width, $title, $options, $return, $id, $class
-                'link', $url, $name, $linktext, $height, $width, $str->$type, '', true, '', ''
-            );
+            // Note: element_to_popup_window() was removed before Moodle 2.0
+            $action = new popup_action('click', $url, $name, array('width' => $width, 'height' => $height));
+            $command = $this->output->action_link($url, $linktext, $action, array('title' => $str->$type))."\n";
         } else {
             $command = html_writer::link($url, $linktext, array('title' => $str->$type))."\n";
 

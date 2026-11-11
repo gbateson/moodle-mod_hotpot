@@ -38,6 +38,15 @@ require_once($CFG->dirroot.'/mod/hotpot/attempt/renderer.php');
  */
 class mod_hotpot_attempt_html_renderer extends mod_hotpot_attempt_renderer {
 
+    // declare properties that are set at runtime,
+    // to avoid "dynamic property" deprecation warnings in PHP >= 8.2
+    /** @var mixed */
+    public $htmlcontent;
+    /** @var mixed */
+    public $styles;
+    /** @var mixed */
+    public $scripts;
+
     // strings to mark beginning and end of submission form
     protected $BeginSubmissionForm = '<!-- BeginSubmissionForm -->';
     protected $EndSubmissionForm = '<!-- EndSubmissionForm -->';

@@ -43,6 +43,19 @@ require_once($CFG->dirroot.'/mod/hotpot/attempt/hp/renderer.php');
  */
 class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
 
+    // declare properties that are set at runtime,
+    // to avoid "dynamic property" deprecation warnings in PHP >= 8.2
+    /** @var mixed */
+    public $navbarid;
+    /** @var mixed */
+    public $PreloadImageList;
+    /** @var mixed */
+    public $wordlist;
+    /** @var mixed */
+    public $l_items;
+    /** @var mixed */
+    public $r_items;
+
     /**#@+
      * internal codes for filter actions
      *

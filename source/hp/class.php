@@ -428,7 +428,7 @@ class hotpot_source_hp extends hotpot_source {
             $this->xml_root = $this->hbs_software.'-'.$this->hbs_quiztype.'-file';
 
             // convert to XML tree using xmlize()
-            if (! $this->xml = xmlize($this->filecontents, 0)) {
+            if (! $this->xml = hotpot_xmlize($this->filecontents, 0)) {
                 debugging('Could not parse XML file: '.$this->filepath);
             } else if (! array_key_exists($this->xml_root, $this->xml)) {
                 debugging('Could not find XML root node: '.$this->xml_root);
@@ -438,7 +438,7 @@ class hotpot_source_hp extends hotpot_source {
             if (isset($this->config) && $this->config && $this->config->get_filecontents()) {
 
                 $this->config->compact_filecontents(array('header-code'));
-                $xml = xmlize($this->config->filecontents, 0);
+                $xml = hotpot_xmlize($this->config->filecontents, 0);
 
                 $config_file = $this->hbs_software.'-config-file';
                 if (isset($xml[$config_file]['#']) && isset($this->xml[$this->xml_root]['#'])) {

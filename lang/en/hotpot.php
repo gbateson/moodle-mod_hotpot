@@ -141,6 +141,9 @@ $string['closed'] = 'This activity has closed';
 $string['clues'] = 'Clues';
 $string['completed'] = 'Completed';
 $string['completioncompleted'] = 'Require completed status';
+$string['completiondetail:completed'] = 'Reach "Completed" status';
+$string['completiondetail:mingrade'] = 'Receive a grade of at least {$a}';
+$string['completiondetail:pass'] = 'Receive a passing grade';
 $string['completionmingrade'] = 'Require minimum grade';
 $string['completionpass'] = 'Require passing grade';
 $string['completionwarning'] = 'These fields are disabled if the grade limit for this activity is "No grade" or the grade weighting is "No weighting"';
@@ -232,6 +235,7 @@ $string['entrypage_help'] = 'Should the students be shown an initial page before
 An entry page is always shown to the teacher, in order to provide access to the reports and edit quizzes page';
 $string['entrypagehdr'] = 'Entry page';
 $string['entrytext'] = 'Entry page text';
+$string['error_disabledfilter'] = 'This media file cannot be displayed, because the "{$a}" setting is disabled on this site.';
 $string['exit_areyouok'] = 'Hello, are you still there?';
 $string['exit_attemptscore'] = 'Your score for that attempt was {$a}';
 $string['exit_course'] = 'Course';

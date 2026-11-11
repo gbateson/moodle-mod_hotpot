@@ -49,7 +49,7 @@ class hotpot_mediafilter_moodle extends hotpot_mediafilter {
         static $eolas_fix_applied = 0;
 
         // insert media players using Moodle's standard mediaplugin filter
-        $filter = new filter_mediaplugin($hotpot->context, array());
+        $filter = hotpot_get_mediaplugin_filter($hotpot->context);
         $newtext = $filter->filter($text);
 
         if ($newtext==$text) {
