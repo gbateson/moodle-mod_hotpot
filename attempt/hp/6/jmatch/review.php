@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -19,15 +18,15 @@
  * Review results of an attempt at a HotPot quiz
  * Output format: hp_6_jmatch
  *
- * @package   mod-hotpot
+ * @package   hotpotattempt_hp
  * @copyright 2010 Gordon Bateson <gordon.bateson@gmail.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-// get parent class
-require_once($CFG->dirroot.'/mod/hotpot/attempt/hp/6/review.php');
+// Get parent class.
+require_once($CFG->dirroot . '/mod/hotpot/attempt/hp/6/review.php');
 
 /**
  * mod_hotpot_attempt_hp_6_jmatch_review
@@ -43,7 +42,7 @@ class mod_hotpot_attempt_hp_6_jmatch_review extends mod_hotpot_attempt_hp_6_revi
      *
      * @return xxx
      */
-    static function response_text_fields()   {
+    public static function response_text_fields() {
         return array('correct', 'wrong');
     }
 
@@ -52,7 +51,7 @@ class mod_hotpot_attempt_hp_6_jmatch_review extends mod_hotpot_attempt_hp_6_revi
      *
      * @return xxx
      */
-    static function response_num_fields()   {
+    public static function response_num_fields() {
         return array('checks');
     }
 }

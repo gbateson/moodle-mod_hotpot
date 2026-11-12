@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -19,15 +18,15 @@
  * Render an attempt at a HotPot quiz
  * Output format: hp_6_jmatch_html_intro
  *
- * @package   mod-hotpot
+ * @package   hotpotattempt_hp
  * @copyright 2010 Gordon Bateson <gordon.bateson@gmail.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-// get parent class
-require_once($CFG->dirroot.'/mod/hotpot/attempt/hp/6/jmatch/html/renderer.php');
+// Get parent class.
+require_once($CFG->dirroot . '/mod/hotpot/attempt/hp/6/jmatch/html/renderer.php');
 
 /**
  * mod_hotpot_attempt_hp_6_jmatch_html_intro_renderer
@@ -43,14 +42,14 @@ class mod_hotpot_attempt_hp_6_jmatch_html_intro_renderer extends mod_hotpot_atte
      *
      * @return array of strings
      */
-    static public function sourcetypes()  {
+    static public function sourcetypes() {
         return array('hp_6_jmatch_html_intro');
     }
 
     /**
      * fix_headcontent
      */
-    function fix_headcontent()  {
+    public function fix_headcontent() {
         $this->fix_headcontent_DragAndDrop();
         $this->fix_headcontent_rottmeier('jintro');
     }
@@ -60,10 +59,10 @@ class mod_hotpot_attempt_hp_6_jmatch_html_intro_renderer extends mod_hotpot_atte
      *
      * @return xxx
      */
-    function get_js_functionnames()  {
-        // start list of function names
+    public function get_js_functionnames() {
+        // Start list of function names.
         $names = parent::get_js_functionnames();
-        $names .= ($names ? ',' : '').'CheckAnswer,ShowDescription';
+        $names .= ($names ? ',' : '') . 'CheckAnswer,ShowDescription';
         return $names;
     }
 
@@ -73,50 +72,48 @@ class mod_hotpot_attempt_hp_6_jmatch_html_intro_renderer extends mod_hotpot_atte
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
-    public function fix_js_ShowDescription(&$str, $start, $length)  {
+    public function fix_js_ShowDescription(&$str, $start, $length) {
         $replace = ''
-            ."function ShowDescription(evt, ElmNum){\n"
-            ."	if (evt==null) {\n"
-            ."		evt = window.event; // IE\n"
-            ."	}\n"
+            . "function ShowDescription(evt, ElmNum){\n"
+            . "	if (evt==null) {\n"
+            . "		evt = window.event; // IE\n"
+            . "	}\n"
 
-            ."	var obj = document.getElementById('DivIntroPage');\n"
-            ."	if (obj) {\n"
+            . "	var obj = document.getElementById('DivIntroPage');\n"
+            . "	if (obj) {\n"
 
-            // get max X and Y for this page
-            ."		var pg = new PageDim();\n"
-            ."		var maxX = (pg.Left + pg.W);\n"
-            ."		var maxY = (pg.Top  + pg.H);\n"
+            // Get max X and Y for this page.
+            . "		var pg = new PageDim();\n"
+            . "		var maxX = (pg.Left + pg.W);\n"
+            . "		var maxY = (pg.Top  + pg.H);\n"
 
-            // get mouse position
-            ."		if (evt.pageX || evt.pageY) {\n"
-            ."			var posX = evt.pageX;\n"
-            ."			var posY = evt.pageY;\n"
-            ."		} else if (evt.clientX || evt.clientY) {\n"
-            ."			var posX = evt.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;\n"
-            ."			var posY = evt.clientY + document.body.scrollTop + document.documentElement.scrollTop;\n"
-            ."		} else {\n"
-            ."			var posX = 0;\n"
-            ."			var posY = 0;\n"
-            ."		}\n"
+            // Get mouse position.
+            . "		if (evt.pageX || evt.pageY) {\n"
+            . "			var posX = evt.pageX;\n"
+            . "			var posY = evt.pageY;\n"
+            . "		} else if (evt.clientX || evt.clientY) {\n"
+            . "			var posX = evt.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;\n"
+            . "			var posY = evt.clientY + document.body.scrollTop + document.documentElement.scrollTop;\n"
+            . "		} else {\n"
+            . "			var posX = 0;\n"
+            . "			var posY = 0;\n"
+            . "		}\n"
 
-            // insert new description and make div visible
-            ."		obj.innerHTML = D[ElmNum][0];\n"
-            ."		obj.style.display = 'block';\n"
+            // Insert new description and make div visible.
+            . "		obj.innerHTML = D[ElmNum][0];\n"
+            . "		obj.style.display = 'block';\n"
 
-            // make sure posX and posY are within the display area
-            ."		posX = Math.max(0, Math.min(posX + 12, maxX - getOffset(obj, 'Width')));\n"
-            ."		posY = Math.max(0, Math.min(posY + 12, maxY - getOffset(obj, 'Height')));\n"
+            // Make sure posX and posY are within the display area.
+            . "		posX = Math.max(0, Math.min(posX + 12, maxX - getOffset(obj, 'Width')));\n"
+            . "		posY = Math.max(0, Math.min(posY + 12, maxY - getOffset(obj, 'Height')));\n"
 
             // move the description div to (posX, posY)
-            ."		setOffset(obj, 'Left', posX);\n"
-            ."		setOffset(obj, 'Top', posY);\n"
-            ."		obj.style.zIndex = ++topZ;\n"
-            ."	}\n"
-            ."}\n"
-        ;
+            . "		setOffset(obj, 'Left', posX);\n"
+            . "		setOffset(obj, 'Top', posY);\n"
+            . "		obj.style.zIndex = ++topZ;\n"
+            . "	}\n"
+            . "}\n";
         $str = substr_replace($str, $replace, $start, $length);
     }
 
@@ -127,66 +124,63 @@ class mod_hotpot_attempt_hp_6_jmatch_html_intro_renderer extends mod_hotpot_atte
      * @param xxx $start
      * @param xxx $length
      */
-    function fix_js_CheckAnswer(&$str, $start, $length)  {
+    public function fix_js_CheckAnswer(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
 
-        // add extra argument to this function, so it can be called from stop button
+        // Add extra argument to this function, so it can be called from stop button.
         if ($pos = strpos($substr, ')')) {
             $substr = substr_replace($substr, 'ForceQuizEvent', $pos, 0);
         }
 
-        // intercept checks
+        // Intercept checks.
         if ($pos = strpos($substr, '{')) {
             $insert = "\n"
-                ."	HP.onclickCheck();\n"
-            ;
-            $substr = substr_replace($substr, $insert, $pos+1, 0);
+                . "	HP.onclickCheck();\n";
+            $substr = substr_replace($substr, $insert, $pos + 1, 0);
         }
 
-        // set quiz status
+        // Set quiz status.
         if ($pos = strpos($substr, 'if (TotalCorrect == F.length) {')) {
             $insert = ''
-                ."if (TotalCorrect == F.length) {\n"
-                ."		var QuizEvent = HP.EVENT_COMPLETED;\n"
-                ."	} else if (ForceQuizEvent){\n"
-                ."		var QuizEvent = ForceQuizEvent;\n" // TIMEDOUT or ABANDONED
-                ."	} else if (TimeOver){\n"
-                ."		var QuizEvent = HP.EVENT_TIMEDOUT;\n"
-                ."	} else {\n"
-                ."		var QuizEvent = HP.EVENT_CHECK;\n"
-                ."	}\n"
-                ."	"
-            ;
+                . "if (TotalCorrect == F.length) {\n"
+                . "		var QuizEvent = HP.EVENT_COMPLETED;\n"
+                . "	} else if (ForceQuizEvent){\n"
+                . "		var QuizEvent = ForceQuizEvent;\n" // TIMEDOUT or ABANDONED
+                . "	} else if (TimeOver){\n"
+                . "		var QuizEvent = HP.EVENT_TIMEDOUT;\n"
+                . "	} else {\n"
+                . "		var QuizEvent = HP.EVENT_CHECK;\n"
+                . "	}\n"
+                . "	";
             $substr = substr_replace($substr, $insert, $pos, 0);
         }
 
-        // remove call to Finish() function
-        $substr = preg_replace('/\s*'.'setTimeout\(.*?\);/s', '', $substr);
+        // Remove call to Finish() function.
+        $substr = preg_replace('/\s*' . 'setTimeout\(.*?\);/s', '', $substr);
 
-        // remove call to WriteToInstructions() function
-        $search = '/\s*'.'WriteToInstructions\(.*?\);/s';
+        // Remove call to WriteToInstructions() function.
+        $search = '/\s*' . 'WriteToInstructions\(.*?\);/s';
         $substr = preg_replace($search, '', $substr);
 
         // remove superfluous if-block that contained WriteToInstructions()
         $search = '/\s*if \(\(is\.ie\)\&\&\(\!is\.mac\)\)\{\s*\}/s';
         $substr = preg_replace($search, '', $substr);
 
-        // send results to Moodle, if necessary
+        // Send results to Moodle, if necessary.
         if ($pos = strrpos($substr, '}')) {
             $insert = "\n"
-                ."	if (HP.end_of_quiz(QuizEvent)) {\n"
-                ."		TimeOver = true;\n"
-                ."		Locked = true;\n"
-                ."		Finished = true;\n"
-                ."	}\n"
-                ."	if (Finished || HP.sendallclicks){\n"
-                ."		if (QuizEvent==HP.EVENT_COMPLETED){\n"
-                ."			setTimeout('HP_send_results('+QuizEvent+')', SubmissionTimeout);\n"
-                ."		} else {\n"
-                ."			HP_send_results(QuizEvent);\n"
-                ."		}\n"
-                ."	}\n"
-            ;
+                . "	if (HP.end_of_quiz(QuizEvent)) {\n"
+                . "		TimeOver = true;\n"
+                . "		Locked = true;\n"
+                . "		Finished = true;\n"
+                . "	}\n"
+                . "	if (Finished || HP.sendallclicks){\n"
+                . "		if (QuizEvent==HP.EVENT_COMPLETED){\n"
+                . "			setTimeout('HP_send_results('+QuizEvent+')', SubmissionTimeout);\n"
+                . "		} else {\n"
+                . "			HP_send_results(QuizEvent);\n"
+                . "		}\n"
+                . "	}\n";
             $substr = substr_replace($substr, $insert, $pos, 0);
         }
 
@@ -198,7 +192,7 @@ class mod_hotpot_attempt_hp_6_jmatch_html_intro_renderer extends mod_hotpot_atte
      *
      * @return xxx
      */
-    function get_stop_function_name()  {
+    public function get_stop_function_name() {
         return 'CheckAnswer';
     }
 
@@ -207,7 +201,7 @@ class mod_hotpot_attempt_hp_6_jmatch_html_intro_renderer extends mod_hotpot_atte
      *
      * @return xxx
      */
-    function get_stop_function_args()  {
+    public function get_stop_function_args() {
         return hotpot::STATUS_ABANDONED;
     }
 

@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -16,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * @package moodlecore
+ * @package mod_hotpot
  * @subpackage backup-moodle2
  * @copyright 2010 onwards Eloy Lafuente (stronk7) {@link http://stronk7.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -46,18 +45,18 @@ class restore_hotpot_activity_structure_step extends restore_activity_structure_
      *
      * @return xxx
      */
-    protected function define_structure()  {
+    protected function define_structure() {
 
         $paths = array();
 
-        // cache userinfo flag
+        // Cache userinfo flag.
         $userinfo = $this->get_setting_value('userinfo');
 
         ////////////////////////////////////////////////////////////////////////
         // XML interesting paths - non-user data
         ////////////////////////////////////////////////////////////////////////
 
-        // root element describing hotpot instance
+        // Root element describing hotpot instance.
         $paths[] = new restore_path_element('hotpot', '/activity/hotpot');
 
         ////////////////////////////////////////////////////////////////////////
@@ -71,7 +70,7 @@ class restore_hotpot_activity_structure_step extends restore_activity_structure_
             $paths[] = new restore_path_element('hotpot_response', '/activity/hotpot/questions/question/responses/response');
         }
 
-        // Return the paths wrapped into standard activity structure
+        // Return the paths wrapped into standard activity structure.
         return $this->prepare_activity_structure($paths);
     }
 
@@ -82,7 +81,7 @@ class restore_hotpot_activity_structure_step extends restore_activity_structure_
     static public function define_decode_contents() {
         return array(
             new restore_decode_content('hotpot', array('entrytext'), 'entrytext'),
-            new restore_decode_content('hotpot', array('exittext'),  'exittext')
+            new restore_decode_content('hotpot', array('exittext'),  'exittext'),
         );
     }
 
@@ -91,28 +90,28 @@ class restore_hotpot_activity_structure_step extends restore_activity_structure_
      *
      * @param xxx $data
      */
-    protected function process_hotpot($data)  {
+    protected function process_hotpot($data) {
         global $DB;
 
-        // convert $data to object
+        // Convert $data to object.
         $data = (object)$data;
 
-        // save $oldid
+        // Save $oldid.
         $oldid = $data->id;
 
-        // fix fields
+        // Fix fields.
         if (! $data->course = $this->get_courseid()) {
-            return false; // missing courseid - shouldn't happen !!
+            return false; // Missing courseid - shouldn't happen !!
         }
         $data->timeopen = $this->apply_date_offset($data->timeopen);
         $data->timeclose = $this->apply_date_offset($data->timeclose);
         $data->timecreated = $this->apply_date_offset($data->timecreated);
         $data->timemodified = $this->apply_date_offset($data->timemodified);
 
-        // insert the hotpot record
+        // Insert the hotpot record.
         $newid = $DB->insert_record('hotpot', $data);
 
-        // inmediately after inserting "activity" record, call this
+        // Inmediately after inserting "activity" record, call this.
         $this->apply_activity_instance($newid);
     }
 
@@ -121,41 +120,41 @@ class restore_hotpot_activity_structure_step extends restore_activity_structure_
      *
      * @param xxx $data
      */
-    protected function process_hotpot_attempt($data)  {
+    protected function process_hotpot_attempt($data) {
         global $DB;
 
-        // convert $data to object
+        // Convert $data to object.
         $data = (object)$data;
 
-        // save $oldid
+        // Save $oldid.
         $oldid = $data->id;
 
-        // fix fields
+        // Fix fields.
         if (! $data->userid = $this->get_mappingid('user', $data->userid)) {
-            return false; // invalid userid - shouldn't happen !!
+            return false; // Invalid userid - shouldn't happen !!
         }
         if (! $data->hotpotid = $this->get_new_parentid('hotpot')) {
-            return false; // hotpotid not available - shouldn't happen !!
+            return false; // Hotpotid not available - shouldn't happen !!
         }
 
-        // get $newid
+        // Get $newid.
         if (! $newid = $DB->insert_record('hotpot_attempts', $data)) {
-            return false; // could not add new attempt - shouldn't happen !!
+            return false; // Could not add new attempt - shouldn't happen !!
         }
 
-        // store mapping from $oldid to $newid
+        // Store mapping from $oldid to $newid.
         $this->set_mapping('hotpot_attempt', $oldid, $newid);
 
-        // reset clickreportid to point to parent attempt
-        if (empty($data->clickreportid) || $data->clickreportid==$oldid) {
+        // Reset clickreportid to point to parent attempt.
+        if (empty($data->clickreportid) || $data->clickreportid == $oldid) {
             // clickreporting is not enabled (this is the usual case)
             $clickreportid = $newid;
         } else {
-            // clickreporting is enabled, so get main attempt id
+            // Clickreporting is enabled, so get main attempt id.
             $clickreportid = $this->get_mappingid('hotpot_attempt', $data->clickreportid);
         }
         if (empty($clickreportid)) {
-            $clickreportid = $newid; // old attempt id not avialable - shouldn't happen !!
+            $clickreportid = $newid; // Old attempt id not avialable - shouldn't happen !!
         }
         $DB->set_field('hotpot_attempts', 'clickreportid', $clickreportid, array('id' => $newid));
     }
@@ -166,30 +165,29 @@ class restore_hotpot_activity_structure_step extends restore_activity_structure_
      * @uses $DB
      * @param xxx $data
      * @return xxx
-     * @todo Finish documenting this function
      */
-    protected function process_hotpot_question($data)   {
+    protected function process_hotpot_question($data) {
         global $DB;
 
-        // convert $data to object
+        // Convert $data to object.
         $data = (object)$data;
 
-        // save $oldid
+        // Save $oldid.
         $oldid = $data->id;
 
-        // fix fields
+        // Fix fields.
         if (! $data->hotpotid = $this->get_new_parentid('hotpot')) {
-            return false; // taskid not available - shouldn't happen !!
+            return false; // Taskid not available - shouldn't happen !!
         }
         $data->md5key = md5($data->name);
         $this->set_string_ids($data, array('text'), 0);
 
-        // add new record
+        // Add new record.
         if (! $newid = $DB->insert_record('hotpot_questions', $data)) {
-            return false; // could not add new record - shouldn't happen !!
+            return false; // Could not add new record - shouldn't happen !!
         }
 
-        // store mapping from $oldid to $newid
+        // Store mapping from $oldid to $newid.
         $this->set_mapping('hotpot_question', $oldid, $newid);
     }
 
@@ -199,32 +197,31 @@ class restore_hotpot_activity_structure_step extends restore_activity_structure_
      * @uses $DB
      * @param xxx $data
      * @return xxx
-     * @todo Finish documenting this function
      */
-    protected function process_hotpot_response($data)   {
+    protected function process_hotpot_response($data) {
         global $DB;
 
-        // convert $data to object
+        // Convert $data to object.
         $data = (object)$data;
 
-        // save $oldid
+        // Save $oldid.
         $oldid = $data->id;
 
-        // fix fields
+        // Fix fields.
         if (! $data->questionid = $this->get_new_parentid('hotpot_question')) {
-            return false; // questionid not available - shouldn't happen !!
+            return false; // Questionid not available - shouldn't happen !!
         }
         if (! isset($data->attemptid)) {
-            return false; // attemptid not set - shouldn't happen !!
+            return false; // Attemptid not set - shouldn't happen !!
         }
         if (! $data->attemptid = $this->get_mappingid('hotpot_attempt', $data->attemptid)) {
-            return false; // new attemptid not available - shouldn't happen !!
+            return false; // New attemptid not available - shouldn't happen !!
         }
         $this->set_string_ids($data, array('correct', 'wrong', 'ignored'));
 
-        // add new record
+        // Add new record.
         if (! $newid = $DB->insert_record('hotpot_responses', $data)) {
-            return false; // could not add new record - shouldn't happen !!
+            return false; // Could not add new record - shouldn't happen !!
         }
     }
 
@@ -233,29 +230,28 @@ class restore_hotpot_activity_structure_step extends restore_activity_structure_
      *
      * @uses $DB
      * @param xxx $data
-     * @todo Finish documenting this function
      */
-    protected function process_hotpot_string($data)   {
+    protected function process_hotpot_string($data) {
         global $DB;
 
-        // convert $data to object
+        // Convert $data to object.
         $data = (object)$data;
 
-        // save $oldid
+        // Save $oldid.
         $oldid = $data->id;
 
-        // fix fields
+        // Fix fields.
         $data->md5key = md5($data->string);
 
-        // add new record, if necessary
+        // Add new record, if necessary.
         $params = array('md5key' => $data->md5key);
         if (! $newid = $DB->get_field('hotpot_strings', 'id', $params)) {
             if (! $newid = $DB->insert_record('hotpot_strings', $data)) {
-                return false; // could not add new record - shouldn't happen !!
+                return false; // Could not add new record - shouldn't happen !!
             }
         }
 
-        // store mapping from $oldid to $newid
+        // Store mapping from $oldid to $newid.
         $this->set_mapping('hotpot_string', $oldid, $newid);
     }
 
@@ -265,21 +261,19 @@ class restore_hotpot_activity_structure_step extends restore_activity_structure_
      * @param xxx $data (passed by reference)
      * @param xxx $fieldnames
      * @param xxx $default (optional, default='')
-     * @todo Finish documenting this function
      */
-    protected function set_string_ids(&$data, $fieldnames, $default='')  {
+    protected function set_string_ids(&$data, $fieldnames, $default = '') {
 
         foreach ($fieldnames as $fieldname) {
-
             $newids = array();
             if (isset($data->$fieldname)) {
                 $oldids = explode(',', $data->$fieldname);
-                $oldids = array_filter($oldids); // remove blanks
+                $oldids = array_filter($oldids); // Remove blanks.
                 foreach ($oldids as $oldid) {
                     if ($newid = $this->get_mappingid('hotpot_string', $oldid)) {
                         $newids[] = $newid;
                     } else {
-                        // new string id not available - should we report it ?
+                        // New string id not available - should we report it ?
                     }
                 }
             }
@@ -297,18 +291,18 @@ class restore_hotpot_activity_structure_step extends restore_activity_structure_
      *
      * @uses $DB
      */
-    protected function after_execute()  {
+    protected function after_execute() {
         global $DB;
 
-        // restore files
+        // Restore files.
         $this->add_related_files('mod_hotpot', 'sourcefile', null);
         $this->add_related_files('mod_hotpot', 'entrytext',  null);
         $this->add_related_files('mod_hotpot', 'exittext',   null);
 
-        // get most recently restored hotpot record
+        // Get most recently restored hotpot record.
         $params = array('id' => $this->task->get_activityid());
         if (! $hotpot = $DB->get_record('hotpot', $params)) {
-            return false; // shouldn;t happen !!
+            return false; // Shouldn;t happen !!
         }
 
         // remap $hotpot->entrycm and $hotpot->exitcm
@@ -324,17 +318,16 @@ class restore_hotpot_activity_structure_step extends restore_activity_structure_
      * @param string $tablename table from which $record was extracted
      * @param array $keys map record $field => $itemname
      * @return void, but may update $record and DB tables
-     * @todo Finish documenting this function
      */
-    protected function after_execute_foreignkeys(&$record, $table, $keys, $default=0)  {
+    protected function after_execute_foreignkeys(&$record, $table, $keys, $default = 0) {
         global $DB;
 
         $update = false;
         foreach ($keys as $field => $itemname) {
             if ($record->$field > 0) {
                 $record->$field = $this->get_mappingid($itemname, $record->$field);
-                if ($record->$field===false || $record->$field===null) {
-                    $record->$field = $default; // shouldn't happen !!
+                if ($record->$field === false || $record->$field === null) {
+                    $record->$field = $default; // Shouldn't happen !!
                 }
                 $update = true;
             }

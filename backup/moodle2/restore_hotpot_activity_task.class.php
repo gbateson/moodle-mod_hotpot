@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -16,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * @package moodlecore
+ * @package mod_hotpot
  * @subpackage backup-moodle2
  * @copyright 2010 onwards Eloy Lafuente (stronk7) {@link http://stronk7.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -36,7 +35,7 @@ class restore_hotpot_activity_task extends restore_activity_task {
      * Define (add) particular settings this activity can have
      */
     protected function define_my_settings() {
-        // No particular settings for this activity
+        // No particular settings for this activity.
     }
 
     /**
@@ -52,7 +51,7 @@ class restore_hotpot_activity_task extends restore_activity_task {
      */
     static public function define_decode_contents() {
         return array(
-            new restore_decode_content('hotpot', array('entrytext', 'exittext'), 'hotpot')
+            new restore_decode_content('hotpot', array('entrytext', 'exittext'), 'hotpot'),
         );
     }
 
@@ -63,7 +62,7 @@ class restore_hotpot_activity_task extends restore_activity_task {
     static public function define_decode_rules() {
         return array(
             new restore_decode_rule('HOTPOTVIEWBYID', '/mod/hotpot/view.php?id=$1', 'course_module'),
-            new restore_decode_rule('HOTPOTINDEX', '/mod/hotpot/index.php?id=$1', 'course')
+            new restore_decode_rule('HOTPOTINDEX', '/mod/hotpot/index.php?id=$1', 'course'),
         );
     }
 

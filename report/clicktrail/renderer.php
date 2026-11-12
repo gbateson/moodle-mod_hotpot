@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -18,15 +17,15 @@
 /**
  * Render the clicktrail report for a given HotPot activity
  *
- * @package   mod-hotpot
+ * @package   hotpotreport_clicktrail
  * @copyright 2010 Gordon Bateson <gordon.bateson@gmail.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-// get parent class
-require_once($CFG->dirroot.'/mod/hotpot/report/renderer.php');
+// Get parent class.
+require_once($CFG->dirroot . '/mod/hotpot/report/renderer.php');
 
 /**
  * mod_hotpot_report_clicktrail_renderer

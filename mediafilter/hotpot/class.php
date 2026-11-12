@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -18,7 +17,7 @@
 /**
  * mod/hotpot/mediafilter/hotpot/class.php
  *
- * @package   mod-hotpot
+ * @package   mod_hotpot
  * @copyright 2010 Gordon Bateson <gordon.bateson@gmail.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -26,7 +25,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 // get the parent class (=hotpot_mediafilter)
-require_once($CFG->dirroot.'/mod/hotpot/mediafilter/class.php');
+require_once($CFG->dirroot . '/mod/hotpot/mediafilter/class.php');
 
 /**
  * hotpot_mediafilter_hotpot
@@ -45,27 +44,26 @@ class hotpot_mediafilter_hotpot extends hotpot_mediafilter {
      * @param xxx $options (optional, default=array)
      * @return xxx
      */
-    function mediaplugin_filter($hotpot, $text, $options=array())  {
+    public function mediaplugin_filter($hotpot, $text, $options = array()) {
         global $CFG, $PAGE;
 
         // Keep track of the id of the current quiz
         // so that eolas_fix.js is only included once in each quiz
-        // Note: the cron script calls this method for multiple quizzes
+        // Note: the cron script calls this method for multiple quizzes.
         static $eolas_fix_applied = 0;
 
         if (! is_string($text)) {
-            // non string data can not be filtered anyway
+            // Non string data can not be filtered anyway.
             return $text;
         }
-        $newtext = $text; // fullclone is slow and not needed here
+        $newtext = $text; // Fullclone is slow and not needed here.
 
         foreach (array_keys($this->media_filetypes) as $filetype) {
-
-            // set $adminsetting, the name of the $CFG setting, if any, which enables/disables filtering of this file type
+            // Set $adminsetting, the name of the $CFG setting, if any, which enables/disables filtering of this file type.
             $adminsetting = '';
             if (preg_match('/^[a-z]+$/', $filetype)) {
-                $hotpot_enable = 'hotpot_enable'.$filetype;
-                $filter_mediaplugin_enable = 'filter_mediaplugin_enable_'.$filetype;
+                $hotpot_enable = 'hotpot_enable' . $filetype;
+                $filter_mediaplugin_enable = 'filter_mediaplugin_enable_' . $filetype;
 
                 if (isset($CFG->$hotpot_enable)) {
                     $adminsetting = $hotpot_enable;
@@ -74,36 +72,36 @@ class hotpot_mediafilter_hotpot extends hotpot_mediafilter {
                 }
             }
 
-            // set $search and $replace strings
-            $search = '/<a.*?href="([^"?>]*\.'.$filetype.'[^">]*)"[^>]*>.*?<\/a>/is';
-            if ($adminsetting=='' || $CFG->$adminsetting) {
-                // filtering of this file type is allowed
+            // Set $search and $replace strings.
+            $search = '/<a.*?href="([^"?>]*\.' . $filetype . '[^">]*)"[^>]*>.*?<\/a>/is';
+            if ($adminsetting == '' || $CFG->$adminsetting) {
+                // Filtering of this file type is allowed.
                 $callback = array($this, 'hotpot_mediaplugin_filter');
                 $callback = partial($callback, $filetype, $options);
                 $newtext = preg_replace_callback($search, $callback, $newtext, -1, $count);
             } else {
-                // filtering of this file type is disabled
-                $replace = '$1<br />'.get_string('error_disabledfilter', 'mod_hotpot', $adminsetting);
+                // Filtering of this file type is disabled.
+                $replace = '$1<br />' . get_string('error_disabledfilter', 'mod_hotpot', $adminsetting);
                 $newtext = preg_replace($search, $replace, $newtext, -1, $count);
             }
 
-            if ($count>0) {
+            if ($count > 0) {
                 break;
             }
         }
 
-        if (is_null($newtext) || $newtext==$text) {
-            // error or not filtered
+        if (is_null($newtext) || $newtext == $text) {
+            // Error or not filtered.
             return $text;
         }
 
-        if ($eolas_fix_applied==$hotpot->id) {
-            // do nothing - the external javascripts have already been included for this quiz
+        if ($eolas_fix_applied == $hotpot->id) {
+            // Do nothing - the external javascripts have already been included for this quiz.
         } else {
             $PAGE->requires->js('/mod/hotpot/mediafilter/ufo.js', true);
             $PAGE->requires->js('/mod/hotpot/mediafilter/eolas_fix.js');
-            //$newtext .= "\n".'<script type="text/javascript" src="'.$CFG->wwwroot.'/mod/hotpot/mediafilter/ufo.js"></script>';
-            //$newtext .= "\n".'<script type="text/javascript" src="'.$CFG->wwwroot.'/mod/hotpot/mediafilter/eolas_fix.js" defer="defer"></script>';
+            // $newtext .= "\n".'<script type="text/javascript" src="'.$CFG->wwwroot.'/mod/hotpot/mediafilter/ufo.js"></script>';
+            // $newtext .= "\n".'<script type="text/javascript" src="'.$CFG->wwwroot.'/mod/hotpot/mediafilter/eolas_fix.js" defer="defer"></script>';
             $eolas_fix_applied = $hotpot->id;
         }
 
@@ -118,31 +116,31 @@ class hotpot_mediafilter_hotpot extends hotpot_mediafilter {
      * @param xxx $options
      * @return xxx
      */
-    function hotpot_mediaplugin_filter($filetype, $options, $match)  {
+    public function hotpot_mediaplugin_filter($filetype, $options, $match) {
         $link = $match[0];
         $mediaurl = $match[1];
 
-        // get a valid $player name
+        // Get a valid $player name.
         if (isset($options['player'])) {
             $player = $options['player'];
         } else {
             $player = '';
         }
-        if ($player=='') {
+        if ($player == '') {
             $player = $this->defaultplayer;
         } else if (! array_key_exists($player, $this->players)) {
-            debugging('Invalid media player requested: '.$player);
+            debugging('Invalid media player requested: ' . $player);
             $player = $this->defaultplayer;
         }
 
-        // merge player options
-        if ($player==$this->defaultplayer) {
+        // Merge player options.
+        if ($player == $this->defaultplayer) {
             $options = array_merge($this->players[$player]->options, $options);
         } else {
             $options = array_merge($this->players[$this->defaultplayer]->options, $this->players[$player]->options, $options);
         }
 
-        // generate content for required player
+        // Generate content for required player.
         $content = $this->players[$player]->generate($filetype, $link, $mediaurl, $options);
 
         return $content;

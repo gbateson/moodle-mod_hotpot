@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -19,15 +18,15 @@
  * Render an attempt at a HotPot quiz
  * Output format: hp_6_jmatch_xml_flashcard
  *
- * @package   mod-hotpot
+ * @package   hotpotattempt_hp
  * @copyright 2010 Gordon Bateson <gordon.bateson@gmail.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-// get parent class
-require_once($CFG->dirroot.'/mod/hotpot/attempt/hp/6/jmatch/xml/renderer.php');
+// Get parent class.
+require_once($CFG->dirroot . '/mod/hotpot/attempt/hp/6/jmatch/xml/renderer.php');
 
 /**
  * mod_hotpot_attempt_hp_6_jmatch_xml_flashcard_renderer
@@ -45,10 +44,10 @@ class mod_hotpot_attempt_hp_6_jmatch_xml_flashcard_renderer extends mod_hotpot_a
      *
      * @param xxx $hotpot
      */
-    function init($hotpot)  {
+    public function init($hotpot) {
         parent::init($hotpot);
 
-        // replace standard jmatch.js with flashcard.js
+        // Replace standard jmatch.js with flashcard.js.
         $this->javascripts = preg_grep('/jmatch.js/', $this->javascripts, PREG_GREP_INVERT);
         array_push($this->javascripts, 'mod/hotpot/attempt/hp/6/jmatch/flashcard.js');
     }
@@ -58,7 +57,7 @@ class mod_hotpot_attempt_hp_6_jmatch_xml_flashcard_renderer extends mod_hotpot_a
      *
      * @return array of strings
      */
-    static public function sourcetypes()  {
+    static public function sourcetypes() {
         return array('hp_6_jmatch_xml', 'hp_7_jmatch_xml');
     }
 
@@ -67,7 +66,7 @@ class mod_hotpot_attempt_hp_6_jmatch_xml_flashcard_renderer extends mod_hotpot_a
      *
      * @param xxx $substr (passed by reference)
      */
-    function fix_js_StartUp_DragAndDrop(&$substr)  {
+    public function fix_js_StartUp_DragAndDrop(&$substr) {
         $this->fix_js_StartUp_DragAndDrop_Flashcard($substr);
     }
 
@@ -76,8 +75,8 @@ class mod_hotpot_attempt_hp_6_jmatch_xml_flashcard_renderer extends mod_hotpot_a
      *
      * @return xxx
      */
-    function fix_mediafilter_onload_extra()  {
-        // automatically show first item
+    public function fix_mediafilter_onload_extra() {
+        // Automatically show first item.
         return $this->fix_mediafilter_onload_extra_Flashcard();
     }
 
@@ -86,10 +85,10 @@ class mod_hotpot_attempt_hp_6_jmatch_xml_flashcard_renderer extends mod_hotpot_a
      *
      * @return xxx
      */
-    function get_js_functionnames()  {
-        // start list of function names
+    public function get_js_functionnames() {
+        // Start list of function names.
         $names = parent::get_js_functionnames();
-        $names .= ($names ? ',' : '').'DeleteItem,ShowItem';
+        $names .= ($names ? ',' : '') . 'DeleteItem,ShowItem';
         return $names;
     }
 
@@ -100,7 +99,7 @@ class mod_hotpot_attempt_hp_6_jmatch_xml_flashcard_renderer extends mod_hotpot_a
      * @param xxx $start
      * @param xxx $length
      */
-    function fix_js_DeleteItem(&$str, $start, $length)  {
+    public function fix_js_DeleteItem(&$str, $start, $length) {
         $this->fix_js_DeleteItem_Flashcard($str, $start, $length);
     }
 
@@ -111,7 +110,7 @@ class mod_hotpot_attempt_hp_6_jmatch_xml_flashcard_renderer extends mod_hotpot_a
      * @param xxx $start
      * @param xxx $length
      */
-    function fix_js_ShowItem(&$str, $start, $length)  {
+    public function fix_js_ShowItem(&$str, $start, $length) {
         $this->fix_js_ShowItem_Flashcard($str, $start, $length);
     }
 
@@ -120,7 +119,7 @@ class mod_hotpot_attempt_hp_6_jmatch_xml_flashcard_renderer extends mod_hotpot_a
      *
      * @return xxx
      */
-    function get_stop_function_name()  {
+    public function get_stop_function_name() {
         return 'HP_send_results';
     }
 
@@ -129,7 +128,7 @@ class mod_hotpot_attempt_hp_6_jmatch_xml_flashcard_renderer extends mod_hotpot_a
      *
      * @return xxx
      */
-    function get_stop_function_args()  {
+    public function get_stop_function_args() {
         return $this->get_send_results_event();
     }
 }

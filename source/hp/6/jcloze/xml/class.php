@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -19,15 +18,15 @@
  * Class to represent the source of a HotPot quiz
  * Source type: hp_6_jcloze_xml
  *
- * @package   mod-hotpot
+ * @package   hotpotsource_hp
  * @copyright 2010 Gordon Bateson <gordon.bateson@gmail.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-// get parent class
-require_once($CFG->dirroot.'/mod/hotpot/source/hp/6/jcloze/class.php');
+// Get parent class.
+require_once($CFG->dirroot . '/mod/hotpot/source/hp/6/jcloze/class.php');
 
 /**
  * hotpot_source_hp_6_jcloze_xml
@@ -41,28 +40,28 @@ class hotpot_source_hp_6_jcloze_xml extends hotpot_source_hp_6_jcloze {
     const REQUIRED_FILETYPES = array('jcl');
     const REQUIRED_STRINGS = array(
         '<hotpot-jcloze-file>',
-        '<version>6</version>'
+        '<version>6</version>',
     );
 
     /**
      * compact_filecontents
      */
-    function compact_filecontents($tags=null) {
-        // remove white space within tags
+    public function compact_filecontents($tags = null) {
+        // Remove white space within tags.
         parent::compact_filecontents($tags);
 
-        // fix white space and html entities in open text
+        // Fix white space and html entities in open text.
 
         // Note: when testing this code, be aware that
-        // xmlize() behaves differently in PHP4 and PHP5
+        // xmlize() behaves differently in PHP4 and PHP5.
 
-        $search = '/(?<=<gap-fill)'.'>.*?<'.'(?=\/gap-fill>)/s';
+        $search = '/(?<=<gap-fill)' . '>.*?<' . '(?=\/gap-fill>)/s';
         if (preg_match($search, $this->filecontents, $matches, PREG_OFFSET_CAPTURE)) {
             $match = $matches[0][0];
             $start = $matches[0][1];
             $length = strlen($match);
 
-            // convert newlines to html line breaks
+            // Convert newlines to html line breaks.
             $newlines = array(
                 "\r\n" => '&lt;br /&gt;',
                 "\r"   => '&lt;br /&gt;',
@@ -70,19 +69,19 @@ class hotpot_source_hp_6_jcloze_xml extends hotpot_source_hp_6_jcloze {
             );
             $match = strtr($match, $newlines);
 
-            // make sure there is at least one space between the gaps
+            // Make sure there is at least one space between the gaps.
             $search = '/(?<=<\/question-record>)(?=<question-record>)/';
             $match = preg_replace($search, ' ', $match);
 
-            // add <open-text> tags around open text
+            // Add <open-text> tags around open text.
             $search = array(
-                '/(^>)([^<>]+?)(<question-record>)/', // start text
+                '/(^>)([^<>]+?)(<question-record>)/', // Start text.
                 '/(<\/question-record>)([^<>]+?)(<question-record>)/',
-                '/(<\/question-record>)([^<>]+?)(<$)/', // end text
+                '/(<\/question-record>)([^<>]+?)(<$)/', // End text.
             );
             $match = preg_replace($search, '$1<open-text>$2</open-text>$3', $match);
 
-            // surround ampersands in open text by CDATA start and end tags
+            // Surround ampersands in open text by CDATA start and end tags.
             $search = '/(?<=>)([^<]*)(?=<)/s';
             $callback = array($this, 'compact_filecontents_opentext');
             $match = preg_replace_callback($search, $callback, $match);
@@ -97,7 +96,7 @@ class hotpot_source_hp_6_jcloze_xml extends hotpot_source_hp_6_jcloze {
      * @param xxx $match
      * @return xxx
      */
-    function compact_filecontents_opentext($match)  {
+    public function compact_filecontents_opentext($match) {
         $search = '/&[a-zA-Z0-9#;]*;/';
         $callback = array($this, 'compact_filecontents_entities');
         return preg_replace_callback($search, $callback, $match[0]);
@@ -109,15 +108,15 @@ class hotpot_source_hp_6_jcloze_xml extends hotpot_source_hp_6_jcloze {
      * @param xxx $match
      * @return xxx
      */
-    function compact_filecontents_entities($match)  {
-        // these html entities are coverted back to plain text
+    public function compact_filecontents_entities($match) {
+        // These html entities are coverted back to plain text.
         static $html_entities = array(
             '&apos;' => "'",
             '&quot;' => '"',
             '&lt;'   => '<',
             '&gt;'   => '>',
-            '&amp;'  => '&'
+            '&amp;'  => '&',
         );
-        return '<![CDATA['.strtr($match[0], $html_entities).']]>';
+        return '<![CDATA[' . strtr($match[0], $html_entities) . ']]>';
     }
 }

@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -18,21 +17,21 @@
 /**
  * Prints the intro page particular instance of a hotpot
  *
- * @package   mod-hotpot
+ * @package   mod_hotpot
  * @copyright 2010 Gordon Bateson <gordon.bateson@gmail.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
-require_once(dirname(__FILE__).'/locallib.php');
+require_once(dirname(dirname(dirname(__FILE__))) . '/config.php');
+require_once(dirname(__FILE__) . '/locallib.php');
 
-$id       = optional_param('id', 0, PARAM_INT); // hotpot_attempts id
+$id       = optional_param('id', 0, PARAM_INT); // Hotpot_attempts id.
 $attempt  = $DB->get_record('hotpot_attempts', array('id' => $id), '*', MUST_EXIST);
 $hotpot   = $DB->get_record('hotpot', array('id' => $attempt->hotpotid), '*', MUST_EXIST);
 $course   = $DB->get_record('course', array('id' => $hotpot->course), '*', MUST_EXIST);
 $cm       = get_coursemodule_from_instance('hotpot', $hotpot->id, $course->id, false, MUST_EXIST);
 
-// Check login
+// Check login.
 require_login($course, true, $cm);
 if (! has_capability('mod/hotpot:reviewallattempts', $PAGE->context)) {
     require_capability('mod/hotpot:reviewmyattempts', $PAGE->context);
@@ -42,13 +41,13 @@ if (! has_capability('mod/hotpot:reviewallattempts', $PAGE->context)) {
     }
 }
 
-// Create an object to represent this attempt at the current HotPot activity
+// Create an object to represent this attempt at the current HotPot activity.
 $hotpot = hotpot::create($hotpot, $cm, $course, $PAGE->context, $attempt);
 
-// Log this request
-hotpot_add_to_log($course->id, 'hotpot', 'review', 'view.php?id='.$cm->id, $hotpot->id, $cm->id);
+// Log this request.
+hotpot_add_to_log($course->id, 'hotpot', 'review', 'view.php?id=' . $cm->id, $hotpot->id, $cm->id);
 
-// Set editing mode
+// Set editing mode.
 if ($PAGE->user_allowed_editing()) {
     hotpot::set_user_editing();
 }
@@ -59,12 +58,12 @@ $PAGE->set_title($hotpot->name);
 $PAGE->set_heading($course->fullname);
 
 // get renderer subtype (e.g. attempt_hp_6_jcloze_xml)
-// and load the appropriate storage class for this attempt
+// and load the appropriate storage class for this attempt.
 $subtype = $hotpot->get_attempt_renderer_subtype();
 $subdir = str_replace('_', '/', $subtype);
-require_once($CFG->dirroot.'/mod/hotpot/'.$subdir.'/review.php');
+require_once($CFG->dirroot . '/mod/hotpot/' . $subdir . '/review.php');
 
-// create the renderer for this attempt
+// Create the renderer for this attempt.
 $output = $PAGE->get_renderer('mod_hotpot');
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -77,9 +76,9 @@ echo $output->heading($hotpot);
 
 echo $output->box_start('generalbox boxaligncenter boxwidthwide');
 
-// show the attempt review page
-// use call_user_func() to prevent syntax error in PHP 5.2.x
-$class = 'mod_hotpot_'.$subtype.'_review';
+// Show the attempt review page
+// use call_user_func() to prevent syntax error in PHP 5.2.x.
+$class = 'mod_hotpot_' . $subtype . '_review';
 echo call_user_func(array($class, 'review'), $hotpot, $class);
 
 echo $output->box_end();

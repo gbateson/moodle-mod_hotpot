@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -19,15 +18,15 @@
  * Class to represent the source of a HotPot quiz
  * Source type: qedoc
  *
- * @package   mod-hotpot
+ * @package   hotpotsource_qedoc
  * @copyright 2010 Gordon Bateson <gordon.bateson@gmail.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-// get parent class
-require_once($CFG->dirroot.'/mod/hotpot/source/class.php');
+// Get parent class.
+require_once($CFG->dirroot . '/mod/hotpot/source/class.php');
 
 /**
  * hotpot_source_qedoc
@@ -39,12 +38,12 @@ require_once($CFG->dirroot.'/mod/hotpot/source/class.php');
 class hotpot_source_qedoc extends hotpot_source {
 
     const REQUIRED_FILETYPES = array(
-        'htm', 'html' // not sure about these
+        'htm', 'html', // Not sure about these.
     );
     const REQUIRED_MATCHES = array(
-        '/http:\/\/www\.qedoc.(?:com|net)\/library\/\w+\.zip/i'
+        '/http:\/\/www\.qedoc.(?:com|net)\/library\/\w+\.zip/i',
         // Note: we may want to detect the following as well:
-        // http://www.qedoc.net/qqp/jnlp/PLJUB_019.jnlp
+        // http://www.qedoc.net/qqp/jnlp/PLJUB_019.jnlp.
     );
 
     /**
@@ -52,7 +51,7 @@ class hotpot_source_qedoc extends hotpot_source {
      *
      * @return xxx
      */
-    function get_name()  {
+    public function get_name() {
         return $this->file->get_filename();
     }
 
@@ -61,7 +60,7 @@ class hotpot_source_qedoc extends hotpot_source {
      *
      * @return xxx
      */
-    function get_title()  {
+    public function get_title() {
         return $this->file->get_filename();
     }
 }

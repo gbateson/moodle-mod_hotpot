@@ -61,7 +61,7 @@ class custom_completion extends \core_completion\activity_custom_completion {
                 break;
 
             case 'completioncompleted':
-                require_once($CFG->dirroot.'/mod/hotpot/locallib.php');
+                require_once($CFG->dirroot . '/mod/hotpot/locallib.php');
                 $params = array('hotpotid' => $this->cm->instance,
                                 'userid'   => $this->userid,
                                 'status'   => \hotpot::STATUS_COMPLETED);
@@ -126,7 +126,7 @@ class custom_completion extends \core_completion\activity_custom_completion {
      */
     protected function get_user_grade() {
         global $CFG;
-        require_once($CFG->libdir.'/gradelib.php');
+        require_once($CFG->libdir . '/gradelib.php');
 
         $params = array('courseid'     => $this->cm->course,
                         'itemtype'     => 'mod',

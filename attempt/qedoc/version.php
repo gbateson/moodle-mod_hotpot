@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -18,7 +17,7 @@
 /**
  * Version
  *
- * @package    hotpotattempt
+ * @package    hotpotattempt_qedoc
  * @subpackage qedoc
  * @copyright  2015 Gordon Bateson <gordon.bateson@gmail.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later

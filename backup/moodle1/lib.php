@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -18,7 +17,7 @@
 /**
  * Provides support for the conversion of moodle1 backup to the moodle2 format
  *
- * @package    mod
+ * @package    mod_hotpot
  * @subpackage hotpot
  * @copyright  2012 Gordon Bateson <gordonbateson@gmail.com>
  *             credit and thanks to Robin de vries <robin@celp.nl>
@@ -28,7 +27,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 /** include required files */
-require_once($CFG->dirroot.'/mod/hotpot/locallib.php');
+require_once($CFG->dirroot . '/mod/hotpot/locallib.php');
 
 /**
  * HotPot conversion handler
@@ -44,7 +43,7 @@ require_once($CFG->dirroot.'/mod/hotpot/locallib.php');
 class moodle1_mod_hotpot_handler extends moodle1_mod_handler {
 
     // declare properties that are set at runtime,
-    // to avoid "dynamic property" deprecation warnings in PHP >= 8.2
+    // to avoid "dynamic property" deprecation warnings in PHP >= 8.2.
     /** @var mixed */
     public $moduleid;
     /** @var mixed */
@@ -74,7 +73,7 @@ class moodle1_mod_hotpot_handler extends moodle1_mod_handler {
                         'summary'   => 'entrytext',
                         'review'    => 'reviewoptions',
                         'attempts'  => 'attemptlimit',
-                        'grade'     => 'gradeweighting'
+                        'grade'     => 'gradeweighting',
                     ),
                     'newfields' => array(
                         'sourcetype'   => '',
@@ -101,16 +100,16 @@ class moodle1_mod_hotpot_handler extends moodle1_mod_handler {
                         'delay1'       => '0',
                         'delay2'       => '0',
                         'delay3 '      => '0',
-                        'discarddetails' =>'0'
+                        'discarddetails' => '0',
                     ),
                     'dropfields' => array(
-                         //'forceplugins', // needed to set usemediafilter
-                         //'shownextquiz', // needed to set exitcm
+                         // 'forceplugins', // needed to set usemediafilter
+                         // 'shownextquiz', // needed to set exitcm
                         'modtype',
-                        'course'
-                    )
+                        'course',
+                    ),
                 )
-            )
+            ),
         );
     }
 
@@ -121,25 +120,24 @@ class moodle1_mod_hotpot_handler extends moodle1_mod_handler {
     public function process_hotpot($data) {
         global $CFG;
 
-        // get the course module id and context id
+        // Get the course module id and context id.
         $instanceid     = $data['id'];
         $currentcminfo  = $this->get_cminfo($instanceid);
         $this->moduleid = $currentcminfo['id'];
         $contextid      = $this->converter->get_contextid(CONTEXT_MODULE, $this->moduleid);
 
-        // set $path, $filepath and $filename
+        // Set $path, $filepath and $filename.
         $is_url = preg_match('|^https?://|', $data['sourcefile']);
         if ($is_url) {
-
             $backupinfo = $this->converter->get_stash('backup_info');
             $originalcourseinfo = $this->converter->get_stash('original_course_info');
 
-            $original_baseurl = $backupinfo['original_wwwroot'].'/'.$originalcourseinfo['original_course_id'].'/';
+            $original_baseurl = $backupinfo['original_wwwroot'] . '/' . $originalcourseinfo['original_course_id'] . '/';
             unset($backupinfo, $originalcourseinfo);
 
             // if the URL is for a file in the original course files folder
-            // then convert it to a simple path, by removing the original base url
-            $search = '/^'.preg_quote($original_baseurl, '/').'/';
+            // then convert it to a simple path, by removing the original base url.
+            $search = '/^' . preg_quote($original_baseurl, '/') . '/';
             if (preg_match($search, $data['sourcefile'])) {
                 $data['sourcefile'] = substr($data['sourcefile'], strlen($original_baseurl));
                 $is_url = false;
@@ -152,43 +150,43 @@ class moodle1_mod_hotpot_handler extends moodle1_mod_handler {
             $filename = basename($data['sourcefile']);
             $filepath = dirname($data['sourcefile']);
             $filepath = trim($filepath, './');
-            if ($filepath=='') {
+            if ($filepath == '') {
                 $filepath = '/';
             } else {
-                $filepath = '/'.$filepath.'/';
+                $filepath = '/' . $filepath . '/';
             }
-            $data['sourcefile'] = $filepath.$filename;
-            $path = 'course_files'.$filepath.$filename;
+            $data['sourcefile'] = $filepath . $filename;
+            $path = 'course_files' . $filepath . $filename;
 
-            // get a fresh new file manager for this instance
+            // Get a fresh new file manager for this instance.
             $this->fileman = $this->converter->get_file_manager($contextid, 'mod_hotpot');
 
-            // migrate hotpot file
+            // Migrate hotpot file.
             $this->fileman->filearea = 'sourcefile';
             $this->fileman->itemid   = 0;
             $id = $this->fileman->migrate_file($path, $filepath, $filename);
 
-            // get stashed hotpot $filerecord
+            // Get stashed hotpot $filerecord.
             $filerecord = $this->fileman->converter->get_stash('files', $id);
 
-            // seems like there should be a way to get the file content
+            // Seems like there should be a way to get the file content
             // using the $filerecord, but I can't see how to do it,
-            // so for now we determine the $fullpath and read from that
+            // so for now we determine the $fullpath and read from that.
 
-            // set sourcetype
-            $fullpath = $this->fileman->converter->get_tempdir_path().'/'.$path;
+            // Set sourcetype.
+            $fullpath = $this->fileman->converter->get_tempdir_path() . '/' . $path;
             $data['sourcetype'] = $this->get_hotpot_sourcetype($fullpath, $filerecord);
         }
 
-        // set outputformat
-        if ($data['outputformat']==14 && ($data['sourcetype']=='hp_6_jmatch_xml' || $data['sourcetype']=='hp_6_jmix_xml')) {
-            $data['outputformat'] = $data['sourcetype'].'_v6';
+        // Set outputformat.
+        if ($data['outputformat'] == 14 && ($data['sourcetype'] == 'hp_6_jmatch_xml' || $data['sourcetype'] == 'hp_6_jmix_xml')) {
+            $data['outputformat'] = $data['sourcetype'] . '_v6';
         } else {
-            $data['outputformat'] = ''; //  = "best" output format
+            $data['outputformat'] = ''; // = "best" output format
         }
 
         // set usemediafilter (and remove forceplugins)
-        if ($data['forceplugins']=='1') {
+        if ($data['forceplugins'] == '1') {
             $data['usemediafilter'] = 'moodle';
         } else {
             $data['usemediafilter'] = '';
@@ -196,27 +194,27 @@ class moodle1_mod_hotpot_handler extends moodle1_mod_handler {
         unset($data['forceplugins']);
 
         // set exitcm (and remove shownextquiz)
-        if ($data['shownextquiz']=='1') {
+        if ($data['shownextquiz'] == '1') {
             $data['exitcm'] = '-4';
         } else {
             $data['exitcm'] = '0';
         }
         unset($data['shownextquiz']);
 
-        // set navigation and stopbutton
-        if ($data['navigation']=='5') {
+        // Set navigation and stopbutton.
+        if ($data['navigation'] == '5') {
             $data['stopbutton'] = '1';
         }
-        if ($data['navigation']=='5' || $data['navigation']=='6') {
+        if ($data['navigation'] == '5' || $data['navigation'] == '6') {
             $data['navigation'] = '0';
         }
 
-        // start writing hotpot.xml
+        // Start writing hotpot.xml.
         $this->open_xml_writer("activities/hotpot_{$this->moduleid}/hotpot.xml");
-        $this->xmlwriter->begin_tag('activity', array('id'=> $instanceid, 'moduleid' => $this->moduleid, 'modulename' => 'hotpot', 'contextid' => $contextid));
+        $this->xmlwriter->begin_tag('activity', array('id' => $instanceid, 'moduleid' => $this->moduleid, 'modulename' => 'hotpot', 'contextid' => $contextid));
         $this->xmlwriter->begin_tag('hotpot', array('id' => $instanceid));
 
-        // write out all $data fields to the xml file
+        // Write out all $data fields to the xml file.
         foreach ($data as $field => $value) {
             if ($field <> 'id') {
                 $this->xmlwriter->full_tag($field, $value);
@@ -234,9 +232,9 @@ class moodle1_mod_hotpot_handler extends moodle1_mod_handler {
      * but in some cases, notably html files, it may be necessary to read the file
      * and analyze its contents in order to determine the sourcetype
      */
-    public function get_hotpot_sourcetype($fullpath, $filerecord=null) {
+    public function get_hotpot_sourcetype($fullpath, $filerecord = null) {
         if ($pos = strrpos($fullpath, '.')) {
-            $filetype = substr($fullpath, $pos+1);
+            $filetype = substr($fullpath, $pos + 1);
             switch ($filetype) {
                 case 'jcl': return 'hp_6_jcloze_xml';
                 case 'jcw': return 'hp_6_jcross_xml';
@@ -248,8 +246,8 @@ class moodle1_mod_hotpot_handler extends moodle1_mod_handler {
             }
         }
 
-        // cannot detect sourcetype from filename alone
-        // so we must open the file and examine the contents
+        // Cannot detect sourcetype from filename alone
+        // so we must open the file and examine the contents.
         if ($filerecord) {
             $fs = get_file_storage();
             $sourcefile = $fs->create_file_from_pathname($filerecord, $fullpath);
@@ -258,7 +256,7 @@ class moodle1_mod_hotpot_handler extends moodle1_mod_handler {
             return $sourcetype;
         }
 
-        // could not detect sourcetype
+        // Could not detect sourcetype.
         return '';
     }
 
@@ -266,12 +264,12 @@ class moodle1_mod_hotpot_handler extends moodle1_mod_handler {
      * This is executed when we reach the closing </MOD> tag of our 'hotpot' path
      */
     public function on_hotpot_end() {
-        // close hotpot.xml
+        // Close hotpot.xml.
         $this->xmlwriter->end_tag('hotpot');
         $this->xmlwriter->end_tag('activity');
         $this->close_xml_writer();
 
-        // write inforef.xml
+        // Write inforef.xml.
         $this->open_xml_writer("activities/hotpot_{$this->moduleid}/inforef.xml");
         $this->xmlwriter->begin_tag('inforef');
         $this->xmlwriter->begin_tag('fileref');

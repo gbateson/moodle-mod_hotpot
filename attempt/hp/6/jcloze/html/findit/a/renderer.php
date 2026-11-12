@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -19,15 +18,15 @@
  * Render an attempt at a HotPot quiz
  * Output format: hp_6_jcloze_html_findit_a
  *
- * @package   mod-hotpot
+ * @package   hotpotattempt_hp
  * @copyright 2010 Gordon Bateson <gordon.bateson@gmail.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-// get parent class
-require_once($CFG->dirroot.'/mod/hotpot/attempt/hp/6/jcloze/html/findit/renderer.php');
+// Get parent class.
+require_once($CFG->dirroot . '/mod/hotpot/attempt/hp/6/jcloze/html/findit/renderer.php');
 
 /**
  * mod_hotpot_attempt_hp_6_jcloze_html_findit_a_renderer
@@ -45,10 +44,10 @@ class mod_hotpot_attempt_hp_6_jcloze_html_findit_a_renderer extends mod_hotpot_a
      *
      * @param xxx $hotpot
      */
-    function init($hotpot)  {
+    public function init($hotpot) {
         parent::init($hotpot);
 
-        // replace standard jcloze.js with findit.js
+        // Replace standard jcloze.js with findit.js.
         $this->javascripts = preg_grep('/jcloze.js/', $this->javascripts, PREG_GREP_INVERT);
         array_push($this->javascripts, 'mod/hotpot/attempt/hp/6/jcloze/findit.a.js');
     }
@@ -58,7 +57,7 @@ class mod_hotpot_attempt_hp_6_jcloze_html_findit_a_renderer extends mod_hotpot_a
      *
      * @return array of strings
      */
-    static public function sourcetypes()  {
+    static public function sourcetypes() {
         return array('hp_6_jcloze_html_findit_a');
     }
 
@@ -67,10 +66,10 @@ class mod_hotpot_attempt_hp_6_jcloze_html_findit_a_renderer extends mod_hotpot_a
      *
      * @return xxx
      */
-    function get_js_functionnames()  {
-        // start list of function names
+    public function get_js_functionnames() {
+        // Start list of function names.
         $names = parent::get_js_functionnames();
-        $names .= ($names ? ',' : '').'CorrectChoice';
+        $names .= ($names ? ',' : '') . 'CorrectChoice';
         return $names;
     }
 
@@ -79,7 +78,7 @@ class mod_hotpot_attempt_hp_6_jcloze_html_findit_a_renderer extends mod_hotpot_a
      *
      * @return xxx
      */
-    function get_stop_function_name()  {
+    public function get_stop_function_name() {
         return 'CorrectChoice';
     }
 
@@ -88,9 +87,9 @@ class mod_hotpot_attempt_hp_6_jcloze_html_findit_a_renderer extends mod_hotpot_a
      *
      * @return xxx
      */
-    function get_stop_function_args()  {
-        // the arguments required by CorrectChoice
-        return 'null,'.hotpot::STATUS_ABANDONED;
+    public function get_stop_function_args() {
+        // The arguments required by CorrectChoice.
+        return 'null,' . hotpot::STATUS_ABANDONED;
     }
 
     /**
@@ -98,8 +97,8 @@ class mod_hotpot_attempt_hp_6_jcloze_html_findit_a_renderer extends mod_hotpot_a
      *
      * @return xxx
      */
-    function get_stop_function_intercept()  {
-        // standard call to HP.onclickCheck() is not needed in CorrectChoice
+    public function get_stop_function_intercept() {
+        // Standard call to HP.onclickCheck() is not needed in CorrectChoice.
         return '';
     }
 }

@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -20,18 +19,18 @@
  *
  * The values defined here are often used as defaults for all module instances.
  *
- * @package   mod-hotpot
+ * @package   mod_hotpot
  * @copyright 2010 Gordon Bateson <gordon.bateson@gmail.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-// we need hotpot/lib.php for the callback validation functions
-require_once($CFG->dirroot.'/mod/hotpot/lib.php');
-require_once($CFG->dirroot.'/mod/hotpot/locallib.php');
+// We need hotpot/lib.php for the callback validation functions.
+require_once($CFG->dirroot . '/mod/hotpot/lib.php');
+require_once($CFG->dirroot . '/mod/hotpot/locallib.php');
 
-// admin_setting_xxx classes are defined in "lib/adminlib.php"
+// Admin_setting_xxx classes are defined in "lib/adminlib.php"
 // new admin_setting_configcheckbox($name, $visiblename, $description, $defaultsetting);
 
 // show Quizports on MyMoodle page (default=1)
@@ -42,28 +41,28 @@ $settings->add(
 // enable caching of browser content for each quiz (default=1)
 $str = get_string('clearcache', 'mod_hotpot');
 $url = new moodle_url('/mod/hotpot/tools/clear_cache.php', array('sesskey' => sesskey()));
-$link = html_writer::link($url, $str, array('class' => 'small', 'style'=> 'white-space: nowrap', 'onclick' => "this.target='_blank'"))."\n";
+$link = html_writer::link($url, $str, array('class' => 'small', 'style' => 'white-space: nowrap', 'onclick' => "this.target='_blank'")) . "\n";
 $settings->add(
-    new admin_setting_configcheckbox('hotpot_enablecache', get_string('enablecache', 'mod_hotpot'), get_string('configenablecache', 'mod_hotpot').' '.$link, 1)
+    new admin_setting_configcheckbox('hotpot_enablecache', get_string('enablecache', 'mod_hotpot'), get_string('configenablecache', 'mod_hotpot') . ' ' . $link, 1)
 );
 
 // restrict cron job to certain hours of the day (default=never)
 if (class_exists('core_date') && method_exists('core_date', 'get_user_timezone')) {
-    // Moodle >= 2.9
+    // Moodle >= 2.9.
     $timezone = core_date::get_user_timezone(99);
     $datetime = new DateTime('now', new DateTimeZone($timezone));
     $timezone = ($datetime->getOffset() - dst_offset_on(time(), $timezone)) / (3600.0);
 } else {
-    // Moodle <= 2.8
+    // Moodle <= 2.8.
     $timezone = get_user_timezone_offset();
 }
 if (abs($timezone) > 13) {
     $timezone = 0;
-} else if ($timezone>0) {
+} else if ($timezone > 0) {
     $timezone = $timezone - 24;
 }
 $options = array();
-for ($i=0; $i<=23; $i++) {
+for ($i = 0; $i <= 23; $i++) {
     $options[($i - $timezone) % 24] = gmdate('H:i', $i * HOURSECS);
 }
 $settings->add(
@@ -84,7 +83,7 @@ $options = array(
     hotpot::BODYSTYLES_BACKGROUND => get_string('bodystylesbackground', 'mod_hotpot'),
     hotpot::BODYSTYLES_COLOR      => get_string('bodystylescolor', 'mod_hotpot'),
     hotpot::BODYSTYLES_FONT       => get_string('bodystylesfont', 'mod_hotpot'),
-    hotpot::BODYSTYLES_MARGIN     => get_string('bodystylesmargin', 'mod_hotpot')
+    hotpot::BODYSTYLES_MARGIN     => get_string('bodystylesmargin', 'mod_hotpot'),
 );
 $settings->add(
     new admin_setting_configmultiselect('hotpot_bodystyles', get_string('bodystyles', 'mod_hotpot'), get_string('configbodystyles', 'mod_hotpot'), array(), $options)
@@ -103,9 +102,9 @@ $settings->add(
 // store raw xml details of HotPot quiz attempts (default=1)
 $str = get_string('cleardetails', 'mod_hotpot');
 $url = new moodle_url('/mod/hotpot/tools/clear_details.php', array('sesskey' => sesskey()));
-$link = html_writer::link($url, $str, array('class' => 'small', 'style'=> 'white-space: nowrap', 'onclick' => "this.target='_blank'"))."\n";
+$link = html_writer::link($url, $str, array('class' => 'small', 'style' => 'white-space: nowrap', 'onclick' => "this.target='_blank'")) . "\n";
 $settings->add(
-    new admin_setting_configcheckbox('hotpot_storedetails', get_string('storedetails', 'mod_hotpot'), get_string('configstoredetails', 'mod_hotpot').' '.$link, 0)
+    new admin_setting_configcheckbox('hotpot_storedetails', get_string('storedetails', 'mod_hotpot'), get_string('configstoredetails', 'mod_hotpot') . ' ' . $link, 0)
 );
 
 // maximum duration of a single calendar event (default=5 mins)

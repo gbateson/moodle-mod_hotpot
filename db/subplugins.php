@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -23,7 +22,7 @@
  * array is generated dynamically to include all subfolders under the
  * main subplugins folders
  *
- * @package    mod
+ * @package    mod_hotpot
  * @subpackage hotpot
  * @copyright  2010 Gordon Bateson <gordon.bateson@gmail.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -34,5 +33,5 @@ defined('MOODLE_INTERNAL') || die();
 $subplugins = array(
     'hotpotattempt' => 'mod/hotpot/attempt',
     'hotpotsource'  => 'mod/hotpot/source',
-    'hotpotreport'  => 'mod/hotpot/report'
+    'hotpotreport'  => 'mod/hotpot/report',
 );

@@ -260,7 +260,6 @@ class provider implements
 
         $userid = $contextlist->get_user()->id;
         foreach ($contextlist->get_contexts() as $context) {
-
             if (!$context instanceof \context_module) {
                 continue;
             }

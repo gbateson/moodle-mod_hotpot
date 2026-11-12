@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -18,7 +17,7 @@
 /**
  * Create a table to display attempts at a HotPot quiz
  *
- * @package   mod-hotpot
+ * @package   mod_hotpot
  * @copyright 2010 Gordon Bateson <gordon.bateson@gmail.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -26,7 +25,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 // get parent classes (table_sql and flexible_table)
-require_once($CFG->dirroot.'/lib//tablelib.php');
+require_once($CFG->dirroot . '/lib//tablelib.php');
 
 /**
  * hotpot_report_table
@@ -57,7 +56,7 @@ class hotpot_report_table extends table_sql {
      *
      * @param int $uniqueid
      */
-    function __construct($uniqueid, $output) {
+    public function __construct($uniqueid, $output) {
         parent::__construct($uniqueid);
         $this->output = $output;
         $this->strtimeformat = get_string($this->timeformat);
@@ -70,7 +69,7 @@ class hotpot_report_table extends table_sql {
      * @param xxx $baseurl
      * @param xxx $usercount (optional, default value = 10)
      */
-    function setup_report_table($tablecolumns, $baseurl, $usercount=10)  {
+    public function setup_report_table($tablecolumns, $baseurl, $usercount = 10) {
 
         // generate headers (using "header_xxx()" methods below)
         $tableheaders = array();
@@ -87,24 +86,24 @@ class hotpot_report_table extends table_sql {
             $this->sortable(true);
             $this->initialbars($usercount > 20);
 
-            // this information is only printed once per user
+            // This information is only printed once per user.
             $this->column_suppress('fullname');
             $this->column_suppress('picture');
             $this->column_suppress('grade');
 
-            // special css class for "picture" column
+            // Special css class for "picture" column.
             $this->column_class('picture', 'picture');
         } else {
             $this->pageable(false);
             $this->sortable(false);
-            // you can set specific columns to be unsortable:
+            // You can set specific columns to be unsortable:
             // $this->no_sorting('columnname');
         }
 
-        // basically all columns are centered
+        // Basically all columns are centered.
         $this->column_style_all('text-align', 'center');
 
-        // some columns are not centered
+        // Some columns are not centered.
         if ($this->has_column('fullname')) {
             $this->column_style('fullname', 'text-align', '');
         }
@@ -112,7 +111,7 @@ class hotpot_report_table extends table_sql {
             $this->column_style('responsefield', 'text-align', 'right');
         }
 
-        // attributes in the table tag
+        // Attributes in the table tag.
         $this->set_attribute('id', 'attempts');
         $this->set_attribute('align', 'center');
         $this->set_attribute('class', $this->output->mode);
@@ -123,56 +122,56 @@ class hotpot_report_table extends table_sql {
     /**
      * wrap_html_start
      */
-    function wrap_html_start() {
+    public function wrap_html_start() {
 
-        // check this table has a "selected" column
+        // Check this table has a "selected" column.
         if (! $this->has_column('selected')) {
             return false;
         }
 
-        // check user can delete attempts
+        // Check user can delete attempts.
         if (! $this->output->hotpot->can_deleteattempts()) {
             return false;
         }
 
-        // start form
+        // Start form.
         $url = $this->output->hotpot->report_url($this->output->mode);
-        $params = array('id'=>'attemptsform', 'method'=>'post', 'action'=>$url->out_omit_querystring());
+        $params = array('id' => 'attemptsform', 'method' => 'post', 'action' => $url->out_omit_querystring());
         echo html_writer::start_tag('form', $params);
 
-        // create hidden fields
-        $params = array('type'=>'hidden', 'name'=>'sesskey', 'value'=>sesskey());
-        $hidden_fields = html_writer::input_hidden_params($url).
-                         html_writer::empty_tag('input', $params)."\n";
+        // Create hidden fields.
+        $params = array('type' => 'hidden', 'name' => 'sesskey', 'value' => sesskey());
+        $hidden_fields = html_writer::input_hidden_params($url) .
+                         html_writer::empty_tag('input', $params) . "\n";
 
         // put hidden fields in a containiner (for strict XHTML compatability)
-        $params = array('style'=>'display: none;');
+        $params = array('style' => 'display: none;');
         echo html_writer::tag('div', $hidden_fields, $params);
     }
 
     /**
      * wrap_html_finish
      */
-    function wrap_html_finish() {
+    public function wrap_html_finish() {
         global $PAGE;
 
-        // check this table has a "selected" column
+        // Check this table has a "selected" column.
         if (! $this->has_column('selected')) {
             return false;
         }
 
-        // check user can delete attempts
+        // Check user can delete attempts.
         if (! $this->output->hotpot->can_deleteattempts()) {
             return false;
         }
 
-        // start "commands" div
+        // Start "commands" div.
         $params = array('id' => 'commands');
         echo html_writer::start_tag('div', $params);
 
-        // add "select all/none" links
+        // Add "select all/none" links.
         if ( method_exists($PAGE->requires, 'js_amd_inline')) {
-            // Moodle >= 3.3
+            // Moodle >= 3.3.
             echo html_writer::tag('a', get_string('selectall', 'quiz'), array('href' => '#', 'id' => 'selectall'));
             echo ' / ';
             echo html_writer::tag('a', get_string('selectnone', 'quiz'), array('href' => '#', 'id' => 'selectnone'));
@@ -188,7 +187,7 @@ class hotpot_report_table extends table_sql {
                 });
             });");
         } else {
-            // Moodle <= 3.2
+            // Moodle <= 3.2.
             $href = "javascript:select_all_in('TABLE',null,'attempts');";
             echo html_writer::tag('a', get_string('selectall', 'quiz'), array('href' => $href));
             echo ' / ';
@@ -198,24 +197,23 @@ class hotpot_report_table extends table_sql {
 
         echo ' &nbsp; ';
 
-        // add button to delete attempts
+        // Add button to delete attempts.
         $confirm = addslashes_js(get_string('confirmdeleteattempts', 'mod_hotpot'));
         $onclick = ''
-            ."if(confirm('$confirm') && this.form && this.form.elements['confirmed']) {"
-                ."this.form.elements['confirmed'].value = '1';"
-                ."return true;"
-            ."} else {"
-                ."return false;"
-            ."}"
-        ;
-        echo html_writer::empty_tag('input', array('type'=>'submit', 'onclick'=>"$onclick", 'name'=>'delete', 'value'=>get_string('deleteattempts', 'mod_hotpot')));
-        echo html_writer::empty_tag('input', array('type'=>'hidden', 'name'=>'confirmed', 'value'=>'0'))."\n";
-        echo html_writer::empty_tag('input', array('type'=>'hidden', 'name'=>'action', 'value'=>'deleteselected'))."\n";
+            . "if(confirm('$confirm') && this.form && this.form.elements['confirmed']) {"
+                . "this.form.elements['confirmed'].value = '1';"
+                . "return true;"
+            . "} else {"
+                . "return false;"
+            . "}";
+        echo html_writer::empty_tag('input', array('type' => 'submit', 'onclick' => "$onclick", 'name' => 'delete', 'value' => get_string('deleteattempts', 'mod_hotpot')));
+        echo html_writer::empty_tag('input', array('type' => 'hidden', 'name' => 'confirmed', 'value' => '0')) . "\n";
+        echo html_writer::empty_tag('input', array('type' => 'hidden', 'name' => 'action', 'value' => 'deleteselected')) . "\n";
 
-        // finish "commands" div
+        // Finish "commands" div.
         echo html_writer::end_tag('div');
 
-        // finish the "attemptsform" form
+        // Finish the "attemptsform" form.
         echo html_writer::end_tag('form');
     }
 
@@ -229,8 +227,8 @@ class hotpot_report_table extends table_sql {
      * @param xxx $tablecolumn
      * @return xxx
      */
-    function format_header($tablecolumn)  {
-        $method = 'header_'.$tablecolumn;
+    public function format_header($tablecolumn) {
+        $method = 'header_' . $tablecolumn;
         if (method_exists($this, $method)) {
             return $this->$method();
         } else {
@@ -243,7 +241,7 @@ class hotpot_report_table extends table_sql {
      *
      * @return xxx
      */
-    function header_picture()  {
+    public function header_picture() {
         return '';
     }
 
@@ -252,7 +250,7 @@ class hotpot_report_table extends table_sql {
      *
      * @return xxx
      */
-    function header_fullname()  {
+    public function header_fullname() {
         return get_string('name');
     }
 
@@ -261,19 +259,19 @@ class hotpot_report_table extends table_sql {
      *
      * @return xxx
      */
-    function header_grade()  {
+    public function header_grade() {
         $grademethod = $this->output->hotpot->format_grademethod();
 
         $gradeweighting = $this->output->hotpot->gradeweighting;
         if ($gradeweighting != 100) {
-            $grademethod = $gradeweighting." x $grademethod/100";
+            $grademethod = $gradeweighting . " x $grademethod/100";
         }
 
         $params = array('class' => 'grademethod');
         $grademethod = html_writer::tag('span', $grademethod, $params);
 
         $br = html_writer::empty_tag('br');
-        return hotpot_get_grade_string().$br.'('.$grademethod.')';
+        return hotpot_get_grade_string() . $br . '(' . $grademethod . ')';
     }
 
     /**
@@ -281,7 +279,7 @@ class hotpot_report_table extends table_sql {
      *
      * @return xxx
      */
-    function header_selected()  {
+    public function header_selected() {
         return '';
     }
 
@@ -290,7 +288,7 @@ class hotpot_report_table extends table_sql {
      *
      * @return xxx
      */
-    function header_attempt()  {
+    public function header_attempt() {
         return get_string('attemptnumber', 'mod_hotpot');
     }
 
@@ -299,7 +297,7 @@ class hotpot_report_table extends table_sql {
      *
      * @return xxx
      */
-    function header_timemodified()  {
+    public function header_timemodified() {
         return get_string('time', 'quiz');
     }
 
@@ -308,7 +306,7 @@ class hotpot_report_table extends table_sql {
      *
      * @return xxx
      */
-    function header_status()  {
+    public function header_status() {
         return get_string('status', 'mod_hotpot');
     }
 
@@ -317,7 +315,7 @@ class hotpot_report_table extends table_sql {
      *
      * @return xxx
      */
-    function header_duration()  {
+    public function header_duration() {
         return get_string('duration', 'mod_hotpot');
     }
 
@@ -326,7 +324,7 @@ class hotpot_report_table extends table_sql {
      *
      * @return xxx
      */
-    function header_penalties()  {
+    public function header_penalties() {
         return get_string('penalties', 'mod_hotpot');
     }
 
@@ -335,7 +333,7 @@ class hotpot_report_table extends table_sql {
      *
      * @return xxx
      */
-    function header_score()  {
+    public function header_score() {
         return get_string('score', 'quiz');
     }
 
@@ -344,7 +342,7 @@ class hotpot_report_table extends table_sql {
      *
      * @return xxx
      */
-    function header_responsefield()  {
+    public function header_responsefield() {
         return '';
     }
 
@@ -353,8 +351,8 @@ class hotpot_report_table extends table_sql {
      *
      * @return xxx
      */
-    function header_other($column)  {
-        if (substr($column, 0, 2)=='q_') {
+    public function header_other($column) {
+        if (substr($column, 0, 2) == 'q_') {
             $a = intval(substr($column, 2)) + 1;
             return get_string('questionshort', 'mod_hotpot', $a);
         } else {
@@ -372,8 +370,8 @@ class hotpot_report_table extends table_sql {
      * @param xxx $row
      * @return xxx
      */
-    function col_selected($row)  {
-        return html_writer::checkbox('selected['.$row->id.']', 1, false);
+    public function col_selected($row) {
+        return html_writer::checkbox('selected[' . $row->id . ']', 1, false);
     }
 
     /**
@@ -382,17 +380,17 @@ class hotpot_report_table extends table_sql {
      * @param xxx $row
      * @return xxx
      */
-    function col_picture($row)  {
+    public function col_picture($row) {
         $user = new stdClass();
         $fields = explode(',', $this->output->get_userfields());
         foreach ($fields as $field) {
-            if ($field=='id') {
+            if ($field == 'id') {
                 $user->$field = $row->userid;
             } else {
                 $user->$field = $row->$field;
             }
         }
-        return $this->output->user_picture($user, array('courseid'=>$this->output->hotpot->course->id));
+        return $this->output->user_picture($user, array('courseid' => $this->output->hotpot->course->id));
     }
 
     /**
@@ -401,9 +399,9 @@ class hotpot_report_table extends table_sql {
      * @param xxx $row
      * @return xxx
      */
-    function col_grade($row)  {
+    public function col_grade($row) {
         if (isset($row->grade)) {
-            return $row->grade.'%';
+            return $row->grade . '%';
         } else {
             return '&nbsp;';
         }
@@ -415,7 +413,7 @@ class hotpot_report_table extends table_sql {
      * @param xxx $row
      * @return xxx
      */
-    function col_attempt($row)  {
+    public function col_attempt($row) {
         $text = "$row->attempt";
         return $this->format_review_link($text, $row);
     }
@@ -426,7 +424,7 @@ class hotpot_report_table extends table_sql {
      * @param xxx $row
      * @return xxx
      */
-    function col_timemodified($row)  {
+    public function col_timemodified($row) {
         $text = trim(userdate($row->timemodified, $this->strtimeformat));
         return $this->format_review_link($text, $row);
     }
@@ -437,7 +435,7 @@ class hotpot_report_table extends table_sql {
      * @param xxx $row
      * @return xxx
      */
-    function col_status($row)  {
+    public function col_status($row) {
         $text = hotpot::format_status($row->status);
         return $this->format_review_link($text, $row);
     }
@@ -448,11 +446,11 @@ class hotpot_report_table extends table_sql {
      * @param xxx $row
      * @return xxx
      */
-    function col_duration($row)  {
+    public function col_duration($row) {
         if ($row->duration) {
             $text = format_time($row->duration);
         } else {
-            $text = ''; // format_text(0) returns "now"
+            $text = ''; // Format_text(0) returns "now".
         }
         return $this->format_review_link($text, $row);
     }
@@ -463,7 +461,7 @@ class hotpot_report_table extends table_sql {
      * @param xxx $row
      * @return xxx
      */
-    function col_penalties($row)  {
+    public function col_penalties($row) {
         $text = "$row->penalties";
         return $this->format_review_link($text, $row);
     }
@@ -474,7 +472,7 @@ class hotpot_report_table extends table_sql {
      * @param xxx $row
      * @return xxx
      */
-    function col_score($row)  {
+    public function col_score($row) {
         $text = "$row->score";
         return $this->format_review_link($text, $row);
     }
@@ -486,17 +484,17 @@ class hotpot_report_table extends table_sql {
      * @param xxx $row
      * @return xxx
      */
-    function other_cols($column, $row) {
+    public function other_cols($column, $row) {
 
         if (! property_exists($row, $column)) {
             return $column;
         }
 
-        if ($column=='responsefield') {
+        if ($column == 'responsefield') {
             return get_string($row->$column, 'mod_hotpot');
         }
 
-        // format columns Q-1 .. Q-99
+        // Format columns Q-1 .. Q-99.
         return $this->format_text($row->$column);
     }
 
@@ -507,7 +505,7 @@ class hotpot_report_table extends table_sql {
      * @param xxx $row from hotpot_attempts table
      * @return xxx
      */
-    function format_review_link($text, $row)  {
+    public function format_review_link($text, $row) {
         if (strlen($text) && $this->output->hotpot->can_reviewattempt($row)) {
             $url = $this->output->hotpot->review_url($row);
             $text = html_writer::link($url, $text);
@@ -520,7 +518,7 @@ class hotpot_report_table extends table_sql {
      *
      * @return xxx
      */
-    function get_sql_sort()  {
+    public function get_sql_sort() {
 
         // if user has specified a sort column, use that
         if ($sort = parent::get_sql_sort()) {
@@ -536,7 +534,7 @@ class hotpot_report_table extends table_sql {
             return $sort;
         }
 
-        // no sort column, and no "fullname" column
+        // No sort column, and no "fullname" column.
         return '';
     }
 
@@ -546,7 +544,7 @@ class hotpot_report_table extends table_sql {
      * @param xxx $column
      * @return xxx
      */
-    public function has_column($column)  {
+    public function has_column($column) {
         return array_key_exists($column, $this->columns);
     }
 
@@ -555,7 +553,7 @@ class hotpot_report_table extends table_sql {
      *
      * @param xxx $delete_rows
      */
-    function delete_rows($delete_rows)  {
+    public function delete_rows($delete_rows) {
         foreach ($delete_rows as $id => $delete_flag) {
             if ($delete_flag) {
                 unset($this->rawdata[$id]);
@@ -568,7 +566,7 @@ class hotpot_report_table extends table_sql {
      *
      * @param xxx $delete_columns
      */
-    function delete_columns($delete_columns)  {
+    public function delete_columns($delete_columns) {
         $newcolnum = 0;
         foreach($this->columns as $column => $oldcolnum) {
             if (empty($delete_columns[$column])) {
@@ -581,7 +579,7 @@ class hotpot_report_table extends table_sql {
                 }
             }
         }
-        // reset indexes on headers
+        // Reset indexes on headers.
         $this->headers = array_values($this->headers);
     }
 
@@ -592,7 +590,7 @@ class hotpot_report_table extends table_sql {
      * @param xxx $value
      * @return xxx
      */
-    function set_legend($column, $value) {
+    public function set_legend($column, $value) {
         if (empty($column) || empty($value)) {
             return '';
         }
@@ -602,9 +600,9 @@ class hotpot_report_table extends table_sql {
             $this->legend[$column] = array();
         }
 
-        // get the $i(ndex) of this $value in this $column
+        // Get the $i(ndex) of this $value in this $column.
         $i = array_search($value, $this->legend[$column]);
-        if ($i===false) {
+        if ($i === false) {
             $i = count($this->legend[$column]);
             $this->legend[$column][$i] = $value;
         }
@@ -616,7 +614,7 @@ class hotpot_report_table extends table_sql {
     /**
      * print_legend
      */
-    function print_legend()  {
+    public function print_legend() {
         if (empty($this->legend)) {
             return false;
         }
@@ -637,7 +635,7 @@ class hotpot_report_table extends table_sql {
                 if (isset($strings[$response])) {
                     $response_string = $strings[$response]->string;
                 } else {
-                    $response_string = 'Unrecognized string id: '.$response;
+                    $response_string = 'Unrecognized string id: ' . $response;
                 }
                 echo html_writer::tag(
                     'tr',
@@ -658,12 +656,12 @@ class hotpot_report_table extends table_sql {
      * @param xxx $i
      * @return xxx
      */
-    function format_legend_index($i)  {
-        // convert numeric index to A, B, ... Z, AA, AB, ...
+    public function format_legend_index($i) {
+        // Convert numeric index to A, B, ... Z, AA, AB, ...
         if ($i < 26) {
             return chr(ord('A') + $i);
         } else {
-            return $this->format_legend_index(intval($i/26)-1).$this->format_legend_index($i % 26);
+            return $this->format_legend_index(intval($i / 26) - 1) . $this->format_legend_index($i % 26);
         }
     }
 }

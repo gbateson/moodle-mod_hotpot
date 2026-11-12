@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -19,15 +18,15 @@
  * Render an attempt at a HotPot quiz
  * Output format: hp_6_jcloze_xml_findit_a
  *
- * @package   mod-hotpot
+ * @package   hotpotattempt_hp
  * @copyright 2010 Gordon Bateson <gordon.bateson@gmail.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-// get parent class
-require_once($CFG->dirroot.'/mod/hotpot/attempt/hp/6/jcloze/xml/findit/renderer.php');
+// Get parent class.
+require_once($CFG->dirroot . '/mod/hotpot/attempt/hp/6/jcloze/xml/findit/renderer.php');
 
 /**
  * mod_hotpot_attempt_hp_6_jcloze_xml_findit_a_renderer
@@ -45,13 +44,13 @@ class mod_hotpot_attempt_hp_6_jcloze_xml_findit_a_renderer extends mod_hotpot_at
      *
      * @param xxx $hotpot (passed by reference)
      */
-    function init($hotpot)  {
+    public function init($hotpot) {
         parent::init($hotpot);
 
-        // prepend templates for this output format
+        // Prepend templates for this output format.
         array_unshift($this->templatesfolders, 'mod/hotpot/attempt/hp/6/jcloze/xml/findit/a/templates');
 
-        // replace standard jcloze.js with findit.a.js
+        // Replace standard jcloze.js with findit.a.js.
         $this->javascripts = preg_grep('/jcloze.js/', $this->javascripts, PREG_GREP_INVERT);
         array_push($this->javascripts, 'mod/hotpot/attempt/hp/6/jcloze/findit.a.js');
     }
@@ -61,7 +60,7 @@ class mod_hotpot_attempt_hp_6_jcloze_xml_findit_a_renderer extends mod_hotpot_at
      *
      * @return array of strings
      */
-    static public function sourcetypes()  {
+    static public function sourcetypes() {
         return array('hp_6_jcloze_xml', 'hp_7_jcloze_xml');
     }
 
@@ -70,10 +69,10 @@ class mod_hotpot_attempt_hp_6_jcloze_xml_findit_a_renderer extends mod_hotpot_at
      *
      * @return xxx
      */
-    function get_js_functionnames()  {
-        // start list of function names
+    public function get_js_functionnames() {
+        // Start list of function names.
         $names = parent::get_js_functionnames();
-        $names .= ($names ? ',' : '').'CorrectChoice';
+        $names .= ($names ? ',' : '') . 'CorrectChoice';
         return $names;
     }
 
@@ -82,7 +81,7 @@ class mod_hotpot_attempt_hp_6_jcloze_xml_findit_a_renderer extends mod_hotpot_at
      *
      * @return xxx
      */
-    function get_stop_function_name()  {
+    public function get_stop_function_name() {
         return 'CorrectChoice';
     }
 
@@ -91,9 +90,9 @@ class mod_hotpot_attempt_hp_6_jcloze_xml_findit_a_renderer extends mod_hotpot_at
      *
      * @return xxx
      */
-    function get_stop_function_args()  {
-        // the arguments required by CorrectChoice
-        return 'null,'.hotpot::STATUS_ABANDONED;
+    public function get_stop_function_args() {
+        // The arguments required by CorrectChoice.
+        return 'null,' . hotpot::STATUS_ABANDONED;
     }
 
     /**
@@ -101,8 +100,8 @@ class mod_hotpot_attempt_hp_6_jcloze_xml_findit_a_renderer extends mod_hotpot_at
      *
      * @return xxx
      */
-    function get_stop_function_intercept()  {
-        // standard call to HP.onclickCheck() is not needed in CorrectChoice
+    public function get_stop_function_intercept() {
+        // Standard call to HP.onclickCheck() is not needed in CorrectChoice.
         return '';
     }
 }

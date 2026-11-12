@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -18,7 +17,7 @@
 /**
  * mod/hotpot/db/install.php
  *
- * @package   mod-hotpot
+ * @package   mod_hotpot
  * @copyright 2010 Gordon Bateson <gordon.bateson@gmail.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -37,27 +36,26 @@ function xmldb_hotpot_install() {
     // On Moodle 2.0, 2.1 and 2.2, we need to force the text fields to be "long"
     // if we add LENGTH="long" to install.xml, then we get an error in Moodle 2.3+
     if (floatval($CFG->release) <= 2.2) {
-
-        // get db manager
+        // Get db manager.
         $dbman = $DB->get_manager();
 
         $tables = array(
             'hotpot' => array(
                 new xmldb_field('entrytext', XMLDB_TYPE_TEXT, 'long', null, XMLDB_NOTNULL),
-                new xmldb_field('exittext', XMLDB_TYPE_TEXT, 'long', null, XMLDB_NOTNULL)
+                new xmldb_field('exittext', XMLDB_TYPE_TEXT, 'long', null, XMLDB_NOTNULL),
             ),
             'hotpot_cache' => array(
-                new xmldb_field('content', XMLDB_TYPE_TEXT, 'long', null, XMLDB_NOTNULL)
+                new xmldb_field('content', XMLDB_TYPE_TEXT, 'long', null, XMLDB_NOTNULL),
             ),
             'hotpot_details' => array(
-                new xmldb_field('details', XMLDB_TYPE_TEXT, 'long', null, XMLDB_NOTNULL)
+                new xmldb_field('details', XMLDB_TYPE_TEXT, 'long', null, XMLDB_NOTNULL),
             ),
             'hotpot_questions' => array(
-                new xmldb_field('name', XMLDB_TYPE_TEXT, 'long', null, XMLDB_NOTNULL)
+                new xmldb_field('name', XMLDB_TYPE_TEXT, 'long', null, XMLDB_NOTNULL),
             ),
             'hotpot_strings' => array(
-                new xmldb_field('string', XMLDB_TYPE_TEXT, 'long', null, XMLDB_NOTNULL)
-            )
+                new xmldb_field('string', XMLDB_TYPE_TEXT, 'long', null, XMLDB_NOTNULL),
+            ),
         );
 
         foreach ($tables as $tablename => $fields) {

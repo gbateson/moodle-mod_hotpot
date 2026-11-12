@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -19,15 +18,15 @@
  * Class to represent the source of a HotPot quiz
  * Source type: html_xerte
  *
- * @package   mod-hotpot
+ * @package   hotpotsource_html
  * @copyright 2010 Gordon Bateson <gordon.bateson@gmail.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-// get parent class
-require_once($CFG->dirroot.'/mod/hotpot/source/html/class.php');
+// Get parent class.
+require_once($CFG->dirroot . '/mod/hotpot/source/html/class.php');
 
 /**
  * hotpot_source_html_xerte
@@ -39,17 +38,17 @@ require_once($CFG->dirroot.'/mod/hotpot/source/html/class.php');
 class hotpot_source_html_xerte extends hotpot_source_html {
 
     const REQUIRED_FILETYPES = array(
-        'htm', 'html'
+        'htm', 'html',
     );
     const REQUIRED_MATCHES = array(
         '/<script[^>]*src\s*=\s*"[^"]*rloObject.js"[^>]*>/',
-        "/myRLO = new rloObject\('\d*','\d*','[^']*.rl[ot]'[^)]*\)/"
+        "/myRLO = new rloObject\('\d*','\d*','[^']*.rl[ot]'[^)]*\)/",
     );
 
-    // properties of the icon for this source file type
+    // Properties of the icon for this source file type.
     var $icon = 'mod/hotpot/file/html/xerte/icon.gif';
 
-    // xmlized content of template.xml
+    // Xmlized content of template.xml.
     var $template_xml = null;
 
     /**
@@ -57,7 +56,7 @@ class hotpot_source_html_xerte extends hotpot_source_html {
      *
      * @return xxx
      */
-    function get_template_xml() {
+    public function get_template_xml() {
         if (is_null($this->template_xml)) {
             $this->template_xml = $this->get_sibling_filecontents('template.xml', true);
         }
@@ -71,7 +70,7 @@ class hotpot_source_html_xerte extends hotpot_source_html {
      * @param xxx $default (optional, default=null)
      * @return xxx
      */
-    function get_template_value($tags, $default=null) {
+    public function get_template_value($tags, $default = null) {
         $value = $this->get_template_xml();
         foreach($tags as $tag) {
             if (! is_array($value)) {
@@ -90,7 +89,7 @@ class hotpot_source_html_xerte extends hotpot_source_html {
      *
      * @return xxx
      */
-    function get_name() {
+    public function get_name() {
         if ($name = $this->get_template_value(array('learningObject', '@', 'name'))) {
             return $name;
         }
@@ -102,7 +101,7 @@ class hotpot_source_html_xerte extends hotpot_source_html {
      *
      * @return xxx
      */
-    function get_displayMode() {
+    public function get_displayMode() {
         return $this->get_template_value(array('learningObject', '@', 'displayMode'), 'default');
     }
 
@@ -111,7 +110,7 @@ class hotpot_source_html_xerte extends hotpot_source_html {
      *
      * @return xxx
      */
-    function get_entrytext() {
+    public function get_entrytext() {
         return '';
     }
 }

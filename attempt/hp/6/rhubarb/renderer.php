@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -19,15 +18,15 @@
  * Render an attempt at a HotPot quiz
  * Output format: hp_6_rhubarb
  *
- * @package   mod-hotpot
+ * @package   hotpotattempt_hp
  * @copyright 2010 Gordon Bateson <gordon.bateson@gmail.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-// get parent class
-require_once($CFG->dirroot.'/mod/hotpot/attempt/hp/6/renderer.php');
+// Get parent class.
+require_once($CFG->dirroot . '/mod/hotpot/attempt/hp/6/renderer.php');
 
 /**
  * mod_hotpot_attempt_hp_6_rhubarb_renderer
@@ -42,11 +41,11 @@ class mod_hotpot_attempt_hp_6_rhubarb_renderer extends mod_hotpot_attempt_hp_6_r
     public $templatefile = 'rhubarb6.ht_';
     public $templatestrings = 'PreloadImageList|FreeWordsArray|WordsArray';
 
-    // Glossary autolinking settings
+    // Glossary autolinking settings.
     public $headcontent_strings = 'strFinished|YourScoreIs|strTimesUp';
     public $headcontent_arrays = 'Words';
 
-    // TexToys do not have a SubmissionTimeout variable
+    // TexToys do not have a SubmissionTimeout variable.
     public $hasSubmissionTimeout = false;
 
     /**
@@ -54,7 +53,7 @@ class mod_hotpot_attempt_hp_6_rhubarb_renderer extends mod_hotpot_attempt_hp_6_r
      *
      * @param xxx $hotpot
      */
-    function init($hotpot)  {
+    public function init($hotpot) {
         parent::init($hotpot);
         array_push($this->javascripts, 'mod/hotpot/attempt/hp/6/rhubarb/rhubarb.js');
     }
@@ -62,14 +61,14 @@ class mod_hotpot_attempt_hp_6_rhubarb_renderer extends mod_hotpot_attempt_hp_6_r
     /**
      * fix_bodycontent
      */
-    function fix_bodycontent()  {
-        // switch off auto complete on Rhubarb text boxes
+    public function fix_bodycontent() {
+        // Switch off auto complete on Rhubarb text boxes.
         $search = '/<form id="Rhubarb"([^>]*)>/';
         if (preg_match($search, $this->bodycontent, $matches, PREG_OFFSET_CAPTURE)) {
             $match = $matches[1][0];
             $start = $matches[1][1];
-            if (strpos($match, 'autocomplete')===false) {
-                $this->bodycontent = substr_replace($this->bodycontent, $match.' autocomplete="off"', $start, strlen($match));
+            if (strpos($match, 'autocomplete') === false) {
+                $this->bodycontent = substr_replace($this->bodycontent, $match . ' autocomplete="off"', $start, strlen($match));
             }
         }
         parent::fix_bodycontent();
@@ -80,10 +79,10 @@ class mod_hotpot_attempt_hp_6_rhubarb_renderer extends mod_hotpot_attempt_hp_6_r
      *
      * @return xxx
      */
-    function get_js_functionnames()  {
-        // start list of function names
+    public function get_js_functionnames() {
+        // Start list of function names.
         $names = parent::get_js_functionnames();
-        $names .= ($names ? ',' : '').'TypeChars,Hint,CheckWord,CheckFinished,TimesUp';
+        $names .= ($names ? ',' : '') . 'TypeChars,Hint,CheckWord,CheckFinished,TimesUp';
         return $names;
     }
 
@@ -94,14 +93,13 @@ class mod_hotpot_attempt_hp_6_rhubarb_renderer extends mod_hotpot_attempt_hp_6_r
      * @param xxx $start
      * @param xxx $length
      */
-    function fix_js_TimesUp(&$str, $start, $length)  {
+    public function fix_js_TimesUp(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
 
         if ($pos = strpos($substr, '	ShowMessage')) {
             $insert = ''
-                ."	Finished = true;\n"
-                ."	HP_send_results(HP.EVENT_TIMEDOUT);\n"
-            ;
+                . "	Finished = true;\n"
+                . "	HP_send_results(HP.EVENT_TIMEDOUT);\n";
             $substr = substr_replace($substr, $insert, $pos, 0);
         }
 
@@ -113,7 +111,7 @@ class mod_hotpot_attempt_hp_6_rhubarb_renderer extends mod_hotpot_attempt_hp_6_r
      *
      * @return xxx
      */
-    function fix_js_TypeChars_init()  {
+    public function fix_js_TypeChars_init() {
         return "	var obj = document.getElementById('Guess');\n";
     }
 
@@ -122,7 +120,7 @@ class mod_hotpot_attempt_hp_6_rhubarb_renderer extends mod_hotpot_attempt_hp_6_r
      *
      * @return xxx
      */
-    function fix_js_TypeChars_obj()  {
+    public function fix_js_TypeChars_obj() {
         return 'obj';
     }
 
@@ -133,18 +131,17 @@ class mod_hotpot_attempt_hp_6_rhubarb_renderer extends mod_hotpot_attempt_hp_6_r
      * @param xxx $start
      * @param xxx $length
      */
-    function fix_js_Hint(&$str, $start, $length)  {
+    public function fix_js_Hint(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
 
-        // intercept Hints
+        // Intercept Hints.
         if ($pos = strpos($substr, '{')) {
             $insert = "\n"
-                ."	if (! AllDone) {\n"
-                ."		// intercept this Hint\n"
-                ."		HP.onclickHint(0);\n"
-                ."	}\n"
-            ;
-            $substr = substr_replace($substr, $insert, $pos+1, 0);
+                . "	if (! AllDone) {\n"
+                . "		// intercept this Hint\n"
+                . "		HP.onclickHint(0);\n"
+                . "	}\n";
+            $substr = substr_replace($substr, $insert, $pos + 1, 0);
         }
 
         $str = substr_replace($str, $substr, $start, $length);
@@ -157,18 +154,17 @@ class mod_hotpot_attempt_hp_6_rhubarb_renderer extends mod_hotpot_attempt_hp_6_r
      * @param xxx $start
      * @param xxx $length
      */
-    function fix_js_CheckWord(&$str, $start, $length)  {
+    public function fix_js_CheckWord(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
 
-        // intercept Hints
+        // Intercept Hints.
         if ($pos = strpos($substr, '{')) {
             $insert = "\n"
-                ."	if (! AllDone && InputWord.length) {\n"
-                ."		// intercept this Check\n"
-                ."		HP.onclickCheck(InputWord);\n"
-                ."	}"
-            ;
-            $substr = substr_replace($substr, $insert, $pos+1, 0);
+                . "	if (! AllDone && InputWord.length) {\n"
+                . "		// intercept this Check\n"
+                . "		HP.onclickCheck(InputWord);\n"
+                . "	}";
+            $substr = substr_replace($substr, $insert, $pos + 1, 0);
         }
 
         $str = substr_replace($str, $substr, $start, $length);
@@ -181,7 +177,7 @@ class mod_hotpot_attempt_hp_6_rhubarb_renderer extends mod_hotpot_attempt_hp_6_r
      * @param xxx $start
      * @param xxx $length
      */
-    function fix_js_CheckFinished(&$str, $start, $length)  {
+    public function fix_js_CheckFinished(&$str, $start, $length) {
         parent::fix_js_CheckAnswers($str, $start, $length);
     }
 
@@ -190,8 +186,8 @@ class mod_hotpot_attempt_hp_6_rhubarb_renderer extends mod_hotpot_attempt_hp_6_r
      *
      * @return xxx
      */
-    function get_stop_function_intercept()  {
-        // intercept is not required in the giveup function of Rhubarb
+    public function get_stop_function_intercept() {
+        // Intercept is not required in the giveup function of Rhubarb
         // because the checks are intercepted by CheckFinished (see above)
         return '';
     }
@@ -201,7 +197,7 @@ class mod_hotpot_attempt_hp_6_rhubarb_renderer extends mod_hotpot_attempt_hp_6_r
      *
      * @return xxx
      */
-    function get_stop_function_name()  {
+    public function get_stop_function_name() {
         return 'CheckFinished';
     }
 
@@ -210,7 +206,7 @@ class mod_hotpot_attempt_hp_6_rhubarb_renderer extends mod_hotpot_attempt_hp_6_r
      *
      * @return xxx
      */
-    function get_stop_function_args()  {
+    public function get_stop_function_args() {
         return 'HP.EVENT_ABANDONED';
     }
 
@@ -219,7 +215,7 @@ class mod_hotpot_attempt_hp_6_rhubarb_renderer extends mod_hotpot_attempt_hp_6_r
      *
      * @return xxx
      */
-    function get_stop_function_search()  {
+    public function get_stop_function_search() {
         return '/\s*if \((Done) == true\)(\{.*?)\}/s';
     }
 }

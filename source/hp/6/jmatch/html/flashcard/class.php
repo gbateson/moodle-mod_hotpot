@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -19,15 +18,15 @@
  * Class to represent the source of a HotPot quiz
  * Source type: hp_6_jmatch_html_flashcard
  *
- * @package   mod-hotpot
+ * @package   hotpotsource_hp
  * @copyright 2010 Gordon Bateson <gordon.bateson@gmail.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-// get parent class
-require_once($CFG->dirroot.'/mod/hotpot/source/hp/6/jmatch/html/class.php');
+// Get parent class.
+require_once($CFG->dirroot . '/mod/hotpot/source/hp/6/jmatch/html/class.php');
 
 /**
  * hotpot_source_hp_6_jmatch_html_flashcard
@@ -38,10 +37,10 @@ require_once($CFG->dirroot.'/mod/hotpot/source/hp/6/jmatch/html/class.php');
  */
 class hotpot_source_hp_6_jmatch_html_flashcard extends hotpot_source_hp_6_jmatch_html {
     const REQUIRED_FILETYPES = array(
-        'htm', 'html'
+        'htm', 'html',
     );
     const REQUIRED_STRINGS = array(
-        '<table class="FlashcardTable" border="0" cellspacing="0">'
+        '<table class="FlashcardTable" border="0" cellspacing="0">',
     );
 
     /*
@@ -50,9 +49,9 @@ class hotpot_source_hp_6_jmatch_html_flashcard extends hotpot_source_hp_6_jmatch
      * @param string $content (passed by reference)
      * @return array of required strings for HTML content
      */
-    static public function required_strings_html(&$content)  {
+    static public function required_strings_html(&$content) {
         $strings = parent::required_strings_html($content);
-        // flashcard files do not have the "MatchDiv" required by plain JMatch
+        // Flashcard files do not have the "MatchDiv" required by plain JMatch.
         return array_values(array_diff($strings, array('<div id="MatchDiv" style="text-align: center;">')));
     }
 }

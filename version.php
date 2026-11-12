@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -21,12 +20,12 @@
  * This code fragment is called by moodle_needs_upgrading() and
  * /admin/index.php
  *
- * @package   mod-hotpot
+ * @package   mod_hotpot
  * @copyright 2010 Gordon Bateson <gordon.bateson@gmail.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-// prevent direct access to this script
+// Prevent direct access to this script.
 defined('MOODLE_INTERNAL') || die();
 
 if (empty($CFG)) {
@@ -34,16 +33,16 @@ if (empty($CFG)) {
 }
 
 if (isset($CFG->yui3version) && version_compare($CFG->yui3version, '3.15.0') < 0) {
-    $plugin = new stdClass(); // Moodle <= 2.6
+    $plugin = new stdClass(); // Moodle <= 2.6.
 }
 
 $plugin->cron      = 0;
 $plugin->component = 'mod_hotpot';
-$plugin->maturity  = MATURITY_STABLE; // ALPHA=50, BETA=100, RC=150, STABLE=200
-$plugin->requires  = 2010112400;      // Moodle 2.0
+$plugin->maturity  = MATURITY_STABLE; // ALPHA=50, BETA=100, RC=150, STABLE=200.
+$plugin->requires  = 2010112400;      // Moodle 2.0.
 $plugin->version   = 2026111260;
 $plugin->release   = '2026-11-12 (60)';
 
 if (isset($CFG->yui3version) && version_compare($CFG->yui3version, '3.15.0') < 0) {
-    $module = clone($plugin); // Moodle <= 2.6
+    $module = clone($plugin); // Moodle <= 2.6.
 }

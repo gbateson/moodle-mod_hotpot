@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -37,7 +36,7 @@ class backup_hotpot_activity_task extends backup_activity_task {
      * Define (add) particular settings this activity can have
      */
     protected function define_my_settings() {
-        // No particular settings for this activity
+        // No particular settings for this activity.
     }
 
     /**
@@ -54,15 +53,15 @@ class backup_hotpot_activity_task extends backup_activity_task {
     static public function encode_content_links($content) {
         global $CFG;
 
-        $base = preg_quote($CFG->wwwroot,"/");
+        $base = preg_quote($CFG->wwwroot, "/");
 
-        // Link to the list of hotpots
+        // Link to the list of hotpots.
         $search = "/(" . $base . "\/mod\/hotpot\/index.php\?id\=)([0-9]+)/";
         $content = preg_replace($search, '$@HOTPOTINDEX*$2@$', $content);
 
-        //Link to hotpot view by moduleid
+        // Link to hotpot view by moduleid.
         $search = "/(" . $base . "\/mod\/hotpot\/view.php\?id\=)([0-9]+)/";
-        $content= preg_replace($search, '$@HOTPOTVIEWBYID*$2@$', $content);
+        $content = preg_replace($search, '$@HOTPOTVIEWBYID*$2@$', $content);
 
         return $content;
     }

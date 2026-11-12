@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -19,15 +18,15 @@
  * Render an attempt at a HotPot quiz
  * Output format: hp_6_jcloze_xml_findit
  *
- * @package   mod-hotpot
+ * @package   hotpotattempt_hp
  * @copyright 2010 Gordon Bateson <gordon.bateson@gmail.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-// get parent class
-require_once($CFG->dirroot.'/mod/hotpot/attempt/hp/6/jcloze/xml/renderer.php');
+// Get parent class.
+require_once($CFG->dirroot . '/mod/hotpot/attempt/hp/6/jcloze/xml/renderer.php');
 
 /**
  * mod_hotpot_attempt_hp_6_jcloze_xml_findit_renderer
@@ -43,7 +42,7 @@ class mod_hotpot_attempt_hp_6_jcloze_xml_findit_renderer extends mod_hotpot_atte
      *
      * @return array of strings
      */
-    static public function sourcetypes()  {
+    static public function sourcetypes() {
         return array();
     }
 
@@ -52,10 +51,10 @@ class mod_hotpot_attempt_hp_6_jcloze_xml_findit_renderer extends mod_hotpot_atte
      *
      * @return xxx
      */
-    function get_js_functionnames()  {
-        // start list of function names
+    public function get_js_functionnames() {
+        // Start list of function names.
         $names = parent::get_js_functionnames();
-        $names .= ($names ? ',' : '').'Markup_Text,CheckText,Build_GapText,ShowSolution,Get_WrongGapContent,TimesUp';
+        $names .= ($names ? ',' : '') . 'Markup_Text,CheckText,Build_GapText,ShowSolution,Get_WrongGapContent,TimesUp';
         return $names;
     }
 
@@ -64,21 +63,21 @@ class mod_hotpot_attempt_hp_6_jcloze_xml_findit_renderer extends mod_hotpot_atte
      *
      * @return xxx
      */
-    function get_stop_function_search()  {
+    public function get_stop_function_search() {
         return '/\s*if \((CheckExStatus\(\)) == true\)({.*?)setTimeout.*?}/s';
     }
 
     /**
      * fix_headcontent
      */
-    function fix_headcontent()  {
+    public function fix_headcontent() {
         $this->fix_headcontent_rottmeier('findit');
     }
 
     /**
      * fix_bodycontent
      */
-    function fix_bodycontent()  {
+    public function fix_bodycontent() {
         $this->fix_bodycontent_rottmeier(true);
     }
 }

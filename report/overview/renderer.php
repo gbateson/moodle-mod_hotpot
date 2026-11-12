@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -18,15 +17,15 @@
 /**
  * Render the overview report for a given HotPot activity
  *
- * @package   mod-hotpot
+ * @package   hotpotreport_overview
  * @copyright 2010 Gordon Bateson <gordon.bateson@gmail.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-// get parent class
-require_once($CFG->dirroot.'/mod/hotpot/report/renderer.php');
+// Get parent class.
+require_once($CFG->dirroot . '/mod/hotpot/report/renderer.php');
 
 /**
  * mod_hotpot_report_overview_renderer
@@ -40,11 +39,11 @@ class mod_hotpot_report_overview_renderer extends mod_hotpot_report_renderer {
 
     public $tablecolumns = array(
         'picture', 'fullname', 'grade', 'selected', 'attempt',
-        'timemodified', 'status', 'duration', 'score'
+        'timemodified', 'status', 'duration', 'score',
     );
 
     public $filterfields = array(
-        'group' => 0, 'realname'=>0, // 'lastname'=>1, 'firstname'=>1, 'username'=>1,
-        'grade'=>1, 'timemodified'=>1, 'status'=>1, 'duration'=>1, 'score'=>1
+        'group' => 0, 'realname' => 0, // 'lastname'=>1, 'firstname'=>1, 'username'=>1,
+        'grade' => 1, 'timemodified' => 1, 'status' => 1, 'duration' => 1, 'score' => 1,
     );
 }

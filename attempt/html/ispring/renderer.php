@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -19,15 +18,15 @@
  * Render an attempt at a HotPot quiz
  * Output format: html_ispring
  *
- * @package   mod-hotpot
+ * @package   hotpotattempt_html
  * @copyright 2010 Gordon Bateson <gordon.bateson@gmail.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-// get parent class
-require_once($CFG->dirroot.'/mod/hotpot/attempt/html/renderer.php');
+// Get parent class.
+require_once($CFG->dirroot . '/mod/hotpot/attempt/html/renderer.php');
 
 /**
  * mod_hotpot_attempt_html_ispring_renderer
@@ -43,7 +42,7 @@ class mod_hotpot_attempt_html_ispring_renderer extends mod_hotpot_attempt_html_r
      *
      * @return array of strings
      */
-    static public function sourcetypes()  {
+    static public function sourcetypes() {
         return array('html_ispring');
     }
 
@@ -52,26 +51,26 @@ class mod_hotpot_attempt_html_ispring_renderer extends mod_hotpot_attempt_html_r
      *
      * @return xxx
      */
-    function preprocessing()  {
+    public function preprocessing() {
         if ($this->cache_uptodate) {
             return true;
         }
 
         if (! $this->hotpot->source->get_filecontents()) {
-            // empty source file - shouldn't happen !!
+            // Empty source file - shouldn't happen !!
             return false;
         }
 
-        // remove doctype
+        // Remove doctype.
         $search = '/\s*(?:<!--\s*)?<!DOCTYPE[^>]*>\s*(?:-->\s*)?/s';
         $this->hotpot->source->filecontents = preg_replace($search, '', $this->hotpot->source->filecontents);
 
-        // replace <object> with link and force through filters
+        // Replace <object> with link and force through filters.
         $search = '/<object id="presentation"[^>]*>.*?<param name="movie" value="([^">]*)"[^>]*>.*?<\/object>/is';
         $replace = '<a href="$1?d=800x600">$1</a>';
         $this->hotpot->source->filecontents = preg_replace($search, $replace, $this->hotpot->source->filecontents);
 
-        // remove fixprompt.js
+        // Remove fixprompt.js.
         $search = '/<script[^>]*src="[^">]*fixprompt.js"[^>]*(?:(?:\/>)|(?:<\/script>))\s*/s';
         $this->hotpot->source->filecontents = preg_replace($search, '', $this->hotpot->source->filecontents);
 

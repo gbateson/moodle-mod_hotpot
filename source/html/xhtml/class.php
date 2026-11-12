@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -19,15 +18,15 @@
  * Class to represent the source of a HotPot quiz
  * Source type: html_xhtml
  *
- * @package   mod-hotpot
+ * @package   hotpotsource_html
  * @copyright 2010 Gordon Bateson <gordon.bateson@gmail.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-// get parent class
-require_once($CFG->dirroot.'/mod/hotpot/source/html/class.php');
+// Get parent class.
+require_once($CFG->dirroot . '/mod/hotpot/source/html/class.php');
 
 /**
  * hotpot_source_html_xhtml
@@ -39,10 +38,10 @@ require_once($CFG->dirroot.'/mod/hotpot/source/html/class.php');
 class hotpot_source_html_xhtml extends hotpot_source_html {
 
     const REQUIRED_FILETYPES = array(
-        'xhtm', 'xhtml'
+        'xhtm', 'xhtml',
     );
 
-    // the icon for this source file type
+    // The icon for this source file type.
     public $icon = 'pix/f/html.gif';
     public $iconwidth = '16';
     public $iconheight = '16';

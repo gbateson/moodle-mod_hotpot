@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -18,7 +17,7 @@
 /**
  * mod/hotpot/mediafilter/hotpot/pyg_mp3_player/class.php
  *
- * @package   mod-hotpot
+ * @package   mod_hotpot
  * @copyright 2010 Gordon Bateson <gordon.bateson@gmail.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -37,9 +36,9 @@ class hotpot_mediaplayer_pyg_mp3_player extends hotpot_mediaplayer {
     public $playerurl = 'pyg_mp3_player/pyg_mp3_player.swf';
     public $flashvars_paramname = 'file';
     public $more_options = array(
-        'width' => 180, 'height' => 30, 'my_BackgroundColor' => '0xE6E6FA', 'autolaunch' => 'false'
+        'width' => 180, 'height' => 30, 'my_BackgroundColor' => '0xE6E6FA', 'autolaunch' => 'false',
     );
     public $flashvars = array(
-        'my_BackgroundColor' => PARAM_ALPHANUM, 'autolaunch' => PARAM_ALPHANUM
+        'my_BackgroundColor' => PARAM_ALPHANUM, 'autolaunch' => PARAM_ALPHANUM,
     );
 }

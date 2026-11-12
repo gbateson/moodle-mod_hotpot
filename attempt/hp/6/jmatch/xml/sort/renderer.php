@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -19,15 +18,15 @@
  * Render an attempt at a HotPot quiz
  * Output format: hp_6_jmatch_xml_sort
  *
- * @package   mod-hotpot
+ * @package   hotpotattempt_hp
  * @copyright 2010 Gordon Bateson <gordon.bateson@gmail.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-// get parent class
-require_once($CFG->dirroot.'/mod/hotpot/attempt/hp/6/jmatch/xml/renderer.php');
+// Get parent class.
+require_once($CFG->dirroot . '/mod/hotpot/attempt/hp/6/jmatch/xml/renderer.php');
 
 /**
  * mod_hotpot_attempt_hp_6_jmatch_xml_sort_renderer
@@ -38,7 +37,7 @@ require_once($CFG->dirroot.'/mod/hotpot/attempt/hp/6/jmatch/xml/renderer.php');
  */
 class mod_hotpot_attempt_hp_6_jmatch_xml_sort_renderer extends mod_hotpot_attempt_hp_6_jmatch_xml_renderer {
 
-    //public $js_object_type = 'JMatchSort';
+    // public $js_object_type = 'JMatchSort';
     public $templatefile = 'djmatch6.ht_';
 
     /**
@@ -46,15 +45,15 @@ class mod_hotpot_attempt_hp_6_jmatch_xml_sort_renderer extends mod_hotpot_attemp
      *
      * @param xxx $hotpot
      */
-    function init($hotpot)  {
+    public function init($hotpot) {
         parent::init($hotpot);
 
-        // prepend templates for this output format
+        // Prepend templates for this output format.
         array_unshift($this->templatesfolders, 'mod/hotpot/attempt/hp/6/jmatch/xml/sort/templates');
 
-        // replace standard jcloze.js with sort.js
-        //$this->javascripts = preg_grep('/jmatch.js/', $this->javascripts, PREG_GREP_INVERT);
-        //array_push($this->javascripts, 'mod/hotpot/attempt/hp/6/jmatch/sort.js');
+        // Replace standard jcloze.js with sort.js
+        // $this->javascripts = preg_grep('/jmatch.js/', $this->javascripts, PREG_GREP_INVERT);
+        // array_push($this->javascripts, 'mod/hotpot/attempt/hp/6/jmatch/sort.js');
     }
 
     /**
@@ -62,7 +61,7 @@ class mod_hotpot_attempt_hp_6_jmatch_xml_sort_renderer extends mod_hotpot_attemp
      *
      * @return array of strings
      */
-    static public function sourcetypes()  {
+    static public function sourcetypes() {
         return array('hp_6_jmatch_xml', 'hp_7_jmatch_xml');
     }
 
@@ -71,9 +70,9 @@ class mod_hotpot_attempt_hp_6_jmatch_xml_sort_renderer extends mod_hotpot_attemp
      *
      * @return xxx
      */
-    function expand_StyleSheet()  {
-        return $this->expand_template('hp6.cs_').
-               $this->expand_template('corners.cs_').
+    public function expand_StyleSheet() {
+        return $this->expand_template('hp6.cs_') .
+               $this->expand_template('corners.cs_') .
                $this->expand_template('shadows.cs_');
     }
 }

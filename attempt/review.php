@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -19,7 +18,7 @@
  * Review results of an attempt at a HotPot quiz
  * Output format: hp
  *
- * @package   mod-hotpot
+ * @package   mod_hotpot
  * @copyright 2010 Gordon Bateson <gordon.bateson@gmail.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -40,7 +39,7 @@ class mod_hotpot_attempt_review {
      *
      * @return boolean
      */
-    static function show_question_text()  {
+    public static function show_question_text() {
         return true;
     }
 
@@ -49,7 +48,7 @@ class mod_hotpot_attempt_review {
      *
      * @return xxx
      */
-    static function attempt_fields()  {
+    public static function attempt_fields() {
         return array('attempt', 'score', 'penalties', 'status', 'duration', 'timemodified');
     }
 
@@ -58,7 +57,7 @@ class mod_hotpot_attempt_review {
      *
      * @return xxx
      */
-    static function response_text_fields()  {
+    public static function response_text_fields() {
         return array('correct', 'ignored', 'wrong');
     }
 
@@ -67,7 +66,7 @@ class mod_hotpot_attempt_review {
      *
      * @return xxx
      */
-    static function response_num_fields()  {
+    public static function response_num_fields() {
         return array('score', 'weighting', 'hints', 'clues', 'checks');
     }
 
@@ -76,7 +75,7 @@ class mod_hotpot_attempt_review {
      *
      * @return boolean true if attempts can be reviewed, otherwise false
      */
-    static function provide_review()  {
+    public static function provide_review() {
         return true;
     }
 
@@ -85,29 +84,29 @@ class mod_hotpot_attempt_review {
      *
      * @return boolean true if attempt can be reviewed, otherwise false
      */
-    static function can_reviewattempt($attempt=null)  {
+    public static function can_reviewattempt($attempt = null) {
         if (self::provide_review() && $hotpot->reviewoptions) {
             if ($attempt = $hotpot->get_attempt()) {
                 if ($hotpot->reviewoptions & hotpot::REVIEW_DURINGATTEMPT) {
-                    // during attempt
-                    if ($hotpot->attempt->status==hotpot::STATUS_INPROGRESS) {
+                    // During attempt.
+                    if ($hotpot->attempt->status == hotpot::STATUS_INPROGRESS) {
                         return true;
                     }
                 }
                 if ($hotpot->reviewoptions & hotpot::REVIEW_AFTERATTEMPT) {
                     // after attempt (but before quiz closes)
-                    if ($hotpot->attempt->status==hotpot::STATUS_COMPLETED) {
+                    if ($hotpot->attempt->status == hotpot::STATUS_COMPLETED) {
                         return true;
                     }
-                    if ($hotpot->attempt->status==hotpot::STATUS_ABANDONED) {
+                    if ($hotpot->attempt->status == hotpot::STATUS_ABANDONED) {
                         return true;
                     }
-                    if ($hotpot->attempt->status==hotpot::STATUS_TIMEDOUT) {
+                    if ($hotpot->attempt->status == hotpot::STATUS_TIMEDOUT) {
                         return true;
                     }
                 }
                 if ($hotpot->reviewoptions & hotpot::REVIEW_AFTERCLOSE) {
-                    // after the quiz closes
+                    // After the quiz closes.
                     if ($hotpot->timeclose < $hotpot->time) {
                         return true;
                     }
@@ -124,23 +123,23 @@ class mod_hotpot_attempt_review {
      * note that PHP 5.4 does not allow pass-by-reference in call_user_func()
      * in such a case we must use call_user_func_array($callback, array(&$pass_by_reference))
      */
-    static function review($hotpot, $class)  {
+    public static function review($hotpot, $class) {
         global $DB;
 
         // for the time-being we set this setting manually here
         // but one day it will be settable in "mod/hotpot/mod_form.php"
-        //$hotpot->reviewoptions = hotpot::REVIEW_DURINGATTEMPT | hotpot::REVIEW_AFTERATTEMPT | hotpot::REVIEW_AFTERCLOSE;
+        // $hotpot->reviewoptions = hotpot::REVIEW_DURINGATTEMPT | hotpot::REVIEW_AFTERATTEMPT | hotpot::REVIEW_AFTERCLOSE;
 
-        // the $hotpot should already have the $attempt attached to it
+        // The $hotpot should already have the $attempt attached to it.
         if (! $reviewoptions = $hotpot->can_reviewattempt()) {
             // oops, we are not allowed to review this $hotpot->attempt
             if ($hotpot->timeclose && $hotpot->timeclose > $hotpot->time) {
-                // quiz is closed
+                // Quiz is closed.
                 if ($hotpot->reviewoptions & hotpot::REVIEW_AFTERATTEMPT) {
                     return get_string('noreviewbeforeclose', 'mod_hotpot', userdate($hotpot->timeclose));
                 }
             } else {
-                // quiz is still open
+                // Quiz is still open.
                 if ($hotpot->reviewoptions & hotpot::REVIEW_AFTERCLOSE) {
                     return get_string('noreviewafterclose', 'mod_hotpot');
                 }
@@ -163,7 +162,7 @@ class mod_hotpot_attempt_review {
             $response_text_fields = array();
         }
 
-        // set flag to remove, if necessary, labels that show whether responses are correct or not
+        // Set flag to remove, if necessary, labels that show whether responses are correct or not.
         if (! ($reviewallattempts || $reviewoptions & hotpot::REVIEW_ANSWERS)) {
             $neutralize_text_fields = true;
         } else {
@@ -190,62 +189,59 @@ class mod_hotpot_attempt_review {
         foreach ($attempt_fields as $field) {
             $row = new html_table_row();
 
-            // add heading
+            // Add heading.
             $text = call_user_func(array($class, 'format_attempt_heading'), $field);
-            $cell = new html_table_cell($text, array('class'=>'attemptfield'));
+            $cell = new html_table_cell($text, array('class' => 'attemptfield'));
             $row->cells[] = $cell;
 
-            // add data
+            // Add data.
             $text = call_user_func(array($class, 'format_attempt_data'), $hotpot->attempt, $field, $strtimeformat);
-            $cell = new html_table_cell($text, array('class'=>'attemptvalue'));
+            $cell = new html_table_cell($text, array('class' => 'attemptvalue'));
             $cell->colspan = $textfield_colspan;
             $row->cells[] = $cell;
 
             $table->data[] = $row;
         }
 
-        // get questions and responses relevant to this quiz attempt
+        // Get questions and responses relevant to this quiz attempt.
         $questions = $DB->get_records('hotpot_questions', array('hotpotid' => $hotpot->id));
         $responses = $DB->get_records('hotpot_responses', array('attemptid' => $hotpot->attempt->id));
 
         if (empty($questions) || empty($responses)) {
             $row = new html_table_row();
 
-            $cell = new html_table_cell(get_string('noresponses', 'mod_hotpot'), array('class'=>'noresponses'));
+            $cell = new html_table_cell(get_string('noresponses', 'mod_hotpot'), array('class' => 'noresponses'));
             $cell->colspan = $question_colspan;
 
             $row->cells[] = $cell;
             $table->data[] = $row;
-
         } else {
-
-            // we have some responses, so print them
+            // We have some responses, so print them.
             foreach ($responses as $response) {
-
                 if (empty($questions[$response->questionid])) {
-                    continue; // invalid question id - shouldn't happen !!
+                    continue; // Invalid question id - shouldn't happen !!
                 }
 
-                // add separator
+                // Add separator.
                 if (count($table->data)) {
-                    $callback = array($class, 'add_separator'); // PHP 5.2
+                    $callback = array($class, 'add_separator'); // PHP 5.2.
                     call_user_func_array($callback, array(&$table, $question_colspan));
                 }
 
-                // question text
+                // Question text.
                 if (call_user_func(array($class, 'show_question_text'))) {
                     if ($text = hotpot::get_question_text($questions[$response->questionid])) {
                         $text = s($text);
-                        $callback = array($class, 'add_question_text'); // PHP 5.2
+                        $callback = array($class, 'add_question_text'); // PHP 5.2.
                         call_user_func_array($callback, array(&$table, $text, $question_colspan));
                     }
                 }
 
-                // string fields
+                // String fields.
                 $neutral_text = '';
                 foreach ($response_text_fields as $field) {
                     if (empty($response->$field)) {
-                        continue; // shouldn't happen !!
+                        continue; // Shouldn't happen !!
                     }
 
                     $text = array();
@@ -257,25 +253,25 @@ class mod_hotpot_attempt_review {
                     unset($records);
 
                     if (! $text = implode(',', $text)) {
-                        continue; // skip empty rows
+                        continue; // Skip empty rows.
                     }
 
                     if ($neutralize_text_fields) {
-                        $neutral_text .= ($neutral_text ? ',' : '').$text;
+                        $neutral_text .= ($neutral_text ? ',' : '') . $text;
                     } else {
-                        $callback = array($class, 'add_text_field'); // PHP 5.2
+                        $callback = array($class, 'add_text_field'); // PHP 5.2.
                         call_user_func_array($callback, array(&$table, $field, $text, $textfield_colspan));
                     }
                 }
                 if ($neutral_text) {
-                    $callback = array($class, 'add_text_field'); // PHP 5.2
+                    $callback = array($class, 'add_text_field'); // PHP 5.2.
                     call_user_func_array($callback, array(&$table, 'responses', $neutral_text, $textfield_colspan));
                 }
 
-                // numeric fields
+                // Numeric fields.
                 $row = new html_table_row();
                 foreach ($response_num_fields as $field) {
-                    $callback = array($class, 'add_num_field'); // PHP 5.2
+                    $callback = array($class, 'add_num_field'); // PHP 5.2.
                     call_user_func_array($callback, array(&$row, $field, $response->$field));
                 }
                 $table->data[] = $row;
@@ -291,7 +287,7 @@ class mod_hotpot_attempt_review {
      * @param xxx $field
      * @return xxx
      */
-    static function format_attempt_heading($field) {
+    public static function format_attempt_heading($field) {
         switch ($field) {
             case 'timemodified': return get_string('time', 'quiz');
             case 'attempt'     : return get_string('attemptnumber', 'mod_hotpot');
@@ -308,7 +304,7 @@ class mod_hotpot_attempt_review {
      * @param xxx $strtimeformat
      * @return xxx
      */
-    static function format_attempt_data($attempt, $field, $strtimeformat) {
+    public static function format_attempt_data($attempt, $field, $strtimeformat) {
         switch ($field) {
             case 'status'      : return hotpot::format_status($attempt->$field);
             case 'duration'    : return format_time($attempt->timemodified - $attempt->timestart);
@@ -323,7 +319,7 @@ class mod_hotpot_attempt_review {
      * @param xxx $table (passed by reference)
      * @param xxx $colspan
      */
-    static function add_separator(&$table, $colspan)  {
+    public static function add_separator(&$table, $colspan) {
         $row = new html_table_row();
 
         $text = html_writer::tag('div', '', array('class' => 'tabledivider'));
@@ -341,10 +337,10 @@ class mod_hotpot_attempt_review {
      * @param xxx $text
      * @param xxx $colspan
      */
-    static function add_question_text(&$table, $text, $colspan)  {
+    public static function add_question_text(&$table, $text, $colspan) {
         $row = new html_table_row();
 
-        $cell = new html_table_cell($text, array('class'=>'questiontext'));
+        $cell = new html_table_cell($text, array('class' => 'questiontext'));
         $cell->colspan = $colspan;
 
         $row->cells[] = $cell;
@@ -359,15 +355,15 @@ class mod_hotpot_attempt_review {
      * @param xxx $text
      * @param xxx $colspan
      */
-    static function add_text_field(&$table, $field, $text, $colspan)  {
+    public static function add_text_field(&$table, $field, $text, $colspan) {
         $row = new html_table_row();
 
-        // heading
-        $cell = new html_table_cell(get_string($field, 'mod_hotpot'), array('class'=>'responsefield'));
+        // Heading.
+        $cell = new html_table_cell(get_string($field, 'mod_hotpot'), array('class' => 'responsefield'));
         $row->cells[] = $cell;
 
-        // data
-        $cell = new html_table_cell($text, array('class'=>'responsevalue'));
+        // Data.
+        $cell = new html_table_cell($text, array('class' => 'responsevalue'));
         $cell->colspan = $colspan;
         $row->cells[] = $cell;
 
@@ -381,13 +377,13 @@ class mod_hotpot_attempt_review {
      * @param xxx $field
      * @param xxx $value
      */
-    static function add_num_field(&$row, $field, $value)  {
-        // heading
-        $cell = new html_table_cell(get_string($field, 'mod_hotpot'), array('class'=>'responsefield'));
+    public static function add_num_field(&$row, $field, $value) {
+        // Heading.
+        $cell = new html_table_cell(get_string($field, 'mod_hotpot'), array('class' => 'responsefield'));
         $row->cells[] = $cell;
 
-        // data
-        $cell = new html_table_cell($value, array('class'=>'responsevalue'));
+        // Data.
+        $cell = new html_table_cell($value, array('class' => 'responsevalue'));
         $row->cells[] = $cell;
     }
 }

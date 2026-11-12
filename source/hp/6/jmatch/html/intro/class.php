@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -19,15 +18,15 @@
  * Class to represent the source of a HotPot quiz
  * Source type: hp_6_jmatch_html_intro
  *
- * @package   mod-hotpot
+ * @package   hotpotsource_hp
  * @copyright 2010 Gordon Bateson <gordon.bateson@gmail.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-// get parent class
-require_once($CFG->dirroot.'/mod/hotpot/source/hp/6/jmatch/html/class.php');
+// Get parent class.
+require_once($CFG->dirroot . '/mod/hotpot/source/hp/6/jmatch/html/class.php');
 
 /**
  * hotpot_source_hp_6_jmatch_html_intro
@@ -38,10 +37,10 @@ require_once($CFG->dirroot.'/mod/hotpot/source/hp/6/jmatch/html/class.php');
  */
 class hotpot_source_hp_6_jmatch_html_intro extends hotpot_source_hp_6_jmatch_html {
     const REQUIRED_FILETYPES = array(
-        'htm', 'html'
+        'htm', 'html',
     );
     const REQUIRED_STRINGS = array(
-        '<div class="Feedback" id="DivIntroPage">'
+        '<div class="Feedback" id="DivIntroPage">',
     );
 
     /*
@@ -50,12 +49,12 @@ class hotpot_source_hp_6_jmatch_html_intro extends hotpot_source_hp_6_jmatch_htm
      * @param string $content of HTML file (passed by reference)
      * @return array of required strings for HTML content
      */
-    static public function required_strings_html(&$content)  {
+    static public function required_strings_html(&$content) {
         $strings = parent::required_strings_html($content);
         if (is_numeric(in_array('<div id="MainDiv" class="StdDiv">', $strings))) {
             $strings[] = '<div id="MatchDiv" style="text-align: center;">';
         } else {
-            // drag-and-drop versions of JMatch and JMix
+            // Drag-and-drop versions of JMatch and JMix.
             $strings[] = 'F = new Array();';
             $strings[] = 'D = new Array();';
         }

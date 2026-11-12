@@ -51,7 +51,7 @@ abstract class base extends \core\event\base {
      */
     public function __call($name, $args) {
         if (preg_match(self::LEGACY_FUNCTIONS, $name)) {;
-            $name = 'my_'.$name;
+            $name = 'my_' . $name;
         }
         return call_user_func_array([$this, $name], $args);
     }
@@ -61,7 +61,7 @@ abstract class base extends \core\event\base {
      */
     public static function __callStatic($name, $args) {
         if (preg_match(self::LEGACY_FUNCTIONS, $name)) {;
-            $name = 'my_'.$name;
+            $name = 'my_' . $name;
         }
         return call_user_func_array([__CLASS__, $name], $args);
     }
@@ -72,10 +72,10 @@ abstract class base extends \core\event\base {
      * @param string $suffix (optional, default="")
      * @return string
      */
-    public static function get_event_string_name($suffix='') {
+    public static function get_event_string_name($suffix = '') {
         $class = get_called_class();
         $class = substr($class, strlen(__NAMESPACE__) + 1);
-        return 'event_'.$class.$suffix;
+        return 'event_' . $class . $suffix;
     }
 
     /**
@@ -93,10 +93,10 @@ abstract class base extends \core\event\base {
      * @return string
      */
     public function get_description() {
-        if ($this->contextlevel==CONTEXT_MODULE) {
+        if ($this->contextlevel == CONTEXT_MODULE) {
             $cmid = $this->contextinstanceid;
         } else {
-            $cmid = 0; // shouldn't happen !!
+            $cmid = 0; // Shouldn't happen !!
         }
         $a = (object)array('courseid'      => $this->courseid,
                            'cmid'          => $cmid,
@@ -126,13 +126,13 @@ abstract class base extends \core\event\base {
         $params = array();
         foreach ($this->my_get_legacy_records() as $record) {
             list($name, $table, $id) = $record;
-            if ($name=='course' || $name=='hotpot') {
-                continue; // not required in the URL
+            if ($name == 'course' || $name == 'hotpot') {
+                continue; // Not required in the URL.
             }
-            if ($name=='cm') {
+            if ($name == 'cm') {
                 $params['id'] = $id;
             } else {
-                $params[$name.'id'] = $id;
+                $params[$name . 'id'] = $id;
             }
         }
         return new \moodle_url('/mod/hotpot/view.php', $params);

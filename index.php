@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -18,15 +17,15 @@
 /**
  * Display a list of HotPot activities with links to HotPot reports.
  *
- * @package   mod-hotpot
+ * @package   mod_hotpot
  * @copyright 2010 Gordon Bateson <gordon.bateson@gmail.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
-require_once(dirname(__FILE__).'/locallib.php');
+require_once(dirname(dirname(dirname(__FILE__))) . '/config.php');
+require_once(dirname(__FILE__) . '/locallib.php');
 
-$id = required_param('id', PARAM_INT);   // course
+$id = required_param('id', PARAM_INT);   // Course.
 
 if (! $course = $DB->get_record('course', array('id' => $id))) {
     throw new moodle_exception('invalidcourseid', 'error');
@@ -41,11 +40,11 @@ $PAGE->set_title($course->fullname);
 $PAGE->set_heading($course->shortname);
 $PAGE->navbar->add(get_string('modulenameplural', 'mod_hotpot'));
 
-/// Output starts here
+/// Output starts here.
 
 echo $OUTPUT->header();
 
-/// Get all the appropriate data
+/// Get all the appropriate data.
 
 if (! $hotpots = get_all_instances_in_course('hotpot', $course)) {
     echo $OUTPUT->heading(get_string('nohotpots', 'mod_hotpot'), 2);
@@ -54,13 +53,13 @@ if (! $hotpots = get_all_instances_in_course('hotpot', $course)) {
     die();
 }
 
-// get list of hotpot ids
+// Get list of hotpot ids.
 $hotpotids = array();
 foreach ($hotpots as $hotpot) {
     $hotpotids[] = $hotpot->id;
 }
 
-// get total number of attempts, users and details for these hotpots
+// Get total number of attempts, users and details for these hotpots.
 if (has_capability('mod/hotpot:reviewallattempts', $PAGE->context)) {
     $show_aggregates = true;
     $single_user = false;
@@ -76,9 +75,9 @@ if ($show_aggregates) {
     $params = array();
     $tables = '{hotpot_attempts} ha';
     $fields = 'ha.hotpotid AS hotpotid, COUNT(DISTINCT ha.clickreportid) AS attemptcount, COUNT(DISTINCT ha.userid) AS usercount, ROUND(SUM(ha.score) / COUNT(ha.score), 0) AS averagescore, MAX(ha.score) AS maxscore';
-    $select = 'ha.hotpotid IN ('.implode(',', $hotpotids).')';
+    $select = 'ha.hotpotid IN (' . implode(',', $hotpotids) . ')';
     if ($single_user) {
-        // restrict results to this user only
+        // Restrict results to this user only.
         $select .= ' AND ha.userid=:userid';
         $params['userid'] = $USER->id;
     }
@@ -90,18 +89,18 @@ if ($show_aggregates) {
 $usesections = course_format_uses_sections($course->format);
 if ($usesections) {
     if (method_exists('course_modinfo', 'get_section_info_all')) {
-        // Moodle >= 2.3
+        // Moodle >= 2.3.
         $modinfo = get_fast_modinfo($course);
         $sections = $modinfo->get_section_info_all();
     } else {
-        // Moodle 2.0 - 2.2
+        // Moodle 2.0 - 2.2.
         $sections = get_all_sections($course->id);
     }
 }
 
 /// Print the list of instances (your module will probably extend this)
 
-$strsectionname = get_string('sectionname', 'format_'.$course->format);
+$strsectionname = get_string('sectionname', 'format_' . $course->format);
 $strname        = get_string('name');
 $strhighest     = get_string('gradehighest', 'quiz');
 $straverage     = get_string('gradeaverage', 'quiz');
@@ -137,14 +136,14 @@ foreach ($hotpots as $hotpot) {
     $text = html_writer::tag('a', $hotpot->name, $params);
     $row->cells[] = new html_table_cell($text);
 
-    // Create an object to represent this attempt at the current HotPot activity
+    // Create an object to represent this attempt at the current HotPot activity.
     $cm = get_coursemodule_from_instance('hotpot', $hotpot->id, $course->id, false, MUST_EXIST);
     $hotpot = hotpot::create($hotpot, $cm, $course, $PAGE->context);
 
     if (empty($aggregates[$hotpot->id]) || empty($aggregates[$hotpot->id]->attemptcount)) {
-        $row->cells[] = new html_table_cell('0'); // average score
-        $row->cells[] = new html_table_cell('0'); // max score
-        $row->cells[] = new html_table_cell('&nbsp;'); // reports
+        $row->cells[] = new html_table_cell('0'); // Average score.
+        $row->cells[] = new html_table_cell('0'); // Max score.
+        $row->cells[] = new html_table_cell('&nbsp;'); // Reports.
     } else {
         $reviewoptions = $hotpot->can_reviewhotpot();
 
@@ -179,6 +178,6 @@ foreach ($hotpots as $hotpot) {
 echo $OUTPUT->heading(get_string('modulenameplural', 'mod_hotpot'), 2);
 echo html_writer::table($table);
 
-/// Finish the page
+/// Finish the page.
 
 echo $OUTPUT->footer();

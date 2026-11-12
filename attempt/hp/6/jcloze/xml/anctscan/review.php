@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -19,15 +18,15 @@
  * Review results of an attempt at a HotPot quiz
  * Output format: hp_6_jcloze_xml_anctscan
  *
- * @package   mod-hotpot
+ * @package   hotpotattempt_hp
  * @copyright 2010 Gordon Bateson <gordon.bateson@gmail.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-// get parent class
-require_once($CFG->dirroot.'/mod/hotpot/attempt/hp/6/jcloze/xml/review.php');
+// Get parent class.
+require_once($CFG->dirroot . '/mod/hotpot/attempt/hp/6/jcloze/xml/review.php');
 
 /**
  * mod_hotpot_attempt_hp_6_jcloze_xml_anctscan_review
@@ -43,7 +42,7 @@ class mod_hotpot_attempt_hp_6_jcloze_xml_anctscan_review extends mod_hotpot_atte
      *
      * @return xxx
      */
-    static function attempt_fields()   {
+    public static function attempt_fields() {
         return array('attempt', 'score', 'penalties', 'status', 'duration', 'timemodified');
     }
 }

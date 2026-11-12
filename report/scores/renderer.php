@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -18,15 +17,15 @@
 /**
  * Render the scores report for a given HotPot activity
  *
- * @package   mod-hotpot
+ * @package   hotpotreport_scores
  * @copyright 2010 Gordon Bateson <gordon.bateson@gmail.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-// get parent class
-require_once($CFG->dirroot.'/mod/hotpot/report/renderer.php');
+// Get parent class.
+require_once($CFG->dirroot . '/mod/hotpot/report/renderer.php');
 
 /**
  * mod_hotpot_report_scores_renderer
@@ -40,12 +39,12 @@ class mod_hotpot_report_scores_renderer extends mod_hotpot_report_renderer {
 
     public $tablecolumns = array(
         'picture', 'fullname', 'grade', 'selected', 'attempt',
-        'timemodified', 'status', 'duration', 'penalties', 'score'
+        'timemodified', 'status', 'duration', 'penalties', 'score',
     );
 
     public $filterfields = array(
-        'group'=>0, 'realname'=>0, // 'lastname'=>1, 'firstname'=>1, 'username'=>1,
-        'grade'=>1, 'timemodified'=>1, 'status'=>1, 'duration'=>1, 'penalties'=>1, 'score'=>1
+        'group' => 0, 'realname' => 0, // 'lastname'=>1, 'firstname'=>1, 'username'=>1,
+        'grade' => 1, 'timemodified' => 1, 'status' => 1, 'duration' => 1, 'penalties' => 1, 'score' => 1,
     );
 
     public $has_questioncolumns = true;
@@ -58,7 +57,7 @@ class mod_hotpot_report_scores_renderer extends mod_hotpot_report_renderer {
      * @param xxx $column
      * @param xxx $response
      */
-    function add_response_to_rawdata(&$table, $attemptid, $column, $response)  {
+    public function add_response_to_rawdata(&$table, $attemptid, $column, $response) {
         $table->rawdata[$attemptid]->$column = $response->score;
     }
 }

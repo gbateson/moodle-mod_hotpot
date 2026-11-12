@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -18,15 +17,15 @@
 /**
  * Class to represent the source of a HotPot quiz
  *
- * @package   mod-hotpot
+ * @package   mod_hotpot
  * @copyright 2010 Gordon Bateson <gordon.bateson@gmail.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-//  get hotpot_xmlize(), which uses Moodle's standard XML parser
-require_once($CFG->dirroot.'/mod/hotpot/lib.php');
+// Get hotpot_xmlize(), which uses Moodle's standard XML parser.
+require_once($CFG->dirroot . '/mod/hotpot/lib.php');
 
 /**
  * hotpot_source
@@ -38,7 +37,7 @@ require_once($CFG->dirroot.'/mod/hotpot/lib.php');
 class hotpot_source {
 
     // declare properties that are set at runtime,
-    // to avoid "dynamic property" deprecation warnings in PHP >= 8.2
+    // to avoid "dynamic property" deprecation warnings in PHP >= 8.2.
     /** @var mixed */
     public $hotpot;
     /** @var mixed */
@@ -175,11 +174,11 @@ class hotpot_source {
         $this->hotpot = $hotpot;
 
         if (is_object($file_or_string)) {
-            // view hotpot activity
+            // View hotpot activity.
             $this->file = $file_or_string;
-            $this->filepath = ltrim($this->file->get_filepath().$this->file->get_filename(), '/');
+            $this->filepath = ltrim($this->file->get_filepath() . $this->file->get_filename(), '/');
         } else if (is_string($file_or_string)) {
-            // question import
+            // Question import.
             $this->file = false;
             $this->filepath = '';
             $this->filecontents = $file_or_string;
@@ -188,17 +187,17 @@ class hotpot_source {
         if (is_object($hotpot->course)) {
             $this->courseid = $hotpot->course->id;
         } else {
-            // probably we are adding a new HotPot
+            // Probably we are adding a new HotPot.
             $this->courseid = $hotpot->course;
         }
 
         if (isset($hotpot->sourcelocation)) {
             $this->location = $hotpot->sourcelocation;
         } else {
-            $this->location = 0; // LOCATION_COURSEFILES
+            $this->location = 0; // LOCATION_COURSEFILES.
         }
 
-        if ($this->location==1) {
+        if ($this->location == 1) {
             // 1=LOCATION_SITEFILES
             // only used on HotPots upgraded from Moodle 1.9
             // and even then, it would be unusual on most sites
@@ -206,8 +205,8 @@ class hotpot_source {
         } else {
             $this->coursefolder = $this->courseid;
         }
-        $this->basepath = $CFG->dataroot.'/'.$this->coursefolder;
-        $this->fullpath = $this->basepath.'/'.$this->filepath;
+        $this->basepath = $CFG->dataroot . '/' . $this->coursefolder;
+        $this->fullpath = $this->basepath . '/' . $this->filepath;
 
         $this->dirname  = dirname($this->fullpath);
         $this->filename = basename($this->fullpath);
@@ -217,17 +216,17 @@ class hotpot_source {
         } else {
             $file_php = 'file.php?file=';
         }
-        $pluginfile_php = 'plugin'.$file_php;
+        $pluginfile_php = 'plugin' . $file_php;
 
-        $this->legacy_baseurl = $CFG->wwwroot.'/'.$file_php.'/'.$this->coursefolder;
+        $this->legacy_baseurl = $CFG->wwwroot . '/' . $file_php . '/' . $this->coursefolder;
         if (isset($hotpot->context)) {
-            // a HotPot activity
-            $this->baseurl = $CFG->wwwroot.'/'.$pluginfile_php.'/'.$hotpot->context->id.'/mod_hotpot/sourcefile';
+            // A HotPot activity.
+            $this->baseurl = $CFG->wwwroot . '/' . $pluginfile_php . '/' . $hotpot->context->id . '/mod_hotpot/sourcefile';
         } else if (isset($hotpot->category->context)) {
-            // importing into the question bank category
-            $this->baseurl = $CFG->wwwroot.'/'.$pluginfile_php.'/'.$hotpot->category->context->id.'/question/questiontext'; // /0/167/167/myimage.gif';
+            // Importing into the question bank category.
+            $this->baseurl = $CFG->wwwroot . '/' . $pluginfile_php . '/' . $hotpot->category->context->id . '/question/questiontext'; // /0/167/167/myimage.gif';
         } else {
-            // no context - shouldn't happen !!
+            // No context - shouldn't happen !!
             $this->baseurl = '';
         }
     }
@@ -238,7 +237,7 @@ class hotpot_source {
      * @param string a hotpot file/output class name
      * @return string class name without the leading "hotpot_source_"
      */
-    static public function get_type($class='') {
+    static public function get_type($class = '') {
         return preg_replace('/^hotpot_[a-z]+_/', '', $class);
     }
 
@@ -248,7 +247,7 @@ class hotpot_source {
      * @param stdclass $sourcefile a Moodle stored_file object representing the source file
      * @return boolean true if the file is a recognized quiz file, or false otherwise
      */
-    static public function is_quizfile($sourcefile)  {
+    static public function is_quizfile($sourcefile) {
 
         if (empty(static::REQUIRED_FILETYPES)) {
             return false;
@@ -256,46 +255,46 @@ class hotpot_source {
 
         $filename = $sourcefile->get_filename();
         if (! $pos = strrpos($filename, '.')) {
-            // no file type (or hidden file) - shouldn't happen!!
+            // No file type (or hidden file) - shouldn't happen!!
             return false;
         }
 
         $filetype = substr($filename, $pos + 1);
         if (! in_array($filetype, static::REQUIRED_FILETYPES)) {
-            // wrong file type
+            // Wrong file type.
             return false;
         }
 
         if (! $content = static::get_content($sourcefile)) {
-            // empty or non-existant file
+            // Empty or non-existant file.
             return false;
         }
 
-        // Build array of required strings
+        // Build array of required strings.
         if ($filetype == 'htm' || $filetype == 'html') {
             $strings = static::required_strings_html($content);
         } else {
             $strings = static::REQUIRED_STRINGS;
         }
 
-        // Check that required strings are present in $content
+        // Check that required strings are present in $content.
         foreach ($strings as $string) {
             if (! is_numeric(strpos($content, $string))) {
-                // required string not found
+                // Required string not found.
                 return false;
             }
         }
 
         foreach (static::REQUIRED_MATCHES as $string) {
             if (! preg_match($string, $content)) {
-                // required match not found
+                // Required match not found.
                 return false;
             }
         }
 
         foreach (static::BANNED_STRINGS as $string) {
             if (is_numeric(strpos($content, $string))) {
-                // banned string found
+                // Banned string found.
                 return false;
             }
         }
@@ -309,7 +308,7 @@ class hotpot_source {
      * @param string $content of HTML file (passed by reference)
      * @return array of strings required in HTML content
      */
-    static public function required_strings_html(&$content)  {
+    static public function required_strings_html(&$content) {
         return static::REQUIRED_STRINGS;
     }
 
@@ -329,14 +328,14 @@ class hotpot_source {
      * @param xxx $file
      * @return xxx
      */
-    static public function get_content($file, $hotpot=null)  {
+    static public function get_content($file, $hotpot = null) {
         if ($content = $file->get_content()) {
             return $content;
         }
         if ($path = self::get_real_path($file, $hotpot)) {
             return file_get_contents($path);
         }
-        return ''; // shouldn't happen !!
+        return ''; // Shouldn't happen !!
     }
 
     /**
@@ -346,30 +345,30 @@ class hotpot_source {
      * @param object $hotpot (optional, default=null)
      * @return string
      */
-    static public function get_real_path($file, $hotpot=null) {
+    static public function get_real_path($file, $hotpot = null) {
         global $CFG, $PAGE;
 
-        // sanity check
+        // Sanity check.
         if (empty($file)) {
             return '';
         }
 
         // set default path (= cached file in filedir)
         $hash = $file->get_contenthash();
-        $path = $CFG->dataroot.'/filedir/'.$hash[0].$hash[1].'/'.$hash[2].$hash[3].'/'.$hash;
+        $path = $CFG->dataroot . '/filedir/' . $hash[0] . $hash[1] . '/' . $hash[2] . $hash[3] . '/' . $hash;
 
         if (! method_exists($file, 'get_repository_id')) {
-            return $path; // Moodle <= 2.2
+            return $path; // Moodle <= 2.2.
         }
         if (! $repositoryid = $file->get_repository_id()) {
-            return $path; // shoudn't happen !!
+            return $path; // Shoudn't happen !!
         }
 
         if (! $repository = repository::get_repository_by_id($repositoryid, $PAGE->context)) {
-            return $path; // shouldn't happen
+            return $path; // Shouldn't happen.
         }
 
-        // get repository $type
+        // Get repository $type.
         switch (true) {
             case isset($repository->options['type']):
                 $type = $repository->options['type'];
@@ -379,100 +378,100 @@ class hotpot_source {
                 $type = $type->get_typename();
                 break;
             default:
-                $type = ''; // shouldn't happen !!
+                $type = ''; // Shouldn't happen !!
         }
 
-        // get path according to repository $type
+        // Get path according to repository $type.
         switch ($type) {
             case 'filesystem':
                 if (method_exists($repository, 'get_rootpath')) {
-                    $path = $repository->get_rootpath().'/'.$file->get_reference();
+                    $path = $repository->get_rootpath() . '/' . $file->get_reference();
                 } else if (isset($repository->root_path)) {
-                    $path = $repository->root_path.'/'.$file->get_reference();
+                    $path = $repository->root_path . '/' . $file->get_reference();
                 }
                 break;
             case 'user':
             case 'coursefiles':
-                // use the the default $path
+                // Use the the default $path.
                 break;
         }
 
         return $path;
     }
 
-    // returns name of quiz that is displayed in the list of quizzes
+    // Returns name of quiz that is displayed in the list of quizzes.
 
     /**
      * get_name
      *
      * @return xxx
      */
-    function get_name()  {
+    public function get_name() {
         return '';
     }
 
-    // returns title of quiz when it is viewed in a browser
+    // Returns title of quiz when it is viewed in a browser.
 
     /**
      * get_title
      *
      * @return xxx
      */
-    function get_title()  {
+    public function get_title() {
         return '';
     }
 
-    // returns the entry text for a quiz
+    // Returns the entry text for a quiz.
 
     /**
      * get_entrytext
      *
      * @return xxx
      */
-    function get_entrytext()  {
+    public function get_entrytext() {
         return '';
     }
 
-    // returns the exit text for a quiz
+    // Returns the exit text for a quiz.
 
     /**
      * get_exittext
      *
      * @return xxx
      */
-    function get_exittext()  {
+    public function get_exittext() {
         return '';
     }
 
-    // returns $filepath of next quiz if there is one, or false otherwise
+    // Returns $filepath of next quiz if there is one, or false otherwise.
 
     /**
      * get_nextquiz
      *
      * @return xxx
      */
-    function get_nextquiz()  {
+    public function get_nextquiz() {
         return false;
     }
 
-    // returns an <img> tag for the icon for this source file type
+    // Returns an <img> tag for the icon for this source file type.
 
     /**
      * get_icon
      *
      * @return xxx
      */
-    function get_icon()  {
+    public function get_icon() {
         global $CFG;
         if (preg_match('/^(?:https?:)?\/+/', $this->icon)) {
             $icon = $this->icon;
         } else {
-            $icon = $CFG->wwwroot.'/'.$this->icon;
+            $icon = $CFG->wwwroot . '/' . $this->icon;
         }
-        return '<img src="'.$icon.'" width="'.$this->iconwidth.'" height="'.$this->iconheight.'" class="'.$this->iconclass.'" />';
+        return '<img src="' . $icon . '" width="' . $this->iconwidth . '" height="' . $this->iconheight . '" class="' . $this->iconclass . '" />';
     }
 
-    // property access functions
+    // Property access functions.
 
     // returns file (=either url or filepath)
 
@@ -481,8 +480,8 @@ class hotpot_source {
      *
      * @return xxx
      */
-    function get_file()  {
-        if ($this->location==hotpot::LOCATION_WWW) {
+    public function get_file() {
+        if ($this->location == hotpot::LOCATION_WWW) {
             return $this->url;
         }
         if ($this->filepath) {
@@ -491,7 +490,7 @@ class hotpot_source {
         return false;
     }
 
-    // returns location (0 : coursefiles; 1 : site files; false : undefined) of quiz source file
+    // Returns location (0 : coursefiles; 1 : site files; false : undefined) of quiz source file.
 
     /**
      * get_location
@@ -499,12 +498,12 @@ class hotpot_source {
      * @param xxx $courseid
      * @return xxx
      */
-    function get_location($courseid)  {
+    public function get_location($courseid) {
         if ($this->coursefolder) {
-            if ($this->coursefolder==$courseid) {
+            if ($this->coursefolder == $courseid) {
                 return hotpot::LOCATION_COURSEFILES;
             }
-            if ($this->coursefolder==SITEID) {
+            if ($this->coursefolder == SITEID) {
                 return hotpot::LOCATION_SITEFILES;
             }
         }
@@ -521,12 +520,12 @@ class hotpot_source {
      * @param xxx $etag
      * @return xxx
      */
-    function filemtime($lastmodified, $etag)  {
+    public function filemtime($lastmodified, $etag) {
         if (is_object($this->file)) {
             if (method_exists($this->file, 'referencelastsync')) {
-                $time = $this->file->referencelastsync(); // Moodle >= 2.3
+                $time = $this->file->referencelastsync(); // Moodle >= 2.3.
             } else {
-                $time = $this->file->get_timemodified(); // Moodle <= 2.2
+                $time = $this->file->get_timemodified(); // Moodle <= 2.2.
             }
             if ($path = self::get_real_path($this->file, $this->hotpot)) {
                 $time = max($time, filemtime($path));
@@ -535,7 +534,7 @@ class hotpot_source {
         }
         if ($this->url) {
             $headers = array(
-                'If-Modified-Since'=>$lastmodified, 'If-None-Match'=>$etag
+                'If-Modified-Since' => $lastmodified, 'If-None-Match' => $etag,
                 // 'If-Modified-Since'=>'Wed, 23 Apr 2008 17:53:50 GMT',
                 // 'If-None-Match'=>'"52237ffc6aa5c81:16d9"'
             );
@@ -550,11 +549,11 @@ class hotpot_source {
                 }
                 return $filemtime;
             } else {
-                debugging('remote file not accesisble: '.$this->url, DEBUG_DEVELOPER);
+                debugging('remote file not accesisble: ' . $this->url, DEBUG_DEVELOPER);
                 return 0;
             }
         }
-        // not a local file or a remote file ?!
+        // Not a local file or a remote file ?!
         return 0;
     }
 
@@ -563,7 +562,7 @@ class hotpot_source {
      *
      * @return xxx
      */
-    function get_filecontents()  {
+    public function get_filecontents() {
         global $DB;
 
         if (isset($this->filecontents)) {
@@ -573,44 +572,44 @@ class hotpot_source {
         // initialize $this->filecontent
         $this->filecontents = false;
 
-        if ($this->location==hotpot::LOCATION_WWW) {
+        if ($this->location == hotpot::LOCATION_WWW) {
             if (! $this->url) {
-                // no url given - shouldn't happen
+                // No url given - shouldn't happen.
                 return false;
             }
             if (! $this->get_filecontents_url()) {
-                // url is (no longer) accessible
+                // Url is (no longer) accessible.
                 return false;
             }
         } else {
             if (! $this->file) {
-                // no file object - shouldn't happen !!
+                // No file object - shouldn't happen !!
                 return false;
             }
             $this->filecontents = self::get_content($this->file, $this->hotpot);
         }
 
-        // file contents were successfully read
+        // File contents were successfully read.
 
-        // remove BOMs - http://en.wikipedia.org/wiki/Byte_order_mark
+        // Remove BOMs - http://en.wikipedia.org/wiki/Byte_order_mark.
         switch (true) {
-            case substr($this->filecontents, 0, 4)=="\xFF\xFE\x00\x00":
+            case substr($this->filecontents, 0, 4) == "\xFF\xFE\x00\x00":
                 $start = 4;
                 $encoding = 'UTF-32LE';
                 break;
-            case substr($this->filecontents, 0, 4)=="\x00\x00\xFE\xFF":
+            case substr($this->filecontents, 0, 4) == "\x00\x00\xFE\xFF":
                 $start = 4;
                 $encoding = 'UTF-32BE';
                 break;
-            case substr($this->filecontents, 0, 2)=="\xFF\xFE":
+            case substr($this->filecontents, 0, 2) == "\xFF\xFE":
                 $start = 2;
                 $encoding = 'UTF-16LE';
                 break;
-            case substr($this->filecontents, 0, 2)=="\xFE\xFF":
+            case substr($this->filecontents, 0, 2) == "\xFE\xFF":
                 $start = 2;
                 $encoding = 'UTF-16BE';
                 break;
-            case substr($this->filecontents, 0, 3)=="\xEF\xBB\xBF":
+            case substr($this->filecontents, 0, 3) == "\xEF\xBB\xBF":
                 $start = 3;
                 $encoding = 'UTF-8';
                 break;
@@ -619,14 +618,14 @@ class hotpot_source {
                 $encoding = '';
         }
 
-        // remove BOM, if necessary
+        // Remove BOM, if necessary.
         if ($start) {
             $this->filecontents = substr($this->filecontents, $start);
         }
 
-        // convert to UTF-8, if necessary
-        if ($encoding=='' || $encoding=='UTF-8') {
-            // do nothing
+        // Convert to UTF-8, if necessary.
+        if ($encoding == '' || $encoding == 'UTF-8') {
+            // Do nothing.
         } else {
             $this->filecontents = hotpot_textlib('convert', $this->filecontents, $encoding);
         }
@@ -640,15 +639,15 @@ class hotpot_source {
      * @param xxx $headers (optional, default=null)
      * @return xxx
      */
-    function get_filecontents_url($headers=null)  {
+    public function get_filecontents_url($headers = null) {
         global $CFG;
-        require_once($CFG->dirroot.'/lib/filelib.php');
+        require_once($CFG->dirroot . '/lib/filelib.php');
 
         $fullresponse = download_file_content($this->url, $headers, null, true);
         foreach ($fullresponse->headers as $header) {
             if ($pos = strpos($header, ':')) {
                 $name = trim(substr($header, 0, $pos));
-                $value = trim(substr($header, $pos+1));
+                $value = trim(substr($header, $pos + 1));
                 switch ($name) {
                     case 'Last-Modified': $this->lastmodified = trim($value); break;
                     case 'ETag': $this->etag = trim($value); break;
@@ -656,11 +655,11 @@ class hotpot_source {
                 }
             }
         }
-        if ($fullresponse->status==200) {
+        if ($fullresponse->status == 200) {
             $this->filecontents = $fullresponse->results;
             return true;
         }
-        if ($fullresponse->status==304) {
+        if ($fullresponse->status == 304) {
             return true;
         }
         return false;
@@ -670,29 +669,27 @@ class hotpot_source {
      * compact_filecontents
      *
      * @param array $tags (optional, default=null) specific tags to remove comments from
-     * @todo Finish documenting this function
      */
-    public function compact_filecontents($tags=null) {
+    public function compact_filecontents($tags = null) {
         if (isset($this->filecontents)) {
             if ($tags) {
                 $callback = array($this, 'compact_filecontents_callback');
                 foreach ($tags as $tag) {
-                    $search = '/(?<=<'.$tag.'>).*(?=<\/'.$tag.'>)/is';
+                    $search = '/(?<=<' . $tag . '>).*(?=<\/' . $tag . '>)/is';
                     $this->filecontents = preg_replace_callback($search, $callback, $this->filecontents);
                 }
             }
-            $this->filecontents = preg_replace('/(?<=>)'.'\s+'.'(?=<)/s', '', $this->filecontents);
+            $this->filecontents = preg_replace('/(?<=>)' . '\s+' . '(?=<)/s', '', $this->filecontents);
         }
     }
 
     /**
      * compact_filecontents_callback
      *
-     * @todo Finish documenting this function
      */
     public function compact_filecontents_callback($match) {
         $search = array(
-            '/\/\/[^\n\r]*/',  // single line js comments
+            '/\/\/[^\n\r]*/',  // Single line js comments.
             '/\/\*.*?\*\//s',  // multiline comments (js and css)
         );
         return preg_replace($search, '', $match[0]);
@@ -705,7 +702,7 @@ class hotpot_source {
      * @param xxx $xmlize (optional, default=false)
      * @return xxx
      */
-    function get_sibling_filecontents($filename, $xmlize=false) {
+    public function get_sibling_filecontents($filename, $xmlize = false) {
         $content = '';
         if (is_object($this->file)) {
             $fs = get_file_storage();
@@ -731,12 +728,12 @@ class hotpot_source {
      *
      * @return xxx
      */
-    function get_best_outputformat()  {
+    public function get_best_outputformat() {
         if (static::BEST_OUTPUT_FORMAT) {
             $format = static::BEST_OUTPUT_FORMAT;
         } else {
-            // the default outputformat is the same as the sourcefile format
-            // assuming class name starts with "hotpot_source_"
+            // The default outputformat is the same as the sourcefile format
+            // assuming class name starts with "hotpot_source_".
             $format = substr(get_class($this), 14);
             // PHP >= 5.3 allows "get_called_class()"
             // PHP >= 5.5 allows "static::class"
@@ -745,7 +742,7 @@ class hotpot_source {
     }
 
 
-    // synchonize file and Moodle settings
+    // Synchonize file and Moodle settings.
 
     /**
      * synchronize_moodle_settings
@@ -753,7 +750,7 @@ class hotpot_source {
      * @param xxx $quiz (passed by reference)
      * @return xxx
      */
-    function synchronize_moodle_settings(&$quiz)  {
+    public function synchronize_moodle_settings(&$quiz) {
         return false;
     }
 }

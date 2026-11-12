@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -19,15 +18,15 @@
  * Class to represent the source of a HotPot quiz
  * Source type: hp_6_jcross_xml
  *
- * @package   mod-hotpot
+ * @package   hotpotsource_hp
  * @copyright 2010 Gordon Bateson <gordon.bateson@gmail.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-// get parent class
-require_once($CFG->dirroot.'/mod/hotpot/source/hp/6/jcross/class.php');
+// Get parent class.
+require_once($CFG->dirroot . '/mod/hotpot/source/hp/6/jcross/class.php');
 
 /**
  * hotpot_source_hp_6_jcross_xml
@@ -40,6 +39,6 @@ class hotpot_source_hp_6_jcross_xml extends hotpot_source_hp_6_jcross {
     const REQUIRED_FILETYPES = array('jcw');
     const REQUIRED_STRINGS = array(
         '<hotpot-jcross-file>',
-        '<version>6</version>'
+        '<version>6</version>',
     );
 }

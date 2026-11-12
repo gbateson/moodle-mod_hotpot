@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -18,17 +17,17 @@
 /**
  * Display a list of HotPot activities with links to HotPot reports.
  *
- * @package   mod-hotpot
+ * @package   mod_hotpot
  * @copyright 2010 Gordon Bateson <gordon.bateson@gmail.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
-require_once(dirname(__FILE__).'/locallib.php');
+require_once(dirname(dirname(dirname(__FILE__))) . '/config.php');
+require_once(dirname(__FILE__) . '/locallib.php');
 
-$id    = optional_param('id', 0, PARAM_INT); // course_module ID, or
-$hp    = optional_param('hp', 0, PARAM_INT); // hotpot instance ID
-$mode  = optional_param('mode', 'overview', PARAM_ALPHA); // type of report
+$id    = optional_param('id', 0, PARAM_INT); // Course_module ID, or.
+$hp    = optional_param('hp', 0, PARAM_INT); // Hotpot instance ID.
+$mode  = optional_param('mode', 'overview', PARAM_ALPHA); // Type of report.
 
 if ($id) {
     $cm      = get_coursemodule_from_id('hotpot', $id, 0, false, MUST_EXIST);
@@ -40,18 +39,18 @@ if ($id) {
     $cm      = get_coursemodule_from_instance('hotpot', $hotpot->id, $course->id, false, MUST_EXIST);
 }
 
-// check login
+// Check login.
 require_login($course, true, $cm);
 if (! has_capability('mod/hotpot:reviewallattempts', $PAGE->context)) {
     require_capability('mod/hotpot:reviewmyattempts', $PAGE->context);
 }
 
-hotpot_add_to_log($course->id, 'hotpot', 'report', 'report.php?id='.$cm->id, $hotpot->id, $cm->id);
+hotpot_add_to_log($course->id, 'hotpot', 'report', 'report.php?id=' . $cm->id, $hotpot->id, $cm->id);
 
-// Create an object to represent the current HotPot activity
+// Create an object to represent the current HotPot activity.
 $hotpot = hotpot::create($hotpot, $cm, $course, $PAGE->context);
 
-// delete attempts, if requested
+// Delete attempts, if requested.
 $action    = optional_param('action', '', PARAM_ALPHA);
 $confirmed = optional_param('confirmed', 0, PARAM_INT);
 if (function_exists('optional_param_array')) {
@@ -60,12 +59,12 @@ if (function_exists('optional_param_array')) {
     $selected  = optional_param('selected', 0, PARAM_INT);
 }
 
-if ($action=='deleteselected') {
+if ($action == 'deleteselected') {
     require_sesskey();
     if ($confirmed) {
         $hotpot->delete_attempts($selected, false);
     } else {
-        // show a confirm button ?
+        // Show a confirm button ?
     }
 }
 
@@ -74,16 +73,16 @@ $PAGE->set_title($hotpot->name);
 $PAGE->set_heading($course->shortname);
 $PAGE->navbar->add(get_string('report', 'quiz'));
 if ($mode) {
-    $PAGE->navbar->add(get_string($mode.'report', 'mod_hotpot'));
+    $PAGE->navbar->add(get_string($mode . 'report', 'mod_hotpot'));
 }
 
 // get renderer subtype (e.g. report_overview)
-// and load the appropriate renderer class for this attempt
+// and load the appropriate renderer class for this attempt.
 $subtype = $hotpot->get_report_renderer_subtype($mode);
 $subdir = str_replace('_', '/', $subtype);
-require_once($CFG->dirroot.'/mod/hotpot/'.$subdir.'/renderer.php');
+require_once($CFG->dirroot . '/mod/hotpot/' . $subdir . '/renderer.php');
 
-// create the renderer for this attempt
+// Create the renderer for this attempt.
 $output = $PAGE->get_renderer('mod_hotpot', $subtype);
 
 ////////////////////////////////////////////////////////////////////////////////

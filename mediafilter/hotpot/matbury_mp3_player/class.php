@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -18,7 +17,7 @@
 /**
  * mod/hotpot/mediafilter/hotpot/matbury_mp3_player/class.php
  *
- * @package   mod-hotpot
+ * @package   mod_hotpot
  * @copyright 2010 Gordon Bateson <gordon.bateson@gmail.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -38,9 +37,9 @@ class hotpot_mediaplayer_matbury_mp3_player extends hotpot_mediaplayer {
     public $flashvars_paramname = 'mp3url';
     public $more_options = array(
         'width' => 200, 'height' => 18, 'majorversion' => 9, 'build' => 115,
-        'timesToPlay' => 1, 'showPlay' => 'true', 'waitToPlay' => 'true'
+        'timesToPlay' => 1, 'showPlay' => 'true', 'waitToPlay' => 'true',
     );
     public $flashvars = array(
-        'timesToPlay' => PARAM_INT, 'showPlay' => PARAM_ALPHANUM, 'waitToPlay' => PARAM_ALPHANUM
+        'timesToPlay' => PARAM_INT, 'showPlay' => PARAM_ALPHANUM, 'waitToPlay' => PARAM_ALPHANUM,
     );
 }

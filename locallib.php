@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -23,15 +22,15 @@
  * hotpot_something() taking the hotpot instance as the first
  * parameter, we use a class hotpot that provides all methods.
  *
- * @package   mod-hotpot
+ * @package   mod_hotpot
  * @copyright 2010 Gordon Bateson <gordon.bateson@gmail.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once(dirname(__FILE__).'/lib.php');     // we extend this library here
-require_once($CFG->libdir . '/gradelib.php');   // we use some rounding and comparing routines here
+require_once(dirname(__FILE__) . '/lib.php');     // We extend this library here.
+require_once($CFG->libdir . '/gradelib.php');   // We use some rounding and comparing routines here.
 
 /**
  * Full-featured hotpot API
@@ -48,7 +47,7 @@ class hotpot {
      *
      * @var integer
      */
-    const TEXTSOURCE_FILE           = 0; // was TEXTSOURCE_QUIZ
+    const TEXTSOURCE_FILE           = 0; // Was TEXTSOURCE_QUIZ.
     const TEXTSOURCE_FILENAME       = 1;
     const TEXTSOURCE_FILEPATH       = 2;
     const TEXTSOURCE_SPECIFIC       = 3;
@@ -60,12 +59,12 @@ class hotpot {
      *
      * @var integer
      */
-    const NAVIGATION_NONE           = 0; // was 6
-    const NAVIGATION_MOODLE         = 1; // was NAVIGATION_BAR
+    const NAVIGATION_NONE           = 0; // Was 6.
+    const NAVIGATION_MOODLE         = 1; // Was NAVIGATION_BAR.
     const NAVIGATION_FRAME          = 2;
-    const NAVIGATION_EMBED          = 3; // was NAVIGATION_IFRAME
+    const NAVIGATION_EMBED          = 3; // Was NAVIGATION_IFRAME.
     const NAVIGATION_ORIGINAL       = 4;
-    const NAVIGATION_TOPBAR         = 5; // was NAVIGATION_GIVEUP but that was replaced by stopbutton
+    const NAVIGATION_TOPBAR         = 5; // Was NAVIGATION_GIVEUP but that was replaced by stopbutton.
     /**#@-*/
 
     /**#@+
@@ -128,8 +127,8 @@ class hotpot {
      *
      * @var integer
      */
-    const HTTP_NO_RESPONSE          = 0; // was false
-    const HTTP_204_RESPONSE         = 1; // was true
+    const HTTP_NO_RESPONSE          = 0; // Was false.
+    const HTTP_204_RESPONSE         = 1; // Was true.
     /**#@-*/
 
     /**#@+
@@ -451,7 +450,7 @@ class hotpot {
      * @param stdclass $context  The context of the hotpot instance
      * @param stdclass $attempt  attempt data from the {hotpot_attempts} table
      */
-    private function __construct($dbrecord, $cm, $course, $context=null, $attempt=null) {
+    private function __construct($dbrecord, $cm, $course, $context = null, $attempt = null) {
         foreach ($dbrecord as $field => $value) {
             if (property_exists('hotpot', $field)) {
                 $this->$field = $value;
@@ -465,7 +464,7 @@ class hotpot {
             $this->context = $context;
         }
         if (is_null($attempt)) {
-            // do nothing
+            // Do nothing.
         } else {
             $this->attempt = $attempt;
         }
@@ -484,7 +483,7 @@ class hotpot {
      * @param stdclass $course a row from the course table
      * @return hotpot the new hotpot object
      */
-    static public function create($dbrecord, $cm, $course, $context=null, $attempt=null) {
+    static public function create($dbrecord, $cm, $course, $context = null, $attempt = null) {
         return new hotpot($dbrecord, $cm, $course, $context, $attempt);
     }
 
@@ -511,7 +510,7 @@ class hotpot {
             self::NAVIGATION_FRAME    => get_string('navigation_frame', 'mod_hotpot'),
             self::NAVIGATION_EMBED    => get_string('navigation_embed', 'mod_hotpot'),
             self::NAVIGATION_ORIGINAL => get_string('navigation_original', 'mod_hotpot'),
-            self::NAVIGATION_NONE     => get_string('navigation_none', 'mod_hotpot')
+            self::NAVIGATION_NONE     => get_string('navigation_none', 'mod_hotpot'),
         );
     }
 
@@ -526,7 +525,7 @@ class hotpot {
             self::FEEDBACK_NONE        => get_string('none'),
             self::FEEDBACK_WEBPAGE     => get_string('feedbackwebpage',  'mod_hotpot'),
             self::FEEDBACK_FORMMAIL    => get_string('feedbackformmail', 'mod_hotpot'),
-            self::FEEDBACK_MOODLEFORUM => get_string('feedbackmoodleforum', 'mod_hotpot')
+            self::FEEDBACK_MOODLEFORUM => get_string('feedbackmoodleforum', 'mod_hotpot'),
         );
         if ($CFG->messaging) {
             $list[self::FEEDBACK_MOODLEMESSAGING] = get_string('feedbackmoodlemessaging', 'mod_hotpot');
@@ -540,10 +539,10 @@ class hotpot {
      * @return array
      */
     static public function available_mediafilters_list() {
-        $plugins = get_list_of_plugins('mod/hotpot/mediafilter'); // sorted
+        $plugins = get_list_of_plugins('mod/hotpot/mediafilter'); // Sorted.
 
         if (in_array('moodle', $plugins)) {
-            // make 'moodle' the first element in the plugins array
+            // Make 'moodle' the first element in the plugins array.
             unset($plugins[array_search('moodle', $plugins)]);
             array_unshift($plugins, 'moodle');
         }
@@ -551,7 +550,7 @@ class hotpot {
         // define element type for list of mediafilters (select, radio, checkbox)
         $options = array('' => get_string('none'));
         foreach ($plugins as $plugin) {
-            $options[$plugin] = get_string('mediafilter_'.$plugin, 'mod_hotpot');
+            $options[$plugin] = get_string('mediafilter_' . $plugin, 'mod_hotpot');
         }
         return $options;
     }
@@ -564,24 +563,24 @@ class hotpot {
     static public function available_outputformats_list($sourcetype) {
 
         $outputformats = array(
-            '0' => get_string('outputformat_best', 'mod_hotpot')
+            '0' => get_string('outputformat_best', 'mod_hotpot'),
         );
         if ($sourcetype) {
             $classes = self::get_classes('hotpotattempt', 'renderer.php', 'mod_', '_renderer');
             foreach ($classes as $class) {
-                // use call_user_func() to prevent syntax error in PHP 5.2.x
+                // Use call_user_func() to prevent syntax error in PHP 5.2.x.
                 $sourcetypes = call_user_func(array($class, 'sourcetypes'));
                 if (in_array($sourcetype, $sourcetypes)) {
-                    // strip prefix, "mod_hotpot_attempt_", and suffix, "_renderer"
+                    // Strip prefix, "mod_hotpot_attempt_", and suffix, "_renderer".
                     $outputformat = substr($class, 19, -9);
-                    $outputformats[$outputformat] = get_string('outputformat_'.$outputformat, 'mod_hotpot');
+                    $outputformats[$outputformat] = get_string('outputformat_' . $outputformat, 'mod_hotpot');
                 }
             }
             uksort($outputformats, array('hotpot', 'uksort_outputformats'));
 
-            // remove "best" if there is only one compatible output format
+            // Remove "best" if there is only one compatible output format
             // if (count($outputformats)==2) {
-            //     unset($outputformats[0]);
+            // unset($outputformats[0]);
             // }
         }
         return $outputformats;
@@ -609,7 +608,7 @@ class hotpot {
         $a_count = count($a);
         $b_count = count($b);
 
-        // special rules for comparing two "hp" classes
+        // Special rules for comparing two "hp" classes.
         $hp = ($a[0] == 'hp' && $b[0] == 'hp');
 
         $i = 0;
@@ -630,7 +629,7 @@ class hotpot {
             $i++;
         }
 
-        // For Jmatch/JMix, the drag-and-drop formats (v6/v7 plus) come first
+        // For Jmatch/JMix, the drag-and-drop formats (v6/v7 plus) come first.
         if ($hp && ($a[2] == 'jmatch' || $a[2] == 'jmix') && ($a[4] == 'v6' || $a[4] == 'v7')) {
             if ($a_count == 6 && $a[5] == 'plus') {
                 return -1;
@@ -659,7 +658,7 @@ class hotpot {
         $options = array(
             0 => get_string('attemptsunlimited', 'mod_hotpot'),
         );
-        for ($i=1; $i<=10; $i++) {
+        for ($i = 1; $i <= 10; $i++) {
             $options[$i] = "$i";
         }
         return $options;
@@ -689,7 +688,7 @@ class hotpot {
             self::STATUS_INPROGRESS => get_string('inprogress', 'mod_hotpot'),
             self::STATUS_TIMEDOUT   => get_string('timedout', 'mod_hotpot'),
             self::STATUS_ABANDONED  => get_string('abandoned', 'mod_hotpot'),
-            self::STATUS_COMPLETED  => get_string('completed', 'mod_hotpot')
+            self::STATUS_COMPLETED  => get_string('completed', 'mod_hotpot'),
         );
     }
 
@@ -703,7 +702,7 @@ class hotpot {
             self::TEXTSOURCE_FILE     => get_string('textsourcefile', 'mod_hotpot'),
             self::TEXTSOURCE_FILENAME => get_string('textsourcefilename', 'mod_hotpot'),
             self::TEXTSOURCE_FILEPATH => get_string('textsourcefilepath', 'mod_hotpot'),
-            self::TEXTSOURCE_SPECIFIC => get_string('textsourcespecific', 'mod_hotpot')
+            self::TEXTSOURCE_SPECIFIC => get_string('textsourcespecific', 'mod_hotpot'),
         );
     }
 
@@ -717,7 +716,7 @@ class hotpot {
             self::TEXTSOURCE_SPECIFIC => get_string('hotpotname', 'mod_hotpot'),
             self::TEXTSOURCE_FILE     => get_string('textsourcefile', 'mod_hotpot'),
             self::TEXTSOURCE_FILENAME => get_string('textsourcefilename', 'mod_hotpot'),
-            self::TEXTSOURCE_FILEPATH => get_string('textsourcefilepath', 'mod_hotpot')
+            self::TEXTSOURCE_FILEPATH => get_string('textsourcefilepath', 'mod_hotpot'),
         );
     }
 
@@ -728,7 +727,7 @@ class hotpot {
      */
     static public function available_gradeweightings_list() {
         $options = array();
-        for ($i=100; $i>=1; $i--) {
+        for ($i = 100; $i >= 1; $i--) {
             $options[$i] = $i;
         }
         $options[0] = get_string('nograde');
@@ -745,15 +744,15 @@ class hotpot {
         // include all the hotpot_source classes
         $classes = self::get_classes('hotpotsource');
 
-        // loop through the classes checking to see if this file is recognized
-        // use call_user_func() to prevent syntax error in PHP 5.2.x
+        // Loop through the classes checking to see if this file is recognized
+        // use call_user_func() to prevent syntax error in PHP 5.2.x.
         foreach ($classes as $class) {
             if (call_user_func(array($class, 'is_quizfile'), $sourcefile)) {
                 return call_user_func(array($class, 'get_type'), $class);
             }
         }
 
-        // file is not a recognized quiz type :-(
+        // File is not a recognized quiz type :-(.
         return '';
     }
 
@@ -784,13 +783,13 @@ class hotpot {
      * @param xxx $info
      * @return xxx
      */
-    static public function get_version_info($info)  {
+    static public function get_version_info($info) {
         global $CFG;
 
         static $plugin = null;
         if (is_null($plugin)) {
             $plugin = new stdClass();
-            require($CFG->dirroot.'/mod/hotpot/version.php');
+            require($CFG->dirroot . '/mod/hotpot/version.php');
         }
 
         if (isset($plugin->$info)) {
@@ -805,13 +804,13 @@ class hotpot {
     *
     * @param xxx $classname
     */
-   static public function load_mediafilter_filter($classname)  {
+   static public function load_mediafilter_filter($classname) {
         global $CFG;
-        $path = $CFG->dirroot.'/mod/hotpot/mediafilter/'.$classname.'/class.php';
+        $path = $CFG->dirroot . '/mod/hotpot/mediafilter/' . $classname . '/class.php';
 
-        // check the filter exists
+        // Check the filter exists.
         if (! file_exists($path)) {
-            debugging('hotpot mediafilter class is not accessible: '.$classname, DEBUG_DEVELOPER);
+            debugging('hotpot mediafilter class is not accessible: ' . $classname, DEBUG_DEVELOPER);
             return false;
         }
 
@@ -834,7 +833,7 @@ class hotpot {
      * @param xxx $context
      * @return xxx
      */
-    static public function text_editors_options($context)  {
+    static public function text_editors_options($context) {
         return array('subdirs' => 1, 'maxbytes' => 0, 'maxfiles' => EDITOR_UNLIMITED_FILES,
                      'changeformat' => 1, 'context' => $context, 'noclean' => 1, 'trusttext' => 0);
     }
@@ -854,16 +853,16 @@ class hotpot {
      * @param xxx $type
      * @return xxx
      */
-    static public function text_page_options($type)  {
-        if ($type=='entry') {
+    static public function text_page_options($type) {
+        if ($type == 'entry') {
             return array(
                 'title'         => self::ENTRYOPTIONS_TITLE,
                 'grading'       => self::ENTRYOPTIONS_GRADING,
                 'dates'         => self::ENTRYOPTIONS_DATES,
-                'attempts'      => self::ENTRYOPTIONS_ATTEMPTS
+                'attempts'      => self::ENTRYOPTIONS_ATTEMPTS,
             );
         }
-        if ($type=='exit') {
+        if ($type == 'exit') {
             return array(
                 'title'         => self::ENTRYOPTIONS_TITLE,
                 'encouragement' => self::EXITOPTIONS_ENCOURAGEMENT,
@@ -872,7 +871,7 @@ class hotpot {
                 'retry'         => self::EXITOPTIONS_RETRY,
                 'index'         => self::EXITOPTIONS_INDEX,
                 'course'        => self::EXITOPTIONS_COURSE,
-                'grades'        => self::EXITOPTIONS_GRADES
+                'grades'        => self::EXITOPTIONS_GRADES,
             );
         }
         return array();
@@ -885,17 +884,17 @@ class hotpot {
      */
     static public function reviewoptions_times_items() {
         return array(
-            array( // times
+            array( // Times.
                 'duringattempt' => self::REVIEW_DURINGATTEMPT,
                 'afterattempt'  => self::REVIEW_AFTERATTEMPT,
-                'afterclose'    => self::REVIEW_AFTERCLOSE
+                'afterclose'    => self::REVIEW_AFTERCLOSE,
             ),
-            array( // items
+            array( // Items.
                 'responses'     => self::REVIEW_RESPONSES,
                 'answers'       => self::REVIEW_ANSWERS,
                 'scores'        => self::REVIEW_SCORES,
-                'feedback'      => self::REVIEW_FEEDBACK
-            )
+                'feedback'      => self::REVIEW_FEEDBACK,
+            ),
         );
     }
 
@@ -906,27 +905,27 @@ class hotpot {
      */
     static public function user_preferences_fieldnames() {
         return array(
-            // fields used only when adding a new HotPot
-            'namesource','entrytextsource','exittextsource','quizchain',
+            // Fields used only when adding a new HotPot.
+            'namesource', 'entrytextsource', 'exittextsource', 'quizchain',
 
-            // source/config files
-            'sourcefile','sourcelocation','configfile','configlocation',
+            // Source/config files.
+            'sourcefile', 'sourcelocation', 'configfile', 'configlocation',
 
-            // entry/exit pages
-            'entrypage','entryformat','entryoptions',
-            'exitpage','exitformat','exitoptions',
-            'entrycm','entrygrade','exitcm','exitgrade',
+            // Entry/exit pages.
+            'entrypage', 'entryformat', 'entryoptions',
+            'exitpage', 'exitformat', 'exitoptions',
+            'entrycm', 'entrygrade', 'exitcm', 'exitgrade',
 
-            // display
-            'outputformat','navigation','title','stopbutton','stoptext','allowpaste',
-            'usefilters','useglossary','usemediafilter','studentfeedback','studentfeedbackurl',
+            // Display.
+            'outputformat', 'navigation', 'title', 'stopbutton', 'stoptext', 'allowpaste',
+            'usefilters', 'useglossary', 'usemediafilter', 'studentfeedback', 'studentfeedbackurl',
 
-            // access restrictions
-            'timeopen','timeclose','timelimit','delay1','delay2','delay3',
-            'password','subnet','reviewoptions','attemptlimit',
+            // Access restrictions.
+            'timeopen', 'timeclose', 'timelimit', 'delay1', 'delay2', 'delay3',
+            'password', 'subnet', 'reviewoptions', 'attemptlimit',
 
-            // grading and reporting
-            'grademethod','gradeweighting','clickreporting','discarddetails'
+            // Grading and reporting.
+            'grademethod', 'gradeweighting', 'clickreporting', 'discarddetails',
         );
     }
 
@@ -936,7 +935,7 @@ class hotpot {
      * @param xxx $field_value
      * @return xxx
      */
-    static public function string_ids($field_value, $max_field_length=255)  {
+    static public function string_ids($field_value, $max_field_length = 255) {
         $ids = array();
 
         $strings = explode(',', $field_value);
@@ -947,22 +946,21 @@ class hotpot {
         }
         $ids = implode(',', $ids);
 
-        // we have to make sure that the list of $ids is no longer
-        // than the maximum allowable length for this field
+        // We have to make sure that the list of $ids is no longer
+        // than the maximum allowable length for this field.
         if (strlen($ids) > $max_field_length) {
-
-            // truncate $ids just before last comma in allowable field length
+            // Truncate $ids just before last comma in allowable field length
             // Note: largest possible id is something like 9223372036854775808
-            //       so we must leave space for that in the $ids string
+            // so we must leave space for that in the $ids string.
             $ids = substr($ids, 0, $max_field_length - 20);
             $ids = substr($ids, 0, strrpos($ids, ','));
 
-            // create single $str(ing) containing all $strings not included in $ids
+            // Create single $str(ing) containing all $strings not included in $ids.
             $str = implode(',', array_slice($strings, substr_count($ids, ',') + 1));
 
-            // append the id of the string containing all the strings not yet in $ids
+            // Append the id of the string containing all the strings not yet in $ids.
             if ($id = self::string_id($str)) {
-                $ids .= ','.$id;
+                $ids .= ',' . $id;
             }
         }
 
@@ -976,29 +974,29 @@ class hotpot {
      * @param xxx $str
      * @return xxx
      */
-    static public function string_id($str)  {
+    static public function string_id($str) {
         global $DB;
 
-        if (! isset($str) || ! is_string($str) || trim($str)=='') {
-            // invalid input string
+        if (! isset($str) || ! is_string($str) || trim($str) == '') {
+            // Invalid input string.
             return false;
         }
 
-        // create md5 key
+        // Create md5 key.
         $md5key = md5($str);
 
-        if ($id = $DB->get_field('hotpot_strings', 'id', array('md5key'=>$md5key))) {
-            // string already exists
+        if ($id = $DB->get_field('hotpot_strings', 'id', array('md5key' => $md5key))) {
+            // String already exists.
             return $id;
         }
 
-        // create a new string record
-        $record = (object)array('string'=>$str, 'md5key'=>$md5key);
+        // Create a new string record.
+        $record = (object)array('string' => $str, 'md5key' => $md5key);
         if (! $id = $DB->insert_record('hotpot_strings', $record)) {
             throw new moodle_exception('error_insertrecord', 'hotpot', '', 'hotpot_strings');
         }
 
-        // new string was successfully added
+        // New string was successfully added.
         return $id;
     }
 
@@ -1008,10 +1006,10 @@ class hotpot {
      * @param xxx $ids
      * @return xxx
      */
-    static public function get_strings($ids)  {
+    static public function get_strings($ids) {
         global $DB;
 
-        // convert $ids to an array, if necessary
+        // Convert $ids to an array, if necessary.
         if (is_string($ids)) {
             $ids = explode(',', $ids);
             $ids = array_filter($ids);
@@ -1032,14 +1030,14 @@ class hotpot {
      * @param xxx $question
      * @return xxx
      */
-    static public function get_question_text($question)   {
+    static public function get_question_text($question) {
         global $DB;
 
         if (empty($question->text)) {
-            // JMatch, JMix and JQuiz
+            // JMatch, JMix and JQuiz.
             return $question->name;
         } else {
-            // JCloze and JCross
+            // JCloze and JCross.
             return $DB->get_field('hotpot_strings', 'string', array('id' => $question->text));
         }
     }
@@ -1051,17 +1049,17 @@ class hotpot {
     /**
      * @return moodle_url of this hotpot's view page
      */
-    public function view_url($cm=null) {
+    public function view_url($cm = null) {
         if (is_null($cm)) {
             $cm = $this->cm;
         }
-        return new moodle_url('/mod/'.$cm->modname.'/view.php', array('id' => $cm->id));
+        return new moodle_url('/mod/' . $cm->modname . '/view.php', array('id' => $cm->id));
     }
 
     /**
      * @return moodle_url of this hotpot's view page
      */
-    public function report_url($mode='', $cm=null) {
+    public function report_url($mode = '', $cm = null) {
         if (is_null($cm)) {
             $cm = $this->cm;
         }
@@ -1075,7 +1073,7 @@ class hotpot {
     /**
      * @return moodle_url of this hotpot's attempt page
      */
-    public function attempt_url($framename='', $cm=null) {
+    public function attempt_url($framename = '', $cm = null) {
         if (is_null($cm)) {
             $cm = $this->cm;
         }
@@ -1089,7 +1087,7 @@ class hotpot {
     /**
      * @return moodle_url of this hotpot's attempt page
      */
-    public function submit_url($attempt=null) {
+    public function submit_url($attempt = null) {
         if (is_null($attempt)) {
             $attempt = $this->attempt;
         }
@@ -1099,7 +1097,7 @@ class hotpot {
     /**
      * @return moodle_url of the review page for an attempt at this hotpot
      */
-    public function review_url($attempt=null) {
+    public function review_url($attempt = null) {
         if (is_null($attempt)) {
             $attempt = $this->attempt;
         }
@@ -1109,7 +1107,7 @@ class hotpot {
     /**
      * @return moodle_url of this course's hotpot index page
      */
-    public function index_url($course=null) {
+    public function index_url($course = null) {
         if (is_null($course)) {
             $course = $this->course;
         }
@@ -1119,21 +1117,21 @@ class hotpot {
     /**
      * @return moodle_url of this hotpot's course page
      */
-    public function course_url($course=null) {
+    public function course_url($course = null) {
         if (is_null($course)) {
             $course = $this->course;
         }
         $params = array('id' => $course->id);
         $sectionnum = 0;
         if (isset($course->coursedisplay) && defined('COURSE_DISPLAY_MULTIPAGE')) {
-            // Moodle >= 2.3
-            if ($course->coursedisplay==COURSE_DISPLAY_MULTIPAGE) {
+            // Moodle >= 2.3.
+            if ($course->coursedisplay == COURSE_DISPLAY_MULTIPAGE) {
                 $courseid = $course->id;
                 $sectionid = $this->cm->section;
                 if ($modinfo = get_fast_modinfo($this->course)) {
                     $sections = $modinfo->get_section_info_all();
                     foreach ($sections as $section) {
-                        if ($section->id==$sectionid) {
+                        if ($section->id == $sectionid) {
                             $sectionnum = $section->section;
                             break;
                         }
@@ -1151,7 +1149,7 @@ class hotpot {
     /**
      * @return moodle_url of this hotpot's course grade page
      */
-    public function grades_url($course=null) {
+    public function grades_url($course = null) {
         if (is_null($course)) {
             $course = $this->course;
         }
@@ -1164,7 +1162,7 @@ class hotpot {
     public function get_source() {
         global $CFG, $DB;
         if (empty($this->source)) {
-            // get sourcetype e.g. hp_6_jcloze_xml
+            // Get sourcetype e.g. hp_6_jcloze_xml.
             $sourcefile = $this->get_sourcefile();
             if (! $sourcetype = clean_param($this->sourcetype, PARAM_SAFEDIR)) {
                 if (! $sourcetype = hotpot::get_sourcetype($sourcefile)) {
@@ -1175,9 +1173,9 @@ class hotpot {
             }
 
             $dir = str_replace('_', '/', $sourcetype);
-            require_once($CFG->dirroot.'/mod/hotpot/source/'.$dir.'/class.php');
+            require_once($CFG->dirroot . '/mod/hotpot/source/' . $dir . '/class.php');
 
-            $classname = 'hotpot_source_'.$sourcetype;
+            $classname = 'hotpot_source_' . $sourcetype;
             $this->source = new $classname($sourcefile, $this);
         }
         return $this->source;
@@ -1193,7 +1191,7 @@ class hotpot {
         if (array_key_exists($this->grademethod, $options)) {
             return $options[$this->grademethod];
         } else {
-            return $this->grademethod; // shouldn't happen
+            return $this->grademethod; // Shouldn't happen.
         }
     }
 
@@ -1207,7 +1205,7 @@ class hotpot {
         if (array_key_exists($status, $options)) {
             return $options[$status];
         } else {
-            return $status; // shouldn't happen
+            return $status; // Shouldn't happen.
         }
     }
 
@@ -1219,8 +1217,8 @@ class hotpot {
      * @param string $notime return value if $time==0
      * @return string
      */
-    static public function format_time($time, $format=null, $notime='&nbsp;') {
-        if ($time>0) {
+    static public function format_time($time, $format = null, $notime = '&nbsp;') {
+        if ($time > 0) {
             return format_time($time, $format);
         } else {
             return $notime;
@@ -1234,7 +1232,7 @@ class hotpot {
      * @param string $noscore return value if $record->score is not set
      * @return string
      */
-    static function format_score($record, $default='&nbsp;') {
+    public static function format_score($record, $default = '&nbsp;') {
         if (isset($record->score)) {
             return $record->score;
         } else {
@@ -1255,18 +1253,18 @@ class hotpot {
         $filepath = dirname($this->sourcefile);
 
         // require leading and trailing slash on $filepath
-        if (substr($filepath, 0, 1)=='/' && substr($filepath, -1)=='/') {
-            // do nothing - $filepath is valid
+        if (substr($filepath, 0, 1) == '/' && substr($filepath, -1) == '/') {
+            // Do nothing - $filepath is valid.
         } else {
-            // fix filepath - shouldn't happen !!
-            // maybe leftover from a messy upgrade
-            if ($filepath=='.' || $filepath=='') {
+            // Fix filepath - shouldn't happen !!
+            // maybe leftover from a messy upgrade.
+            if ($filepath == '.' || $filepath == '') {
                 $filepath = '/';
             } else {
-                $filepath = '/'.ltrim($filepath, '/');
-                $filepath = rtrim($filepath, '/').'/';
+                $filepath = '/' . ltrim($filepath, '/');
+                $filepath = rtrim($filepath, '/') . '/';
             }
-            $this->sourcefile = $filepath.$filename;
+            $this->sourcefile = $filepath . $filename;
             $DB->set_field('hotpot', 'sourcefile', $this->sourcefile, array('id' => $this->id));
         }
 
@@ -1274,34 +1272,34 @@ class hotpot {
             return $file;
         }
 
-        // the source file is missing, probably this HotPot
+        // The source file is missing, probably this HotPot
         // has recently been upgraded/imported from Moodle 1.9
-        // so we are going to try to create the missing stored file
+        // so we are going to try to create the missing stored file.
 
         $file_record = array(
-            'contextid'=>$this->context->id, 'component'=>'mod_hotpot', 'filearea'=>'sourcefile',
-            'sortorder'=>1, 'itemid'=>0, 'filepath'=>$filepath, 'filename'=>$filename
+            'contextid' => $this->context->id, 'component' => 'mod_hotpot', 'filearea' => 'sourcefile',
+            'sortorder' => 1, 'itemid' => 0, 'filepath' => $filepath, 'filename' => $filename,
         );
 
         $coursecontext  = hotpot_get_context(CONTEXT_COURSE, $this->course->id);
-        $filehash = sha1('/'.$coursecontext->id.'/course/legacy/0'.$filepath.$filename);
+        $filehash = sha1('/' . $coursecontext->id . '/course/legacy/0' . $filepath . $filename);
 
         if ($file = $fs->get_file_by_hash($filehash)) {
-            // file exists in legacy course files
+            // File exists in legacy course files.
             if ($file = $fs->create_file_from_storedfile($file_record, $file)) {
                 return $file;
             }
         }
 
-        $oldfilepath = $CFG->dataroot.'/'.$this->course->id.$filepath.$filename;
+        $oldfilepath = $CFG->dataroot . '/' . $this->course->id . $filepath . $filename;
         if (file_exists($oldfilepath)) {
-            // file exists on server's filesystem
+            // File exists on server's filesystem.
             if ($file = $fs->create_file_from_pathname($file_record, $oldfilepath)) {
                 return $file;
             }
         }
 
-        // source file not found - shouldn't happen !!
+        // Source file not found - shouldn't happen !!
         throw new moodle_exception('sourcefilenotfound', 'hotpot', '', $this->sourcefile);
     }
 
@@ -1319,7 +1317,7 @@ class hotpot {
         if ($source = $this->get_source()) {
             return $source->get_best_outputformat();
         }
-        return ''; // shouldn't happen !!
+        return ''; // Shouldn't happen !!
     }
 
     /**
@@ -1327,7 +1325,7 @@ class hotpot {
      *
      * @return xxx
      */
-    function can_attempt() {
+    public function can_attempt() {
         if (is_null($this->canattempt)) {
             $this->canattempt = has_capability('mod/hotpot:attempt', $this->context);
         }
@@ -1339,7 +1337,7 @@ class hotpot {
      *
      * @return xxx
      */
-    function can_deleteattempts() {
+    public function can_deleteattempts() {
         return $this->can_deletemyattempts() || $this->can_deleteallattempts();
     }
 
@@ -1348,7 +1346,7 @@ class hotpot {
      *
      * @return xxx
      */
-    function can_deleteallattempts() {
+    public function can_deleteallattempts() {
         if (is_null($this->candeleteallattempts)) {
             $this->candeleteallattempts = has_capability('mod/hotpot:deleteallattempts', $this->context);
         }
@@ -1360,7 +1358,7 @@ class hotpot {
      *
      * @return xxx
      */
-    function can_deletemyattempts() {
+    public function can_deletemyattempts() {
         if (is_null($this->candeletemyattempts)) {
             $this->candeletemyattempts = has_capability('mod/hotpot:deletemyattempts', $this->context);
         }
@@ -1372,7 +1370,7 @@ class hotpot {
      *
      * @return xxx
      */
-    function can_manage() {
+    public function can_manage() {
         if (is_null($this->canmanage)) {
             $this->canmanage = has_capability('mod/hotpot:manage', $this->context);
         }
@@ -1384,7 +1382,7 @@ class hotpot {
      *
      * @return xxx
      */
-    function can_preview() {
+    public function can_preview() {
         if (is_null($this->canpreview)) {
             $this->canpreview = has_capability('mod/hotpot:preview', $this->context);
         }
@@ -1396,7 +1394,7 @@ class hotpot {
      *
      * @return xxx
      */
-    function can_reviewattempts() {
+    public function can_reviewattempts() {
         return $this->can_reviewmyattempts() || $this->can_reviewallattempts();
     }
 
@@ -1405,7 +1403,7 @@ class hotpot {
      *
      * @return xxx
      */
-    function can_reviewallattempts() {
+    public function can_reviewallattempts() {
         if (is_null($this->canreviewallattempts)) {
             $this->canreviewallattempts = has_capability('mod/hotpot:reviewallattempts', $this->context);
         }
@@ -1417,7 +1415,7 @@ class hotpot {
      *
      * @return xxx
      */
-    function can_reviewmyattempts() {
+    public function can_reviewmyattempts() {
         if (is_null($this->canreviewmyattempts)) {
             $this->canreviewmyattempts = has_capability('mod/hotpot:reviewmyattempts', $this->context);
         }
@@ -1430,14 +1428,14 @@ class hotpot {
      * @param object $attempt (optional, default=null) record from "hotpot_attempts" table
      * @return integer $reviewoptions currently available for this user at this attempt
      */
-    function can_reviewhotpot() {
+    public function can_reviewhotpot() {
         if ($this->can_reviewallattempts()) {
-            // teacher can view always review everything
+            // Teacher can view always review everything.
             return (self::REVIEW_DURINGATTEMPT | self::REVIEW_AFTERATTEMPT | self::REVIEW_AFTERCLOSE);
         }
         if ($this->can_reviewmyattempts()) {
             if ($this->timeclose && $this->timeclose > $this->time) {
-                // quiz is still open
+                // Quiz is still open.
                 if ($reviewoptions = ($this->reviewoptions & self::REVIEW_DURINGATTEMPT)) {
                     return $reviewoptions;
                 }
@@ -1445,7 +1443,7 @@ class hotpot {
                     return $reviewoptions;
                 }
             } else {
-                // quiz is already closed
+                // Quiz is already closed.
                 if ($reviewoptions = $this->reviewoptions & self::REVIEW_AFTERCLOSE) {
                     return $reviewoptions;
                 }
@@ -1460,10 +1458,10 @@ class hotpot {
      * @param object $attempt (optional, default=null) record from "hotpot_attempts" table
      * @return integer $reviewoptions currently available for this user at this attempt
      */
-    function can_reviewattempt($attempt=null) {
+    public function can_reviewattempt($attempt = null) {
         global $USER;
         if ($this->can_reviewattempts()) {
-            if ($attempt===null && isset($this->attempt)) {
+            if ($attempt === null && isset($this->attempt)) {
                 $attempt = $this->attempt;
             }
             if ($attempt) {
@@ -1472,28 +1470,28 @@ class hotpot {
                     return 0;
                 }
                 if ($reviewoptions = ($this->reviewoptions & self::REVIEW_DURINGATTEMPT)) {
-                    // during attempt
-                    if ($attempt->status==self::STATUS_INPROGRESS) {
+                    // During attempt.
+                    if ($attempt->status == self::STATUS_INPROGRESS) {
                         return $reviewoptions;
                     }
                 }
                 if ($reviewoptions = ($this->reviewoptions & self::REVIEW_AFTERATTEMPT)) {
                     // after attempt (but before quiz closes)
-                    if ($attempt->status==self::STATUS_COMPLETED) {
+                    if ($attempt->status == self::STATUS_COMPLETED) {
                         return $reviewoptions;
                     }
-                    if ($attempt->status==self::STATUS_ABANDONED) {
+                    if ($attempt->status == self::STATUS_ABANDONED) {
                         return $reviewoptions;
                     }
-                    if ($attempt->status==self::STATUS_TIMEDOUT) {
+                    if ($attempt->status == self::STATUS_TIMEDOUT) {
                         return $reviewoptions;
                     }
-                    if ($attempt->status==self::STATUS_INPROGRESS) {
+                    if ($attempt->status == self::STATUS_INPROGRESS) {
                         return $reviewoptions;
                     }
                 }
                 if ($reviewoptions = ($this->reviewoptions & self::REVIEW_AFTERCLOSE)) {
-                    // after the quiz closes
+                    // After the quiz closes.
                     if ($this->timeclose < $this->time) {
                         return $reviewoptions;
                     }
@@ -1509,7 +1507,7 @@ class hotpot {
      *
      * @return xxx
      */
-     function can_view() {
+     public function can_view() {
         if (is_null($this->canview)) {
             $this->canview = has_capability('mod/hotpot:view', $this->context);
         }
@@ -1522,10 +1520,10 @@ class hotpot {
      * @param xxx $canstart (optional, default=null)
      * @return xxx
      */
-    function can_start($canstart=null)  {
+    public function can_start($canstart = null) {
         if (is_null($canstart)) {
             if (is_null($this->canstart)) {
-                // set automatically
+                // Set automatically.
                 if (has_capability('mod/hotpot:preview', $this->context)) {
                     $this->canstart = true;
                 } else if (! $this->can_attempt()) {
@@ -1542,14 +1540,14 @@ class hotpot {
                     $this->canstart = false;
                 } else if ($this->require_moreattempts(true)) {
                     $this->canstart = false;
-                } else { // no errors so far
+                } else { // No errors so far.
                     $this->canstart = true;
                 }
             }
-            // get
+            // Get.
             return $this->canstart;
         } else {
-            // set manually
+            // Set manually.
             $this->canstart = $canstart;
         }
     }
@@ -1561,9 +1559,9 @@ class hotpot {
      */
     public function get_attempt_renderer_subtype() {
         if ($outputformat = $this->get_outputformat()) {
-            return 'attempt_'.$outputformat;
+            return 'attempt_' . $outputformat;
         } else {
-            return ''; // shouldn't happen !!
+            return ''; // Shouldn't happen !!
         }
     }
 
@@ -1572,11 +1570,10 @@ class hotpot {
      *
      * @param xxx $PAGE
      */
-    public function set_preferred_pagelayout($PAGE)  {
-        // page layouts are defined in theme/xxx/config.php
+    public function set_preferred_pagelayout($PAGE) {
+        // Page layouts are defined in theme/xxx/config.php.
 
         switch ($this->navigation) {
-
             case self::NAVIGATION_ORIGINAL:
             case self::NAVIGATION_NONE:
                 // $PAGE->set_pagelayout('popup');
@@ -1586,16 +1583,16 @@ class hotpot {
             case self::NAVIGATION_FRAME:
             case self::NAVIGATION_EMBED:
                 $framename = optional_param('framename', '', PARAM_ALPHA);
-                if ($framename=='top') {
+                if ($framename == 'top') {
                     $PAGE->set_pagelayout('frametop');
                 }
-                if ($framename=='main') {
+                if ($framename == 'main') {
                     $PAGE->set_pagelayout('embedded');
                 }
                 break;
 
             case self::NAVIGATION_TOPBAR:
-                $PAGE->set_pagelayout('login'); // no nav menu
+                $PAGE->set_pagelayout('login'); // No nav menu.
                 break;
         }
     }
@@ -1614,7 +1611,7 @@ class hotpot {
             }
             $stdclass->$name = $value;
         }
-        // extra fields required for grades
+        // Extra fields required for grades.
         if (isset($this->course) && is_object($this->course)) {
             $stdclass->course = $this->course->id;
         }
@@ -1632,10 +1629,10 @@ class hotpot {
      * @return string $subtype
      */
     public function get_report_renderer_subtype($mode) {
-        if ($mode=='') {
+        if ($mode == '') {
             $mode = 'overview';
         }
-        return 'report_'.$mode;
+        return 'report_' . $mode;
     }
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -1648,49 +1645,48 @@ class hotpot {
      *
      * @param string $plugintype one of the plugintypes specified in mod/hotpot/db/subplugins.php
      */
-    static public function get_classes($plugintype, $classfilename='class.php', $prefix='', $suffix='') {
+    static public function get_classes($plugintype, $classfilename = 'class.php', $prefix = '', $suffix = '') {
         global $CFG;
 
-        // initialize array to hold class names
+        // Initialize array to hold class names.
         $classes = array();
 
-        // get list of all subplugins
+        // Get list of all subplugins.
         $subplugins = array();
-        include($CFG->dirroot.'/mod/hotpot/db/subplugins.php');
+        include($CFG->dirroot . '/mod/hotpot/db/subplugins.php');
 
-        // extract the $plugintype we are interested in
+        // Extract the $plugintype we are interested in.
         $types = array();
         if (isset($subplugins[$plugintype])) {
             $types[$plugintype] = $subplugins[$plugintype];
         }
         unset($subplugins);
 
-        // we are not interested in these directories
+        // We are not interested in these directories.
         $ignored = array('CVS', '_vti_cnf', 'simpletest', 'db', 'yui', 'phpunit');
 
-        // get all the subplugins for this $plugintype
+        // Get all the subplugins for this $plugintype.
         reset($types);
         while ($type = key($types)) {
             $dir = current($types);
-            $fulldir = $CFG->dirroot.'/'.$dir;
-            if (is_dir($fulldir) && file_exists($fulldir.'/'.$classfilename)) {
-
+            $fulldir = $CFG->dirroot . '/' . $dir;
+            if (is_dir($fulldir) && file_exists($fulldir . '/' . $classfilename)) {
                 // include the class
-                require_once($fulldir.'/'.$classfilename);
+                require_once($fulldir . '/' . $classfilename);
 
-                // extract class name, e.g. hotpot_source_hp_6_jcloze_xml
+                // Extract class name, e.g. hotpot_source_hp_6_jcloze_xml
                 // from $subdir, e.g. mod/hotpot/file/h6/6/jcloze/xml
-                // by removing leading "mod/" and converting all "/" to "_"
-                $classes[] = $prefix.str_replace('/', '_', substr($dir, 4)).$suffix;
+                // by removing leading "mod/" and converting all "/" to "_".
+                $classes[] = $prefix . str_replace('/', '_', substr($dir, 4)) . $suffix;
 
-                // get subplugins in this $dir
+                // Get subplugins in this $dir.
                 $items = new DirectoryIterator($fulldir);
                 foreach ($items as $item) {
-                    if (substr($item, 0, 1)=='.' || in_array($item, $ignored)) {
+                    if (substr($item, 0, 1) == '.' || in_array($item, $ignored)) {
                         continue;
                     }
                     if ($item->isDir()) {
-                        $types[$type.$item] = $dir.'/'.$item;
+                        $types[$type . $item] = $dir . '/' . $item;
                     }
                 }
             }
@@ -1705,7 +1701,7 @@ class hotpot {
      *
      * @return xxx
      */
-    function get_report_modes() {
+    public function get_report_modes() {
         $modes = array('overview', 'scores', 'responses', 'analysis');
         if ($this->clickreporting) {
             $modes[] = 'clicktrail';
@@ -1722,11 +1718,10 @@ class hotpot {
      *
      * @return int the id of the newly created attempt record
      */
-    function create_attempt() {
+    public function create_attempt() {
         global $DB, $USER;
         if (empty($this->attempt)) {
-
-            // get max attempt number so far
+            // Get max attempt number so far.
             $sql = "SELECT MAX(attempt) FROM {hotpot_attempts} WHERE hotpotid = ? AND userid = ?";
             if ($max_attempt = $DB->get_field_sql($sql, array($this->id, $USER->id))) {
                 $max_attempt ++;
@@ -1734,7 +1729,7 @@ class hotpot {
                 $max_attempt = 1;
             }
 
-            // create attempt record
+            // Create attempt record.
             $this->attempt = new stdClass();
             $this->attempt->hotpotid       = $this->id;
             $this->attempt->userid         = $USER->id;
@@ -1749,12 +1744,12 @@ class hotpot {
             $this->attempt->clickreportid  = 0;
             $this->attempt->timemodified   = $this->time;
 
-            // insert attempt record into database
+            // Insert attempt record into database.
             if (! $this->attempt->id = $DB->insert_record('hotpot_attempts', $this->attempt)) {
                 throw new moodle_exception('error_insertrecord', 'hotpot', '', 'hotpot_attempts');
             }
 
-            // set previous "in progress" attempt(s) to adandoned
+            // Set previous "in progress" attempt(s) to adandoned.
             $select = 'hotpotid = ? AND userid = ? AND attempt < ? AND status = ?';
             $params = array($this->id, $USER->id, $max_attempt, self::STATUS_INPROGRESS);
             if ($attempts = $DB->get_records_select('hotpot_attempts', $select, $params)) {
@@ -1764,7 +1759,6 @@ class hotpot {
                     $DB->update_record('hotpot_attempts', $attempt);
                 }
             }
-
         }
         return $this->attempt->id;
     }
@@ -1791,7 +1785,7 @@ class hotpot {
      * @param int $userid (optional, default=0)
      * @return xxx
      */
-    public function get_attempts($selected=null, $userid=0)  {
+    public function get_attempts($selected = null, $userid = 0) {
         global $DB, $USER;
 
         if (is_null($selected)) {
@@ -1830,28 +1824,28 @@ class hotpot {
      *
      * @param xxx $selected
      */
-    public function delete_attempts($selected, $onlymyattempts=true) {
+    public function delete_attempts($selected, $onlymyattempts = true) {
         global $DB, $USER;
 
         if ($this->can_deleteallattempts()) {
-            $userid = 0; // i.e. any user
+            $userid = 0; // I.e. any user.
         } else if ($this->can_deletemyattempts()) {
             $userid = $USER->id;
             $onlymyattempts = true;
         } else {
-            return; // user is not allowed to delete attempts
+            return; // User is not allowed to delete attempts.
         }
 
         if ($onlymyattempts) {
-            // get attempts for this user only
+            // Get attempts for this user only.
             $this->get_attempts();
         } else {
-            // get attempts for any users
+            // Get attempts for any users.
             $this->get_attempts($selected, $userid);
         }
 
         if (empty($selected) || ! $this->attempts) {
-            return; // nothing to do
+            return; // Nothing to do.
         }
 
         $ids = array();
@@ -1859,7 +1853,7 @@ class hotpot {
         foreach ($selected as $id => $delete) {
             if ($delete && array_key_exists($id, $this->attempts)) {
                 $userid = $this->attempts[$id]->userid;
-                if ($this->can_deleteallattempts() || ($this->can_deletemyattempts() && $userid==$USER->id)) {
+                if ($this->can_deleteallattempts() || ($this->can_deletemyattempts() && $userid == $USER->id)) {
                     $ids[] = $id;
                     $userids[$userid] = true;
                     unset($this->attempts[$id]);
@@ -1886,7 +1880,7 @@ class hotpot {
      *
      * @return xxx
      */
-    function require_access()  {
+    public function require_access() {
         if (! $error = $this->require_subnet()) {
             if (! $error = $this->require_password()) {
                 $error = false;
@@ -1900,14 +1894,14 @@ class hotpot {
      *
      * @return xxx
      */
-    function require_subnet()  {
+    public function require_subnet() {
         if (! $this->subnet) {
             return false;
         }
         if (address_in_subnet(getremoteaddr(), $this->subnet)) {
             return false;
         }
-        // user's IP address is missing or does not match required subnet mask
+        // User's IP address is missing or does not match required subnet mask.
         return self::get_quiz_string('subnetwrong', 'quizaccess_ipaddress');
     }
 
@@ -1921,11 +1915,11 @@ class hotpot {
      * @param string $component where the string is in Moodle >= 2.2
      * @return string
      */
-    static public function get_quiz_string($name, $component)  {
+    static public function get_quiz_string($name, $component) {
         if (get_string_manager()->string_exists($name, $component)) {
-            return get_string($name, $component); // Moodle >= 2.2
+            return get_string($name, $component); // Moodle >= 2.2.
         }
-        return get_string($name, 'quiz'); // Moodle <= 2.1
+        return get_string($name, 'quiz'); // Moodle <= 2.1.
     }
 
     /**
@@ -1933,22 +1927,19 @@ class hotpot {
      *
      * @return xxx
      */
-    function require_password()  {
+    public function require_password() {
         global $SESSION;
         $error = '';
 
-        // does this hotpot require a password?
+        // Does this hotpot require a password?
         if ($this->password) {
-
-            // has password not already been given?
+            // Has password not already been given?
             if (empty($SESSION->hotpot_passwordchecked[$this->id])) {
-
-                // get password, if any, that was entered
+                // Get password, if any, that was entered
                 // (strcmp returns 0 if strings are identical)
                 $password = optional_param('hotpotpassword', '', PARAM_RAW);
                 if (strcmp($this->password, $password)) {
-
-                    // password is missing or invalid
+                    // Password is missing or invalid.
 
                     if ($this->entrypage) {
                         $url = $this->view_url();
@@ -1956,20 +1947,20 @@ class hotpot {
                         $url = $this->attempt_url();
                     }
                     $error = self::get_quiz_string('requirepasswordmessage', 'quizaccess_password');
-                    $error .= html_writer::start_tag('form', array('id'=>'hotpotpasswordform', 'method'=>'post', 'action'=>$url));
+                    $error .= html_writer::start_tag('form', array('id' => 'hotpotpasswordform', 'method' => 'post', 'action' => $url));
                     $error .= html_writer::start_tag('fieldset');
-                    $error .= html_writer::tag('b', get_string('password')).' ';
-                    $error .= html_writer::empty_tag('input', array('name'=>'hotpotpassword', 'type'=>'password', 'value'=>$password)).' ';
-                    $error .= html_writer::empty_tag('input', array('type'=>'submit', 'value'=>get_string('ok')));
+                    $error .= html_writer::tag('b', get_string('password')) . ' ';
+                    $error .= html_writer::empty_tag('input', array('name' => 'hotpotpassword', 'type' => 'password', 'value' => $password)) . ' ';
+                    $error .= html_writer::empty_tag('input', array('type' => 'submit', 'value' => get_string('ok')));
                     if ($password) {
-                        // previously entered password was invalid
+                        // Previously entered password was invalid.
                         $error .= html_writer::empty_tag('br');
                         $error .= self::get_quiz_string('passworderror', 'quizaccess_password');
                     }
                     $error .= html_writer::end_tag('fieldset');
-                    $error .= html_writer::end_tag('form')."\n";
+                    $error .= html_writer::end_tag('form') . "\n";
                 } else {
-                    // newly entered password was correct
+                    // Newly entered password was correct.
                     if (empty($SESSION->hotpot_passwordchecked)) {
                         $SESSION->hotpot_passwordchecked = array();
                     }
@@ -1991,7 +1982,7 @@ class hotpot {
      */
     public function require_isopen() {
         if ($this->timeopen && $this->timeopen > $this->time) {
-            // unit/quiz is not yet open
+            // Unit/quiz is not yet open.
             return get_string('notavailable', 'mod_hotpot', userdate($this->timeopen));
         }
         return false;
@@ -2004,7 +1995,7 @@ class hotpot {
      */
     public function require_notclosed() {
         if ($this->timeclose && $this->timeclose < $this->time) {
-            // unit/quiz is already closed
+            // Unit/quiz is already closed.
             return get_string('closed', 'mod_hotpot', userdate($this->timeclose));
         }
         return false;
@@ -2017,39 +2008,39 @@ class hotpot {
      */
     public function require_entrycm() {
         global $CFG, $DB, $USER;
-        require_once($CFG->dirroot.'/lib/gradelib.php');
+        require_once($CFG->dirroot . '/lib/gradelib.php');
 
         if (! $cm = $this->get_cm('entry')) {
             return false;
         }
 
-        // set up url to view this activity
-        $href = new moodle_url('/mod/'.$cm->modname.'/view.php', array('id' => $cm->id));
+        // Set up url to view this activity.
+        $href = new moodle_url('/mod/' . $cm->modname . '/view.php', array('id' => $cm->id));
 
         if ($this->entrygrade) {
             if ($grades = grade_get_grades($cm->course, 'mod', $cm->modname, $cm->instance, $USER->id)) {
                 $grade = 0;
                 if (isset($grades->items[0]) && $grades->items[0]->grademax > 0) {
-                    // this activity has a grade item
+                    // This activity has a grade item.
                     if (isset($grades->items[0]->grades[$USER->id])) {
                         $grade = $grades->items[0]->grades[$USER->id]->grade;
                     } else {
                         $grade = 0;
                     }
                     if ($grade < $this->entrygrade) {
-                        // either this user has not attempted the entry activity
-                        // or their grade so far on the entry activity is too low
+                        // Either this user has not attempted the entry activity
+                        // or their grade so far on the entry activity is too low.
                         $a = (object)array(
                             'usergrade' => intval($grade),
                             'entrygrade' => $this->entrygrade,
-                            'entryactivity' => html_writer::tag('a', format_string(urldecode($cm->name)), array('href' => $href))
+                            'entryactivity' => html_writer::tag('a', format_string(urldecode($cm->name)), array('href' => $href)),
                         );
                         return get_string('entrygradewarning', 'mod_hotpot', $a);
                     }
                 }
             }
         } else {
-            // no grade, so test for "completion"
+            // No grade, so test for "completion".
             switch ($cm->modname) {
                 case 'resource':
                     $table = 'log';
@@ -2067,7 +2058,7 @@ class hotpot {
                     $params = array();
             }
             if ($table && $select && ! $DB->record_exists_select($table, $select, $params)) {
-                // user has not viewed or completed this activity yet
+                // User has not viewed or completed this activity yet.
                 $a = html_writer::tag('a', format_string(urldecode($cm->name)), array('href' => $href->out()));
                 return get_string('entrycompletionwarning', 'mod_hotpot', $a);
             }
@@ -2081,8 +2072,8 @@ class hotpot {
      *
      * @return xxx
      */
-    function require_exitgrade() {
-        if ($this->exitcm==0 || $this->exitgrade==0 || empty($this->attempt)) {
+    public function require_exitgrade() {
+        if ($this->exitcm == 0 || $this->exitgrade == 0 || empty($this->attempt)) {
             return false;
         } else {
             return true;
@@ -2095,7 +2086,7 @@ class hotpot {
      * @param xxx $delay
      * @return xxx
      */
-    public function require_delay($delay)  {
+    public function require_delay($delay) {
         if (! $this->$delay) {
             return false;
         }
@@ -2104,10 +2095,10 @@ class hotpot {
             return false;
         }
 
-        // check to see if we require a delay or not
+        // Check to see if we require a delay or not.
         switch ($delay) {
-            case 'delay1': $require_delay = ($countattempts==1); break;
-            case 'delay2': $require_delay = ($countattempts>=2); break;
+            case 'delay1': $require_delay = ($countattempts == 1); break;
+            case 'delay2': $require_delay = ($countattempts >= 2); break;
             default: $require_delay = false;
         }
 
@@ -2115,7 +2106,7 @@ class hotpot {
             return false;
         }
 
-        // get most recent attempt
+        // Get most recent attempt.
         $lastattempt = reset($this->attempts);
 
         $nextattempttime = $lastattempt->timemodified + ($this->$delay);
@@ -2125,7 +2116,7 @@ class hotpot {
         } else {
             // $delay has not expired yet
             $time = html_writer::tag('strong', userdate($nextattempttime));
-            return get_string('temporaryblocked', 'quiz').' '.$time;
+            return get_string('temporaryblocked', 'quiz') . ' ' . $time;
         }
 
     }
@@ -2136,7 +2127,7 @@ class hotpot {
      * @param xxx $shorterror (optional, default=false)
      * @return xxx
      */
-    public function require_moreattempts($shorterror=false)  {
+    public function require_moreattempts($shorterror = false) {
         if (! $this->attemptlimit) {
             return false;
         }
@@ -2149,13 +2140,13 @@ class hotpot {
             return false;
         }
 
-        // maximum number of unit/quiz attempts reached
+        // Maximum number of unit/quiz attempts reached.
         if ($shorterror) {
             return get_string('nomoreattempts', 'mod_hotpot');
         } else {
             $attemptlimitstr = hotpot_textlib('moodle_strtolower', get_string('attemptlimit', 'mod_hotpot'));
-            $msg = html_writer::tag('b', format_string($this->name))." ($attemptlimitstr = $this->attemptlimit)";
-            return html_writer::tag('p', get_string('nomoreattempts', 'mod_hotpot')).html_writer::tag('p', $msg);
+            $msg = html_writer::tag('b', format_string($this->name)) . " ($attemptlimitstr = $this->attemptlimit)";
+            return html_writer::tag('p', get_string('nomoreattempts', 'mod_hotpot')) . html_writer::tag('p', $msg);
         }
     }
 
@@ -2165,55 +2156,55 @@ class hotpot {
      * @param xxx $type
      * @return xxx
      */
-    public function get_cm($type)  {
-        // gets the next, previous or specific Moodle activity
+    public function get_cm($type) {
+        // Gets the next, previous or specific Moodle activity.
 
-        // get entry/exit cm id
-        $cm_field = $type.'cm';
+        // Get entry/exit cm id.
+        $cm_field = $type . 'cm';
         $cmid = $this->$cm_field;
 
-        if ($cmid==self::ACTIVITY_NONE) {
+        if ($cmid == self::ACTIVITY_NONE) {
             return false;
         }
 
         if (! $modinfo = get_fast_modinfo($this->course)) {
-            return false; // no modinfo - shouldn't happen !!
+            return false; // No modinfo - shouldn't happen !!
         }
 
         if (method_exists($modinfo, 'get_cm')) {
             if (! $modinfo->get_cm($this->cm->id)) {
-                return false; // target cm not found - shouldn't happen !!
+                return false; // Target cm not found - shouldn't happen !!
             }
         } else {
             if (! isset($modinfo->cms[$this->cm->id])) {
-                return false; // target cm not found - shouldn't happen !!
+                return false; // Target cm not found - shouldn't happen !!
             }
         }
 
-        // set default search values
+        // Set default search values.
         $id = 0;
         $modname = '';
         $sectionnum = -1;
 
-        // restrict search values
-        if ($cmid>0) {
+        // Restrict search values.
+        if ($cmid > 0) {
             $id = $cmid;
         } else {
-            if ($cmid==self::ACTIVITY_COURSE_HOTPOT || $cmid==self::ACTIVITY_SECTION_HOTPOT) {
+            if ($cmid == self::ACTIVITY_COURSE_HOTPOT || $cmid == self::ACTIVITY_SECTION_HOTPOT) {
                 $modname = 'hotpot';
             }
-            if ($cmid==self::ACTIVITY_SECTION_ANY || $cmid==self::ACTIVITY_SECTION_HOTPOT) {
+            if ($cmid == self::ACTIVITY_SECTION_ANY || $cmid == self::ACTIVITY_SECTION_HOTPOT) {
                 $sectionnum = $modinfo->get_cm($this->cm->id)->sectionnum;
             }
         }
 
         // get cm ids (reverse order if necessary)
         $cmids = array_keys($modinfo->cms);
-        if ($type=='entry') {
+        if ($type == 'entry') {
             $cmids = array_reverse($cmids);
         }
 
-        // search for next, previous or specific course module
+        // Search for next, previous or specific course module.
         $found = false;
         foreach ($cmids as $cmid) {
             if (method_exists($modinfo, 'get_cm')) {
@@ -2221,54 +2212,54 @@ class hotpot {
             } else {
                 $cm = $modinfo->cms[$cmid];
             }
-            if ($id && $cm->id!=$id) {
-                continue; // wrong activity
+            if ($id && $cm->id != $id) {
+                continue; // Wrong activity.
             }
-            if ($sectionnum>=0) {
-                if ($type=='entry') {
-                    if ($cm->sectionnum>$sectionnum) {
-                        continue; // later section
+            if ($sectionnum >= 0) {
+                if ($type == 'entry') {
+                    if ($cm->sectionnum > $sectionnum) {
+                        continue; // Later section.
                     }
-                    if ($cm->sectionnum<$sectionnum) {
-                        return false; // previous section
+                    if ($cm->sectionnum < $sectionnum) {
+                        return false; // Previous section.
                     }
                 } else { // exit (=next)
-                    if ($cm->sectionnum<$sectionnum) {
-                        continue; // earlier section
+                    if ($cm->sectionnum < $sectionnum) {
+                        continue; // Earlier section.
                     }
-                    if ($cm->sectionnum>$sectionnum) {
-                        return false; // later section
+                    if ($cm->sectionnum > $sectionnum) {
+                        return false; // Later section.
                     }
                 }
             }
-            if ($modname && $cm->modname!=$modname) {
-                continue; // wrong module
+            if ($modname && $cm->modname != $modname) {
+                continue; // Wrong module.
             }
-            if ($cm->modname=='label') {
-                continue; // skip labels
+            if ($cm->modname == 'label') {
+                continue; // Skip labels.
             }
-            if ($found || $cm->id==$id) {
+            if ($found || $cm->id == $id) {
                 if (class_exists('\core_availability\info_module')) {
-                    // Moodle >= 2.7
+                    // Moodle >= 2.7.
                     $is_visible = \core_availability\info_module::is_user_visible($cm);
                 } else {
-                    // Moodle <= 2.6
+                    // Moodle <= 2.6.
                     $is_visible = coursemodule_visible_for_user($cm);
                 }
                 if ($is_visible) {
                     return $cm;
                 }
-                if ($cm->id==$id) {
-                    // required cm is not visible to this user
+                if ($cm->id == $id) {
+                    // Required cm is not visible to this user.
                     return false;
                 }
             }
-            if ($cm->id==$this->cm->id) {
+            if ($cm->id == $this->cm->id) {
                 $found = true;
             }
         }
 
-        // next cm not found
+        // Next cm not found.
         return false;
     }
 
@@ -2288,17 +2279,17 @@ class hotpot {
      */
     public function get_gradeitem() {
         global $CFG, $USER;
-        require_once($CFG->dirroot.'/lib/gradelib.php');
+        require_once($CFG->dirroot . '/lib/gradelib.php');
 
         if (is_null($this->gradeitem)) {
             $this->gradeitem = false;
             if ($grades = grade_get_grades($this->course->id, 'mod', 'hotpot', $this->id, $USER->id)) {
                 if (isset($grades->items[0]) && $grades->items[0]->grademax > 0) {
-                    // this activity has a grade item
+                    // This activity has a grade item.
                     if (isset($grades->items[0]->grades[$USER->id])) {
                         $this->gradeitem = $grades->items[0]->grades[$USER->id];
                         // grade->grade is the adjusted grade, for a true percent
-                        // we need to shift and scale according to grademin and grademax
+                        // we need to shift and scale according to grademin and grademax.
                         $percent = $this->gradeitem->grade;
                         if ($grades->items[0]->grademax > 0) {
                             $percent = (($percent - $grades->items[0]->grademin) / $grades->items[0]->grademax);
@@ -2319,7 +2310,7 @@ class hotpot {
      */
     public function update_completion_state($completion) {
         if ($this->completionmingrade > 0.0 || $this->completionpass || $this->completioncompleted) {
-            if ($completion->is_enabled($this->cm) && ($this->cm->completion==COMPLETION_TRACKING_AUTOMATIC)) {
+            if ($completion->is_enabled($this->cm) && ($this->cm->completion == COMPLETION_TRACKING_AUTOMATIC)) {
                 $completion->update_state($this->cm);
             }
         }

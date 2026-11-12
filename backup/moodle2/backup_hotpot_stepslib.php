@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -41,16 +40,16 @@ class backup_hotpot_activity_structure_step extends backup_activity_structure_st
      *
      * @return xxx
      */
-    protected function define_structure()  {
+    protected function define_structure() {
 
-        // are we including userinfo?
+        // Are we including userinfo?
         $userinfo = $this->get_setting_value('userinfo');
 
         ////////////////////////////////////////////////////////////////////////
         // XML nodes declaration - non-user data
         ////////////////////////////////////////////////////////////////////////
 
-        // root element describing hotpot instance
+        // Root element describing hotpot instance.
         $fieldnames = $this->get_fieldnames('hotpot', array('id', 'course'));
         $hotpot     = new backup_nested_element('hotpot', array('id'), $fieldnames);
 
@@ -59,23 +58,22 @@ class backup_hotpot_activity_structure_step extends backup_activity_structure_st
         ////////////////////////////////////////////////////////////////////////
 
         if ($userinfo) {
-
-            // attempts at hotpots
+            // Attempts at hotpots.
             $attempts   = new backup_nested_element('attempts');
             $fieldnames = $this->get_fieldnames('hotpot_attempts', array('id', 'hotpotid'));
             $attempt    = new backup_nested_element('attempt', array('id'), $fieldnames);
 
-            // questions in hotpots
+            // Questions in hotpots.
             $questions  = new backup_nested_element('questions');
             $fieldnames = $this->get_fieldnames('hotpot_questions', array('id', 'hotpotid', 'md5key'));
             $question   = new backup_nested_element('question', array('id'), $fieldnames);
 
-            // responses to questions
+            // Responses to questions.
             $responses  = new backup_nested_element('responses');
             $fieldnames = $this->get_fieldnames('hotpot_responses', array('id', 'questionid'));
             $response   = new backup_nested_element('response', array('id'), $fieldnames);
 
-             // strings used in questions and responses
+             // Strings used in questions and responses.
             $strings    = new backup_nested_element('strings');
             $fieldnames = $this->get_fieldnames('hotpot_strings', array('id', 'md5key'));
             $string     = new backup_nested_element('string', array('id'), $fieldnames);
@@ -86,20 +84,19 @@ class backup_hotpot_activity_structure_step extends backup_activity_structure_st
         ////////////////////////////////////////////////////////////////////////
 
         if ($userinfo) {
-
-            // strings
+            // Strings.
             $hotpot->add_child($strings);
             $strings->add_child($string);
 
-            // attempts
+            // Attempts.
             $hotpot->add_child($attempts);
             $attempts->add_child($attempt);
 
-            // questions
+            // Questions.
             $hotpot->add_child($questions);
             $questions->add_child($question);
 
-            // responses
+            // Responses.
             $question->add_child($responses);
             $responses->add_child($response);
         }
@@ -115,17 +112,16 @@ class backup_hotpot_activity_structure_step extends backup_activity_structure_st
         ////////////////////////////////////////////////////////////////////////
 
         if ($userinfo) {
-
-            // attempts
+            // Attempts.
             $attempt->set_source_table('hotpot_attempts', array('hotpotid' => backup::VAR_PARENTID));
 
-            // questions
+            // Questions.
             $question->set_source_table('hotpot_questions', array('hotpotid' => backup::VAR_PARENTID));
 
-            // responses
+            // Responses.
             $response->set_source_table('hotpot_responses', array('questionid' => backup::VAR_PARENTID));
 
-            // strings
+            // Strings.
             list($filter, $params) = $this->get_strings_sql();
             $string->set_source_sql("SELECT * FROM {hotpot_strings} WHERE id $filter", $params);
         }
@@ -161,7 +157,7 @@ class backup_hotpot_activity_structure_step extends backup_activity_structure_st
      * @param array $excluded_fieldnames these field names will be excluded
      * @return array of field names
      */
-    protected function get_fieldnames($tablename, array $excluded_fieldnames)   {
+    protected function get_fieldnames($tablename, array $excluded_fieldnames) {
         global $DB;
         $fieldnames = array_keys($DB->get_columns($tablename));
         return array_diff($fieldnames, $excluded_fieldnames);
@@ -181,19 +177,18 @@ class backup_hotpot_activity_structure_step extends backup_activity_structure_st
     protected function get_strings_sql() {
         global $DB;
 
-        // array to store the string ids
+        // Array to store the string ids.
         $stringids = array();
 
-        // the response fields that contain string ids
+        // The response fields that contain string ids.
         $stringfields = array('correct', 'wrong', 'ignored');
 
-        // the id of the current hotpot
+        // The id of the current hotpot.
         $hotpotid = $this->get_setting_value(backup::VAR_ACTIVITYID);
 
-        // get questions in this hotpot
+        // Get questions in this hotpot.
         if ($questions = $DB->get_records('hotpot_questions', array('hotpotid' => $hotpotid), '', 'id, text')) {
-
-            // extract string ids in the "text" field of these questions
+            // Extract string ids in the "text" field of these questions.
             foreach ($questions as $question) {
                 if ($id = intval(trim($question->text))) {
                     $stringids[$id] = true;
@@ -202,12 +197,10 @@ class backup_hotpot_activity_structure_step extends backup_activity_structure_st
 
             $questions = array_keys($questions);
             while (($questionids = array_splice($questions, 0, self::GET_QUESTIONS_LIMIT)) && count($questionids)) {
-
-                // get the responses to these questions
+                // Get the responses to these questions.
                 list($filter, $params) = $DB->get_in_or_equal($questionids);
                 if ($responses = $DB->get_records_select('hotpot_responses', "questionid $filter", $params)) {
-
-                    // extract string ids from the string fields of these responses
+                    // Extract string ids from the string fields of these responses.
                     foreach ($responses as $response) {
                         foreach ($stringfields as $stringfield) {
                             $ids = explode(',', trim($response->$stringfield));
@@ -220,16 +213,15 @@ class backup_hotpot_activity_structure_step extends backup_activity_structure_st
                     }
                 } // end if $responses
             }
-
         } // end if $questions
 
-        // get the distinct string ids
+        // Get the distinct string ids.
         $stringids = array_keys($stringids);
 
         switch (count($stringids)) {
             case 0:  $filter = '< 0'; break;
-            case 1:  $filter = '='.$stringids[0]; break;
-            default: $filter = 'IN ('.implode(',', $stringids).')';
+            case 1:  $filter = '=' . $stringids[0]; break;
+            default: $filter = 'IN (' . implode(',', $stringids) . ')';
         }
 
         // Note: we don't put the ids into $params like this
@@ -238,7 +230,7 @@ class backup_hotpot_activity_structure_step extends backup_activity_structure_st
         // constants, which are all negative, in $params, and will
         // throw an exception for any positive values in $params
         // - baseelementincorrectfinalorattribute
-        //   backup/util/structure/base_final_element.class.php
+        // backup/util/structure/base_final_element.class.php.
         return array($filter, array());
     }
 }

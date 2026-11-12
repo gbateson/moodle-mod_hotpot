@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -19,15 +18,15 @@
  * Class to represent the source of a HotPot quiz
  * Source type: html_ispring
  *
- * @package   mod-hotpot
+ * @package   hotpotsource_html
  * @copyright 2010 Gordon Bateson <gordon.bateson@gmail.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-// get parent class
-require_once($CFG->dirroot.'/mod/hotpot/source/html/class.php');
+// Get parent class.
+require_once($CFG->dirroot . '/mod/hotpot/source/html/class.php');
 
 /**
  * hotpot_source_html_ispring
@@ -39,16 +38,16 @@ require_once($CFG->dirroot.'/mod/hotpot/source/html/class.php');
 class hotpot_source_html_ispring extends hotpot_source_html {
 
     const REQUIRED_FILETYPES = array(
-        'htm', 'html'
+        'htm', 'html',
     );
     const REQUIRED_MATCHES = array(
         '/<!--\s*<!DOCTYPE[^>]*>\s*-->/',
         '/<object[^>]*id="presentation"[^>]*>/',
         '/<embed[^>]*name="presentation"[^>]*>/',
-        '/<script[^>]*src="[^">]*fixprompt.js"[^>]*\/>/'
+        '/<script[^>]*src="[^">]*fixprompt.js"[^>]*\/>/',
     );
 
-    // properties of the icon for this source file type
+    // Properties of the icon for this source file type.
     public $icon = 'mod/hotpot/file/html/ispring/icon.gif';
 
     /**
@@ -56,7 +55,7 @@ class hotpot_source_html_ispring extends hotpot_source_html {
      *
      * @return xxx
      */
-    function get_entrytext()  {
+    public function get_entrytext() {
         return '';
     }
 }

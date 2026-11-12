@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -19,15 +18,15 @@
  * Render an attempt at a HotPot quiz
  * Output format: hp_6_jcloze_xml_findit_b
  *
- * @package   mod-hotpot
+ * @package   hotpotattempt_hp
  * @copyright 2010 Gordon Bateson <gordon.bateson@gmail.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-// get parent class
-require_once($CFG->dirroot.'/mod/hotpot/attempt/hp/6/jcloze/xml/findit/renderer.php');
+// Get parent class.
+require_once($CFG->dirroot . '/mod/hotpot/attempt/hp/6/jcloze/xml/findit/renderer.php');
 
 /**
  * mod_hotpot_attempt_hp_6_jcloze_xml_findit_b_renderer
@@ -46,13 +45,13 @@ class mod_hotpot_attempt_hp_6_jcloze_xml_findit_b_renderer extends mod_hotpot_at
      *
      * @param xxx $hotpot
      */
-    function init($hotpot)  {
+    public function init($hotpot) {
         parent::init($hotpot);
 
-        // prepend templates for this output format
+        // Prepend templates for this output format.
         array_unshift($this->templatesfolders, 'mod/hotpot/attempt/hp/6/jcloze/xml/findit/b/templates');
 
-        // replace standard jcloze.js with findit.b.js
+        // Replace standard jcloze.js with findit.b.js.
         $this->javascripts = preg_grep('/jcloze.js/', $this->javascripts, PREG_GREP_INVERT);
         array_push($this->javascripts, 'mod/hotpot/attempt/hp/6/jcloze/findit.b.js');
     }
@@ -62,7 +61,7 @@ class mod_hotpot_attempt_hp_6_jcloze_xml_findit_b_renderer extends mod_hotpot_at
      *
      * @return array of strings
      */
-    static public function sourcetypes()  {
+    static public function sourcetypes() {
         return array('hp_6_jcloze_xml', 'hp_7_jcloze_xml');
     }
 
@@ -73,21 +72,21 @@ class mod_hotpot_attempt_hp_6_jcloze_xml_findit_b_renderer extends mod_hotpot_at
      * @param xxx $start
      * @param xxx $length
      */
-    function fix_js_CheckAnswers(&$str, $start, $length)  {
+    public function fix_js_CheckAnswers(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
 
-        // do several search and replace actions at once
+        // Do several search and replace actions at once.
         $search = array(
             '/if \(NumOfVisibleGaps < 1\)\{return;\}/',
             "/(\s+)Output = '';/s",
             '/Output \+= MissingMistakes \+ Get_NumMissingErr\(\);/',
-            '/CalculateScore\(\);/' // last occurrence
+            '/CalculateScore\(\);/', // Last occurrence.
         );
         $replace = array(
             'if (NumOfVisibleGaps){',
             '$1}$0',
             'if (NumOfVisibleGaps) $0',
-            'if (NumOfVisibleGaps) $0'
+            'if (NumOfVisibleGaps) $0',
         );
         $substr = preg_replace($search, $replace, $substr, 1);
 

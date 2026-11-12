@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -19,15 +18,15 @@
  * Render an attempt at a HotPot quiz
  * Output format: hp_6_jcloze_xml
  *
- * @package   mod-hotpot
+ * @package   hotpotattempt_hp
  * @copyright 2010 Gordon Bateson <gordon.bateson@gmail.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-// get parent class
-require_once($CFG->dirroot.'/mod/hotpot/attempt/hp/6/jcloze/renderer.php');
+// Get parent class.
+require_once($CFG->dirroot . '/mod/hotpot/attempt/hp/6/jcloze/renderer.php');
 
 /**
  * mod_hotpot_attempt_hp_6_jcloze_xml_renderer
@@ -43,23 +42,22 @@ class mod_hotpot_attempt_hp_6_jcloze_xml_renderer extends mod_hotpot_attempt_hp_
      *
      * @return xxx
      */
-    function expand_ItemArray() {
+    public function expand_ItemArray() {
         $q = 0;
         $qq = 0;
 
         $str = '';
-        // Note: I = new Array(); is declared in hp6jcloze.js_
+        // Note: I = new Array(); is declared in hp6jcloze.js_.
 
         $tags = 'data,gap-fill,question-record';
-        while (($question="[$q]['#']") && $this->hotpot->source->xml_value($tags, $question)) {
-
+        while (($question = "[$q]['#']") && $this->hotpot->source->xml_value($tags, $question)) {
             $a = 0;
             $aa = 0;
 
-            while (($answer=$question."['answer'][$a]['#']") && $this->hotpot->source->xml_value($tags, $answer)) {
-                $text = $this->hotpot->source->xml_value_js($tags,  $answer."['text'][0]['#']");
+            while (($answer = $question . "['answer'][$a]['#']") && $this->hotpot->source->xml_value($tags, $answer)) {
+                $text = $this->hotpot->source->xml_value_js($tags,  $answer . "['text'][0]['#']");
                 if (strlen((string)$text)) {
-                    if ($aa==0) { // first time only
+                    if ($aa == 0) { // First time only.
                         $str .= "\n";
                         $str .= "I[$qq] = new Array();\n";
                         $str .= "I[$qq][1] = new Array();\n";
@@ -70,9 +68,9 @@ class mod_hotpot_attempt_hp_6_jcloze_xml_renderer extends mod_hotpot_attempt_hp_
                 }
                 $a++;
             }
-            // add clue, if any answers were found
+            // Add clue, if any answers were found.
             if ($aa) {
-                $clue = $this->hotpot->source->xml_value_js($tags, $question."['clue'][0]['#']");
+                $clue = $this->hotpot->source->xml_value_js($tags, $question . "['clue'][0]['#']");
                 $str .= "I[$qq][2] = '$clue';\n";
                 $qq++;
             }

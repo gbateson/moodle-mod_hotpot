@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -19,15 +18,15 @@
  * Class to represent the source of a HotPot quiz
  * Source type: hp_6_jcloze_html_jgloss
  *
- * @package   mod-hotpot
+ * @package   hotpotsource_hp
  * @copyright 2010 Gordon Bateson <gordon.bateson@gmail.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-// get parent class
-require_once($CFG->dirroot.'/mod/hotpot/source/hp/6/jcloze/html/class.php');
+// Get parent class.
+require_once($CFG->dirroot . '/mod/hotpot/source/hp/6/jcloze/html/class.php');
 
 /**
  * hotpot_source_hp_6_jcloze_html_jgloss
@@ -38,12 +37,12 @@ require_once($CFG->dirroot.'/mod/hotpot/source/hp/6/jcloze/html/class.php');
  */
 class hotpot_source_hp_6_jcloze_html_jgloss extends hotpot_source_hp_6_jcloze_html {
     const REQUIRED_FILETYPES = array(
-        'htm', 'html'
+        'htm', 'html',
     );
     const REQUIRED_STRINGS = array(
-        'function Add_GlossFunctionality()' // Rottmeier JGloss file
+        'function Add_GlossFunctionality()', // Rottmeier JGloss file.
     );
 
-    // override the BANNED_STRINGS of plain JCloze, which bans Rottmeier files
+    // Override the BANNED_STRINGS of plain JCloze, which bans Rottmeier files.
     const BANNED_STRINGS = array();
 }

@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -18,7 +17,7 @@
 /**
  * mod/hotpot/db/access.php
  *
- * @package   mod-hotpot
+ * @package   mod_hotpot
  * @copyright 2010 Gordon Bateson <gordon.bateson@gmail.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -34,9 +33,9 @@ $capabilities = array(
         'contextlevel' => CONTEXT_COURSE,
         'archetypes'   => array(
             'editingteacher' => CAP_ALLOW,
-            'manager'  => CAP_ALLOW
+            'manager'  => CAP_ALLOW,
         ),
-        'clonepermissionsfrom' => 'moodle/course:manageactivities'
+        'clonepermissionsfrom' => 'moodle/course:manageactivities',
     ),
 
     // ability to attempt HotPot as a student (and submit results)
@@ -48,11 +47,11 @@ $capabilities = array(
             'student'  => CAP_ALLOW,
             'teacher'  => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
-            'manager'  => CAP_ALLOW
-        )
+            'manager'  => CAP_ALLOW,
+        ),
     ),
 
-    // ability to delete anyone's attempts at a HotPot
+    // Ability to delete anyone's attempts at a HotPot.
     'mod/hotpot:deleteallattempts' => array(
         'riskbitmask'  => RISK_DATALOSS,
         'captype'      => 'write',
@@ -60,11 +59,11 @@ $capabilities = array(
         'archetypes'   => array(
             'teacher'  => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
-            'manager'  => CAP_ALLOW
-        )
+            'manager'  => CAP_ALLOW,
+        ),
     ),
 
-    // ability to delete one's own attempts at a HotPot
+    // Ability to delete one's own attempts at a HotPot.
     'mod/hotpot:deletemyattempts' => array(
         'riskbitmask'  => RISK_DATALOSS,
         'captype'      => 'write',
@@ -72,41 +71,41 @@ $capabilities = array(
         'archetypes'   => array(
             'teacher'  => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
-            'manager'  => CAP_ALLOW
-        )
+            'manager'  => CAP_ALLOW,
+        ),
     ),
 
     // ability to ignore time limits (used for accessibility legislation compliance)
-    //'mod/hotpot:ignoretimelimits' => array(
-    //    'captype'      => 'read',
-    //    'contextlevel' => CONTEXT_MODULE,
-    //    'archetypes'   => array()
-    //),
+    // 'mod/hotpot:ignoretimelimits' => array(
+    // 'captype'      => 'read',
+    // 'contextlevel' => CONTEXT_MODULE,
+    // 'archetypes'   => array()
+    // ),
 
-    // ability to edit the HotPot settings
+    // Ability to edit the HotPot settings.
     'mod/hotpot:manage' => array(
         'riskbitmask'  => RISK_SPAM,
         'captype'      => 'write',
         'contextlevel' => CONTEXT_MODULE,
         'archetypes'   => array(
             'editingteacher' => CAP_ALLOW,
-            'manager'  => CAP_ALLOW
-        )
+            'manager'  => CAP_ALLOW,
+        ),
     ),
 
     // ability to preview a HotPot as a teacher (and submit results)
-    // access restrictions, such as open/close time, will be ignored
+    // access restrictions, such as open/close time, will be ignored.
     'mod/hotpot:preview' => array(
         'captype'      => 'write',
         'contextlevel' => CONTEXT_MODULE,
         'archetypes'   => array(
             'teacher'  => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
-            'manager'  => CAP_ALLOW
-        )
+            'manager'  => CAP_ALLOW,
+        ),
     ),
 
-    // ability to view anyone's attempts at a HotPot
+    // Ability to view anyone's attempts at a HotPot.
     'mod/hotpot:reviewallattempts' => array(
         'riskbitmask'  => RISK_PERSONAL,
         'captype'      => 'read',
@@ -114,11 +113,11 @@ $capabilities = array(
         'archetypes'   => array(
             'teacher'  => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
-            'manager'  => CAP_ALLOW
-        )
+            'manager'  => CAP_ALLOW,
+        ),
     ),
 
-    // ability to view one's own attempts at a HotPot
+    // Ability to view one's own attempts at a HotPot.
     'mod/hotpot:reviewmyattempts' => array(
         'riskbitmask'  => RISK_PERSONAL,
         'captype'      => 'read',
@@ -127,11 +126,11 @@ $capabilities = array(
             'student'  => CAP_ALLOW,
             'teacher'  => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
-            'manager'  => CAP_ALLOW
-        )
+            'manager'  => CAP_ALLOW,
+        ),
     ),
 
-    // ability to view the entry page for a HotPot
+    // Ability to view the entry page for a HotPot.
     'mod/hotpot:view' => array(
         'captype'      => 'read',
         'contextlevel' => CONTEXT_MODULE,
@@ -140,7 +139,7 @@ $capabilities = array(
             'student'  => CAP_ALLOW,
             'teacher'  => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
-            'manager'  => CAP_ALLOW
-        )
+            'manager'  => CAP_ALLOW,
+        ),
     ),
 );

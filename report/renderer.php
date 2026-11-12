@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -18,21 +17,21 @@
 /**
  * Render an attempt at a HotPot quiz
  *
- * @package   mod-hotpot
+ * @package   mod_hotpot
  * @copyright 2010 Gordon Bateson <gordon.bateson@gmail.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-// get parent renderer class
-require_once($CFG->dirroot.'/mod/hotpot/renderer.php');
+// Get parent renderer class.
+require_once($CFG->dirroot . '/mod/hotpot/renderer.php');
 
-// get hotpot_report_table class
-require_once($CFG->dirroot.'/mod/hotpot/report/tablelib.php');
+// Get hotpot_report_table class.
+require_once($CFG->dirroot . '/mod/hotpot/report/tablelib.php');
 
-// get hotpot_user_filtering class
-require_once($CFG->dirroot.'/mod/hotpot/report/userfiltering.php');
+// Get hotpot_user_filtering class.
+require_once($CFG->dirroot . '/mod/hotpot/report/userfiltering.php');
 
 /**
  * mod_hotpot_report_renderer
@@ -44,7 +43,7 @@ require_once($CFG->dirroot.'/mod/hotpot/report/userfiltering.php');
 class mod_hotpot_report_renderer extends mod_hotpot_renderer {
 
     // declare properties that are set at runtime,
-    // to avoid "dynamic property" deprecation warnings in PHP >= 8.2
+    // to avoid "dynamic property" deprecation warnings in PHP >= 8.2.
     /** @var mixed */
     public $hotpot;
 
@@ -67,13 +66,13 @@ class mod_hotpot_report_renderer extends mod_hotpot_renderer {
      *
      * @param xxx $hotpot
      */
-    protected function init($hotpot)   {
+    protected function init($hotpot) {
         global $DB;
 
-        // save a reference to the $hotpot record
+        // Save a reference to the $hotpot record.
         $this->hotpot = $hotpot;
 
-        // remove grade filter and column, if not required
+        // Remove grade filter and column, if not required.
         if (! $hotpot->gradeweighting) {
             if (array_key_exists('grade', $this->filterfields)) {
                 unset($this->filterfields['grade']);
@@ -84,7 +83,7 @@ class mod_hotpot_report_renderer extends mod_hotpot_renderer {
             }
         }
 
-        // add question numbers to $tablecolumns
+        // Add question numbers to $tablecolumns.
         if ($this->has_questioncolumns) {
             if ($records = $DB->get_records('hotpot_questions', array('hotpotid' => $this->hotpot->id), '', 'id,name,text')) {
                 $this->questions = array_values($records);
@@ -97,7 +96,7 @@ class mod_hotpot_report_renderer extends mod_hotpot_renderer {
      *
      * @param xxx $hotpot
      */
-    public function render_report($hotpot)  {
+    public function render_report($hotpot) {
         $this->init($hotpot);
         echo $this->header();
         echo $this->reportcontent();
@@ -107,35 +106,35 @@ class mod_hotpot_report_renderer extends mod_hotpot_renderer {
     /**
      * reportcontent
      */
-    public function reportcontent()  {
+    public function reportcontent() {
         global $DB, $USER;
 
-        // check capabilities
+        // Check capabilities.
         if ($this->hotpot->can_reviewallattempts()) {
-            $userid = 0; // all users
+            $userid = 0; // All users.
         } else if ($this->hotpot->can_reviewmyattempts()) {
-            // current user can only review their own attempts
+            // Current user can only review their own attempts.
             $userid = $USER->id;
         } else {
             // has_capability('mod/hotpot:review', $this->hotpot->context))
-            // should already have been checked in "mod/hotpot/report.php"
+            // should already have been checked in "mod/hotpot/report.php".
             return false;
         }
 
         // set baseurl for this page (used for filters and table)
         $baseurl = $this->hotpot->report_url($this->mode)->out();
 
-        // display user and attempt filters
+        // Display user and attempt filters.
         $this->display_filters($baseurl);
 
-        // create report table
-        $uniqueid = $this->page->pagetype.'-'.$this->mode;
+        // Create report table.
+        $uniqueid = $this->page->pagetype . '-' . $this->mode;
         $table = new hotpot_report_table($uniqueid, $this);
 
-        // set the table columns
+        // Set the table columns.
         $tablecolumns = $this->tablecolumns;
         if (! $this->hotpot->can_deleteattempts()) {
-            // remove the select column from students view
+            // Remove the select column from students view.
             $i = array_search('selected', $tablecolumns);
             if (is_numeric($i)) {
                 array_splice($tablecolumns, $i, 1);
@@ -143,49 +142,48 @@ class mod_hotpot_report_renderer extends mod_hotpot_renderer {
         }
         if ($this->has_questioncolumns) {
             $i = array_search('penalties', $tablecolumns);
-            if ($i===false) {
+            if ($i === false) {
                 $i = array_search('score', $tablecolumns);
             }
-            if ($i===false) {
+            if ($i === false) {
                 $i = count($tablecolumns);
             }
             array_splice($tablecolumns, $i, 0, $this->get_question_columns());
         }
 
-        // setup the report table
+        // Setup the report table.
         $table->setup_report_table($tablecolumns, $baseurl);
 
-        // setup sql to COUNT records
+        // Setup sql to COUNT records.
         list($select, $from, $where, $params) = $this->count_sql($userid);
         $table->set_count_sql("SELECT $select FROM $from WHERE $where", $params);
 
-        // setup sql to SELECT records
+        // Setup sql to SELECT records.
         list($select, $from, $where, $params) = $this->select_sql($userid);
         $table->set_sql($select, $from, $where, $params);
 
-        // extract attempt records
+        // Extract attempt records.
         $table->query_db($table->get_page_size());
 
-        // extract question responses, if required
+        // Extract question responses, if required.
         if ($this->has_questioncolumns) {
             $this->add_responses_to_rawdata($table);
         }
         $this->adjust_grades_in_rawdata($table);
 
-        // display the table
+        // Display the table.
         $table->build_table();
         $table->finish_html();
 
-        // display the legend
+        // Display the legend.
         $table->print_legend();
     }
 
     /**
      * display_filters
      */
-    function display_filters($baseurl) {
+    public function display_filters($baseurl) {
         if (count($this->filterfields) && $this->hotpot->can_reviewattempts()) {
-
             $user_filtering = new hotpot_user_filtering($this->filterfields, $baseurl);
 
             $this->userfilter = $user_filtering->get_sql_filter();
@@ -208,21 +206,21 @@ class mod_hotpot_report_renderer extends mod_hotpot_renderer {
      * @param array $params
      * @return void, but may modify $select $from $where $params
      */
-    function add_filter_params($userfields, $userid, $attemptid, $select, $from, $where, $params) {
+    public function add_filter_params($userfields, $userid, $attemptid, $select, $from, $where, $params) {
 
-        // search string to detect db fieldname in a filter string
+        // Search string to detect db fieldname in a filter string
         // - not preceded by {:`"'_. a-z 0-9
         // - starts with lowercase a-z
         // - followed by lowercase a-z, 0-9 or underscore
-        // - not followed by }:`"'_. a-z 0-9
-        $before = '[{:`"'."'".'a-zA-Z0-9_.]';
-        $after  = '[}:`"'."'".'a-zA-Z0-9_.]';
+        // - not followed by }:`"'_. a-z 0-9.
+        $before = '[{:`"' . "'" . 'a-zA-Z0-9_.]';
+        $after  = '[}:`"' . "'" . 'a-zA-Z0-9_.]';
         $search = "/(?<!$before)([a-z][a-z0-9_]*)(?!$after)/";
 
         $require_usertable = false;
         $require_attempttable = false;
 
-        // add user fields. if required
+        // Add user fields. if required.
         if (in_array('fullname', $this->tablecolumns)) {
             $select .= $userfields;
             $where  .= ' AND ha.userid=u.id';
@@ -230,61 +228,61 @@ class mod_hotpot_report_renderer extends mod_hotpot_renderer {
         }
 
         if ($userid) {
-            // a specific user
+            // A specific user.
             $where .= ' AND ha.userid=:userid';
             $params['userid'] = $userid;
             $require_usertable = true;
         } else {
-            // user filters
+            // User filters.
             list($filterwhere, $filterparams) = $this->userfilter;
             if ($filterwhere) {
                 $filterwhere = preg_replace($search, 'u.$1', $filterwhere);
-                $where  .= ' AND '.$filterwhere;
+                $where  .= ' AND ' . $filterwhere;
                 $params += $filterparams;
                 $require_usertable = true;
             }
         }
 
         if ($attemptid) {
-            // a specific attempt
+            // A specific attempt.
             $where .= ' AND ha.id=:attemptid';
             $params['attemptid'] = $attemptid;
             $require_attempttable = true;
         } else {
-            // attempt filters
+            // Attempt filters.
             list($filterwhere, $filterparams) = $this->attemptfilter;
             if ($filterwhere) {
                 $filterwhere = preg_replace($search, 'ha.$1', $filterwhere);
-                $where  .= ' AND '.$filterwhere;
+                $where  .= ' AND ' . $filterwhere;
                 $params += $filterparams;
                 $require_attempttable = true;
             }
         }
 
-        // add user table if needed
-        if ($require_usertable && strpos($from, '{user}')===false) {
+        // Add user table if needed.
+        if ($require_usertable && strpos($from, '{user}') === false) {
             $from .= ' INNER JOIN {user} u ON ha.userid = u.id';
         }
 
-        // add attempt table if needed
-        if ($require_attempttable && strpos($from, '{hotpot_attempts}')===false) {
-            $from = '{hotpot_attempts} ha '.$from;
+        // Add attempt table if needed.
+        if ($require_attempttable && strpos($from, '{hotpot_attempts}') === false) {
+            $from = '{hotpot_attempts} ha ' . $from;
         }
 
-        // join to grade tables if necessary
-        if (strpos($select, 'gg')===false && strpos($where, 'gg')===false) {
-            // grade tables not required
-        } else if (strpos($from, 'grade_grades')===false) {
-            // grade tables are required, but missing, so add them to $from
+        // Join to grade tables if necessary.
+        if (strpos($select, 'gg') === false && strpos($where, 'gg') === false) {
+            // Grade tables not required.
+        } else if (strpos($from, 'grade_grades') === false) {
+            // Grade tables are required, but missing, so add them to $from
             // the "gg" table alias is added by the "set_sql()" method of this class
             // or the "get_sql_filter_attempts()" method of the hotpot "grade" filter
             // Note that we expect that there will always be a "grade_items" record
-            // but there may not necessarily be a "grade_grades" record
-            $from   .= ' LEFT JOIN {grade_items} gi  ON gi.courseid = :courseid'.
-                                                  ' AND gi.itemtype = :itemtype'.
-                                                  ' AND gi.itemmodule = :itemmodule'.
-                                                  ' AND gi.iteminstance = :iteminstance'.
-                       ' LEFT JOIN {grade_grades} gg ON gg.itemid = gi.id'.
+            // but there may not necessarily be a "grade_grades" record.
+            $from   .= ' LEFT JOIN {grade_items} gi  ON gi.courseid = :courseid' .
+                                                  ' AND gi.itemtype = :itemtype' .
+                                                  ' AND gi.itemmodule = :itemmodule' .
+                                                  ' AND gi.iteminstance = :iteminstance' .
+                       ' LEFT JOIN {grade_grades} gg ON gg.itemid = gi.id' .
                                                  '  AND gg.userid = ha.userid';
             $params += array('courseid' => $this->hotpot->course->id,
                              'itemtype' => 'mod',
@@ -302,7 +300,7 @@ class mod_hotpot_report_renderer extends mod_hotpot_renderer {
      * @param xxx $attemptid (optional, default=0)
      * @return xxx
      */
-    function count_sql($userid=0, $attemptid=0) {
+    public function count_sql($userid = 0, $attemptid = 0) {
         $params = array();
 
         $select = 'COUNT(1)';
@@ -310,7 +308,7 @@ class mod_hotpot_report_renderer extends mod_hotpot_renderer {
         $where  = 'hotpotid=:hotpotid';
         $params['hotpotid'] = $this->hotpot->id;
 
-        // there is no explicit specification of the user fields because they cause
+        // There is no explicit specification of the user fields because they cause
         // an error on MS-SQL: Column 'mdl_user.id' is invalid in the select list
         // because it is not contained in either an aggregate function or the GROUP BY clause.
         // $userfields = ', '.$this->get_userfields('u', null, 'userid');
@@ -326,13 +324,13 @@ class mod_hotpot_report_renderer extends mod_hotpot_renderer {
      * @param xxx $attemptid (optional, default=0)
      * @return xxx
      */
-    function select_sql($userid=0, $attemptid=0) {
+    public function select_sql($userid = 0, $attemptid = 0) {
 
-        // the standard way to get Moodle grades is thus:
+        // The standard way to get Moodle grades is thus:
         // $grades = grade_get_grades($this->hotpot->course->id, 'mod', 'hotpot', $this->hotpot->id, $userid);
         // $grade = $grades->items[0]->grades[$USER->id]->grade;
 
-        // get question fields, if any
+        // Get question fields, if any.
         $select_questions = '';
         foreach ($this->get_question_columns() as $column) {
             $select_questions .= "1 AS $column, ";
@@ -340,16 +338,16 @@ class mod_hotpot_report_renderer extends mod_hotpot_renderer {
 
         // sql to select all attempts at this HotPot (and Moodle grade)
         $round_grade = '(CASE WHEN gg.rawgrade IS NULL THEN 0 ELSE ROUND(gg.rawgrade, 0) END)';
-        $select = 'ha.*, (ha.timemodified - ha.timestart) AS duration,'.$select_questions." $round_grade AS grade";
+        $select = 'ha.*, (ha.timemodified - ha.timestart) AS duration,' . $select_questions . " $round_grade AS grade";
         $from   = '{hotpot_attempts} ha';
         $where  = 'ha.hotpotid=:hotpotid';
         $params = array('hotpotid' => $this->hotpot->id);
 
         // Note: we don't need "u.id AS userid" because we already have ha.userid
         // and it causes Debug info: ORA-00918: column ambiguously defined (CONTRIB-4910)
-        $userfields = ','.$this->get_userfields('u', null, 'userid');
+        $userfields = ',' . $this->get_userfields('u', null, 'userid');
         $userfields = str_replace('u.id AS userid,', '', $userfields);
-        //$userfields = ',u.firstname,u.lastname,u.picture,u.imagealt,u.email';
+        // $userfields = ',u.firstname,u.lastname,u.picture,u.imagealt,u.email';
         return $this->add_filter_params($userfields, $userid, $attemptid, $select, $from, $where, $params);
     }
 
@@ -359,7 +357,7 @@ class mod_hotpot_report_renderer extends mod_hotpot_renderer {
      * @param xxx $table (passed by reference)
      * @return xxx
      */
-    function add_responses_to_rawdata(&$table)   {
+    public function add_responses_to_rawdata(&$table) {
         global $DB;
 
         if (empty($table->rawdata) || empty($this->questions)) {
@@ -369,7 +367,7 @@ class mod_hotpot_report_renderer extends mod_hotpot_renderer {
         // get question column names (indexed by questionid)
         $question_columns = $this->get_question_columns(true);
 
-        // empty out the response fields in the the rawdata
+        // Empty out the response fields in the the rawdata.
         $attemptids = array_keys($table->rawdata);
         foreach ($attemptids as $attemptid) {
             foreach ($question_columns as $questionid => $column) {
@@ -377,7 +375,7 @@ class mod_hotpot_report_renderer extends mod_hotpot_renderer {
             }
         }
 
-        // set sql to select responses for these attempts
+        // Set sql to select responses for these attempts.
         list($a_filter, $a_params) = $DB->get_in_or_equal($attemptids);
         list($q_filter, $q_params) = $DB->get_in_or_equal(array_keys($question_columns));
 
@@ -386,7 +384,7 @@ class mod_hotpot_report_renderer extends mod_hotpot_renderer {
         $where  = "attemptid $a_filter AND questionid $q_filter";
         $params = array_merge($a_params, $q_params);
 
-        // get the responses for these attempts
+        // Get the responses for these attempts.
         if (! $responses = $DB->get_records_sql("SELECT $select FROM $from WHERE $where", $params)) {
             return false;
         }
@@ -394,12 +392,12 @@ class mod_hotpot_report_renderer extends mod_hotpot_renderer {
         foreach ($responses as $response) {
             $attemptid = $response->attemptid;
             if (empty($table->rawdata[$attemptid])) {
-                return false; // shouldn't happen
+                return false; // Shouldn't happen.
             }
 
             $questionid = $response->questionid;
             if (empty($question_columns[$questionid])) {
-                return false; // shouldn't happen
+                return false; // Shouldn't happen.
             }
 
             $column = $question_columns[$questionid];
@@ -415,7 +413,7 @@ class mod_hotpot_report_renderer extends mod_hotpot_renderer {
      * @param xxx $column
      * @param xxx $response
      */
-    function add_response_to_rawdata(&$table, $attemptid, $column, $response)  {
+    public function add_response_to_rawdata(&$table, $attemptid, $column, $response) {
         // $table->rawdata[$attemptid]->$column = $response->somefield;
     }
 
@@ -425,7 +423,7 @@ class mod_hotpot_report_renderer extends mod_hotpot_renderer {
      * @param xxx $index_by_id (optional, default=false)
      * @return xxx
      */
-    function get_question_columns($index_by_id=false)  {
+    public function get_question_columns($index_by_id = false) {
         $question_columns = array();
         foreach ($this->questions as $i => $question) {
             if ($index_by_id) {
@@ -446,12 +444,12 @@ class mod_hotpot_report_renderer extends mod_hotpot_renderer {
      * @param xxx $table (passed by reference)
      * @return xxx
      */
-    function adjust_grades_in_rawdata(&$table)   {
+    public function adjust_grades_in_rawdata(&$table) {
         if (empty($table->rawdata)) {
-            return false; // no records
+            return false; // No records.
         }
         if (! $table->has_column('grade')) {
-            return false; // no grade column
+            return false; // No grade column.
         }
         if (empty($table->column_suppress) || empty($table->column_suppress['grade'])) {
             return false; // grade column is not suppressed (i.e. it is always printed)
@@ -463,25 +461,25 @@ class mod_hotpot_report_renderer extends mod_hotpot_renderer {
 
         foreach ($table->rawdata as $id => $record) {
             if ($userid) {
-                if ($userid==$record->userid) {
-                    // same user - do nothing
+                if ($userid == $record->userid) {
+                    // Same user - do nothing.
                 } else {
-                    if ($grade==$record->grade) {
+                    if ($grade == $record->grade) {
                         // oops, same grade as previous user - we must adjust the grade value,
-                        // so that "print_row()" (lib/tablelib.php) does not suppress this grade
+                        // so that "print_row()" (lib/tablelib.php) does not suppress this grade.
                         if ($prefix) {
                             $prefix = '';
                         } else {
-                            // add an empty span tag to make grade different from previous user's
+                            // Add an empty span tag to make grade different from previous user's.
                             $prefix = html_writer::tag('span', '');
                         }
                     } else {
-                        // different grade from previous user, so we can unset the prefix
+                        // Different grade from previous user, so we can unset the prefix.
                         $prefix = '';
                     }
                 }
                 if ($prefix) {
-                    $table->rawdata[$id]->grade = $prefix.$table->rawdata[$id]->grade;
+                    $table->rawdata[$id]->grade = $prefix . $table->rawdata[$id]->grade;
                 }
             }
             $userid = $record->userid;
@@ -498,33 +496,33 @@ class mod_hotpot_report_renderer extends mod_hotpot_renderer {
      * @param string $fieldprefix prefix to add to all columns in their aliases, does not apply to 'id'
      * @return string
      */
-     function get_userfields($tableprefix = '', $extrafields = NULL, $idalias = 'id', $fieldprefix = '') {
+     public function get_userfields($tableprefix = '', $extrafields = NULL, $idalias = 'id', $fieldprefix = '') {
 
         // Ensure $tableprefix is a string.
         if ($tableprefix === null) {
             $tableprefix = '';
         }
 
-        // Moodle >= 3.11
+        // Moodle >= 3.11.
         if (class_exists('\\core_user\\fields')) {
             $fields = \core_user\fields::for_userpic();
             if ($extrafields) {
-                $fields->including(...$extrafields); // splat operator is available from PHP 5.5
+                $fields->including(...$extrafields); // Splat operator is available from PHP 5.5.
             }
             $fields = $fields->get_sql($tableprefix, false, $fieldprefix, $idalias, false)->selects;
             if ($tableprefix === '') {
                 $fields = str_replace('{user}.', '', $fields);
             }
             return str_replace(', ', ',', $fields);
-            // id, picture, firstname, lastname, firstnamephonetic, lastnamephonetic, middlename, alternatename, imagealt, email
+            // Id, picture, firstname, lastname, firstnamephonetic, lastnamephonetic, middlename, alternatename, imagealt, email.
         }
 
-        // Moodle >= 2.6
+        // Moodle >= 2.6.
         if (class_exists('user_picture')) {
             return user_picture::fields($tableprefix, $extrafields, $idalias, $fieldprefix);
         }
 
-        // Moodle <= 2.5
+        // Moodle <= 2.5.
         $fields = array('id', 'firstname', 'lastname', 'picture', 'imagealt', 'email');
         if ($tableprefix || $extrafields || $idalias) {
             if ($tableprefix) {
@@ -540,10 +538,10 @@ class mod_hotpot_report_renderer extends mod_hotpot_renderer {
                 $fieldprefix = " AS $fieldprefix";
             }
             foreach ($fields as $i => $field) {
-                $fields[$i] = "$tableprefix$field".($field=='id' ? $idalias : ($fieldprefix=='' ? '' : "$fieldprefix$field"));
+                $fields[$i] = "$tableprefix$field" . ($field == 'id' ? $idalias : ($fieldprefix == '' ? '' : "$fieldprefix$field"));
             }
         }
         return implode(',', $fields);
-        //return 'u.id AS userid, u.username, u.firstname, u.lastname, u.picture, u.imagealt, u.email';
+        // return 'u.id AS userid, u.username, u.firstname, u.lastname, u.picture, u.imagealt, u.email';
     }
 }

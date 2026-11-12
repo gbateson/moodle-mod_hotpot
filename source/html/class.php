@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -19,15 +18,15 @@
  * Class to represent the source of a HotPot quiz
  * Source type: html
  *
- * @package   mod-hotpot
+ * @package   hotpotsource_html
  * @copyright 2010 Gordon Bateson <gordon.bateson@gmail.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-// get parent class
-require_once($CFG->dirroot.'/mod/hotpot/source/class.php');
+// Get parent class.
+require_once($CFG->dirroot . '/mod/hotpot/source/class.php');
 
 /**
  * hotpot_source_html
@@ -39,7 +38,7 @@ require_once($CFG->dirroot.'/mod/hotpot/source/class.php');
 class hotpot_source_html extends hotpot_source {
 
     const REQUIRED_FILETYPES = array(
-        'htm', 'html'
+        'htm', 'html',
     );
 
     /**
@@ -48,24 +47,23 @@ class hotpot_source_html extends hotpot_source {
      * @param xxx $textonly (optional, default=true)
      * @return xxx
      */
-    function html_get_name($textonly=true)  {
+    public function html_get_name($textonly = true) {
         if (! isset($this->name)) {
             $this->name = '';
             $this->title = '';
 
             if (! $this->get_filecontents()) {
-                // empty file - shouldn't happen !!
+                // Empty file - shouldn't happen !!
                 return false;
             }
 
             $search = '/<((?:h[1-6])|p|div|title)[^>]*>(.*?)<\/\1[^>]*>/is';
             if (preg_match_all($search, $this->filecontents, $matches)) {
-
-                // search string to match style and script blocks
+                // Search string to match style and script blocks.
                 $search = '/<(script|style)[^>]*>.*?<\/\1[^>]*>\s/is';
 
                 $i_max = count($matches[0]);
-                for ($i=0; $i<$i_max; $i++) {
+                for ($i = 0; $i < $i_max; $i++) {
                     $match = $matches[2][$i];
                     $match = preg_replace($search, '', $match);
                     if ($this->name = trim(strip_tags($match))) {
@@ -87,27 +85,27 @@ class hotpot_source_html extends hotpot_source {
      *
      * @return xxx
      */
-    function get_title()  {
+    public function get_title() {
         return $this->html_get_name(false);
     }
 
-    // returns the introduction text for a quiz
+    // Returns the introduction text for a quiz.
 
     /**
      * get_entrytext
      *
      * @return xxx
      */
-    function get_entrytext()  {
+    public function get_entrytext() {
         if (! isset($this->entrytext)) {
             $this->entrytext = '';
 
             if (! $this->get_filecontents()) {
-                // empty file - shouldn't happen !!
+                // Empty file - shouldn't happen !!
                 return false;
             }
             if (preg_match('/<(div|p)[^>]*>\s*(.*?)\s*<\/$1>/is', $this->filecontents, $matches)) {
-                $this->entrytext .= '<'.$matches[1].'>'.$matches[2].'</'.$matches[1].'>';
+                $this->entrytext .= '<' . $matches[1] . '>' . $matches[2] . '</' . $matches[1] . '>';
             }
         }
         return $this->entrytext;

@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -19,15 +18,15 @@
  * Render an attempt at a HotPot quiz
  * Output format: hp_6_jmatch_xml_jmemori
  *
- * @package   mod-hotpot
+ * @package   hotpotattempt_hp
  * @copyright 2010 Gordon Bateson <gordon.bateson@gmail.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-// get parent class
-require_once($CFG->dirroot.'/mod/hotpot/attempt/hp/6/jmatch/xml/renderer.php');
+// Get parent class.
+require_once($CFG->dirroot . '/mod/hotpot/attempt/hp/6/jmatch/xml/renderer.php');
 
 /**
  * mod_hotpot_attempt_hp_6_jmatch_xml_jmemori_renderer
@@ -46,13 +45,13 @@ class mod_hotpot_attempt_hp_6_jmatch_xml_jmemori_renderer extends mod_hotpot_att
      *
      * @param xxx $hotpot
      */
-    function init($hotpot)  {
+    public function init($hotpot) {
         parent::init($hotpot);
 
-        // prepend templates for this output format
+        // Prepend templates for this output format.
         array_unshift($this->templatesfolders, 'mod/hotpot/attempt/hp/6/jmatch/xml/jmemori/templates');
 
-        // replace standard jcloze.js with jmemori.js
+        // Replace standard jcloze.js with jmemori.js.
         $this->javascripts = preg_grep('/jmatch.js/', $this->javascripts, PREG_GREP_INVERT);
         array_push($this->javascripts, 'mod/hotpot/attempt/hp/6/jmatch/jmemori.js');
     }
@@ -62,21 +61,21 @@ class mod_hotpot_attempt_hp_6_jmatch_xml_jmemori_renderer extends mod_hotpot_att
      *
      * @return array of strings
      */
-    static public function sourcetypes()  {
+    static public function sourcetypes() {
         return array('hp_6_jmatch_xml', 'hp_7_jmatch_xml');
     }
 
     /**
      * fix_headcontent
      */
-    function fix_headcontent()  {
+    public function fix_headcontent() {
         $this->fix_headcontent_rottmeier('jmemori');
     }
 
     /**
      * fix_bodycontent
      */
-    function fix_bodycontent()  {
+    public function fix_bodycontent() {
         $this->fix_bodycontent_rottmeier();
         parent::fix_bodycontent();
     }
@@ -84,7 +83,7 @@ class mod_hotpot_attempt_hp_6_jmatch_xml_jmemori_renderer extends mod_hotpot_att
     /**
      * fix_title
      */
-    function fix_title()  {
+    public function fix_title() {
         $this->fix_title_rottmeier_JMemori();
     }
 
@@ -93,10 +92,10 @@ class mod_hotpot_attempt_hp_6_jmatch_xml_jmemori_renderer extends mod_hotpot_att
      *
      * @return xxx
      */
-    function get_js_functionnames()  {
-        // start list of function names
+    public function get_js_functionnames() {
+        // Start list of function names.
         $names = parent::get_js_functionnames();
-        $names .= ($names ? ',' : '').'ShowSolution,CheckPair,WriteFeedback';
+        $names .= ($names ? ',' : '') . 'ShowSolution,CheckPair,WriteFeedback';
         return $names;
     }
 
@@ -107,7 +106,7 @@ class mod_hotpot_attempt_hp_6_jmatch_xml_jmemori_renderer extends mod_hotpot_att
      * @param xxx $start
      * @param xxx $length
      */
-    function fix_js_WriteFeedback(&$str, $start, $length)  {
+    public function fix_js_WriteFeedback(&$str, $start, $length) {
         $this->fix_js_WriteFeedback_JMemori($str, $start, $length);
     }
 
@@ -118,7 +117,7 @@ class mod_hotpot_attempt_hp_6_jmatch_xml_jmemori_renderer extends mod_hotpot_att
      * @param xxx $start
      * @param xxx $length
      */
-    function fix_js_HideFeedback(&$str, $start, $length)  {
+    public function fix_js_HideFeedback(&$str, $start, $length) {
         $this->fix_js_HideFeedback_JMemori($str, $start, $length);
     }
 
@@ -129,7 +128,7 @@ class mod_hotpot_attempt_hp_6_jmatch_xml_jmemori_renderer extends mod_hotpot_att
      * @param xxx $start
      * @param xxx $length
      */
-    function fix_js_ShowSolution(&$str, $start, $length)  {
+    public function fix_js_ShowSolution(&$str, $start, $length) {
         $this->fix_js_ShowSolution_JMemori($str, $start, $length);
     }
 
@@ -140,7 +139,7 @@ class mod_hotpot_attempt_hp_6_jmatch_xml_jmemori_renderer extends mod_hotpot_att
      * @param xxx $start
      * @param xxx $length
      */
-    function fix_js_CheckPair(&$str, $start, $length)  {
+    public function fix_js_CheckPair(&$str, $start, $length) {
         $this->fix_js_CheckPair_JMemori($str, $start, $length);
     }
 
@@ -149,7 +148,7 @@ class mod_hotpot_attempt_hp_6_jmatch_xml_jmemori_renderer extends mod_hotpot_att
      *
      * @return xxx
      */
-    function get_stop_function_name()  {
+    public function get_stop_function_name() {
         return 'CheckPair';
     }
 
@@ -158,7 +157,7 @@ class mod_hotpot_attempt_hp_6_jmatch_xml_jmemori_renderer extends mod_hotpot_att
      *
      * @return xxx
      */
-    function get_stop_function_search()  {
+    public function get_stop_function_search() {
         return '/\s*if \((Pairs == F\.length)\)({.*?)setTimeout.*?}/s';
     }
 
@@ -167,9 +166,9 @@ class mod_hotpot_attempt_hp_6_jmatch_xml_jmemori_renderer extends mod_hotpot_att
      *
      * @return xxx
      */
-    function get_stop_function_args()  {
-        // the arguments required by CheckPair
-        return '-1,'.hotpot::STATUS_ABANDONED;
+    public function get_stop_function_args() {
+        // The arguments required by CheckPair.
+        return '-1,' . hotpot::STATUS_ABANDONED;
     }
 
     /**
@@ -177,11 +176,10 @@ class mod_hotpot_attempt_hp_6_jmatch_xml_jmemori_renderer extends mod_hotpot_att
      *
      * @return xxx
      */
-    function get_stop_function_intercept()  {
+    public function get_stop_function_intercept() {
         return "\n"
-            ."	// intercept this Check\n"
-            ."	if (id>=0) HP.onclickCheck(id);\n"
-        ;
+            . "	// intercept this Check\n"
+            . "	if (id>=0) HP.onclickCheck(id);\n";
     }
 
     /**
@@ -189,7 +187,7 @@ class mod_hotpot_attempt_hp_6_jmatch_xml_jmemori_renderer extends mod_hotpot_att
      *
      * @return xxx
      */
-    function expand_BackCaption()  {
+    public function expand_BackCaption() {
         return $this->expand_CaptionJS('Back');
     }
 
@@ -198,7 +196,7 @@ class mod_hotpot_attempt_hp_6_jmatch_xml_jmemori_renderer extends mod_hotpot_att
      *
      * @return xxx
      */
-    function expand_ContentsCaption()  {
+    public function expand_ContentsCaption() {
         return $this->expand_CaptionJS('Contents');
     }
 
@@ -207,7 +205,7 @@ class mod_hotpot_attempt_hp_6_jmatch_xml_jmemori_renderer extends mod_hotpot_att
      *
      * @return xxx
      */
-    function expand_NextExCaption()  {
+    public function expand_NextExCaption() {
         return $this->expand_CaptionJS('NextEx');
     }
 
@@ -216,7 +214,7 @@ class mod_hotpot_attempt_hp_6_jmatch_xml_jmemori_renderer extends mod_hotpot_att
      *
      * @return xxx
      */
-    function expand_CheckCaption()  {
+    public function expand_CheckCaption() {
         return $this->expand_CaptionJS('Check');
     }
 
@@ -227,8 +225,8 @@ class mod_hotpot_attempt_hp_6_jmatch_xml_jmemori_renderer extends mod_hotpot_att
      * @param string suffix (optional, default="Caption") to be appended $name
      * @return string
      */
-    function expand_CaptionJS($name, $suffix='Caption')  {
-        $method = 'expand_'.$name.$suffix;
+    public function expand_CaptionJS($name, $suffix = 'Caption') {
+        $method = 'expand_' . $name . $suffix;
         // Note: call_user_func(array($this, 'parent::'.$method)) is deprecated in PHP >= 8.2
         $caption = parent::$method();
         return $this->hotpot->source->js_value_safe($caption, true);

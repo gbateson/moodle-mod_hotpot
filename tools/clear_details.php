@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -18,13 +17,13 @@
 /**
  * mod/hotpot/tools/clear_details.php
  *
- * @package   mod-hotpot
+ * @package   mod_hotpot
  * @copyright 2010 Gordon Bateson <gordon.bateson@gmail.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require_once(dirname(dirname(dirname(dirname(__FILE__)))).'/config.php');
-require_once($CFG->dirroot.'/mod/hotpot/lib.php');
+require_once(dirname(dirname(dirname(dirname(__FILE__)))) . '/config.php');
+require_once($CFG->dirroot . '/mod/hotpot/lib.php');
 
 require_login(SITEID);
 if (class_exists('context_system')) {
@@ -36,7 +35,7 @@ require_capability('moodle/site:config', $context);
 
 // $SCRIPT is set by initialise_fullme() in "lib/setuplib.php"
 // it is the path below $CFG->wwwroot of this script
-$PAGE->set_url($CFG->wwwroot.$SCRIPT);
+$PAGE->set_url($CFG->wwwroot . $SCRIPT);
 
 $title = get_string('cleardetails', 'mod_hotpot');
 $PAGE->set_title($title);
@@ -56,22 +55,22 @@ $count_quizzes = $DB->count_records('hotpot');
 
 echo $OUTPUT->box_start();
 
-echo '<table style="margin:auto"><tbody>'."\n";
-echo '<tr><th style="text-align:right;">'.get_string('quizzes', 'mod_hotpot').':</th><td>'.$count_quizzes.'</td></tr>'."\n";
-echo '<tr><th style="text-align:right;">'.get_string('detailsrecords', 'mod_hotpot').':</th><td>'.$count_details.'</td></tr>'."\n";
+echo '<table style="margin:auto"><tbody>' . "\n";
+echo '<tr><th style="text-align:right;">' . get_string('quizzes', 'mod_hotpot') . ':</th><td>' . $count_quizzes . '</td></tr>' . "\n";
+echo '<tr><th style="text-align:right;">' . get_string('detailsrecords', 'mod_hotpot') . ':</th><td>' . $count_details . '</td></tr>' . "\n";
 if ($count_details) {
     echo '<tr><td colspan="2" style="text-align:center;">';
-    echo '<form action="'.$CFG->wwwroot.$SCRIPT.'" method="post">';
+    echo '<form action="' . $CFG->wwwroot . $SCRIPT . '" method="post">';
     echo '<fieldset>';
     echo '<input type="hidden" value="1" name="confirm" />';
-    echo '<input type="hidden" value="'.sesskey().'" name="sesskey" />';
-    echo '<input type="submit" value="'.get_string('confirm').'" />';
+    echo '<input type="hidden" value="' . sesskey() . '" name="sesskey" />';
+    echo '<input type="submit" value="' . get_string('confirm') . '" />';
     echo '</fieldset>';
-    echo '</td></tr>'."\n";
+    echo '</td></tr>' . "\n";
 } else {
-    echo '<tr><td colspan="2" style="text-align:center;">'.get_string('cleareddetails', 'mod_hotpot').'</td></tr>'."\n";
+    echo '<tr><td colspan="2" style="text-align:center;">' . get_string('cleareddetails', 'mod_hotpot') . '</td></tr>' . "\n";
 }
-echo '</tbody></table>'."\n";
+echo '</tbody></table>' . "\n";
 
 echo $OUTPUT->box_end();
 
