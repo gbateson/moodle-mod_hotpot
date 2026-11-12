@@ -299,6 +299,9 @@ class mod_hotpot_attempt_html_renderer extends mod_hotpot_attempt_renderer {
     function postprocessing()  {
         $this->fix_title_icons();
         $this->fix_submissionform();
+        // fix_onload() adds javascript that uses HP_add_listener(), HP_disable_event()
+        // and HP_send_results(), which are defined in hp.js
+        $this->page->requires->js('/mod/hotpot/attempt/hp/hp.js', true);
     }
 
     /**
