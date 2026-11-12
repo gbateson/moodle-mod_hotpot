@@ -912,16 +912,21 @@ class mod_hotpot_mod_form extends moodleform_mod {
             $errors['sourceitemid'] = get_string('required');
             // $errors['sourceitemid'] = get_string('nofile', 'error');
         } else {
-            $mainfile = false;
+            $mainfile = null;
             foreach ($files as $file) {
                 if ($file->get_sortorder()==1) {
-                    $mainfile = true;
+                    $mainfile = $file;
                     break;
                 }
             }
             if (! $mainfile) {
-                $file = reset($files); // first file in the list
-                file_set_sortorder($file->get_contextid(), $file->get_component(), $file->get_filearea(), $file->get_itemid(), $file->get_filepath(), $file->get_filename(), 1);
+                $mainfile = reset($files); // first file in the list
+                file_set_sortorder($mainfile->get_contextid(), $mainfile->get_component(), $mainfile->get_filearea(), $mainfile->get_itemid(), $mainfile->get_filepath(), $mainfile->get_filename(), 1);
+            }
+            // check that the main file is a type of file that HotPot can display
+            if (hotpot::get_sourcetype($mainfile)=='') {
+                $filename = $mainfile->get_filepath().$mainfile->get_filename();
+                $errors['sourceitemid'] = get_string('unrecognizedsourcefile', 'mod_hotpot', $filename);
             }
         }
 

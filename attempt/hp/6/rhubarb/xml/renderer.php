@@ -39,6 +39,15 @@ require_once($CFG->dirroot.'/mod/hotpot/attempt/hp/6/rhubarb/renderer.php');
 class mod_hotpot_attempt_hp_6_rhubarb_xml_renderer extends mod_hotpot_attempt_hp_6_rhubarb_renderer {
 
     /**
+     * List of source types which this renderer can handle
+     *
+     * @return array of strings
+     */
+    static public function sourcetypes()  {
+        return array('hp_6_rhubarb_xml');
+    }
+
+    /**
      * expand_JSRhubarb6
      *
      * @return xxx

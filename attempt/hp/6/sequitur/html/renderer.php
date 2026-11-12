@@ -37,4 +37,13 @@ require_once($CFG->dirroot.'/mod/hotpot/attempt/hp/6/sequitur/renderer.php');
  * @since     Moodle 2.0
  */
 class mod_hotpot_attempt_hp_6_sequitur_html_renderer extends mod_hotpot_attempt_hp_6_sequitur_renderer {
+
+    /**
+     * List of source types which this renderer can handle
+     *
+     * @return array of strings
+     */
+    static public function sourcetypes()  {
+        return array('hp_6_sequitur_html');
+    }
 }
