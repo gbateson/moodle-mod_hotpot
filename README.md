@@ -104,7 +104,8 @@ See [CHANGES.txt](CHANGES.txt) for the history of changes to this plugin.
 
 HotPot is free, and always will be. If you find it useful, you can help to keep it
 up to date with new versions of Moodle and Hot Potatoes by
-[sponsoring its development on GitHub](https://github.com/sponsors/gbateson).
+[sponsoring its development on GitHub](https://github.com/sponsors/gbateson),
+or by making a donation via [PayPal](https://paypal.me/gordonbateson).
 
 ## Credits
 
