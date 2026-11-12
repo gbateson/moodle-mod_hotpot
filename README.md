@@ -6,8 +6,6 @@ HotPot lets teachers use **Hot Potatoes** and other externally authored interact
 exercises as Moodle activities. Students' scores are saved to the Moodle gradebook,
 and teachers can review every attempt and response in HotPot's reports.
 
-![A drag-and-drop JMatch exercise in Moodle](pix/screenshots/jmatch-drag.png)
-
 ## Features
 
 - Upload a Hot Potatoes 6 or 7 **data file** (`.jqz`, `.jcl`, `.jcw`, `.jmt`, `.jmx`)
@@ -33,17 +31,17 @@ and teachers can review every attempt and response in HotPot's reports.
 
 ## Screenshots
 
-| JQuiz | JCross |
-|---|---|
-| ![A JQuiz multiple-choice question](pix/screenshots/jquiz.png) | ![A JCross crossword](pix/screenshots/jcross.png) |
+Click on a screenshot to see it full size.
 
-**Activity settings:** choose how the exercise is displayed
+| JMatch (drag and drop) | JQuiz | JCross |
+|:---:|:---:|:---:|
+| <a href="pix/screenshots/jmatch-drag.png"><img src="pix/screenshots/jmatch-drag.png" alt="A drag-and-drop JMatch exercise" width="320"></a> | <a href="pix/screenshots/jquiz.png"><img src="pix/screenshots/jquiz.png" alt="A JQuiz multiple-choice question" width="320"></a> | <a href="pix/screenshots/jcross.png"><img src="pix/screenshots/jcross.png" alt="A JCross crossword" width="320"></a> |
+| **JCloze** | **JMix (drag and drop)** | |
+| <a href="pix/screenshots/jcloze.png"><img src="pix/screenshots/jcloze.png" alt="A JCloze gap-fill exercise" width="320"></a> | <a href="pix/screenshots/jmix-drag.png"><img src="pix/screenshots/jmix-drag.png" alt="A drag-and-drop JMix exercise" width="320"></a> | |
 
-![The Display section of the activity settings](pix/screenshots/settings.png)
-
-**Overview report:** every attempt, with its status and score
-
-![The overview report](pix/screenshots/report.png)
+| Activity settings: choose how the exercise is displayed | Overview report: every attempt, with its status and score |
+|:---:|:---:|
+| <a href="pix/screenshots/settings.png"><img src="pix/screenshots/settings.png" alt="The Display section of the activity settings" width="400"></a> | <a href="pix/screenshots/report.png"><img src="pix/screenshots/report.png" alt="The overview report" width="400"></a> |
 
 ## Requirements
 
