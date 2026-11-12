@@ -397,9 +397,9 @@ function xmldb_hotpot_upgrade($oldversion) {
     if ($oldversion < $newversion) {
         require_once($CFG->dirroot . '/mod/hotpot/locallib.php');
 
-        /////////////////////////////////////
-        /// new file storage migrate code ///
-        /////////////////////////////////////
+        /*///////////////////////////////////
+        // new file storage migrate code
+        ///////////////////////////////////*/
 
         // set up sql strings to select HotPots with Moodle 1.x file paths (i.e. no leading slash)
         $strupdating = get_string('migratingfiles', 'mod_hotpot');
@@ -1044,7 +1044,7 @@ function xmldb_hotpot_upgrade($oldversion) {
 
     if ($update_grades) {
         // Ensure "hotpot_update_grades" function is available.
-        require_once $CFG->dirroot . '/mod/hotpot/lib.php';
+        require_once($CFG->dirroot . '/mod/hotpot/lib.php');
 
         // Unset upgraderunning because it can cause hotpot_update_grades() to fail.
         if (isset($CFG->upgraderunning)) {

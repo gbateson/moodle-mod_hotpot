@@ -36,12 +36,13 @@ require_once($CFG->dirroot . '/mod/hotpot/attempt/hp/6/jcloze/html/renderer.php'
  * @since     Moodle 2.0
  */
 class mod_hotpot_attempt_hp_6_jcloze_html_jgloss_renderer extends mod_hotpot_attempt_hp_6_jcloze_html_renderer {
-
+    /** @var string */
     public $js_object_type = 'JClozeJGloss';
 
-    /** Glossary autolinking settings (override standard JCloze - (?:I\[\d+\]\[1\]\[\d+\]\[2\])) */
-    var $headcontent_strings = 'Feedback|Correct|Incorrect|GiveHint|YourScoreIs|Guesses|(?:I\[\d+\]\[2\])';
-    var $headcontent_arrays = '';
+    /** @var string Glossary autolinking settings (override standard JCloze - (?:I\[\d+\]\[1\]\[\d+\]\[2\])) */
+    public $headcontent_strings = 'Feedback|Correct|Incorrect|GiveHint|YourScoreIs|Guesses|(?:I\[\d+\]\[2\])';
+    /** @var string */
+    public $headcontent_arrays = '';
 
     /**
      * init
@@ -61,7 +62,7 @@ class mod_hotpot_attempt_hp_6_jcloze_html_jgloss_renderer extends mod_hotpot_att
      *
      * @return array of strings
      */
-    static public function sourcetypes() {
+    public static function sourcetypes() {
         return array('hp_6_jcloze_html_jgloss');
     }
 

@@ -37,7 +37,6 @@ defined('MOODLE_INTERNAL') || die();
  * @since      Moodle 2.6
  */
 abstract class base extends \core\event\base {
-
     /**
      * Pattern to match names of legacy functions.
      * This is used to hide legacy functions and so prevent error
@@ -164,7 +163,7 @@ abstract class base extends \core\event\base {
         return $eventdata;
     }
 
-   /**
+    /**
      * Records required by my_get_legacy_eventdata
      *
      * @return array(array($name, $table, $id), ...)

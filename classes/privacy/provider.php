@@ -54,7 +54,6 @@ class provider implements
 
     // This plugin is capable of determining which users have data within it.
     \core_privacy\local\request\core_userlist_provider {
-
     /**
      * Return the fields which contain personal data.
      *

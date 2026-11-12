@@ -36,7 +36,6 @@ require_once($CFG->dirroot . '/mod/hotpot/attempt/hp/6/jmix/xml/v6/plus/renderer
  * @since     Moodle 2.0
  */
 class mod_hotpot_attempt_hp_6_jmix_xml_v6_plus_keypress_renderer extends mod_hotpot_attempt_hp_6_jmix_xml_v6_plus_renderer {
-
     /**
      * fix_bodycontent
      *

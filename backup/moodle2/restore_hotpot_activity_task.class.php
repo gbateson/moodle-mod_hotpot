@@ -30,7 +30,6 @@ require_once($CFG->dirroot . '/mod/hotpot/backup/moodle2/restore_hotpot_stepslib
  * complete restore of the activity
  */
 class restore_hotpot_activity_task extends restore_activity_task {
-
     /**
      * Define (add) particular settings this activity can have
      */
@@ -49,7 +48,7 @@ class restore_hotpot_activity_task extends restore_activity_task {
      * Define the contents in the activity that must be
      * processed by the link decoder
      */
-    static public function define_decode_contents() {
+    public static function define_decode_contents() {
         return array(
             new restore_decode_content('hotpot', array('entrytext', 'exittext'), 'hotpot'),
         );
@@ -59,7 +58,7 @@ class restore_hotpot_activity_task extends restore_activity_task {
      * Define the decoding rules for links belonging
      * to the activity to be executed by the link decoder
      */
-    static public function define_decode_rules() {
+    public static function define_decode_rules() {
         return array(
             new restore_decode_rule('HOTPOTVIEWBYID', '/mod/hotpot/view.php?id=$1', 'course_module'),
             new restore_decode_rule('HOTPOTINDEX', '/mod/hotpot/index.php?id=$1', 'course'),
@@ -73,7 +72,7 @@ class restore_hotpot_activity_task extends restore_activity_task {
     * hotpot logs. It must return one array
     * of {@link restore_log_rule} objects
     */
-    static public function define_restore_log_rules() {
+    public static function define_restore_log_rules() {
         $rules = array();
 
         $rules[] = new restore_log_rule('hotpot', 'attempt', 'view.php?id={course_module}', '{hotpot}');
@@ -95,7 +94,7 @@ class restore_hotpot_activity_task extends restore_activity_task {
     * by the restore final task, but are defined here at
     * activity level. All them are rules not linked to any module instance (cmid = 0)
     */
-    static public function define_restore_log_rules_for_course() {
+    public static function define_restore_log_rules_for_course() {
         $rules = array();
 
         $rules[] = new restore_log_rule('hotpot', 'index', 'index.php?id={course}', null);

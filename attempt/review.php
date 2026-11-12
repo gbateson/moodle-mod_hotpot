@@ -33,7 +33,6 @@ defined('MOODLE_INTERNAL') || die();
  * @since     Moodle 2.0
  */
 class mod_hotpot_attempt_review {
-
     /**
      * return true if question text should appear on review page, or false otherwise
      *

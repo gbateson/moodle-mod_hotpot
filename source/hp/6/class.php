@@ -36,7 +36,6 @@ require_once($CFG->dirroot . '/mod/hotpot/source/hp/class.php');
  * @since     Moodle 2.0
  */
 class hotpot_source_hp_6 extends hotpot_source_hp {
-
     // TexToys (Rhubarb and Sequitur) classes can set this flag to "true".
     const IS_TEXTOYS = false;
 
@@ -46,7 +45,7 @@ class hotpot_source_hp_6 extends hotpot_source_hp {
      * @param string $content of HTML file (passed by reference)
      * @return array of required strings for HTML content
      */
-    static public function required_strings_html(&$content) {
+    public static function required_strings_html(&$content) {
         $strings = array(
             '<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />',
         );

@@ -36,13 +36,12 @@ require_once($CFG->dirroot . '/mod/hotpot/attempt/hp/6/jcloze/renderer.php');
  * @since     Moodle 2.0
  */
 class mod_hotpot_attempt_hp_6_jcloze_html_renderer extends mod_hotpot_attempt_hp_6_jcloze_renderer {
-
     /**
      * the source file types with which this output format can be used
      *
      * @return array of source file types
      */
-    static public function sourcetypes() {
+    public static function sourcetypes() {
         return array('hp_6_jcloze_html');
     }
 }

@@ -35,12 +35,16 @@ require_once($CFG->dirroot . '/mod/hotpot/report/renderer.php');
  * @since     Moodle 2.0
  */
 class mod_hotpot_report_analysis_renderer extends mod_hotpot_report_renderer {
+    /** @var string */
     public $mode = 'analysis';
 
+    /** @var array */
     public $tablecolumns = array('responsefield');
 
+    /** @var array */
     public $filterfields = array('status' => 0);
 
+    /** @var bool */
     public $has_questioncolumns = true;
 
     /**

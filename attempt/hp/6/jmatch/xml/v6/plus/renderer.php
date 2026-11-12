@@ -36,6 +36,7 @@ require_once($CFG->dirroot . '/mod/hotpot/attempt/hp/6/jmatch/xml/v6/renderer.ph
  * @since     Moodle 2.0
  */
 class mod_hotpot_attempt_hp_6_jmatch_xml_v6_plus_renderer extends mod_hotpot_attempt_hp_6_jmatch_xml_v6_renderer {
+    /** @var string */
     public $templatefile = 'djmatch6.ht_';
 
     /**

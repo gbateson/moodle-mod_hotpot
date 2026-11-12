@@ -41,7 +41,6 @@ require_once($CFG->dirroot . '/mod/hotpot/attempt/hp/renderer.php');
  * @subpackage hotpot
  */
 class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
-
     // declare properties that are set at runtime,
     // to avoid "dynamic property" deprecation warnings in PHP >= 8.2.
     /** @var mixed */
@@ -1578,9 +1577,9 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
     public function fix_filters() {
         global $CFG, $FILTERLIB_PRIVATE;
 
-        ////////////////////////////////////////////////
+        /*//////////////////////////////////////////////
         // adjust filters
-        ////////////////////////////////////////////////
+        //////////////////////////////////////////////*/
 
         $context = $this->hotpot->context;
 
@@ -1650,16 +1649,16 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
             }
         }
 
-        ////////////////////////////////////////////////
+        /*//////////////////////////////////////////////
         // filter the content
-        ////////////////////////////////////////////////
+        //////////////////////////////////////////////*/
 
         $this->filter_text_headcontent();
         $this->filter_text_bodycontent();
 
-        ////////////////////////////////////////////////
+        /*//////////////////////////////////////////////
         // reset filters
-        ////////////////////////////////////////////////
+        //////////////////////////////////////////////*/
 
         list($newactives, $configs) = filter_get_all_local_settings($context->id);
         if ($newactives === false) {
@@ -1679,9 +1678,9 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
             filter_set_local_state($active->filter, $context->id, TEXTFILTER_INHERIT);
         }
 
-        ////////////////////////////////////////////////
+        /*//////////////////////////////////////////////
         // tidy up
-        ////////////////////////////////////////////////
+        //////////////////////////////////////////////*/
 
         // Fix unwanted conversions by the Moodle's Tex filter
         // http://moodle.org/mod/forum/discuss.php?d=68435
@@ -2367,7 +2366,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * @return xxx
      */
     public function expand_FuncLightColor() {
- // Top-left of buttons.
+        // Top-left of buttons.
         $color = $this->hotpot->source->xml_value($this->hotpot->source->hbs_software . '-config-file,global,ex-bg-color');
         return $this->expand_halfway_color($color, '#ffffff');
     }
@@ -2378,7 +2377,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      * @return xxx
      */
     public function expand_FuncShadeColor() {
- // Bottom right of buttons.
+        // Bottom right of buttons.
         $color = $this->hotpot->source->xml_value($this->hotpot->source->hbs_software . '-config-file,global,ex-bg-color');
         return $this->expand_halfway_color($color, '#000000');
     }
@@ -4099,7 +4098,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
      *
      * @return xxx
      */
-     public function expand_ForceLowercase() {
+    public function expand_ForceLowercase() {
         $tag = $this->hotpot->source->hbs_software . '-config-file,' . $this->hotpot->source->hbs_quiztype . ',force-lowercase';
         return $this->hotpot->source->xml_value_int($tag);
     }

@@ -36,14 +36,13 @@ require_once($CFG->dirroot . '/mod/hotpot/source/hp/6/jcloze/html/class.php');
  * @since     Moodle 2.0
  */
 class hotpot_source_hp_6_jcloze_html_findit extends hotpot_source_hp_6_jcloze_html {
-
     /**
      * is_quizfile
      *
      * @param xxx $sourcefile
      * @return xxx
      */
-    static public function is_quizfile($sourcefile) {
+    public static function is_quizfile($sourcefile) {
         return false;
     }
 }

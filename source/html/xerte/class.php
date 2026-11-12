@@ -36,7 +36,6 @@ require_once($CFG->dirroot . '/mod/hotpot/source/html/class.php');
  * @since     Moodle 2.0
  */
 class hotpot_source_html_xerte extends hotpot_source_html {
-
     const REQUIRED_FILETYPES = array(
         'htm', 'html',
     );
@@ -45,11 +44,11 @@ class hotpot_source_html_xerte extends hotpot_source_html {
         "/myRLO = new rloObject\('\d*','\d*','[^']*.rl[ot]'[^)]*\)/",
     );
 
-    // Properties of the icon for this source file type.
-    var $icon = 'mod/hotpot/file/html/xerte/icon.gif';
+    /** @var string Properties of the icon for this source file type. */
+    public $icon = 'mod/hotpot/file/html/xerte/icon.gif';
 
-    // Xmlized content of template.xml.
-    var $template_xml = null;
+    /** @var mixed Xmlized content of template.xml. */
+    public $template_xml = null;
 
     /**
      * get_template_xml

@@ -41,20 +41,27 @@ require_once($CFG->dirroot . '/mod/hotpot/attempt/hp/6/renderer.php');
  * @subpackage hotpot
  */
 class mod_hotpot_attempt_hp_6_jcross_renderer extends mod_hotpot_attempt_hp_6_renderer {
+    /** @var string */
     public $icon = 'pix/f/jcw.gif';
+    /** @var string */
     public $js_object_type = 'JCross';
 
+    /** @var string */
     public $templatefile = 'jcross6.ht_';
+    /** @var string */
     public $templatestrings = 'PreloadImageList|ShowHideClueList';
 
-    // Glossary autolinking settings.
+    /** @var string Glossary autolinking settings. */
     public $headcontent_strings = 'Feedback|AcrossCaption|DownCaption|Correct|Incorrect|GiveHint|YourScoreIs';
+    /** @var string */
     public $headcontent_arrays = '';
 
+    /** @var array */
     public $response_text_fields = array(
         'correct', 'wrong', // Remove: ignored.
     );
 
+    /** @var array */
     public $response_num_fields = array(
         'score', 'hints', 'clues', 'checks', // Remove: weighting.
     );

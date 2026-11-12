@@ -36,13 +36,12 @@ require_once($CFG->dirroot . '/mod/hotpot/attempt/hp/6/jmix/renderer.php');
  * @since     Moodle 2.0
  */
 class mod_hotpot_attempt_hp_6_jmix_html_renderer extends mod_hotpot_attempt_hp_6_jmix_renderer {
-
     /**
      * List of source types which this renderer can handle
      *
      * @return array of strings
      */
-    static public function sourcetypes() {
+    public static function sourcetypes() {
         return array('hp_6_jmix_html');
     }
 

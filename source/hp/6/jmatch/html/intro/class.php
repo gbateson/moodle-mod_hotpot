@@ -49,7 +49,7 @@ class hotpot_source_hp_6_jmatch_html_intro extends hotpot_source_hp_6_jmatch_htm
      * @param string $content of HTML file (passed by reference)
      * @return array of required strings for HTML content
      */
-    static public function required_strings_html(&$content) {
+    public static function required_strings_html(&$content) {
         $strings = parent::required_strings_html($content);
         if (is_numeric(in_array('<div id="MainDiv" class="StdDiv">', $strings))) {
             $strings[] = '<div id="MatchDiv" style="text-align: center;">';

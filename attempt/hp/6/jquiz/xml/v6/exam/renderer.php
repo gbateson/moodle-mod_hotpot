@@ -36,13 +36,18 @@ require_once($CFG->dirroot . '/mod/hotpot/attempt/hp/6/jquiz/xml/v6/renderer.php
  * @since     Moodle 2.0
  */
 class mod_hotpot_attempt_hp_6_jquiz_xml_v6_exam_renderer extends mod_hotpot_attempt_hp_6_jquiz_xml_v6_renderer {
-
-    // to faciliate autoadvance to next question, pass QNum to ShowMessage()
+    /** @var string to faciliate autoadvance to next question, pass QNum to ShowMessage() */
     public $searchShowMessage = '/(?<=ShowMessage)\(([^)]*)\)/';
+    /** @var string */
     public $replaceShowMessage = '($1, QNum)';
 
-    // To facilitate autoplay of media, call PlaySound() every time we advance to a new question.
+    /**
+     * To facilitate autoplay of media, call PlaySound() every time we advance to a new question.
+     *
+     * @var string
+     */
     public $searchSetQNumReadout = '/(\s*)SetQNumReadout\(\);/';
+    /** @var string */
     public $replaceSetQNumReadout = '$1PlaySound(CurrQNum,0);$0';
 
     /**
@@ -50,7 +55,7 @@ class mod_hotpot_attempt_hp_6_jquiz_xml_v6_exam_renderer extends mod_hotpot_atte
      *
      * @return array of strings
      */
-    static public function sourcetypes() {
+    public static function sourcetypes() {
         return array('hp_6_jquiz_xml', 'hp_7_jquiz_xml');
     }
 

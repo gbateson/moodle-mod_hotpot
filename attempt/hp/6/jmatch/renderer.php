@@ -36,23 +36,32 @@ require_once($CFG->dirroot . '/mod/hotpot/attempt/hp/6/renderer.php');
  * @since     Moodle 2.0
  */
 class mod_hotpot_attempt_hp_6_jmatch_renderer extends mod_hotpot_attempt_hp_6_renderer {
+    /** @var string */
     public $icon = 'pix/f/jmt.gif';
+    /** @var string */
     public $js_object_type = 'JMatch';
 
+    /** @var string */
     public $templatefile = 'jmatch6.ht_';
+    /** @var string */
     public $templatestrings = 'PreloadImageList|QsToShow|FixedArray|DragArray';
 
+    /** @var array */
     public $l_items = array();
+    /** @var array */
     public $r_items = array();
 
-    // Glossary autolinking settings.
+    /** @var string Glossary autolinking settings. */
     public $headcontent_strings = 'CorrectResponse|IncorrectResponse|YourScoreIs|F|D';
+    /** @var string */
     public $headcontent_arrays = '';
 
+    /** @var array */
     public $response_text_fields = array(
         'correct', 'wrong', // Remove: ignored.
     );
 
+    /** @var array */
     public $response_num_fields = array(
         'checks', // Remove: score, weighting, hints, clues.
     );

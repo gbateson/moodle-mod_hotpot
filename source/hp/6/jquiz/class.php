@@ -36,7 +36,10 @@ require_once($CFG->dirroot . '/mod/hotpot/source/hp/6/class.php');
  * @since     Moodle 2.0
  */
 class hotpot_source_hp_6_jquiz extends hotpot_source_hp_6 {
+    /** @var string */
     public $icon = 'pix/f/jqz.gif';
+    /** @var string */
     public $hbs_software = 'hotpot';
+    /** @var string */
     public $hbs_quiztype = 'jquiz';
 }

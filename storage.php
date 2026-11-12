@@ -35,7 +35,6 @@ require_once($CFG->dirroot . '/mod/hotpot/lib.php');
  * @since     Moodle 2.0
  */
 class mod_hotpot_storage {
-
     /**
      * the name of the $_POST fields holding the score and details
      * and the xml tag within the details that holds the results
@@ -59,7 +58,7 @@ class mod_hotpot_storage {
      *
      * @param xxx $hotpot
      */
-    static public function store($hotpot) {
+    public static function store($hotpot) {
         global $CFG, $DB, $USER;
 
         if (empty($hotpot->attempt)) {
@@ -179,7 +178,7 @@ class mod_hotpot_storage {
      * @param xxx $old_string (passed by reference)
      * @return xxx
      */
-    static public function pre_xmlize(&$old_string) {
+    public static function pre_xmlize(&$old_string) {
         $new_string = '';
         $str_start = 0;
         while (($cdata_start = strpos($old_string, '<![CDATA[', $str_start)) && ($cdata_end = strpos($old_string, ']]>', $cdata_start))) {
@@ -196,7 +195,7 @@ class mod_hotpot_storage {
      *
      * @param xxx $attempt (passed by reference)
      */
-    static public function store_details($attempt) {
+    public static function store_details($attempt) {
 
         // Encode ampersands so that HTML entities are preserved in the XML parser
         // N.B. ampersands inside <![CDATA[ ]]> blocks do NOT need to be encoded
@@ -324,7 +323,7 @@ class mod_hotpot_storage {
      * @param xxx $question (passed by reference)
      * @param xxx $response (passed by reference)
      */
-    static public function add_response(&$attempt, &$question, &$response) {
+    public static function add_response(&$attempt, &$question, &$response) {
         global $DB;
 
         if (! $question || ! $response || ! isset($question->name)) {

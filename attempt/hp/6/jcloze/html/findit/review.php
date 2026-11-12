@@ -36,7 +36,6 @@ require_once($CFG->dirroot . '/mod/hotpot/attempt/hp/6/jcloze/html/review.php');
  * @since     Moodle 2.0
  */
 class mod_hotpot_attempt_hp_6_jcloze_html_findit_review extends mod_hotpot_attempt_hp_6_jcloze_html_review {
-
     /**
      * attempt_fields
      *

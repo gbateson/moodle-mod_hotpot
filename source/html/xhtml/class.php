@@ -36,14 +36,16 @@ require_once($CFG->dirroot . '/mod/hotpot/source/html/class.php');
  * @since     Moodle 2.0
  */
 class hotpot_source_html_xhtml extends hotpot_source_html {
-
     const REQUIRED_FILETYPES = array(
         'xhtm', 'xhtml',
     );
 
-    // The icon for this source file type.
+    /** @var string The icon for this source file type. */
     public $icon = 'pix/f/html.gif';
+    /** @var string */
     public $iconwidth = '16';
+    /** @var string */
     public $iconheight = '16';
+    /** @var string */
     public $iconclass = 'icon';
 }

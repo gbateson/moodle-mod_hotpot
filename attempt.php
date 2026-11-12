@@ -59,7 +59,7 @@ $PAGE->set_heading($course->fullname);
 // Allow the HotPot activity to set its preferred page layout.
 $hotpot->set_preferred_pagelayout($PAGE);
 
-/// Create an object to manage all the other (non-roles) access rules.
+// Create an object to manage all the other (non-roles) access rules.
 // $timenow = time();
 // $canignoretimelimits = has_capability('mod/hotpot:ignoretimelimits', $PAGE->context, null, false);
 // $accessmanager = new hotpot_access_manager($hotpot, $timenow, $canignoretimelimits);
@@ -89,8 +89,8 @@ if ($warnings = $output->entrywarnings($hotpot)) {
     exit;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-// Output starts here                                                         //
-////////////////////////////////////////////////////////////////////////////////
+/*//////////////////////////////////////////////////////////////////////////////
+// Output starts here
+//////////////////////////////////////////////////////////////////////////////*/
 
 echo $output->render_attempt($hotpot);

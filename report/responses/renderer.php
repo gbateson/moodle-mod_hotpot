@@ -35,18 +35,22 @@ require_once($CFG->dirroot . '/mod/hotpot/report/renderer.php');
  * @since     Moodle 2.0
  */
 class mod_hotpot_report_responses_renderer extends mod_hotpot_report_renderer {
+    /** @var string */
     public $mode = 'responses';
 
+    /** @var array */
     public $tablecolumns = array(
         'picture', 'fullname', 'grade', 'selected', 'attempt',
         'timemodified', 'status', 'duration', 'penalties', 'score',
     );
 
+    /** @var array */
     public $filterfields = array(
         'group' => 0, 'realname' => 0, // 'lastname'=>1, 'firstname'=>1, 'username'=>1,
         'grade' => 1, 'timemodified' => 1, 'status' => 1, 'duration' => 1, 'penalties' => 1, 'score' => 1,
     );
 
+    /** @var bool */
     public $has_questioncolumns = true;
 
     /**

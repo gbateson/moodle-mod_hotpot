@@ -40,17 +40,22 @@ require_once($CFG->dirroot . '/mod/hotpot/source/class.php');
  * @subpackage hotpot
  */
 class hotpot_source_hp extends hotpot_source {
-
+    /** @var mixed An array containing the xml tree for hp xml files. */
     public $xml; // An array containing the xml tree for hp xml files.
+    /** @var mixed The array key of the root of the xml tree. */
     public $xml_root; // The array key of the root of the xml tree.
 
+    /** @var mixed Hotpot or textoys. */
     public $hbs_software; // Hotpot or textoys.
+    /** @var mixed Jcloze, jcross, jmatch, jmix, jquiz, quandary, rhubarb, sequitur. */
     public $hbs_quiztype; // Jcloze, jcross, jmatch, jmix, jquiz, quandary, rhubarb, sequitur.
 
+    /** @var mixed 6 or 7 */
     public $hbs_version; // 6 or 7
+    /** @var mixed */
     public $hbs_filetype;
 
-    // Encode a string for javascript.
+    /** @var array Encode a string for javascript. */
     public $javascript_replace_pairs = array(
         // Backslashes and quotes.
         '\\' => '\\\\', "'" => "\\'", '"' => '\\"',
@@ -60,18 +65,26 @@ class hotpot_source_hp extends hotpot_source {
         "\0" => '\\0', '</' => '<\\/',
     );
 
-    // Unicode characters can be detected by checking the hex value of a character
-    // 00 - 7F : ascii char (roman alphabet + punctuation)
-    // 80 - BF : byte 2, 3 or 4 of a unicode char
-    // C0 - DF : 1st byte of 2-byte char
-    // E0 - EF : 1st byte of 3-byte char
-    // F0 - FF : 1st byte of 4-byte char
-    // if the string doesn't match any of the above, it might be
-    // 80 - FF : single-byte, non-ascii char.
+    /**
+     * Unicode characters can be detected by checking the hex value of a character
+     * 00 - 7F : ascii char (roman alphabet + punctuation)
+     * 80 - BF : byte 2, 3 or 4 of a unicode char
+     * C0 - DF : 1st byte of 2-byte char
+     * E0 - EF : 1st byte of 3-byte char
+     * F0 - FF : 1st byte of 4-byte char
+     * if the string doesn't match any of the above, it might be
+     * 80 - FF : single-byte, non-ascii char.
+     *
+     * @var string
+     */
     public $search_unicode_chars = '/[\xc0-\xdf][\x80-\xbf]|[\xe0-\xef][\x80-\xbf]{2}|[\xf0-\xff][\x80-\xbf]{3}|[\x00-\xff]/';
 
-    // Array used to figure what number to decrement from character order value
-    // according to number of characters used to map unicode to ascii by utf-8.
+    /**
+     * Array used to figure what number to decrement from character order value
+     * according to number of characters used to map unicode to ascii by utf-8.
+     *
+     * @var array
+     */
     public $utf8_decrement = array(
         1 => 0,
         2 => 192,
@@ -79,7 +92,7 @@ class hotpot_source_hp extends hotpot_source {
         4 => 240,
     );
 
-    // The number of bits to shift each character by.
+    /** @var array The number of bits to shift each character by. */
     public $utf8_shift = array(
         1 => array(0 => 0),
         2 => array(0 => 6,  1 => 0),

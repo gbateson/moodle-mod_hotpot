@@ -36,13 +36,12 @@ require_once($CFG->dirroot . '/mod/hotpot/attempt/hp/6/jquiz/xml/renderer.php');
  * @since     Moodle 2.0
  */
 class mod_hotpot_attempt_hp_6_jquiz_xml_v6_renderer extends mod_hotpot_attempt_hp_6_jquiz_xml_renderer {
-
     /**
      * List of source types which this renderer can handle
      *
      * @return array of strings
      */
-    static public function sourcetypes() {
+    public static function sourcetypes() {
         return array('hp_6_jquiz_xml', 'hp_7_jquiz_xml');
     }
 }

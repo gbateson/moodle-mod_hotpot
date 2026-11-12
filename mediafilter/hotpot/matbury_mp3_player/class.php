@@ -32,13 +32,18 @@ defined('MOODLE_INTERNAL') || die();
  * @since     Moodle 2.0
  */
 class hotpot_mediaplayer_matbury_mp3_player extends hotpot_mediaplayer {
+    /** @var array */
     public $aliases = array('matbury');
+    /** @var string */
     public $playerurl = 'matbury_mp3_player/matbury_mp3_player.swf';
+    /** @var string */
     public $flashvars_paramname = 'mp3url';
+    /** @var array */
     public $more_options = array(
         'width' => 200, 'height' => 18, 'majorversion' => 9, 'build' => 115,
         'timesToPlay' => 1, 'showPlay' => 'true', 'waitToPlay' => 'true',
     );
+    /** @var array */
     public $flashvars = array(
         'timesToPlay' => PARAM_INT, 'showPlay' => PARAM_ALPHANUM, 'waitToPlay' => PARAM_ALPHANUM,
     );

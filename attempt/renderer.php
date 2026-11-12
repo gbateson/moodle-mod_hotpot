@@ -35,61 +35,62 @@ require_once($CFG->dirroot . '/mod/hotpot/renderer.php');
  * @since     Moodle 2.0
  */
 class mod_hotpot_attempt_renderer extends mod_hotpot_renderer {
-
-    /** xml declaration */
+    /** @var mixed xml declaration */
     protected $xmldeclaration;
 
-    /** doctype tag */
+    /** @var mixed doctype tag */
     protected $doctype;
 
-    /** html tag attributes */
+    /** @var mixed html tag attributes */
     protected $htmlattributes;
 
-    /** head tag attributes */
+    /** @var mixed head tag attributes */
     protected $headattributes;
 
-    /** head content */
+    /** @var mixed head content */
     public $headcontent;
 
-    /** body tag attributes */
+    /** @var mixed body tag attributes */
     protected $bodyattributes;
 
-    /** body content */
+    /** @var mixed body content */
     public $bodycontent;
 
-    /** name of html frame */
+    /** @var mixed name of html frame */
     protected $framename;
 
-    /** boolean flag indicating whether or not we should use the Moodle theme */
+    /** @var mixed boolean flag indicating whether or not we should use the Moodle theme */
     protected $usemoodletheme;
 
-    /** name of theme containiner */
+    /** @var mixed name of theme containiner */
     protected $themecontainer;
 
-    /** the hotpot object (as defined in "mod/hotpot/locallib.php") representing this HotPot */
+    /** @var mixed the hotpot object (as defined in "mod/hotpot/locallib.php") representing this HotPot */
     public $hotpot;
 
-    /** the id for the embedded object used for hotpot::NAVIGATION_EMBED */
+    /** @var string the id for the embedded object used for hotpot::NAVIGATION_EMBED */
     protected $embed_object_id  = 'hotpot_embed_object';
 
-    /** the onload function (in iframe.js) for the embedded object (if used) */
+    /** @var string the onload function (in iframe.js) for the embedded object (if used) */
     protected $embed_object_onload  = 'set_embed_object_height';
 
     /**
      * most outputformats use the hotpot cache
      * but those that don't can switch this flag off
+     * @var bool
      */
     protected $use_hotpot_cache = true;
 
-    /** object to store the hotpot_cache record for the quiz */
+    /** @var mixed object to store the hotpot_cache record for the quiz */
     protected $cache;
 
-    /** boolean flag that indicates whether the cache content is uptodate or not */
+    /** @var mixed boolean flag that indicates whether the cache content is uptodate or not */
     protected $cache_uptodate;
 
     /**
      * these $CFG fields must match those in the "hotpot_cache" table
      * "wwwroot" is not stored explicitly because it is included in the md5key
+     * @var array
      */
     protected $cache_CFG_fields = array(
         'slasharguments', 'hotpot_bodystyles', 'hotpot_enableobfuscate', 'hotpot_enableswf',
@@ -98,6 +99,7 @@ class mod_hotpot_attempt_renderer extends mod_hotpot_renderer {
     /**
      * these fields in the hotpot record must match those in the "hotpot_cache" table
      * "outputformat" is not stored explicitly because it is included in the md5key
+     * @var array
      */
     protected $cache_hotpot_fields = array(
         'name', 'sourcefile', 'sourcetype', 'sourcelocation', 'configfile', 'configlocation',
@@ -105,7 +107,7 @@ class mod_hotpot_attempt_renderer extends mod_hotpot_renderer {
         'studentfeedback', 'studentfeedbackurl', 'timelimit', 'delay3', 'clickreporting',
     );
 
-    /** these fields are treated as text fields */
+    /** @var array these fields are treated as text fields */
     public $cache_text_fields = array(
         'slasharguments', 'hotpot_enableobfuscate', 'hotpot_enableswf', 'name',
         'sourcefile', 'sourcetype', 'sourcelastmodified', 'sourceetag',
@@ -114,25 +116,35 @@ class mod_hotpot_attempt_renderer extends mod_hotpot_renderer {
     );
 
     /* these fields from the source and config file objects are stored in the cache */
+    /** @var array */
     public $cache_remote_fields = array(
         'lastmodified', 'etag',
     );
 
     /**
      * these fields will be serialized and then stored in the "content" field of the "hotpot_cache" table
+     * @var array
      */
     protected $cache_content_fields = array(
         'xmldeclaration', 'doctype', 'htmlattributes', 'headattributes', 'headcontent', 'bodyattributes', 'bodycontent',
     );
 
+    /** @var int */
     protected $unitid = 0;
+    /** @var int */
     protected $unumber = 0;
+    /** @var int */
     protected $unitgradeid = 0;
+    /** @var int */
     protected $unitattemptid = 0;
 
+    /** @var int */
     protected $quizid = 0;
+    /** @var int */
     protected $qnumber = 0;
+    /** @var int */
     protected $quizscoreid = 0;
+    /** @var int */
     protected $quizattemptid = 0;
 
     /**
@@ -185,7 +197,7 @@ class mod_hotpot_attempt_renderer extends mod_hotpot_renderer {
      *
      * @return array of source file types
      */
-    static public function sourcetypes() {
+    public static function sourcetypes() {
         return array();
     }
 
@@ -273,9 +285,9 @@ class mod_hotpot_attempt_renderer extends mod_hotpot_renderer {
         echo $this->hotpot_footer();
     }
 
-    /////////////////////////////////////////////////////////////////////
-    // functions to prepare browser content                            //
-    /////////////////////////////////////////////////////////////////////
+    /*///////////////////////////////////////////////////////////////////
+    // functions to prepare browser content
+    ///////////////////////////////////////////////////////////////////*/
 
     /**
      * preprocessing
@@ -308,7 +320,7 @@ class mod_hotpot_attempt_renderer extends mod_hotpot_renderer {
      */
     protected function set_htmlattributes() {
 
-    if (! isset($this->htmlattributes)) {
+        if (! isset($this->htmlattributes)) {
             $this->htmlattributes = '';
         }
     }
@@ -387,9 +399,9 @@ class mod_hotpot_attempt_renderer extends mod_hotpot_renderer {
         }
     }
 
-   /////////////////////////////////////////////////////////////////////
-    // functions to merge external page with Moodle page               //
-    /////////////////////////////////////////////////////////////////////
+    /*///////////////////////////////////////////////////////////////////
+    // functions to merge external page with Moodle page
+    ///////////////////////////////////////////////////////////////////*/
 
     /**
      * generates the header for this hotpot attempt
@@ -437,9 +449,9 @@ class mod_hotpot_attempt_renderer extends mod_hotpot_renderer {
         return $this->bodycontent;
     }
 
-    /////////////////////////////////////////////////////////////////////
-    // functions to generate frames                                    //
-    /////////////////////////////////////////////////////////////////////
+    /*///////////////////////////////////////////////////////////////////
+    // functions to generate frames
+    ///////////////////////////////////////////////////////////////////*/
 
     /**
      * basetag
@@ -604,9 +616,9 @@ class mod_hotpot_attempt_renderer extends mod_hotpot_renderer {
         echo $this->footer();
     }
 
-    /////////////////////////////////////////////////////////////////////
-    // functions to set and get cached content                         //
-    /////////////////////////////////////////////////////////////////////
+    /*///////////////////////////////////////////////////////////////////
+    // functions to set and get cached content
+    ///////////////////////////////////////////////////////////////////*/
 
     /**
      * get_cache_md5key
@@ -823,9 +835,9 @@ class mod_hotpot_attempt_renderer extends mod_hotpot_renderer {
         return $title;
     }
 
-    /////////////////////////////////////////////////////////////////////
-    // utility functions to indicate whether user can resume, restart  //
-    /////////////////////////////////////////////////////////////////////
+    /*///////////////////////////////////////////////////////////////////
+    // utility functions to indicate whether user can resume, restart
+    ///////////////////////////////////////////////////////////////////*/
 
     // Does this output format allow quiz attempts to be resumed?
 
@@ -1005,9 +1017,9 @@ class mod_hotpot_attempt_renderer extends mod_hotpot_renderer {
         redirect($response); // Script will die here.
     }
 
-    /////////////////////////////////////////////////////////////////////
-    // utility functions for extracting and cleaning html              //
-    /////////////////////////////////////////////////////////////////////
+    /*///////////////////////////////////////////////////////////////////
+    // utility functions for extracting and cleaning html
+    ///////////////////////////////////////////////////////////////////*/
 
     /**
      * remove_blank_lines
@@ -1062,9 +1074,9 @@ class mod_hotpot_attempt_renderer extends mod_hotpot_renderer {
         return '/' . $before . '<' . $tag . '([^>]*' . $attribute . ')>' . $content . $after . '/is';
     }
 
-    /////////////////////////////////////////////////////////////////////
-    // utility functions for fixing css, media, onload, and urls       //
-    /////////////////////////////////////////////////////////////////////
+    /*///////////////////////////////////////////////////////////////////
+    // utility functions for fixing css, media, onload, and urls
+    ///////////////////////////////////////////////////////////////////*/
 
     /**
      * fix_css_definitions

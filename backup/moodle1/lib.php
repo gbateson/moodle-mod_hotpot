@@ -41,7 +41,6 @@ require_once($CFG->dirroot . '/mod/hotpot/locallib.php');
  * - get_converter, log
  */
 class moodle1_mod_hotpot_handler extends moodle1_mod_handler {
-
     // declare properties that are set at runtime,
     // to avoid "dynamic property" deprecation warnings in PHP >= 8.2.
     /** @var mixed */

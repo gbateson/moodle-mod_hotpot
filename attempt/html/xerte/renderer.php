@@ -36,9 +36,8 @@ require_once($CFG->dirroot . '/mod/hotpot/attempt/html/renderer.php');
  * @since     Moodle 2.0
  */
 class mod_hotpot_attempt_html_xerte_renderer extends mod_hotpot_attempt_html_renderer {
-
-    // Source file types with which this output format can be used.
-    var $filetypes = array('html_xerte');
+    /** @var array Source file types with which this output format can be used. */
+    public $filetypes = array('html_xerte');
 
     /**
      * init

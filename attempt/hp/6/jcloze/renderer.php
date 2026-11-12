@@ -39,14 +39,19 @@ require_once($CFG->dirroot . '/mod/hotpot/attempt/hp/6/renderer.php');
  * @subpackage hotpot
  */
 class mod_hotpot_attempt_hp_6_jcloze_renderer extends mod_hotpot_attempt_hp_6_renderer {
+    /** @var string */
     public $icon = 'pix/f/jcl.gif';
+    /** @var string */
     public $js_object_type = 'JCloze';
 
+    /** @var string */
     public $templatefile = 'jcloze6.ht_';
+    /** @var string */
     public $templatestrings = 'PreloadImageList';
 
-    // Glossary autolinking settings.
+    /** @var string Glossary autolinking settings. */
     public $headcontent_strings = 'Feedback|Correct|Incorrect|GiveHint|YourScoreIs|Guesses|(?:I\[\d+\]\[[12]\])';
+    /** @var string */
     public $headcontent_arrays = '';
 
     /**
@@ -381,7 +386,7 @@ class mod_hotpot_attempt_hp_6_jcloze_renderer extends mod_hotpot_attempt_hp_6_re
             $substr = substr_replace($substr, $replace, $pos, $len);
         }
 
-         if ($this->expand_CaseSensitive()) {
+        if ($this->expand_CaseSensitive()) {
             $search = 'SelectorList = Shuffle(SelectorList);';
             $replace = 'SelectorList = AlphabeticalSort(SelectorList, x);';
             $substr = str_replace($search, $replace, $substr);

@@ -36,7 +36,6 @@ require_once($CFG->dirroot . '/mod/hotpot/attempt/hp/6/jquiz/renderer.php');
  * @since     Moodle 2.0
  */
 class mod_hotpot_attempt_hp_6_jquiz_xml_renderer extends mod_hotpot_attempt_hp_6_jquiz_renderer {
-
     /**
      * expand_ItemArray
      *

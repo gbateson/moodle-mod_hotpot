@@ -36,7 +36,6 @@ require_once($CFG->dirroot . '/mod/hotpot/attempt/hp/6/review.php');
  * @since     Moodle 2.0
  */
 class mod_hotpot_attempt_hp_6_jmatch_review extends mod_hotpot_attempt_hp_6_review {
-
     /**
      * response_text_fields
      *

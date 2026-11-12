@@ -31,10 +31,9 @@ defined('MOODLE_INTERNAL') || die();
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class mod_hotpot_renderer extends plugin_renderer_base {
-
-    /////////////////////////////////////////////////////////////////////
-    // functions to generate common html snippets                      //
-    /////////////////////////////////////////////////////////////////////
+    /*///////////////////////////////////////////////////////////////////
+    // functions to generate common html snippets
+    ///////////////////////////////////////////////////////////////////*/
 
     /**
      * form_start
@@ -85,9 +84,9 @@ class mod_hotpot_renderer extends plugin_renderer_base {
         return $output;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
-    // Helper methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
+    /*//////////////////////////////////////////////////////////////////////////
+    // Helper methods
+    //////////////////////////////////////////////////////////////////////////*/
 
     /**
      * format_url
@@ -587,7 +586,7 @@ class mod_hotpot_renderer extends plugin_renderer_base {
                 'id' => $hotpot->cm->id, 'sesskey' => sesskey(), 'confirmed' => 0, 'action' => 'deleteselected',
             );
             $output .= $this->form_start('view.php', $params, array('onsubmit' => $onsubmit)) . "\n";
-       }
+        }
 
         // echo the summary of attempts
         $output .= html_writer::table($table);

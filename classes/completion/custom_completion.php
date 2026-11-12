@@ -36,7 +36,6 @@ defined('MOODLE_INTERNAL') || die();
  * The custom rules are defined in hotpot_get_coursemodule_info() in "lib.php".
  */
 class custom_completion extends \core_completion\activity_custom_completion {
-
     /**
      * Fetches the completion state for a given completion rule.
      *

@@ -36,16 +36,22 @@ require_once($CFG->dirroot . '/mod/hotpot/attempt/hp/6/renderer.php');
  * @since     Moodle 2.0
  */
 class mod_hotpot_attempt_hp_6_jquiz_renderer extends mod_hotpot_attempt_hp_6_renderer {
+    /** @var string */
     public $icon = 'pix/f/jqz.gif';
+    /** @var string */
     public $js_object_type = 'JQuiz';
 
+    /** @var string */
     public $templatefile = 'jquiz6.ht_';
+    /** @var string */
     public $templatestrings = 'PreloadImageList|QsToShow';
 
-    // Glossary autolinking settings.
+    /** @var string Glossary autolinking settings. */
     public $headcontent_strings = 'CorrectIndicator|IncorrectIndicator|YourScoreIs|CorrectFirstTime|DefaultRight|DefaultWrong|ShowAllQuestionsCaption|ShowOneByOneCaption|I';
+    /** @var string */
     public $headcontent_arrays = 'I';
 
+    /** @var array */
     public $response_num_fields = array(
         'score', 'weighting', 'hints', 'checks', // Remove: clues.
     );

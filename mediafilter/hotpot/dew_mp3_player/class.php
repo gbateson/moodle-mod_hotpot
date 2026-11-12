@@ -32,9 +32,13 @@ defined('MOODLE_INTERNAL') || die();
  * @since     Moodle 2.0
  */
 class hotpot_mediaplayer_dew_mp3_player extends hotpot_mediaplayer {
+    /** @var array */
     public $aliases = array('dew');
+    /** @var string */
     public $playerurl = 'dew_mp3_player/dewplayer.swf';
+    /** @var string */
     public $querystring_paramname = 'mp3';
+    /** @var array */
     public $more_options = array(
         'width' => 200, 'height' => 20, 'flashvars' => '',
         // 'bgcolor' => 'FFFFFF', 'wmode' => 'transparent',

@@ -31,7 +31,6 @@ require_once($CFG->dirroot . '/mod/hotpot/backup/moodle2/backup_hotpot_stepslib.
  * Provides all the settings and steps to perform one complete backup of hotpot activity
  */
 class backup_hotpot_activity_task extends backup_activity_task {
-
     /**
      * Define (add) particular settings this activity can have
      */
@@ -50,7 +49,7 @@ class backup_hotpot_activity_task extends backup_activity_task {
      * Code the transformations to perform in the activity in
      * order to get transportable (encoded) links
      */
-    static public function encode_content_links($content) {
+    public static function encode_content_links($content) {
         global $CFG;
 
         $base = preg_quote($CFG->wwwroot, "/");

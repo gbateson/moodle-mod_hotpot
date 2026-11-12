@@ -36,7 +36,7 @@ require_once($CFG->dirroot . '/mod/hotpot/attempt/hp/6/jcloze/xml/findit/rendere
  * @since     Moodle 2.0
  */
 class mod_hotpot_attempt_hp_6_jcloze_xml_findit_a_renderer extends mod_hotpot_attempt_hp_6_jcloze_xml_findit_renderer {
-
+    /** @var string */
     public $js_object_type = 'JClozeFindItA';
 
     /**
@@ -60,7 +60,7 @@ class mod_hotpot_attempt_hp_6_jcloze_xml_findit_a_renderer extends mod_hotpot_at
      *
      * @return array of strings
      */
-    static public function sourcetypes() {
+    public static function sourcetypes() {
         return array('hp_6_jcloze_xml', 'hp_7_jcloze_xml');
     }
 

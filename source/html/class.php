@@ -36,7 +36,6 @@ require_once($CFG->dirroot . '/mod/hotpot/source/class.php');
  * @since     Moodle 2.0
  */
 class hotpot_source_html extends hotpot_source {
-
     const REQUIRED_FILETYPES = array(
         'htm', 'html',
     );

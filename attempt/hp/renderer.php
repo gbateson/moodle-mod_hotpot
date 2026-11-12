@@ -36,7 +36,6 @@ require_once($CFG->dirroot . '/mod/hotpot/attempt/renderer.php');
  * @since     Moodle 2.0
  */
 class mod_hotpot_attempt_hp_renderer extends mod_hotpot_attempt_renderer {
-
     // declare properties that are set at runtime,
     // to avoid "dynamic property" deprecation warnings in PHP >= 8.2.
     /** @var mixed */
@@ -44,46 +43,48 @@ class mod_hotpot_attempt_hp_renderer extends mod_hotpot_attempt_renderer {
     /** @var mixed */
     public $scripts;
 
-    /** file name of main template e.g. jcloze6.ht_ */
+    /** @var string file name of main template e.g. jcloze6.ht_ */
     protected $templatefile = '';
 
-    /** special template strings to be expanded */
+    /** @var string special template strings to be expanded */
     protected $templatestrings = '';
 
-    /** templates folders (relative to Moodle dirroot) */
+    /** @var array templates folders (relative to Moodle dirroot) */
     protected $templatesfolders = array();
 
-    /** external javascripts required for this format */
+    /** @var array external javascripts required for this format */
     protected $javascripts = array();
 
-    /** type of javascript object to collect quiz results from browser */
+    /** @var string type of javascript object to collect quiz results from browser */
     protected $js_object_type = '';
 
-    // The id/name of the of the form which returns results to the browser.
+    /** @var string The id/name of the of the form which returns results to the browser. */
     protected $formid = 'store';
 
-    // The name of the score field in the results returned form the browser.
+    /** @var string The name of the score field in the results returned form the browser. */
     protected $scorefield = 'mark';
 
     /* results form field that holds the start time of the attempt */
+    /** @var string */
     protected $durationstartfield = 'starttime';
 
     /* results form field that holds the end time of the attempt */
+    /** @var string */
     protected $durationfinishfield = 'endtime';
 
     // starttime/endtime are recorded by the client (and may not be trustworthy)
     // resumestart/resumefinish are recorded by the server (but include transfer time to and from client)
 
-    /** the raw html content, either straight from an html file, or generated from an xml file */
+    /** @var mixed the raw html content, either straight from an html file, or generated from an xml file */
     protected $htmlcontent;
 
-    /** names of javascript string variables which can be passed through Glossary autolinking filter, if enabled */
+    /** @var string names of javascript string variables which can be passed through Glossary autolinking filter, if enabled */
     protected $headcontent_strings = '';
 
-    /** names of javascript array variables which can be passed through Glossary autolinking filter, if enabled */
+    /** @var string names of javascript array variables which can be passed through Glossary autolinking filter, if enabled */
     protected $headcontent_arrays = '';
 
-    // HP quizzes have a SubmissionTimeout variable, but TexToys do not.
+    /** @var bool HP quizzes have a SubmissionTimeout variable, but TexToys do not. */
     protected $hasSubmissionTimeout = true;
 
     // Basic initialization.
@@ -478,10 +479,10 @@ class mod_hotpot_attempt_hp_renderer extends mod_hotpot_attempt_renderer {
         return $out;
     }
 
-   /**
-    * set_bodycontent
-    */
-   public function set_bodycontent() {
+    /**
+     * set_bodycontent
+     */
+    public function set_bodycontent() {
         if (isset($this->bodycontent)) {
             // Content was fetched from cache.
             return;
@@ -507,7 +508,7 @@ class mod_hotpot_attempt_hp_renderer extends mod_hotpot_attempt_renderer {
         $onload = $matches[3];
         $this->bodycontent = $this->remove_blank_lines($matches[5]);
 
-       // Where necessary, add single space before javascript event handlers to make the syntax compatible with strict XHTML.
+        // Where necessary, add single space before javascript event handlers to make the syntax compatible with strict XHTML.
         $this->bodycontent = preg_replace('/"(on(?:blur|click|focus|mouse(?:down|out|over|up)))/', '" $1', $this->bodycontent);
 
         // Ensure javascript onload routine for quiz is always executed

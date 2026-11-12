@@ -36,7 +36,6 @@ require_once($CFG->dirroot . '/mod/hotpot/attempt/hp/6/sequitur/html/renderer.ph
  * @since     Moodle 2.0
  */
 class mod_hotpot_attempt_hp_6_sequitur_html_incremental_renderer extends mod_hotpot_attempt_hp_6_sequitur_html_renderer {
-
     /**
      * get_js_functionnames
      */

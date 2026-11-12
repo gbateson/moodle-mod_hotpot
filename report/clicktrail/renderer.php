@@ -35,5 +35,6 @@ require_once($CFG->dirroot . '/mod/hotpot/report/renderer.php');
  * @since     Moodle 2.0
  */
 class mod_hotpot_report_clicktrail_renderer extends mod_hotpot_report_renderer {
+    /** @var string */
     public $mode = 'clicktrail';
 }

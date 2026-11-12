@@ -36,7 +36,6 @@ require_once($CFG->dirroot . '/mod/hotpot/source/hp/6/jcloze/class.php');
  * @since     Moodle 2.0
  */
 class hotpot_source_hp_6_jcloze_xml extends hotpot_source_hp_6_jcloze {
-
     const REQUIRED_FILETYPES = array('jcl');
     const REQUIRED_STRINGS = array(
         '<hotpot-jcloze-file>',

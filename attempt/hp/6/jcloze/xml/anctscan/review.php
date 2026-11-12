@@ -36,7 +36,6 @@ require_once($CFG->dirroot . '/mod/hotpot/attempt/hp/6/jcloze/xml/review.php');
  * @since     Moodle 2.0
  */
 class mod_hotpot_attempt_hp_6_jcloze_xml_anctscan_review extends mod_hotpot_attempt_hp_6_jcloze_xml_review {
-
     /**
      * attempt_fields
      *

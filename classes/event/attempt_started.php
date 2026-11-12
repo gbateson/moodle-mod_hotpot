@@ -37,7 +37,6 @@ defined('MOODLE_INTERNAL') || die();
  * @since      Moodle 2.6
  */
 class attempt_started extends base {
-
     /**
      * Return the legacy event name
      *

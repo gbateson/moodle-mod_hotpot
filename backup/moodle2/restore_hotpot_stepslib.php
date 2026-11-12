@@ -39,7 +39,6 @@ defined('MOODLE_INTERNAL') || die();
  * @since     Moodle 2.0
  */
 class restore_hotpot_activity_structure_step extends restore_activity_structure_step {
-
     /**
      * define_structure
      *
@@ -52,16 +51,16 @@ class restore_hotpot_activity_structure_step extends restore_activity_structure_
         // Cache userinfo flag.
         $userinfo = $this->get_setting_value('userinfo');
 
-        ////////////////////////////////////////////////////////////////////////
+        /*//////////////////////////////////////////////////////////////////////
         // XML interesting paths - non-user data
-        ////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////*/
 
         // Root element describing hotpot instance.
         $paths[] = new restore_path_element('hotpot', '/activity/hotpot');
 
-        ////////////////////////////////////////////////////////////////////////
+        /*//////////////////////////////////////////////////////////////////////
         // XML interesting paths - user data
-        ////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////*/
 
         if ($userinfo) {
             $paths[] = new restore_path_element('hotpot_string',   '/activity/hotpot/strings/string');
@@ -78,7 +77,7 @@ class restore_hotpot_activity_structure_step extends restore_activity_structure_
      * Define the contents in the activity that must be
      * processed by the link decoder
      */
-    static public function define_decode_contents() {
+    public static function define_decode_contents() {
         return array(
             new restore_decode_content('hotpot', array('entrytext'), 'entrytext'),
             new restore_decode_content('hotpot', array('exittext'),  'exittext'),

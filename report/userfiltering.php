@@ -35,7 +35,6 @@ require_once($CFG->dirroot . '/user/filters/lib.php');
  * @since     Moodle 2.0
  */
 class hotpot_user_filtering extends user_filtering {
-
     /**
      * get_field
      *
@@ -490,7 +489,6 @@ class hotpot_filter_number extends user_filter_select {
  * @since     Moodle 2.0
  */
 class hotpot_filter_grade extends hotpot_filter_number {
-
     /**
      * get_sql_filter_attempts
      *
@@ -532,7 +530,6 @@ class hotpot_filter_grade extends hotpot_filter_number {
  * @since     Moodle 2.0
  */
 class hotpot_filter_duration extends hotpot_filter_number {
-
     /**
      * setupForm
      *

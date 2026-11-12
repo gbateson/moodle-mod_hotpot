@@ -36,12 +36,13 @@ if (isset($CFG->yui3version) && version_compare($CFG->yui3version, '3.15.0') < 0
     $plugin = new stdClass(); // Moodle <= 2.6.
 }
 
-$plugin->cron      = 0;
+$plugin->cron = 0;
 $plugin->component = 'mod_hotpot';
-$plugin->maturity  = MATURITY_STABLE; // ALPHA=50, BETA=100, RC=150, STABLE=200.
-$plugin->requires  = 2010112400;      // Moodle 2.0.
-$plugin->version   = 2026111260;
-$plugin->release   = '2026-11-12 (60)';
+$plugin->maturity = MATURITY_STABLE;
+// ALPHA is 50, BETA is 100, RC is 150, STABLE is 200.
+$plugin->requires = 2010112400; // Moodle 2.0.
+$plugin->version = 2026111260;
+$plugin->release = '2026-11-12 (60)';
 
 if (isset($CFG->yui3version) && version_compare($CFG->yui3version, '3.15.0') < 0) {
     $module = clone($plugin); // Moodle <= 2.6.

@@ -36,7 +36,6 @@ require_once($CFG->dirroot . '/mod/hotpot/attempt/renderer.php');
  * @since     Moodle 2.0
  */
 class mod_hotpot_attempt_html_renderer extends mod_hotpot_attempt_renderer {
-
     // declare properties that are set at runtime,
     // to avoid "dynamic property" deprecation warnings in PHP >= 8.2.
     /** @var mixed */
@@ -46,14 +45,15 @@ class mod_hotpot_attempt_html_renderer extends mod_hotpot_attempt_renderer {
     /** @var mixed */
     public $scripts;
 
-    // Strings to mark beginning and end of submission form.
+    /** @var string Strings to mark beginning and end of submission form. */
     protected $BeginSubmissionForm = '<!-- BeginSubmissionForm -->';
+    /** @var string */
     protected $EndSubmissionForm = '<!-- EndSubmissionForm -->';
 
-    // The id/name of the of the form which returns results to the browser.
+    /** @var string The id/name of the of the form which returns results to the browser. */
     protected $formid = 'store';
 
-    // The name of the score field in the results returned form the browser.
+    /** @var string The name of the score field in the results returned form the browser. */
     protected $scorefield = 'mark';
 
     /**

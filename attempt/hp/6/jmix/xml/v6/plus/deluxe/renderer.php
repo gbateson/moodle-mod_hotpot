@@ -36,7 +36,6 @@ require_once($CFG->dirroot . '/mod/hotpot/attempt/hp/6/jmix/xml/v6/plus/renderer
  * @since     Moodle 2.0
  */
 class mod_hotpot_attempt_hp_6_jmix_xml_v6_plus_deluxe_renderer extends mod_hotpot_attempt_hp_6_jmix_xml_v6_plus_renderer {
-
     /**
      * init
      *
@@ -59,12 +58,12 @@ class mod_hotpot_attempt_hp_6_jmix_xml_v6_plus_deluxe_renderer extends mod_hotpo
         parent::fix_bodycontent_DragAndDrop($prefix, $suffix);
     }
 
-     /**
-      * fix_js_StartUp_DragAndDrop_DragArea
-      *
-      * @param xxx $substr (passed by reference)
-      */
-     public function fix_js_StartUp_DragAndDrop_DragArea(&$substr) {
+    /**
+     * fix_js_StartUp_DragAndDrop_DragArea
+     *
+     * @param xxx $substr (passed by reference)
+     */
+    public function fix_js_StartUp_DragAndDrop_DragArea(&$substr) {
         // fix LeftCol (=left side of drag area)
         $search = '/LeftColPos = [^;]+;/';
         $replace = "LeftColPos = getOffset(document.getElementById('CheckButtonDiv'),'Left') + 20;";

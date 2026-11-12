@@ -37,7 +37,6 @@ defined('MOODLE_INTERNAL') || die();
  * @author     Anupama Dharmajan <anupamadharmajan@catalyst-au.net>
  */
 class provider implements \core_privacy\local\metadata\null_provider {
-
     // This polyfill allows the provider to work on both old (pre-7)
     // and new PHP versions. Thanks to Dan Marsden for this suggestion.
     use \core_privacy\local\legacy_polyfill;

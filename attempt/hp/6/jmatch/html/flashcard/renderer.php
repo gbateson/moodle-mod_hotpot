@@ -36,7 +36,7 @@ require_once($CFG->dirroot . '/mod/hotpot/attempt/hp/6/jmatch/html/renderer.php'
  * @since     Moodle 2.0
  */
 class mod_hotpot_attempt_hp_6_jmatch_html_flashcard_renderer extends mod_hotpot_attempt_hp_6_jmatch_html_renderer {
-
+    /** @var string */
     public $js_object_type = 'JMatchFlashcard';
 
     /**
@@ -57,7 +57,7 @@ class mod_hotpot_attempt_hp_6_jmatch_html_flashcard_renderer extends mod_hotpot_
      *
      * @return array of strings
      */
-    static public function sourcetypes() {
+    public static function sourcetypes() {
         return array('hp_6_jmatch_html_flashcard');
     }
 

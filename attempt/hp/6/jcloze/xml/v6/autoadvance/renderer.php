@@ -36,7 +36,6 @@ require_once($CFG->dirroot . '/mod/hotpot/attempt/hp/6/jcloze/xml/v6/renderer.ph
  * @since     Moodle 2.0
  */
 class mod_hotpot_attempt_hp_6_jcloze_xml_v6_autoadvance_renderer extends mod_hotpot_attempt_hp_6_jcloze_xml_v6_renderer {
-
     /**
      * get_js_functionnames
      *

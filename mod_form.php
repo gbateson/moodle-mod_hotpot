@@ -39,7 +39,6 @@ require_once($CFG->libdir . '/filelib.php');
  * @since     Moodle 2.0
  */
 class mod_hotpot_mod_form extends moodleform_mod {
-
     /**
      * Detects if we are adding a new HotPot activity
      * as opposed to updating an existing one

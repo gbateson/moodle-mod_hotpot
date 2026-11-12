@@ -36,7 +36,6 @@ require_once($CFG->dirroot . '/mod/hotpot/source/hp/6/jmix/class.php');
  * @since     Moodle 2.0
  */
 class hotpot_source_hp_6_jmix_html extends hotpot_source_hp_6_jmix {
-
     const REQUIRED_FILETYPES = array(
         'htm', 'html',
     );
@@ -47,7 +46,7 @@ class hotpot_source_hp_6_jmix_html extends hotpot_source_hp_6_jmix {
      * @param string $content of HTML file (passed by reference)
      * @return array of required strings for HTML content
      */
-    static public function required_strings_html(&$content) {
+    public static function required_strings_html(&$content) {
         $strings = parent::required_strings_html($content);
         if (in_array('<div id="MainDiv" class="StdDiv">', $strings)) {
             // Plain version of JMix.

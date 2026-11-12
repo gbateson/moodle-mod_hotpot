@@ -2,8 +2,97 @@
 Change log for mod_hotpot
 ========================================
 
+2026-11-12 (60)
+ - reject unrecognized source files when saving the activity settings form
+ - make Rhubarb and Sequitur output formats selectable, including the Sequitur
+   'incremental scoring' formats (add sourcetypes() to TexToys renderers)
+ - coding style fixes reported by Moodle codechecker (no functional changes):
+   spaces around operators; capitals and full stops in inline comments; declare
+   visibility of class methods; correct @package tags; remove unfinished @todo
+   lines from docblocks; boilerplate on first line; spacing before function
+   braces, semicolons, commas, comments, default values and inside control
+   structures; trailing commas in multi-line arrays
+ - more coding style fixes (no functional changes): visibility before static in
+   method declarations; no blank lines after opening braces; @var docblocks for
+   class properties; public instead of var for properties; multi-line comments
+   for section banners; indentation; parentheses for include/require; wrap long
+   lines in CHANGES.txt
+
+2026-11-12 (59)
+ - fix HP6 output formats on Moodle 5.3+: JMemori (PHP 8.2 deprecated parent::
+   callable; rename global M array to JMemoriM, because it overwrote Moodle's M
+   object), JCloze autoadvance (strlen null), JQuiz autoadvance (only call
+   AA_PlaySound() if it exists)
+ - cast timelimit and delay3 to integers on the activity settings form
+ - remove unused get_quizfiles() and is() methods from source/class.php
+ - fix name of Sequitur output format
+
+2026-11-12 (58)
+ - fix HP7 drag-and-drop JMix: card positions (keep HP7 card functions instead
+   of replacing them with getOffset/setOffset) and dragging (do not apply HP6
+   fixes to HP7 drag functions)
+ - load hp.js for plain html output format (fixes 'HP_add_listener is not
+   defined')
+
+2026-11-12 (57)
+ - HP7 JMatch html files: move HP7 JMatch hooks to the HP7 JMatch base renderer
+   so they also work for HP7 html files
+ - add HP7 flashcard source type and output formats (hp_7_jmatch_html_flashcard,
+   hp_7_jmatch_xml_flashcard)
+ - add missing strings for HP6 JMatch flashcard, JMemori and Intro html output
+   formats
+
+2026-11-12 (56)
+ - add HP7 output formats for JMatch (standard and drag-and-drop): generate
+   V7JsonEx, V7SelectEx and V7Cards from HP6 or HP7 data files, set up HP object
+   after JsonEx/DragEx.Setup(), rewrite HP7 jmatch.js to use JsonEx/DragEx,
+   stretch exercise container to cover drag-and-drop cards
+ - fix names of expand_JSDJMatch7() and expand_JSFJMatch7()
+
+2026-11-12 (55)
+ - use navigator.sendBeacon() to send results when leaving the quiz page (modern
+   browsers block synchronous XMLHttpRequest during page unload, so abandoned
+   attempts were not saved)
+ - fix JS error in plain JMix when leaving the page (GetGuessSequence() only
+   exists in drag-and-drop JMix)
+ - get HP7 output formats working for JQuiz, JCloze, JCross and JMix: define HP7
+   CSS variables on the container instead of :root; add SubmissionTimeout
+   (removed from HP7 templates); remove references to HP6 browser check object
+   (C) and button hover handlers (FuncBtnOver) from HP7 output; fix JQuiz
+   CheckFinished for HP7
+ - fix PHP 8 deprecation warnings: strlen(null) in JCloze, and float passed to
+   srand() in JMix
+ - fix detection of HotPot html files: plain HP6 and HP7 JMatch/JMix and HP6
+   JMatch flashcard (is_numeric(in_array()) was always false), HP7 JMix
+   drag-and-drop (no CheckButtonDiv), and Rottmeier JCloze DropDown, FindIt (b)
+   and JGloss (inherited BANNED_STRINGS banned their own files)
+ - merge fixes from GitHub PRs #23 (smaller monologo for Moodle 4.4+) and #26
+   (escape question text and responses in review and reports, clean_text() on
+   saved editor text, reviewmyattempts only allows review of own attempts,
+   require sesskey in tools/clear_cache.php and tools/clear_details.php, cast
+   form data to array in userfiltering)
+
+2026-11-11 (54)
+ - compatibility with Moodle 5.3+: add custom_completion class and
+   hotpot_get_coursemodule_info() (completion rules were ignored since Moodle
+   4.3); add suffix to completion form fields (Moodle 4.3+); replace
+   print_error() (removed in Moodle 4.5) with moodle_exception; use quizaccess_*
+   strings when available; use \core\xml_parser when available (xmlize
+   deprecated in Moodle 5.1); only include filter/mediaplugin/filter.php on
+   Moodle <= 4.4; declare properties to avoid PHP 8.2 dynamic property warnings;
+   fix course category deletion in tools/import_hotpot_tables.php (Moodle 3.6+);
+   add missing error_disabledfilter string; replace element_to_popup_window()
+   with popup_action
+ - fix issues reported on GitHub: #18 (use 'gradenoun' string where available),
+   #19 (CONTRIB-9156: fmod() TypeError for delay1/delay2 on PHP 8), #20 (add
+   Moodle 4 monologo), #24 (PHP 8.4 implicitly nullable params, remove
+   PREVIOUS/NEXT from install.xml)
+ - only declare FEATURE_GROUPMEMBERSONLY on Moodle <= 2.6 (it caused
+   'detectedbrokenplugin' on Moodle 5.x)
+
 2025-05-03 (53)
- - ensure FEATURE_CAN_DISPLAY is enabled so that vocab activities are displayed in Moodle >= 5.0
+ - ensure FEATURE_CAN_DISPLAY is enabled so that vocab activities are displayed
+   in Moodle >= 5.0
 
 2025-05-03 (52)
  - modify db/subplugins.json for compatability with MDL-83705 and Moodle >= 5.x
@@ -12,16 +101,20 @@ Change log for mod_hotpot
  - fix link to user on function to 'get_recent_mod_activity()'
 
 2024-02-10 (50)
- - for compatability with Moodle 4.x, we hide the legacy event functions, and user_picture::fields
+ - for compatability with Moodle 4.x, we hide the legacy event functions, and
+   user_picture::fields
 
 2022-09-15 (48)
  - fix error caused by NULL intro field
 
 2022-09-06 (47)
- - fix compatibility with PHP 8.x and Moodle 4.x (1) remove use of curly braces on strings; (2) add 'intro' and 'introformat' fields; (3) use custom version of utf8_to_entities() that does not convert strings to lowercase;
+ - fix compatibility with PHP 8.x and Moodle 4.x (1) remove use of curly braces
+   on strings; (2) add 'intro' and 'introformat' fields; (3) use custom version
+   of utf8_to_entities() that does not convert strings to lowercase;
 
 2021-09-14 (46)
- - modify markdown syntax for long help messages (for compatability with Moodle 3.11)
+ - modify markdown syntax for long help messages (for compatability with Moodle
+   3.11)
 
 2020-06-05 (44)
  - mod/hotpot convert URLs in 'src' attribute of <audio> and <video> tags
@@ -57,7 +150,9 @@ Change log for mod_hotpot
  - remove use of 'events_trigger' for compatability with Moodle 3.6
 
 2019-01-21 (33)
- - (1) CONTRIB-7098 fix 'non-numeric value' warning in PHP 7.1; (2) fix 'cannotexecduringupgrade' error when modifying HotPot grades during Moodle upgrade
+ - (1) CONTRIB-7098 fix 'non-numeric value' warning in PHP 7.1; (2) fix
+   'cannotexecduringupgrade' error when modifying HotPot grades during Moodle
+   upgrade
 
 2018-12-08 (32)
  - remove misplaced 'use' line in main privacy file for HotPot module
@@ -69,7 +164,8 @@ Change log for mod_hotpot
  - Merge pull request #17 from Anupamatd/hotpot_privacy_api
 
 2018-09-10 (29)
- - Merge pull request #17 from Anupamatd/hotpot_privacy_api Incorporated Privacy API. Many thanks to Anupamatd for all your work on this improvement.
+ - Merge pull request #17 from Anupamatd/hotpot_privacy_api Incorporated Privacy
+   API. Many thanks to Anupamatd for all your work on this improvement.
 
 2018-09-10 (29)
  - fix URL for Moodle message feedback in Moodle >= 3.2
@@ -81,13 +177,15 @@ Change log for mod_hotpot
  - fix addition of navigation nodes in Moodle 2.0
 
 2018-06-29 (24)
- - display reports in Admin menu in Moodle >= 2.5 to ensure that they remain accessible in Boost theme
+ - display reports in Admin menu in Moodle >= 2.5 to ensure that they remain
+   accessible in Boost theme
 
 2018-06-29 (23)
  - investigate fix retrieval of HotPot release in Moodle >= 2.7
 
 2018-06-26 (22)
- - replace shorthand declaration of array, [...], with standard array(...) for compatability with PHP 5.3
+ - replace shorthand declaration of array, [...], with standard array(...) for
+   compatability with PHP 5.3
 
 2018-06-02 (21)
  - remove superfluous openpopup function from hp/6/renderer.php
@@ -99,16 +197,19 @@ Change log for mod_hotpot
  - add output format descriptor strings for Rottmeier DropDown and JGloss
 
 2018-05-30 (18)
- - replace each() with key(), continue() and next() for compatability with PHP 7.2
+ - replace each() with key(), continue() and next() for compatability with PHP
+   7.2
 
 2018-05-29 (17)
  - replace 'each()' with 'foreach()' for compatability with PHP 7.2
 
 2018-05-25 (16)
- - add to <open-text> tags to JCloze XML to account for new behavior of XML parser in Moodle >= 3.5
+ - add to <open-text> tags to JCloze XML to account for new behavior of XML
+   parser in Moodle >= 3.5
 
 2018-04-21 (15)
- - fix activity-navigation bar (Moodle >= 3.4) being covered by position:absolute and floating elements
+ - fix activity-navigation bar (Moodle >= 3.4) being covered by
+   position:absolute and floating elements
 
 2018-04-20 (14)
  - in responses report, replace deprecated tick/cross icons in Moodle >= 2.5
@@ -117,16 +218,19 @@ Change log for mod_hotpot
  - add composer.json
 
 2017-10-26 (12)
- - CONTRIB-7098 fix warning on PHP 7.1: A non-numeric value encountered in "mod_form.php" on line 789
+ - CONTRIB-7098 fix warning on PHP 7.1: A non-numeric value encountered in
+   "mod_form.php" on line 789
 
 2017-10-04 (11)
  - Added support for block_myoverview in Moodle 3.3+
 
 2017-10-03 (10)
- - replace use of deprecated JS functions in Moodle 3.3: select_all_in, deselect_all_in
+ - replace use of deprecated JS functions in Moodle 3.3: select_all_in,
+   deselect_all_in
 
 2017-09-14 (08)
- - fix positioning of JMatch items and box sizing on templatable themes in Moodle >= 3.3
+ - fix positioning of JMatch items and box sizing on templatable themes in
+   Moodle >= 3.3
 
 2017-04-27 (07)
  - replace use of pix_url for compatability with Moodle >= 3.3
@@ -135,7 +239,8 @@ Change log for mod_hotpot
  - use 'image_url' instead of 'pix_url' for compatabaility with Moodle >= 3.3
 
 2017-04-17 (06)
- - fix undefined property 'TC' introduced after recent change to the way edit icons are generated
+ - fix undefined property 'TC' introduced after recent change to the way edit
+   icons are generated
 
 2017-04-14 (05)
  - use pix_icon instead of pix_url for compatability with Moodle 3.3
@@ -156,13 +261,15 @@ Change log for mod_hotpot
  - fix enabling and disabling of filter on Moodle 3.x
 
 2016-09-15 (99)
- - handle self-modified HP html files that have no Begin|EndSubmissionsForm markers
+ - handle self-modified HP html files that have no Begin|EndSubmissionsForm
+   markers
 
 2016-07-24 (98)
  - fix JCross and JMemori (JMatch) button captions with apostrophe
 
 2016-07-16 (97)
- - Moodle coding standards compatability: remove all usage of 'print' and 'create_function' in PHP code
+ - Moodle coding standards compatability: remove all usage of 'print' and
+   'create_function' in PHP code
 
 2016-06-14 (96)
  - small improvements to coding style in mod_form.php
@@ -222,10 +329,12 @@ Change log for mod_hotpot
  - standardize white spce in JS template files for JCloze and JQuiz
 
 2015-10-28 (79)
- - remove troublesome ascii control chars from HP XML files, and handle floating elements when setting canvas height in browser
+ - remove troublesome ascii control chars from HP XML files, and handle floating
+   elements when setting canvas height in browser
 
 2015-10-26 (78)
- - add completion critera: (1) require minimum grade, (2) require passing grade, (3) require completed status
+ - add completion critera: (1) require minimum grade, (2) require passing grade,
+   (3) require completed status
 
 2015-10-07 (77)
  - standardize format of release string in version.php
@@ -255,19 +364,23 @@ Change log for mod_hotpot
  - improve Moodle version detection using compare_version
 
 2015.05.13 (67)
- - allow detection of Moodle version from $CFG->yui3version, if $CFG->release is not available, for example when installing from the CLI using PHPunit
+ - allow detection of Moodle version from $CFG->yui3version, if $CFG->release is
+   not available, for example when installing from the CLI using PHPunit
 
 2015.04.12 (66)
  - improve comments in settings.php
 
 2015.04.12 (66)
- - compatability with Moodle 2.9: use core_date::get_user_timezone() instead of get_user_timezone_offset()
+ - compatability with Moodle 2.9: use core_date::get_user_timezone() instead of
+   get_user_timezone_offset()
 
 2015.04.05 (65)
- - fix checking of activity visibility on Moodle >= 2.7; fix detection of legacy course files
+ - fix checking of activity visibility on Moodle >= 2.7; fix detection of legacy
+   course files
 
 2015.03.03 (64)
- - when updating files to Moodle 2.x, use aliasses to files repositories, when possible
+ - when updating files to Moodle 2.x, use aliasses to files repositories, when
+   possible
 
 2015.02.18 (63)
  - small code optimizationwhen converting tap/click events
@@ -285,13 +398,16 @@ Change log for mod_hotpot
  - add version.php files for all subplugins
 
 2015.01.20 (57)
- - fix faulty conversation of decimal HTML entities with leading zero in Moodle <= 2.5
+ - fix faulty conversation of decimal HTML entities with leading zero in Moodle
+   <= 2.5
 
 2015.01.16 (56)
  - fix sql to select userfields in get_recent_mod_activity for Moodle >= 2.5
 
 2015.01.06 (55)
- - limit display of HotPots on MyMoodle page to activities that are open and are not closed, i.e. the open date is in the past and the closing deadline has not yet passed
+ - limit display of HotPots on MyMoodle page to activities that are open and are
+   not closed, i.e. the open date is in the past and the closing deadline has
+   not yet passed
 
 2015.01.03 (54)
  - add source and output class for hp_6_jmatch_html_sort
@@ -306,7 +422,8 @@ Change log for mod_hotpot
  - add HotPot activities to MyMoodle page
 
 2014.12.19 (51)
- - fix display of event description and explanation in Site admin -> Reports -> Logs and Events list
+ - fix display of event description and explanation in Site admin -> Reports ->
+   Logs and Events list
 
 2014.12.17 (50)
  - fix error adding and updating logs for HotPot 'view all' event
@@ -339,7 +456,8 @@ Change log for mod_hotpot
  - fix update error: Undefined variable DB
 
 2014.12.04 (40)
- - fix upgrading error: The course_module_viewed event must define objectid and object table
+ - fix upgrading error: The course_module_viewed event must define objectid and
+   object table
 
 2014.12.01 (39)
  - remove calls to init() in classes/event/*.php files
@@ -351,7 +469,8 @@ Change log for mod_hotpot
  - enable new 'standard' logging on HotPot module
 
 2014.11.27 (35)
- - allow 'lazy' detection and transfer of files from Private Files to sourcefile file-area
+ - allow 'lazy' detection and transfer of files from Private Files to sourcefile
+   file-area
 
 2014.11.24 (34)
  - fix position of feedback in JGloss
@@ -408,7 +527,8 @@ Change log for mod_hotpot
  - fix JMatch and JMix drag-and-drop on touch screens
 
 2014.06.06 (19)
- - CONTRIB-5100 fix JMix restart button to move all tiles/segment back to their original positions
+ - CONTRIB-5100 fix JMix restart button to move all tiles/segment back to their
+   original positions
 
 2014.06.04 (18)
  - fix warning about events API in Moodle 2.8
@@ -423,7 +543,8 @@ Change log for mod_hotpot
  - add _get_completion_state function required for course/activity completion
 
 2014.05.04 (14)
- - fix migration of HotPot source files in site files folder when upgrading from Moodle1 to Moodle2
+ - fix migration of HotPot source files in site files folder when upgrading from
+   Moodle1 to Moodle2
 
 2014.04.27 (13)
  - reword version.php to pass moodle.org repository validation checks
@@ -462,7 +583,8 @@ Change log for mod_hotpot
  - use new core_text class instead of textlib in Moodle >= 2.6
 
 2014.03.03 (04)
- - CONTRIB-4910 mod/hotpot fix Oracle error: 'duplicate column names userid' on HotPot report pages
+ - CONTRIB-4910 mod/hotpot fix Oracle error: 'duplicate column names userid' on
+   HotPot report pages
 
 2014.03.02 (03)
  - further improve positioning of elements in JMatch intro output format
@@ -510,7 +632,8 @@ Change log for mod_hotpot
  - fix small typo in hp.js in end_of_quiz() function
 
 2014.01.15 (92)
- - remove hotpot grade from gradebook if not required; remove grade filter and column from hotpot reports if not required
+ - remove hotpot grade from gradebook if not required; remove grade filter and
+   column from hotpot reports if not required
 
 2014.01.15 (91)
  - do not require grade record for HotPot reports
@@ -519,7 +642,8 @@ Change log for mod_hotpot
  - add new utility import_hotpot_tables
 
 2013.12.17 (90)
- - fix Call-time pass-by-reference has been removed errors in hotpot/attempt/review.php
+ - fix Call-time pass-by-reference has been removed errors in
+   hotpot/attempt/review.php
 
 2013.12.17 (89)
  - fix Undefined property: duration in storage.php
@@ -562,10 +686,12 @@ Change log for mod_hotpot
 
 v3.0.82
  - add force_update utility
- - add new additiaional names fields on HotPot reports and 'classes' folder for compatibility with Moodle 2.6
+ - add new additiaional names fields on HotPot reports and 'classes' folder for
+   compatibility with Moodle 2.6
 
 v3.0.81
- - fix error: Argument 4 passed to hotpot_extend_navigation() must be an instance of stdClass
+ - fix error: Argument 4 passed to hotpot_extend_navigation() must be an
+   instance of stdClass
  - CONTRIB-4698 fix invalid CSS color: auto
 
 v3.0.80
@@ -576,20 +702,26 @@ v3.0.79
  - improve detection of changed source files in private files area
 
 v3.0.78
- - slight alteration to logic in locate_js_block(), and new js function HP_remove_listener to remove js event handlers
+ - slight alteration to logic in locate_js_block(), and new js function
+   HP_remove_listener to remove js event handlers
  - standardize HP function names to use prefix 'HP_'
- - make SuppressBackspace function use modern browser standards of preventDefault() and event.returnValue and replace onkeypress with onkeydown
+ - make SuppressBackspace function use modern browser standards of
+   preventDefault() and event.returnValue and replace onkeypress with onkeydown
 
 v3.0.76
- - use textlib to convert input file content to utf-8, instead of explicitly called iconv or mb_convert_encoding
+ - use textlib to convert input file content to utf-8, instead of explicitly
+   called iconv or mb_convert_encoding
  - improve performance of Rhubarb STOP button
  - improve performance of Sequitur STOP button
  - verify new STOP and abort functionality in Seuitur nad Rhubarb quizzes
- - fix 'Unable to insert submission form' error which sometimes occurs when the contents of newly added HotPot files are not immediately available via the standard Moodle file API
+ - fix 'Unable to insert submission form' error which sometimes occurs when the
+   contents of newly added HotPot files are not immediately available via the
+   standard Moodle file API
  - remove select effect when dragging in JMatch and JMix
 
 v3.0.72
- - optimize sending of results when HotPot activity finishes unexpectedly (STOP button, navigate away, time out etc)
+ - optimize sending of results when HotPot activity finishes unexpectedly (STOP
+   button, navigate away, time out etc)
  - allow pasting of answers if window.allow_paste_input = true
 
 v3.0.71
@@ -604,21 +736,27 @@ v3.0.69
  - use explicit INNER JOIN in reports instead of implicit JOIN
 
 v3.0.68
- - (1) include ALL attempts in reports - even those which have no grade item yet; (2) force results to be saved in Chrome and other browsers which have no onunload event
+ - (1) include ALL attempts in reports - even those which have no grade item
+   yet; (2) force results to be saved in Chrome and other browsers which have no
+   onunload event
 
 v3.0.66
- - fix 'sourcefile' field in HotPots that were previously restored from Moodle 1.9 to 2.x
+ - fix 'sourcefile' field in HotPots that were previously restored from Moodle
+   1.9 to 2.x
 
 v3.0.65
- - remove debug line which caused 'http' prefix to be added to all HotPot source file paths when restoring from Moodle 1.9 to 2.x
+ - remove debug line which caused 'http' prefix to be added to all HotPot source
+   file paths when restoring from Moodle 1.9 to 2.x
  - fix Hint/ShowAnswer button in FindIt
  - microincrement version number to force clearing of cache
 
 v3.0.63
- - fix JQuiz score when STOP button is pressed after only a few questions have been attempted
+ - fix JQuiz score when STOP button is pressed after only a few questions have
+   been attempted
  - fix error 'objtec could not be converted to int' when STOP button is enabled
  - don't use deprecated get_all_sections in Moodle >= 2.3
- - remove unecessary u.id AS userid from report extraction sql, as it causes as error on Oracle DBs
+ - remove unecessary u.id AS userid from report extraction sql, as it causes as
+   error on Oracle DBs
  - for fix warnings on forms
  - microincrement version number for nw release for fix warnings on forms
 
@@ -635,18 +773,22 @@ v3.0.57
  - allow for song_url as a parameter name to hold a relative URL
 
 v3.0.56
- - use 0/1 instead of false/true for HTTP_NO/204_RESPONSE constants, and small improvement to readability of send_response method
+ - use 0/1 instead of false/true for HTTP_NO/204_RESPONSE constants, and small
+   improvement to readability of send_response method
  - fix error storing results after clicking STOP button
 
 v3.0.55
- - implement delay3 setting functionality so that quiz does not continue automatically after it is completed
+ - implement delay3 setting functionality so that quiz does not continue
+   automatically after it is completed
 
 v3.0.54
  - Moodle2.x mod/hotpot add pix/icon.svg
 
 v3.0.53
- - moodle.2x mod/hotpot allow for url in sourcefile field when importing Moodle 1.x backup into a Moodle 2.x site
- - remove any unwanted 'course_files' folders that may have been created when restoring Moodle 1.9 HotPot activities to a Moodle 2.x site
+ - moodle.2x mod/hotpot allow for url in sourcefile field when importing Moodle
+   1.x backup into a Moodle 2.x site
+ - remove any unwanted 'course_files' folders that may have been created when
+   restoring Moodle 1.9 HotPot activities to a Moodle 2.x site
 
 v3.0.52
  - fix filepath of file restored from Moodle 1.x

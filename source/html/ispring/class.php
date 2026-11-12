@@ -36,7 +36,6 @@ require_once($CFG->dirroot . '/mod/hotpot/source/html/class.php');
  * @since     Moodle 2.0
  */
 class hotpot_source_html_ispring extends hotpot_source_html {
-
     const REQUIRED_FILETYPES = array(
         'htm', 'html',
     );
@@ -47,7 +46,7 @@ class hotpot_source_html_ispring extends hotpot_source_html {
         '/<script[^>]*src="[^">]*fixprompt.js"[^>]*\/>/',
     );
 
-    // Properties of the icon for this source file type.
+    /** @var string Properties of the icon for this source file type. */
     public $icon = 'mod/hotpot/file/html/ispring/icon.gif';
 
     /**

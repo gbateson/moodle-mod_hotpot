@@ -36,10 +36,12 @@ require_once($CFG->dirroot . '/mod/hotpot/source/hp/6/class.php');
  * @since     Moodle 2.0
  */
 class hotpot_source_hp_6_sequitur extends hotpot_source_hp_6 {
-
     const IS_TEXTOYS = true;
 
+    /** @var string */
     public $icon = 'mod/hotpot/file/hp/6/sequitur/sqt.gif';
+    /** @var string */
     public $hbs_software = 'textoys';
+    /** @var string */
     public $hbs_quiztype = 'sequitur';
 }

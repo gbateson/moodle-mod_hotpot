@@ -36,16 +36,20 @@ require_once($CFG->dirroot . '/mod/hotpot/attempt/hp/6/renderer.php');
  * @since     Moodle 2.0
  */
 class mod_hotpot_attempt_hp_6_rhubarb_renderer extends mod_hotpot_attempt_hp_6_renderer {
+    /** @var string */
     public $js_object_type = 'Rhubarb';
 
+    /** @var string */
     public $templatefile = 'rhubarb6.ht_';
+    /** @var string */
     public $templatestrings = 'PreloadImageList|FreeWordsArray|WordsArray';
 
-    // Glossary autolinking settings.
+    /** @var string Glossary autolinking settings. */
     public $headcontent_strings = 'strFinished|YourScoreIs|strTimesUp';
+    /** @var string */
     public $headcontent_arrays = 'Words';
 
-    // TexToys do not have a SubmissionTimeout variable.
+    /** @var bool TexToys do not have a SubmissionTimeout variable. */
     public $hasSubmissionTimeout = false;
 
     /**

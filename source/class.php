@@ -35,7 +35,6 @@ require_once($CFG->dirroot . '/mod/hotpot/lib.php');
  * @since     Moodle 2.0
  */
 class hotpot_source {
-
     // declare properties that are set at runtime,
     // to avoid "dynamic property" deprecation warnings in PHP >= 8.2.
     /** @var mixed */
@@ -237,7 +236,7 @@ class hotpot_source {
      * @param string a hotpot file/output class name
      * @return string class name without the leading "hotpot_source_"
      */
-    static public function get_type($class = '') {
+    public static function get_type($class = '') {
         return preg_replace('/^hotpot_[a-z]+_/', '', $class);
     }
 
@@ -247,7 +246,7 @@ class hotpot_source {
      * @param stdclass $sourcefile a Moodle stored_file object representing the source file
      * @return boolean true if the file is a recognized quiz file, or false otherwise
      */
-    static public function is_quizfile($sourcefile) {
+    public static function is_quizfile($sourcefile) {
 
         if (empty(static::REQUIRED_FILETYPES)) {
             return false;
@@ -308,7 +307,7 @@ class hotpot_source {
      * @param string $content of HTML file (passed by reference)
      * @return array of strings required in HTML content
      */
-    static public function required_strings_html(&$content) {
+    public static function required_strings_html(&$content) {
         return static::REQUIRED_STRINGS;
     }
 
@@ -318,7 +317,7 @@ class hotpot_source {
      * @param stdclass $sourcefile a Moodle stored_file object representing the source file
      * @return boolean true if the file is a recognized quiz file, or false otherwise
      */
-    static public function is_unitfile($sourcefile) {
+    public static function is_unitfile($sourcefile) {
         return false;
     }
 
@@ -328,7 +327,7 @@ class hotpot_source {
      * @param xxx $file
      * @return xxx
      */
-    static public function get_content($file, $hotpot = null) {
+    public static function get_content($file, $hotpot = null) {
         if ($content = $file->get_content()) {
             return $content;
         }
@@ -345,7 +344,7 @@ class hotpot_source {
      * @param object $hotpot (optional, default=null)
      * @return string
      */
-    static public function get_real_path($file, $hotpot = null) {
+    public static function get_real_path($file, $hotpot = null) {
         global $CFG, $PAGE;
 
         // Sanity check.

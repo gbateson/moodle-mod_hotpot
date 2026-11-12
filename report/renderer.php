@@ -41,24 +41,30 @@ require_once($CFG->dirroot . '/mod/hotpot/report/userfiltering.php');
  * @since     Moodle 2.0
  */
 class mod_hotpot_report_renderer extends mod_hotpot_renderer {
-
     // declare properties that are set at runtime,
     // to avoid "dynamic property" deprecation warnings in PHP >= 8.2.
     /** @var mixed */
     public $hotpot;
 
+    /** @var array */
     protected $tablecolumns = array();
 
+    /** @var array */
     protected $filterfields = array();
 
+    /** @var array */
     protected $userfilter = array();
 
+    /** @var array */
     protected $attemptfilter = array();
 
+    /** @var string */
     public $mode = '';
 
+    /** @var array */
     public $questions = array();
 
+    /** @var bool */
     public $has_questioncolumns = false;
 
     /**
@@ -496,7 +502,7 @@ class mod_hotpot_report_renderer extends mod_hotpot_renderer {
      * @param string $fieldprefix prefix to add to all columns in their aliases, does not apply to 'id'
      * @return string
      */
-     public function get_userfields($tableprefix = '', $extrafields = NULL, $idalias = 'id', $fieldprefix = '') {
+    public function get_userfields($tableprefix = '', $extrafields = NULL, $idalias = 'id', $fieldprefix = '') {
 
         // Ensure $tableprefix is a string.
         if ($tableprefix === null) {

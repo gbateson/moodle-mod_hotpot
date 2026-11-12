@@ -36,7 +36,7 @@ require_once($CFG->dirroot . '/mod/hotpot/attempt/hp/6/jcloze/html/renderer.php'
  * @since     Moodle 2.0
  */
 class mod_hotpot_attempt_hp_6_jcloze_html_dropdown_renderer extends mod_hotpot_attempt_hp_6_jcloze_html_renderer {
-
+    /** @var string */
     public $js_object_type = 'JClozeDropDown';
 
     /**
@@ -57,7 +57,7 @@ class mod_hotpot_attempt_hp_6_jcloze_html_dropdown_renderer extends mod_hotpot_a
      *
      * @return array of strings
      */
-    static public function sourcetypes() {
+    public static function sourcetypes() {
         return array('hp_6_jcloze_html_dropdown');
     }
 

@@ -35,7 +35,6 @@ require_once($CFG->dirroot . '/mod/hotpot/mediafilter/class.php');
  * @since     Moodle 2.0
  */
 class hotpot_mediafilter_moodle extends hotpot_mediafilter {
-
     /*
      * mediaplugin_filter
      *

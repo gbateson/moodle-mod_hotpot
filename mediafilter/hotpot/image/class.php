@@ -32,13 +32,18 @@ defined('MOODLE_INTERNAL') || die();
  * @since     Moodle 2.0
  */
 class hotpot_mediaplayer_image extends hotpot_mediaplayer {
+    /** @var array */
     public $aliases = array('img');
+    /** @var array */
     public $media_filetypes = array('gif', 'jpg', 'png');
+    /** @var array */
     public $options = array(
         'width' => 0, 'height' => 0, 'build' => 0,
         'quality' => '', 'majorversion' => '', 'flashvars' => '',
     );
+    /** @var string */
     public $spantext = '';
+    /** @var bool */
     public $removelink = false;
 
     /**

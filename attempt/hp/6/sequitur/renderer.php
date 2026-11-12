@@ -36,22 +36,28 @@ require_once($CFG->dirroot . '/mod/hotpot/attempt/hp/6/renderer.php');
  * @since     Moodle 2.0
  */
 class mod_hotpot_attempt_hp_6_sequitur_renderer extends mod_hotpot_attempt_hp_6_renderer {
+    /** @var string */
     public $js_object_type = 'Sequitur';
 
+    /** @var string */
     public $templatefile = 'sequitur6.ht_';
+    /** @var string */
     public $templatestrings = 'PreloadImageList|SegmentsArray';
 
-    // Glossary autolinking settings.
+    /** @var string Glossary autolinking settings. */
     public $headcontent_strings = 'CorrectIndicator|IncorrectIndicator|YourScoreIs|strTimesUp';
+    /** @var string */
     public $headcontent_arrays = 'Segments';
 
-    // TexToys do not have a SubmissionTimeout variable.
+    /** @var bool TexToys do not have a SubmissionTimeout variable. */
     public $hasSubmissionTimeout = false;
 
+    /** @var array */
     public $response_text_fields = array(
         'correct', 'wrong', // Remove: ignored.
     );
 
+    /** @var array */
     public $response_num_fields = array(
         'checks', // Remove: score, weighting, hints, clues.
     );

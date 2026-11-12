@@ -58,10 +58,13 @@ function hotpot_get_mediaplugin_filter($context, $localconfig = array()) {
  * @since     Moodle 2.0
  */
 class hotpot_mediafilter {
-
-    // Media filetypes that this filter can handle
-    // this initial list is of the file types that Moodle's standard mediaplugin can handle
-    // media file types specified by individual media players will be added to this list.
+    /**
+     * Media filetypes that this filter can handle
+     * this initial list is of the file types that Moodle's standard mediaplugin can handle
+     * media file types specified by individual media players will be added to this list.
+     *
+     * @var array
+     */
     public $media_filetypes = array(
         // any params allowed (flash audio/video, html5 audio/video)
         'aac' => 'any', 'f4v' => 'any', 'flv' => 'any', 'm4a' => 'any', 'm4v' => 'any',
@@ -73,30 +76,46 @@ class hotpot_mediafilter {
         'mp3' => 'none', 'ra' => 'none', 'ram' => 'none', 'rm' => 'none', 'rv' => 'none',
     );
 
+    /** @var string */
     public $param_names = 'movie|song_url|src|url';
-    // Wmp        : url
-    // quicktime  : src
-    // realplayer : src
-    // flash      : movie
-    // other      : song_url.
+    /**
+     * Wmp        : url
+     * quicktime  : src
+     * realplayer : src
+     * flash      : movie
+     * other      : song_url.
+     *
+     * @var string
+     */
 
     public $tagopen = '(?:(<)|(\\\\u003C))'; // left angle-bracket (uses two parenthese)
+    /** @var string String of chars inside the tag. */
     public $tagchars = '(?(1)[^>]|(?(2).(?!\\\\u003E)))*?';  // String of chars inside the tag.
+    /** @var string right angle-bracket (to match the left one) */
     public $tagclose = '(?(1)>|(?(2)\\\\u003E))'; // right angle-bracket (to match the left one)
+    /** @var string another left angle-bracket (to match the first one) */
     public $tagreopen = '(?(1)<|(?(2)\\\\u003C))'; // another left angle-bracket (to match the first one)
     // $tagopen = '(?:(<)|(&lt;)|(&amp;#x003C;))';
     // $tagclose = '(?(2)>|(?(3)&gt;|(?(4)&amp;#x003E;)))';
 
+    /** @var string */
     public $link_search = '';
+    /** @var string */
     public $object_search = '';
+    /** @var array */
     public $object_searches = array();
 
+    /** @var string */
     public $js_inline = '';
+    /** @var string */
     public $js_external = '';
 
+    /** @var array */
     public $players  = array();
+    /** @var string */
     public $defaultplayer = 'moodle';
 
+    /** @var array */
     public $moodle_flashvars = array('waitForPlay', 'autoPlay', 'buffer');
     // bgColour, btnColour, btnBorderColour,
     // iconColour, iconOverColour,
@@ -691,18 +710,28 @@ class hotpot_mediafilter {
  * @since     Moodle 2.0
  */
 class hotpot_mediaplayer {
+    /** @var array */
     public $aliases = array();
+    /** @var string */
     public $playerurl = '';
+    /** @var array */
     public $flashvars = array();
+    /** @var string */
     public $flashvars_paramname = '';
+    /** @var string */
     public $querystring_paramname = '';
+    /** @var array */
     public $options = array(
         'width' => 0, 'height' => 0, 'build' => 40,
         'quality' => 'high', 'majorversion' => '6', 'flashvars' => null,
     );
+    /** @var array */
     public $more_options = array();
+    /** @var array */
     public $media_filetypes = array();
+    /** @var string */
     public $spantext = '';
+    /** @var bool */
     public $removelink = true;
 
     /**

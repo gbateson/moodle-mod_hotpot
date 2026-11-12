@@ -36,16 +36,22 @@ require_once($CFG->dirroot . '/mod/hotpot/attempt/hp/6/renderer.php');
  * @since     Moodle 2.0
  */
 class mod_hotpot_attempt_hp_6_jmix_renderer extends mod_hotpot_attempt_hp_6_renderer {
+    /** @var string */
     public $icon = 'pix/f/jmx.gif';
+    /** @var string */
     public $js_object_type = 'JMix';
 
+    /** @var string */
     public $templatefile = 'jmix6.ht_';
+    /** @var string */
     public $templatestrings = 'PreloadImageList|SegmentArray|AnswerArray';
 
-    // Glossary autolinking settings.
+    /** @var string Glossary autolinking settings. */
     public $headcontent_strings = 'CorrectResponse|IncorrectResponse|ThisMuchCorrect|TheseAnswersToo|YourScoreIs|NextCorrect|Segments';
+    /** @var string */
     public $headcontent_arrays = '';
 
+    /** @var array */
     public $response_num_fields = array(
         'score', 'hints', 'checks', // Remove: weighting, clues.
     );

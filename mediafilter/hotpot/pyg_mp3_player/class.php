@@ -32,12 +32,17 @@ defined('MOODLE_INTERNAL') || die();
  * @since     Moodle 2.0
  */
 class hotpot_mediaplayer_pyg_mp3_player extends hotpot_mediaplayer {
+    /** @var array */
     public $aliases = array('pyg');
+    /** @var string */
     public $playerurl = 'pyg_mp3_player/pyg_mp3_player.swf';
+    /** @var string */
     public $flashvars_paramname = 'file';
+    /** @var array */
     public $more_options = array(
         'width' => 180, 'height' => 30, 'my_BackgroundColor' => '0xE6E6FA', 'autolaunch' => 'false',
     );
+    /** @var array */
     public $flashvars = array(
         'my_BackgroundColor' => PARAM_ALPHANUM, 'autolaunch' => PARAM_ALPHANUM,
     );

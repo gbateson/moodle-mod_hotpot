@@ -49,7 +49,7 @@ class hotpot_source_hp_6_jmatch_html_flashcard extends hotpot_source_hp_6_jmatch
      * @param string $content (passed by reference)
      * @return array of required strings for HTML content
      */
-    static public function required_strings_html(&$content) {
+    public static function required_strings_html(&$content) {
         $strings = parent::required_strings_html($content);
         // Flashcard files do not have the "MatchDiv" required by plain JMatch.
         return array_values(array_diff($strings, array('<div id="MatchDiv" style="text-align: center;">')));
