@@ -100,6 +100,12 @@ Pull requests are welcome.
 
 See [CHANGES.txt](CHANGES.txt) for the history of changes to this plugin.
 
+## Support HotPot
+
+HotPot is free, and always will be. If you find it useful, you can help to keep it
+up to date with new versions of Moodle and Hot Potatoes by
+[sponsoring its development on GitHub](https://github.com/sponsors/gbateson).
+
 ## Credits
 
 HotPot was written by Gordon Bateson. Thanks to everyone who has reported issues
