@@ -376,6 +376,13 @@ function hpQuizAttempt() {
      * @return xxx
      */
     this.send_results_ajax = function (use_asynchrounous) {
+
+        // When the page is being unloaded, modern browsers block synchronous
+        // XMLHttpRequests, so we use navigator.sendBeacon() if it is available.
+        if (! use_asynchrounous && this.send_results_beacon()) {
+            return;
+        }
+
         // based on http://www.captain.at/howto-ajax-form-post-request.php
         if (window.HP_xmlhttp===undefined || window.HP_xmlhttp===null) {
             window.HP_xmlhttp = false;
@@ -394,26 +401,55 @@ function hpQuizAttempt() {
             }
         }
         if (HP_xmlhttp) {
-            var params = new Array();
-            var i_max = this.form.elements.length;
-            for (var i=0; i<i_max; i++) {
-                var obj = this.form.elements[i];
-                if (! obj.name) {
-                    continue;
-                }
-                var value = this.getFormElementValue(obj);
-                if (! value) {
-                    continue;
-                }
-                params.push(obj.name + '=' + escape(value)); // encodeURI
-            }
             if (use_asynchrounous) {
                 HP_xmlhttp.onreadystatechange = HP_onreadystatechange;
             }
             HP_xmlhttp.open(this.form.method, this.form.action, use_asynchrounous);
             HP_xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            HP_xmlhttp.send(params.join('&'));
+            HP_xmlhttp.send(this.get_form_params());
         }
+    }
+
+    /**
+     * send_results_beacon
+     *
+     * Send the form values using navigator.sendBeacon(),
+     * which browsers deliver even after the page has been unloaded.
+     *
+     * @return boolean true if the results were queued for sending, otherwise false
+     */
+    this.send_results_beacon = function () {
+        if (! window.navigator || ! navigator.sendBeacon || ! window.Blob) {
+            return false; // old browser
+        }
+        var data = new Blob([this.get_form_params()], {type: "application/x-www-form-urlencoded"});
+        try {
+            return navigator.sendBeacon(this.form.action, data);
+        } catch (e) {
+            return false;
+        }
+    }
+
+    /**
+     * get_form_params
+     *
+     * @return string the form values as a url-encoded string
+     */
+    this.get_form_params = function () {
+        var params = new Array();
+        var i_max = this.form.elements.length;
+        for (var i=0; i<i_max; i++) {
+            var obj = this.form.elements[i];
+            if (! obj.name) {
+                continue;
+            }
+            var value = this.getFormElementValue(obj);
+            if (! value) {
+                continue;
+            }
+            params.push(obj.name + '=' + escape(value)); // encodeURI
+        }
+        return params.join('&');
     }
 
     /**
