@@ -1,0 +1,12 @@
+
+[AudioFile]
+<audio controls="controls">
+[strContent]
+</audio> 
+[/AudioFile]
+
+[VideoFile]
+ <video width="[strWidth]" height="[strHeight]" controls="controls">
+[strContent]
+</video> 
+[/VideoFile]

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en" prefix="dc: http://purl.org/dc/elements/1.1/">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+<title>
+Page Title
+</title>
+
+<!-- Made with executable version [strFullVersionInfo] -->
+
+<!-- The following insertion allows you to add your own code directly to this head tag from the configuration screen -->
+
+[strHeaderCode]
+
+<style>
+
+[strStyleSheet]
+
+</style>
+
+</head>
+
+<body id="TheBody">
+
+<div class="Titles">
+	<h2 class="ExerciseTitle">Page Title</h2>
+	<h3 class="ExerciseSubtitle">Page Subtitle</h3>
+</div>
+
+<div id="MainDiv" class="StdDiv">
+ 
+<p>Page content...</p>
+
+</div>
+
+
+</body>
+
+</html>

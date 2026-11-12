@@ -1,0 +1,362 @@
+
+[inclScorm1.2]
+//JMATCH-SPECIFIC SCORM-RELATED JAVASCRIPT CODE
+
+//Polyfill for old Safari versions.
+if (window.NodeList && !NodeList.prototype.forEach) {
+    NodeList.prototype.forEach = Array.prototype.forEach;
+}
+
+function SetScormScore(){
+//Reports the current score and any other information back to the LMS
+	if (API != null){
+		API.LMSSetValue('cmi.core.score.raw', Score);
+		
+//Now send a detailed reports on the item
+		var ItemLabel = 'Matching';
+		API.LMSSetValue('cmi.objectives.0.id', 'obj'+ItemLabel);
+		API.LMSSetValue('cmi.interactions.0.id', 'int'+ItemLabel);	
+		API.LMSSetValue('cmi.objectives.0.status', API.LMSGetValue('cmi.core.lesson_status'));	
+		API.LMSSetValue('cmi.objectives.0.score.min', '0');
+		API.LMSSetValue('cmi.objectives.0.score.max', '100');
+		API.LMSSetValue('cmi.objectives.0.score.raw', Score);
+//We can only use the performance type, because we're storing multiple responses of various types.
+		API.LMSSetValue('cmi.interactions.0.type', 'performance');
+		
+		var AnswersTried = '';
+		for (var i=0; i<Status[0][3].length; i++){
+			if (i>0){AnswersTried += ' | ';}
+			for (var j=0; j<Status.length; j++){
+				if (j>0){AnswersTried += ',';}
+				AnswersTried += j + '.' + Status[j][3][i];
+			}
+		}
+		API.LMSSetValue('cmi.interactions.0.student_response', AnswersTried);
+		API.LMSCommit('');
+	}
+}
+[/inclScorm1.2]
+
+//JMATCH CORE JAVASCRIPT CODE
+
+var CorrectIndicator = '[strCorrectIndicator]';
+var IncorrectIndicator = '[strIncorrectIndicator]';
+var YourScoreIs = '[strYourScoreIs]';
+var CorrectResponse = '[strGuessCorrect]';
+var IncorrectResponse = '[strGuessIncorrect]';
+var TotalUnfixedLeftItems = 0;
+var TotCorrectChoices = 0;
+var Penalties = 0;
+var Finished = false;
+var TimeOver = false;
+
+var Score = 0;
+var Locked = false;
+var ShuffleQs = [boolShuffleQs];
+var QsToShow = [QsToShow];
+
+function TimerStartUp(){
+	setTimeout('JsonEx.Setup()', 300);
+}
+
+/*
+  The new V7 JSON object replaces the arrays of old.
+*/
+[V7JsonEx]
+
+var JsonEx = JSON.parse(V7JsonEx);
+
+JsonEx.GetLeftItemByOrigPos = function(Pos){
+	for (var i=0; i<this.LeftItems.length; i++){
+		if (this.LeftItems[i].OrigPos == Pos){
+			return this.LeftItems[i];
+		}
+	}
+	return null;
+};
+
+JsonEx.GetRightItemByOrigPos = function(Pos){
+	for (var i=0; i<this.RightItems.length; i++){
+		if (this.RightItems[i].OrigPos == Pos){
+			return this.RightItems[i];
+		}
+	}
+	return null;
+};
+
+//Methods for the object.
+JsonEx.Setup = function(){
+	var i, j, nList, LI, RI;
+	
+[inclScorm1.2]
+	ScormStartUp();
+[/inclScorm1.2]
+
+[inclSendResults]
+	GetUserName();
+[/inclSendResults]
+
+[inclPreloadImages]
+	PreloadImages([PreloadImageList]);
+[/inclPreloadImages]
+
+//Get a reference to the table's tbody.
+	this.tbody = document.querySelector('tbody#MatchItems');
+	
+//Connect each of the items to its cell or select element.
+	for (var i=0; i<this.LeftItems.length; i++){
+		LI = this.LeftItems[i];
+		LI.Cell = document.getElementById('L_' + LI.OrigPos);
+		LI.Select = LI.Cell.nextElementSibling.getElementsByTagName('select')[0];
+		LI.MarkingCell = LI.Cell.nextElementSibling.nextElementSibling;
+//Now check whether this item is a distractor that shouldn't have a matching
+//right item.
+		LI.IsDistractor = (this.GetRightItemByOrigPos(LI.OrigPos) === null);
+	}
+
+	this.RightItems.forEach(function(RI){
+//Note: this doesn't really matter; the only thing that matters is 
+//the selected option and its match to the left item in the preceding
+//cell.
+		RI.Select = document.getElementById('R_' + RI.OrigPos);
+	});
+	
+//Reduce the items as required. Sanity check: don't allow less than 2.
+	if (this.ItemsToShow > 2){
+		while (this.LeftItems.length > this.ItemsToShow){
+			RemItem = Math.floor(this.LeftItems.length*Math.random());
+			OP = this.LeftItems[RemItem].OrigPos;
+//Remove the whole table row which is the parent of this left item.
+			var row = this.LeftItems[RemItem].Cell.parentNode;
+			row.parentNode.removeChild(row);
+			this.LeftItems.splice(RemItem, 1);
+
+//Having removed an item from the left, we must remove the corresponding 
+//one from the right if it exists. (There may not be a matching item if 
+//the one removed was a distractor.)
+			for (i = 0; i < this.RightItems.length; i++){
+				if (this.RightItems[i].OrigPos == OP){
+//Before removing the item itself, we need to remove its option
+//from all the select elements.
+					nList = document.querySelectorAll('option[data-origPos="R_' + OP + '"]');
+					for (var j=0; j<nList.length; j++){
+						nList[j].parentNode.removeChild(nList[j]);
+					}
+					this.RightItems.splice(i, 1);
+				}
+			}
+		}
+	}
+//Now do any shuffling that's required.
+	if (this.ShuffleLeftItems == true){
+		var arrRows = new Array();
+		var rows = this.tbody.getElementsByTagName('tr');
+		for (i=rows.length-1; i>=0; i--){
+			arrRows.push(this.tbody.removeChild(rows[i]));
+		}
+		arrRows = Shuffle(arrRows);
+		for (i=0; i<arrRows.length; i++){
+			this.tbody.appendChild(arrRows[i]);
+		}
+	}
+	
+//Now get a reference to all selectors, since distractors may not be associated
+//with a right item.
+	this.AllSelects = document.querySelectorAll('select[id^="R_"]');
+	
+//Now we check for any select that should be pre-selected (fixed item).
+	for (i = 0; i<this.AllSelects.length; i++){
+		var Sel = this.AllSelects[i];
+		var Pos = parseInt(Sel.id.substring(2));
+		var RI = this.GetRightItemByOrigPos(Pos);
+		if ((RI)&&(RI.MatchedWith > -1)){
+			for (var j=0; j<Sel.options.length; j++){
+				if (Sel.options[j].value == Pos){
+					Sel.options.selectedIndex = j;
+					Sel.dispatchEvent(new Event("change", {"bubbles": true}));
+					break;
+				}
+			}
+		}
+	}
+
+[inclTimer]
+	StartTimer();
+[/inclTimer]	
+
+};
+
+JsonEx.AlignSelects = function(OrigPos){
+	var Select = document.getElementById('R_' + OrigPos);
+	var CurrMatch = Select.options[Select.selectedIndex].value;
+	var RI = this.GetRightItemByOrigPos(OrigPos);
+	var i;
+	
+	//First we make sure that if this is unselecting
+	//a previous selection, we re-show all the corresponding
+	//items.
+	if ((!RI)||(RI.MatchedWith != CurrMatch)){
+		var lastMatch = RI? RI.MatchedWith : Select.getAttribute('data-LastMatch') ? Select.getAttribute('data-LastMatch') : -1;
+		for (i=0; i<this.AllSelects.length; i++){
+			if (Select !== this.AllSelects[i]){
+				var opt = this.AllSelects[i].querySelector('option[value="' + lastMatch + '"]');
+				opt.removeAttribute('disabled');
+			}
+		}
+	}
+	
+	//Store the current match either in the object or on the select if it's a distractor.
+	if (RI){
+		RI.MatchedWith = CurrMatch;
+	}
+	else{
+		Select.setAttribute('data-lastMatch', CurrMatch);
+	}
+	
+	//Now we hide any other instances of the selected option.
+	if (CurrMatch > -1){
+		for (i=0; i<this.AllSelects.length; i++){
+			if (Select !== this.AllSelects[i]){
+				this.AllSelects[i].querySelector('option[value="' + CurrMatch + '"]').disabled = 'disabled';
+			}
+		}
+	}
+};
+
+JsonEx.CheckAnswers = function(){
+/*
+	Check each right item to see whether a) it had an 
+	original match on the left, and b) it is matched
+	to a left item whose group is one of its groups.
+*/
+
+	if (!this.hasOwnProperty('Penalties')){
+		this.Penalties = 0;
+	}
+	var ItemsToCount = this.AllSelects.length;
+	var CorrectItems = 0;
+	var Done = true; //Assume till proven otherwise.
+	var i, selectedOrigPos, LI, RI;
+	
+//Tot up the scores.
+
+//Go through all the left items.
+	for (i=0; i<this.LeftItems.length; i++){
+		LI = this.LeftItems[i];
+//Get the selection made.
+
+			selectedOrigPos = LI.Select.options[LI.Select.options.selectedIndex].value;
+//First check whether the left item is a distractor, so nothing should
+//match with it.
+		if (LI.IsDistractor){
+			if (selectedOrigPos == -1){
+				LI.MarkingCell.innerHTML = CorrectIndicator;
+				if ((this.IsSimple)&&(LI.Select.style.display !== 'none')){
+					LI.Select.parentNode.appendChild(document.createTextNode(LI.Select.options[LI.Select.options.selectedIndex].innerText));
+					LI.Select.style.display = 'none';
+				}
+				CorrectItems++;
+			}
+			else{
+				LI.MarkingCell.innerHTML = IncorrectIndicator;
+				Done = false;
+			}
+		}
+		else{
+//If the LI is not a distractor, then no selection (-1) must be wrong.
+			if (selectedOrigPos == -1){
+				LI.MarkingCell.innerHTML = IncorrectIndicator;
+				Done = false;
+			}
+			else{
+//Otherwise a selection is expected, and its groups must match.	
+//Find the corresponding right item.
+				RI = this.GetRightItemByOrigPos(selectedOrigPos);	
+				if (RI.Groups.indexOf(LI.Group) > -1){
+				//Mark this right
+					LI.MarkingCell.innerHTML = CorrectIndicator;
+					if ((this.IsSimple)&&(LI.Select.style.display !== 'none')){
+						//LI.Select.parentNode.innerHTML = LI.Select.options[LI.Select.options.selectedIndex].innerText;
+						LI.Select.parentNode.appendChild(document.createTextNode(LI.Select.options[LI.Select.options.selectedIndex].innerText));
+						LI.Select.style.display = 'none';
+					}
+					CorrectItems++;
+				}
+				else{
+					LI.MarkingCell.innerHTML = IncorrectIndicator;
+					Done = false;
+				}
+			}
+		}
+	}
+
+	if (!this.hasOwnProperty('Score')){
+		this.Score = 0;
+	}
+	this.Score = Math.round((100*(CorrectItems - this.Penalties))/ItemsToCount);
+	if (Done === false){
+		this.Penalties++;
+	}
+	return Done;
+};
+
+function CheckAnswers(){
+	if (Locked == true){return;}
+	
+	var Feedback = '';
+
+	var AllDone = JsonEx.CheckAnswers();
+	Score = JsonEx.Score;
+	if (Score < 0){Score = 0;}
+
+	if (AllDone == true){
+		Feedback = YourScoreIs + ' ' + Score + '%.<br/>' + CorrectResponse;
+	}
+	else {
+		if (TimeOver == true){
+			Feedback = YourScoreIs + ' ' + Score + '%.'
+		}
+		else{
+			Feedback = YourScoreIs + ' ' + Score + '%.' + '<br />' + IncorrectResponse;
+		}
+	}
+	ShowMessage(Feedback);
+	
+//If the exercise is over, deal with that
+	if ((AllDone == true)||(TimeOver == true)){
+[inclSendResults]
+		setTimeout('SendResults(' + Score + ')', 50);
+[/inclSendResults]
+[inclTimer]
+		window.clearInterval(Interval);
+[/inclTimer]
+		TimeOver = true;
+		Locked = true;
+		Finished = true;
+		WriteToInstructions(Feedback);
+	}
+[inclScorm1.2]
+	if (AllDone == true){
+		SetScormComplete();
+	}
+	else{
+		SetScormIncomplete();
+	}
+[/inclScorm1.2]
+	
+}
+
+[inclTimer]
+function TimesUp() {
+	document.getElementById('Timer').innerHTML = '[strTimesUp]';
+[inclPreloadImages]
+	RefreshImages();
+[/inclPreloadImages]
+	TimeOver = true;
+	CheckAnswers();
+	Locked = true;
+[inclScorm1.2]
+	SetScormTimedOut();
+[/inclScorm1.2]
+}
+[/inclTimer]

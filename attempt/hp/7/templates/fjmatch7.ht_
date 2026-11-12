@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en" prefix="dc: http://purl.org/dc/elements/1.1/">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+[strDublinCoreMetadata]
+
+
+<title>
+[strPlainTitle]
+</title>
+
+<!-- Made with executable version [strFullVersionInfo] -->
+
+<!-- The following insertion allows you to add your own code directly to this head tag from the configuration screen -->
+
+[strHeaderCode]
+
+<style>
+
+[strStyleSheet]
+
+</style>
+
+<script>
+
+//<![CDATA[
+
+<!--
+
+[inclScorm1.2]
+[strJSScorm_1_2]
+[/inclScorm1.2]
+
+[strJSButtons]
+
+[strJSUtilities]
+
+[strJSFJMatch7]
+
+//-->
+
+//]]>
+
+</script>
+
+
+</head>
+
+<body onload="StartUp()" id="TheBody" [inclScorm1.2]onunload="SetScormBrowseTime(); CheckLMSFinish()"[/inclScorm1.2]>
+
+<!-- BeginTopNavButtons -->
+
+[inclNavButtons]
+[strTopNavBar]
+[/inclNavButtons]
+
+<!-- EndTopNavButtons -->
+
+<div class="Titles">
+	<h2 class="ExerciseTitle">[strExerciseTitle]</h2>
+[inclExerciseSubtitle]
+	<h3 class="ExerciseSubtitle">[strExerciseSubtitle]</h3>
+[/inclExerciseSubtitle]
+</div>
+
+<div id="InstructionsDiv" class="StdDiv">
+	<div id="Instructions">[strInstructions]</div>
+</div>
+
+<div id="ContainerDiv">
+
+[inclReading]
+<div class="ReadingContainer">
+
+	<div id="Reading">
+
+		<div id="ReadingDiv">
+[strReadingText]
+		</div>
+	</div>
+
+</div>
+
+[/inclReading]
+
+<div class="ExerciseContainer">
+
+<button class="FuncButton" onclick="ShowItem()">[strNextCaption]</button>
+
+<button class="FuncButton" onclick="DeleteItem()">[strDeleteCaption]</button>
+
+<table class="FlashcardTable" style="border-width: 0; margin-left: auto; margin-right: auto;">
+<tbody id="Questions">
+
+[strTRows]
+
+</tbody>
+</table>
+
+</div>
+</div>
+
+<!-- BeginBottomNavButtons -->
+
+[inclNavButtons]
+[strBottomNavBar]
+[/inclNavButtons]
+
+<!-- EndBottomNavButtons -->
+
+<!-- BeginSubmissionForm -->
+
+<!-- EndSubmissionForm -->
+
+</body>
+
+</html>

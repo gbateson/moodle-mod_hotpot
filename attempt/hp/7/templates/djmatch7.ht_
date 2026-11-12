@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en" prefix="dc: http://purl.org/dc/elements/1.1/">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+[strDublinCoreMetadata]
+
+
+<title>
+[strPlainTitle]
+</title>
+
+<!-- Made with executable version [strFullVersionInfo] -->
+
+<!-- The following insertion allows you to add your own code directly to this head tag from the configuration screen -->
+
+[strHeaderCode]
+
+<style>
+
+[strStyleSheet]
+
+</style>
+
+<script>
+
+//<![CDATA[
+
+<!--
+
+[inclScorm1.2]
+[strJSScorm_1_2]
+[/inclScorm1.2]
+
+[strJSButtons]
+
+[strJSShowMessage]
+
+[strJSUtilities]
+
+[strJSDJMatch7]
+
+[inclTimer]
+[strJSTimer]
+[/inclTimer]
+
+[inclSendResults]
+[strJSSendResults]
+[/inclSendResults]
+
+//-->
+
+//]]>
+
+</script>
+
+</head> 
+
+<body onload="TimerStartUp()" id="TheBody" [inclScorm1.2]onunload="CheckLMSFinish()"[/inclScorm1.2]> 
+<!-- BeginTopNavButtons -->
+
+[inclNavButtons]
+[strTopNavBar]
+[/inclNavButtons]
+
+<!-- EndTopNavButtons -->
+
+<div class="Titles">
+	<h2 class="ExerciseTitle">[strExerciseTitle]</h2>
+[inclExerciseSubtitle]
+	<h3 class="ExerciseSubtitle">[strExerciseSubtitle]</h3>
+[/inclExerciseSubtitle]
+[inclTimer]
+<div id="Timer">&#160;<span id="TimerText">&#160;&#160;</span>&#160;</div>
+[/inclTimer]
+
+</div>
+
+<div id="InstructionsDiv" class="StdDiv">
+	<div id="Instructions">[strInstructions]</div>
+</div>
+
+
+<div id="ContainerDiv">
+
+[inclReading]
+<div class="ReadingContainer">
+
+	<div id="Reading">
+
+		<div id="ReadingDiv">
+[strReadingText]
+		</div>
+	</div>
+
+</div>
+
+[/inclReading]
+
+<div class="ExerciseContainer JMatchDrag">
+
+<div class="StdDiv" id="CheckButtonDiv">
+<button id="CheckButton1" class="FuncButton" onclick="CheckAnswers()">&#160;[strCheckCaption]&#160;</button>
+</div>
+
+
+</div>
+</div>
+
+<div class="Feedback" id="FeedbackDiv">
+<div class="FeedbackText" id="FeedbackContent"></div>
+<button id="FeedbackOKButton" class="FuncButton" onclick="HideFeedback(); return false;">&#160;[strOKCaption]&#160;</button>
+</div>
+
+<!-- BeginBottomNavButtons -->
+
+<!-- EndBottomNavButtons -->
+
+<!-- BeginSubmissionForm -->
+
+<!-- EndSubmissionForm -->
+
+[V7Cards]
+
+</body>
+</html>

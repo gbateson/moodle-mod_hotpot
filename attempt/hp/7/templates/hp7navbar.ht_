@@ -1,0 +1,15 @@
+<div class="NavButtonBar" id="[strNavBarID]">
+
+[inclBack]
+<button class="NavButton" onclick="history.back(); return false;">[strBackCaption]</button>
+[/inclBack]
+
+[inclContents]
+<button class="NavButton" onclick="location='[strContentsURL]'; return false;"> [strContentsCaption] </button>
+[/inclContents]
+
+[inclNextEx]
+<button class="NavButton" onclick="location='[strNextExURL]'; return false;">[strNextExCaption]</button>
+[/inclNextEx]
+
+</div>

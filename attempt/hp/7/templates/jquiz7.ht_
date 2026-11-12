@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en" prefix="dc: http://purl.org/dc/elements/1.1/">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+[strDublinCoreMetadata]
+
+
+<title>
+[strPlainTitle]
+</title>
+
+<!-- Made with executable version [strFullVersionInfo] -->
+
+<!-- The following insertion allows you to add your own code directly to this head tag from the configuration screen -->
+
+[strHeaderCode]
+
+<style>
+
+[strStyleSheet]
+
+</style>
+
+<script>
+
+//<![CDATA[
+
+<!--
+
+[inclScorm1.2]
+[strJSScorm_1_2]
+[/inclScorm1.2]
+
+[strJSButtons]
+
+[strJSShowMessage]
+
+[strJSUtilities]
+
+[strJSJQuiz7]
+
+[inclShortAnswer]
+[strJSCheckShortAnswer]
+[/inclShortAnswer]
+
+[inclTimer]
+[strJSTimer]
+[/inclTimer]
+
+[inclSendResults]
+[strJSSendResults]
+[/inclSendResults]
+
+//-->
+
+//]]>
+
+</script>
+
+
+</head>
+
+<body onload="StartUp()" id="TheBody" [inclScorm1.2]onunload="CheckLMSFinish()"[/inclScorm1.2]>
+
+<!-- BeginTopNavButtons -->
+
+[inclNavButtons]
+[strTopNavBar]
+[/inclNavButtons]
+
+<!-- EndTopNavButtons -->
+
+<div class="Titles">
+	<h2 class="ExerciseTitle">[strExerciseTitle]</h2>
+[inclExerciseSubtitle]
+	<h3 class="ExerciseSubtitle">[strExerciseSubtitle]</h3>
+[/inclExerciseSubtitle]
+[inclTimer]
+<div id="Timer"><span id="TimerText">&#160;&#160;</span></div>
+[/inclTimer]
+
+</div>
+
+<div id="InstructionsDiv" class="StdDiv">
+	<div id="Instructions">[strInstructions]</div>
+</div>
+
+
+<div id="ContainerDiv">
+
+[inclReading]
+<div class="ReadingContainer">
+
+	<div id="Reading">
+
+		<div id="ReadingDiv">
+[strReadingText]
+		</div>
+	</div>
+
+</div>
+
+[/inclReading]
+
+<div class="ExerciseContainer">
+
+<div id="QNav" class="QuestionNavigation">
+
+<p style="text-align: right;">
+<button id="ShowMethodButton" class="FuncButton" onclick="ShowHideQuestions(); return false;">[strShowAllQuestionsCaption]</button>
+</p>
+
+<div id="OneByOneReadout">
+<button id="PrevQButton" class="FuncButton" onclick="ChangeQ(-1); return false;">[strLastQCaption]</button>
+
+<span id="QNumReadout" class="QNum">&#160;</span>
+
+<button id="NextQButton" class="FuncButton" onclick="ChangeQ(1); return false;">[strNextQCaption]</button>
+<br />
+</div>
+
+</div>
+ 
+[strQuestionOutput]
+
+[inclKeypad]
+<div id="CharacterKeypad" class="Keypad">
+[strKeypad]
+</div>
+[/inclKeypad]
+
+</div>
+
+</div>
+
+<div class="Feedback" id="FeedbackDiv">
+<div class="FeedbackText" id="FeedbackContent"></div>
+<button id="FeedbackOKButton" class="FuncButton" onclick="HideFeedback(); return false;">&#160;[strOKCaption]&#160;</button>
+</div>
+
+<!-- BeginBottomNavButtons -->
+
+[inclNavButtons]
+[strBottomNavBar]
+[/inclNavButtons]
+
+<!-- EndBottomNavButtons -->
+
+<!-- BeginSubmissionForm -->
+
+<!-- EndSubmissionForm -->
+
+</body>
+
+</html>

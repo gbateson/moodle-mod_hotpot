@@ -1,0 +1,52 @@
+
+
+//CODE FOR HANDLING SENDING OF RESULTS
+
+var UserName = '';
+var StartTime = (new Date()).toLocaleString();
+
+var ResultForm = '<form name="Results" id="Results" action="[strFormMailURL]" method="post" enctype="x-www-form-encoded">';
+ResultForm += '<input type="hidden" name="recipient" value="[strEMail]"></input>';
+ResultForm += '<input type="hidden" name="subject" value="[strEscapedExerciseTitle]"></input>';
+ResultForm += '<input type="hidden" name="Exercise" value="[strEscapedExerciseTitle]"></input>';
+ResultForm += '<input type="hidden" name="realname" value=""></input>';
+ResultForm += '<input type="hidden" name="Score" value=""></input>';
+ResultForm += '<input type="hidden" name="Start_Time" value=""></input>';
+ResultForm += '<input type="hidden" name="End_Time" value=""></input>';
+ResultForm += '<input type="hidden" name="title" value="Thanks!"></input>';
+ResultForm += '<input type="hidden" name="httpReferrer" value="' + document.location.href + '"></input>';
+[inclPageBGColor]ResultForm += '<input type="hidden" name="bgcolor" value="' + getComputedStyle(document.documentElement).getPropertyValue('--strPageBGColor') +'"></input>';[/inclPageBGColor]
+ResultForm += '<input type="hidden" name="text_color" value="' + getComputedStyle(document.documentElement).getPropertyValue('--strTitleColor') + '"></input>';
+ResultForm += '<input type="hidden" name="sort" value="order:realname,Exercise,Score,Start_Time,End_Time,httpReferrer"></input>';
+ResultForm += '</form>';
+
+function GetUserName(){
+	UserName = prompt('[strNamePlease]','');
+	UserName += '';
+	if ((UserName.substring(0,4) == 'null')||(UserName.length < 1)){
+		UserName = prompt('[strNamePlease]','');
+		UserName += '';
+		if ((UserName.substring(0,4) == 'null')||(UserName.length < 1)){
+			history.back();
+		}
+	}
+}
+
+function SendResults(Score){
+	var today = new Date;
+	var NewName = '' + today.getTime();
+      var NewWin = window.open('', NewName, 'toolbar=no,location=no,directories=no,status=no, menubar=no,scrollbars=yes,resizable=no,,width=400,height=300');
+
+//If user has prevented popups, no way to proceed -- exit
+	if (NewWin == null){
+		return;
+	}
+
+	NewWin.document.body.innerHTML = ResultForm;
+	var frm = NewWin.document.getElementById('Results');
+	frm.Score.value = Score + '%';
+	frm.realname.value = UserName;
+	frm.End_Time.value = (new Date()).toLocaleString();
+	frm.Start_Time.value = StartTime;
+	frm.submit();
+}
