@@ -824,20 +824,22 @@ class mod_hotpot_mod_form extends moodleform_mod {
             }
         }
 
-        // timelimit
-        if ($data['timelimit']>0) {
-            $data['timelimitspecific'] = $data['timelimit'];
-            $data['timelimit'] = hotpot::TIME_SPECIFIC;
-        } else {
-            $data['timelimitspecific'] = 0;
-        }
-
-        // delay3
-        if ($data['delay3']>0) {
-            $data['delay3specific'] = $data['delay3'];
-            $data['delay3'] = hotpot::TIME_SPECIFIC;
-        } else {
-            $data['delay3specific'] = 0;
+        // timelimit and delay3
+        // force these to be integers (see CONTRIB-9156 below), using the
+        // database default if the value is missing or not numeric
+        $defaults = array('timelimit' => 0, 'delay3' => hotpot::TIME_TEMPLATE);
+        foreach ($defaults as $name => $default) {
+            if (array_key_exists($name, $data) && is_numeric($data[$name])) {
+                $data[$name] = intval($data[$name]);
+            } else {
+                $data[$name] = $default;
+            }
+            if ($data[$name] > 0) {
+                $data[$name.'specific'] = $data[$name];
+                $data[$name] = hotpot::TIME_SPECIFIC;
+            } else {
+                $data[$name.'specific'] = 0;
+            }
         }
 
         // delay1 and delay2

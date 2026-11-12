@@ -174,6 +174,12 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
                     $this->headcontent = substr_replace($this->headcontent, $insert, $pos, 0);
                 }
 
+                // JMemori stores its cards in a global array called "M",
+                // which overwrites Moodle's global "M" object, so rename it
+                // (any standalone "M", except "M.xxx", where "xxx" is not "length")
+                $search = '/(?<![\w.$\'"])M(?![\w$])(?!\.(?!length\b))/';
+                $this->headcontent = preg_replace($search, 'JMemoriM', $this->headcontent);
+
                 // override table border collapse from standard Moodle styles
                 if ($pos = strrpos($this->headcontent, '</style>')) {
                     $insert = ''

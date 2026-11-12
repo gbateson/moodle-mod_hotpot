@@ -62,7 +62,7 @@ class mod_hotpot_attempt_hp_6_jquiz_xml_renderer extends mod_hotpot_attempt_hp_6
                 $correct  = $this->hotpot->source->xml_value_int($tags, $answer."['correct'][0]['#']");
                 $percent  = $this->hotpot->source->xml_value_int($tags, $answer."['percent-correct'][0]['#']");
                 $include  = $this->hotpot->source->xml_value_int($tags, $answer."['include-in-mc-options'][0]['#']");
-                if (strlen($text)) {
+                if (strlen((string)$text)) {
                     if ($aa==0) { // first time only
                         $str .= "\n";
                         $str .= "I[$qq] = new Array();\n";

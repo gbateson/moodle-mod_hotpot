@@ -130,7 +130,10 @@ class mod_hotpot_attempt_hp_6_jquiz_xml_v6_autoadvance_renderer extends mod_hotp
             $insert .= "	AA_SetProgressBar();\n";
         }
         if ($this->expand_UserDefined2()) {
-            $insert .= "	setTimeout('AA_PlaySound(0,0)', 500);";
+            // Note: AA_PlaySound() is not defined by HotPot, so check it exists
+            $insert .= "	if (window.AA_PlaySound) {\n"
+                      ."		setTimeout('AA_PlaySound(0,0)', 500);\n"
+                      ."	}\n";
         }
         if ($insert) {
             $pos = strrpos($substr, '}');
@@ -1096,7 +1099,7 @@ class mod_hotpot_attempt_hp_6_jquiz_xml_v6_autoadvance_renderer extends mod_hotp
                 }
             }
             $text = preg_replace('/&[#a-zA-Z0-9]+;/', 'x', $text);
-            $size = max($size, strlen($text));
+            $size = max($size, strlen((string)$text));
             $a++;
         }
 

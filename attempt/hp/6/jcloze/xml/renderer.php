@@ -58,7 +58,7 @@ class mod_hotpot_attempt_hp_6_jcloze_xml_renderer extends mod_hotpot_attempt_hp_
 
             while (($answer=$question."['answer'][$a]['#']") && $this->hotpot->source->xml_value($tags, $answer)) {
                 $text = $this->hotpot->source->xml_value_js($tags,  $answer."['text'][0]['#']");
-                if (strlen($text)) {
+                if (strlen((string)$text)) {
                     if ($aa==0) { // first time only
                         $str .= "\n";
                         $str .= "I[$qq] = new Array();\n";

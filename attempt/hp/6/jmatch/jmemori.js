@@ -61,15 +61,15 @@ function JMemori(sendallclicks, ajax) {
 
         if (! this.questions[id_min]) {
             this.addQuestion(id_min);
-            this.initQuestion(id_min, M[id_min][0]);
+            this.initQuestion(id_min, JMemoriM[id_min][0]);
         }
 
-        if (M[id_min][1][0]==M[id_max][1][0]) {
+        if (JMemoriM[id_min][1][0]==JMemoriM[id_max][1][0]) {
             var responses = this.questions[id_min].correct;
         } else {
             var responses = this.questions[id_min].wrong;
         }
-        var g = M[id_max][0]; // content
+        var g = JMemoriM[id_max][0]; // content
 
         var r_max = responses.length;
         for (var r=0; r<r_max; r++) {
