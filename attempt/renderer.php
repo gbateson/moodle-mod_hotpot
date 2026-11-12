@@ -1097,6 +1097,12 @@ class mod_hotpot_attempt_renderer extends mod_hotpot_renderer {
                         $selectors[] = "$selector";
                         break;
 
+                    case preg_match('/^:root$/i', $selector):
+                        // HP7 defines CSS variables in ":root",
+                        // so we define them on the container instead
+                        $selectors[] = "$container";
+                        break;
+
                     case preg_match('/^body\b/i', $selector):
 
                         // by default, we do nothing here, so that

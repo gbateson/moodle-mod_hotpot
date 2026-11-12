@@ -3439,13 +3439,13 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
                 }
                 if ($includeclues) {
                     $clue = $this->hotpot->source->xml_value($question_record, $item."['clue'][0]['#']");
-                    if (strlen($clue)) {
+                    if (strlen((string)$clue)) {
                         $gap .= '<button style="line-height: 1.0" class="FuncButton" onfocus="FuncBtnOver(this)" onmouseover="FuncBtnOver(this)" onblur="FuncBtnOut(this)" onmouseout="FuncBtnOut(this)" onmousedown="FuncBtnDown(this)" onmouseup="FuncBtnOut(this)" onclick="ShowClue('.$i.')">'.$cluecaption.'</button>';
                     }
                 }
                 $gap .= '</span>';
             }
-            if (strlen($text) || strlen($gap)) {
+            if (strlen((string)$text) || strlen($gap)) {
                 if ($startwithgap) {
                     $str .= $gap.$text;
                 } else {
@@ -3531,7 +3531,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
                     while (($answer=$question."['answer'][$a]['#']") && $this->hotpot->source->xml_value($tags, $answer)) {
                         $text = $this->hotpot->source->xml_value($tags,  $answer."['text'][0]['#']");
                         $correct =  $this->hotpot->source->xml_value_int($tags, $answer."['correct'][0]['#']");
-                        if (strlen($text) && $correct) { // $correct is always true
+                        if (strlen((string)$text) && $correct) { // $correct is always true
                             $this->wordlist[] = $text;
                             $aa++;
                         }
@@ -4106,7 +4106,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
     function seed_random_number_generator()  {
         static $seeded = false;
         if (! $seeded) {
-            srand((double) microtime() * 1000000);
+            srand((int) ((double) microtime() * 1000000));
             $seeded = true;
         }
     }
@@ -4547,7 +4547,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
                     $aa = 0;
                     while (($answer = $answers."['answer'][$a]['#']") && $this->hotpot->source->xml_value($tags, $answer)) {
                         $text = $this->hotpot->source->xml_value($tags, $answer."['text'][0]['#']");
-                        if (strlen($text)) {
+                        if (strlen((string)$text)) {
                             if ($question_type==1 || $question_type==3) {
                                 // MULTICHOICE or HYBRID: button
                                 if ($this->hotpot->source->xml_value_int($tags, $answer."['include-in-mc-options'][0]['#']")) {
@@ -4601,7 +4601,7 @@ class mod_hotpot_attempt_hp_6_renderer extends mod_hotpot_attempt_hp_renderer {
         while (($answer = $answers."['answer'][$a]['#']") && $this->hotpot->source->xml_value($tags, $answer)) {
             $text = $this->hotpot->source->xml_value($tags, $answer."['text'][0]['#']", '', false);
             $text = preg_replace('/&[#a-zA-Z0-9]+;/', 'x', $text);
-            $size = max($size, strlen($text));
+            $size = max($size, strlen((string)$text));
             $a++;
         }
 
