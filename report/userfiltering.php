@@ -548,7 +548,11 @@ class hotpot_filter_duration extends hotpot_filter_number {
         $mform->setType($this->_name . '[timeunit]', PARAM_INT);
 
         if (!is_null($this->_default)) {
-            $mform->setDefault($this->_name, $this->_default);
+            // Force the default to be numeric, because the "duration" element passes
+            // it to fmod(), which throws a TypeError on PHP >= 8 if the value is
+            // a non-numeric string (see also CONTRIB-9156 and MDL-78544).
+            $default = (is_numeric($this->_default) ? intval($this->_default) : 0);
+            $mform->setDefault($this->_name, $default);
         }
 
         if ($this->_advanced) {

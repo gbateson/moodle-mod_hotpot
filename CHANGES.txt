@@ -2,6 +2,14 @@
 Change log for mod_hotpot
 ========================================
 
+2026-11-12 (61)
+ - add PHPUnit tests (lib_test, attempt_test) and Behat tests (attempt.feature),
+   with a data generator and test fixtures
+ - allow HotPot activities to be created without the settings form, e.g. by the
+   create_module() API and test data generators
+ - fix fmod() TypeError in the duration filter on report pages (Moodle < 4.3
+   with PHP 8)
+
 2026-11-12 (60)
  - reject unrecognized source files when saving the activity settings form
  - make Rhubarb and Sequitur output formats selectable, including the Sequitur

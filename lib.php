@@ -142,7 +142,7 @@ function hotpot_update_instance(stdclass $data, $mform) {
     hotpot_update_events_wrapper($data);
 
     // Update gradebook item.
-    if ($data->grademethod == $mform->get_original_value('grademethod', 0)) {
+    if ($data->grademethod == hotpot_get_original_value($mform, 'grademethod', 0)) {
         hotpot_grade_item_update($data);
     } else {
         // Recalculate grades for all users.
@@ -155,6 +155,23 @@ function hotpot_update_instance(stdclass $data, $mform) {
     }
 
     return true;
+}
+
+/**
+ * Get the original value of a field on the activity settings form,
+ * or the default value if there is no form, e.g. when a HotPot is created
+ * by the create_module() API or by a test data generator.
+ *
+ * @param moodleform_mod|null $mform
+ * @param string $fieldname
+ * @param mixed $default
+ * @return mixed
+ */
+function hotpot_get_original_value($mform, $fieldname, $default) {
+    if ($mform && method_exists($mform, 'get_original_value')) {
+        return $mform->get_original_value($fieldname, $default);
+    }
+    return $default;
 }
 
 /**
@@ -176,7 +193,15 @@ function hotpot_process_formdata(stdclass &$data, $mform) {
         $data->introformat = 0;
     }
 
-    if ($mform->is_add()) {
+    // These fields are not set if there is no form,
+    // e.g. when a HotPot is created by the create_module() API.
+    foreach (array('timeopen', 'timeclose') as $name) {
+        if (! isset($data->$name)) {
+            $data->$name = 0;
+        }
+    }
+
+    if ($mform ? $mform->is_add() : empty($data->instance)) {
         $data->timecreated = time();
     } else {
         $data->timemodified = time();
@@ -247,7 +272,7 @@ function hotpot_process_formdata(stdclass &$data, $mform) {
                 if (isset($data->$textfield)) {
                     $data->$textfield = trim($data->$textfield);
                 } else {
-                    $data->$textfield = $mform->get_original_value($textfield, '');
+                    $data->$textfield = hotpot_get_original_value($mform, $textfield, '');
                 }
         }
 
@@ -275,13 +300,13 @@ function hotpot_process_formdata(stdclass &$data, $mform) {
         // Ensure text, format and option fields are set
         // (these fields can't be null in the database)
         if (! isset($data->$textfield)) {
-            $data->$textfield = $mform->get_original_value($textfield, '');
+            $data->$textfield = hotpot_get_original_value($mform, $textfield, '');
         }
         if (! isset($data->$formatfield)) {
-            $data->$formatfield = $mform->get_original_value($formatfield, FORMAT_HTML);
+            $data->$formatfield = hotpot_get_original_value($mform, $formatfield, FORMAT_HTML);
         }
         if (! isset($data->$optionsfield)) {
-            $data->$optionsfield = $mform->get_original_value($optionsfield, 0);
+            $data->$optionsfield = hotpot_get_original_value($mform, $optionsfield, 0);
         }
         if (! is_numeric($data->$optionsfield)) {
             $data->$optionsfield = 0; // Prevent "non-numeric" warnings in PHP 7.1.
@@ -290,7 +315,7 @@ function hotpot_process_formdata(stdclass &$data, $mform) {
         // Set text and format fields.
         if ($data->$sourcefield == hotpot::TEXTSOURCE_SPECIFIC) {
             // Transfer wysiwyg editor text.
-            if ($itemid = $data->{$editorfield}['itemid']) {
+            if (isset($data->{$editorfield}['itemid']) && ($itemid = $data->{$editorfield}['itemid'])) {
                 if (isset($data->{$editorfield}['text'])) {
                     // Get the text that was sent from the browser.
                     $editoroptions = hotpot::text_editors_options($context);
@@ -344,7 +369,7 @@ function hotpot_process_formdata(stdclass &$data, $mform) {
     // Set stopbutton and stoptext.
     if (empty($data->stopbutton_yesno)) {
         $data->stopbutton = hotpot::STOPBUTTON_NONE;
-        $data->stoptext = $mform->get_original_value('stoptext', '');
+        $data->stoptext = hotpot_get_original_value($mform, 'stoptext', '');
     } else {
         if (! isset($data->stopbutton_type)) {
             $data->stopbutton_type = '';
